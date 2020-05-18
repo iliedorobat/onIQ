@@ -1,0 +1,507 @@
+<rdf:RDF
+    xmlns:dcterms="http://purl.org/dc/terms/"
+    xmlns:dc="http://purl.org/dc/elements/1.1/"
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:openData="http://opendata.cs.pub.ro/property/ro/"
+    xmlns:ore="http://www.openarchives.org/ore/terms/"
+    xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+    xmlns:dbpedia="http://dbpedia.org/page"
+    xmlns:edm="http://www.europeana.eu/schemas/edm/"
+    xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+    xmlns:foaf="http://xmlns.com/foaf/0.1/"
+    xmlns:j.0="http://dbpedia.org/page/">
+  <ore:Aggregation rdf:about="http://opendata.cs.pub.ro/resource/ro/aggregation/GUID/003567D33B3B495F8BBD5872A58039D1">
+    <edm:object>
+      <edm:WebResource rdf:about="http://clasate.cimec.ro/medium/ARH_6946501_902-5.jpg">
+        <edm:rights rdf:resource="http://www.europeana.eu/rights/rr-f/"/>
+        <dc:format>jpg</dc:format>
+      </edm:WebResource>
+    </edm:object>
+    <edm:isShownBy rdf:resource="http://clasate.cimec.ro/medium/ARH_6946501_902-5.jpg"/>
+    <edm:rights rdf:resource="http://creativecommons.org/licenses/by-sa/4.0/"/>
+    <edm:dataProvider>
+      <foaf:Organization rdf:about="http://opendata.cs.pub.ro/resource/ro/organization/Institutul_Național_al_Patrimoniului">
+        <edm:organizationScope xml:lang="en">ensuring the legal framework and managing the national cultural heritage</edm:organizationScope>
+        <edm:acronym xml:lang="ro">INP</edm:acronym>
+        <edm:geographicLevel xml:lang="en">country</edm:geographicLevel>
+        <edm:europeanaRole xml:lang="en">data provider</edm:europeanaRole>
+        <edm:geographicLevel xml:lang="ro">țară</edm:geographicLevel>
+        <edm:organizationDomain xml:lang="en">culture</edm:organizationDomain>
+        <skos:prefLabel xml:lang="en">National Heritage Institute</skos:prefLabel>
+        <dc:identifier>http://www.patrimoniu.ro</dc:identifier>
+        <edm:organizationScope xml:lang="ro">asigurarea cadrului legislativ si gestionarea patrimoniului national cultural</edm:organizationScope>
+        <edm:organizationSector xml:lang="en">cultural heritage</edm:organizationSector>
+        <edm:organizationSector xml:lang="ro">patrimoniul cultural</edm:organizationSector>
+        <edm:organizationDomain xml:lang="ro">cultură</edm:organizationDomain>
+        <foaf:homepage xml:lang="ro">https://patrimoniu.ro/</foaf:homepage>
+        <skos:prefLabel xml:lang="ro">Institutul Național al Patrimoniului</skos:prefLabel>
+        <edm:country xml:lang="ro">România</edm:country>
+        <edm:country xml:lang="en">Romania</edm:country>
+      </foaf:Organization>
+    </edm:dataProvider>
+    <edm:intermediateProvider>
+      <foaf:Organization rdf:about="http://opendata.cs.pub.ro/resource/ro/organization_Romanian_Open_Data_Portal">
+        <edm:organizationScope xml:lang="en">centralization of open data published by Romanian institutions according to the principles and standards in the field</edm:organizationScope>
+        <foaf:homepage xml:lang="ro">http://data.gov.ro</foaf:homepage>
+        <dc:identifier xml:lang="en">http://data.gov.ro/en/</dc:identifier>
+        <edm:organizationSector xml:lang="en">open data</edm:organizationSector>
+        <edm:organizationSector xml:lang="ro">date deschise</edm:organizationSector>
+        <dc:identifier xml:lang="ro">http://data.gov.ro</dc:identifier>
+        <edm:country xml:lang="en">Romania</edm:country>
+        <edm:organizationDomain xml:lang="en">data publishing</edm:organizationDomain>
+        <edm:country xml:lang="ro">România</edm:country>
+        <skos:prefLabel xml:lang="ro">data.gov.ro</skos:prefLabel>
+        <skos:prefLabel xml:lang="en">data.gov.ro</skos:prefLabel>
+        <edm:geographicLevel xml:lang="en">country</edm:geographicLevel>
+        <edm:organizationDomain xml:lang="ro">publicarea datelor</edm:organizationDomain>
+        <edm:organizationScope xml:lang="ro">centralizarea datelor deschise publicate de instituțiile din România conform principiilor și standardelor în domeniu</edm:organizationScope>
+        <edm:europeanaRole xml:lang="en">data provider</edm:europeanaRole>
+        <edm:geographicLevel xml:lang="ro">țară</edm:geographicLevel>
+        <foaf:homepage xml:lang="en">http://data.gov.ro/en/</foaf:homepage>
+      </foaf:Organization>
+    </edm:intermediateProvider>
+    <edm:provider>
+      <foaf:Organization rdf:about="http://opendata.cs.pub.ro/resource/ro/organization_Politehnica_University_of_Bucharest">
+        <edm:organizationScope xml:lang="en">academic research</edm:organizationScope>
+        <edm:organizationDomain xml:lang="en">education</edm:organizationDomain>
+        <edm:acronym xml:lang="ro">UPB</edm:acronym>
+        <edm:organizationScope xml:lang="ro">cercetare academică</edm:organizationScope>
+        <skos:prefLabel xml:lang="en">Politehnica University of Bucharest</skos:prefLabel>
+        <foaf:homepage xml:lang="ro">https://upb.ro/</foaf:homepage>
+        <dc:identifier xml:lang="ro">https://upb.ro/</dc:identifier>
+        <edm:country xml:lang="ro">România</edm:country>
+        <edm:geographicLevel xml:lang="en">county</edm:geographicLevel>
+        <edm:organizationSector xml:lang="en">higher education</edm:organizationSector>
+        <edm:country xml:lang="en">Romania</edm:country>
+        <edm:geographicLevel xml:lang="ro">județ</edm:geographicLevel>
+        <edm:europeanaRole xml:lang="en">data provider</edm:europeanaRole>
+        <edm:organizationDomain xml:lang="ro">învățământ</edm:organizationDomain>
+        <foaf:homepage xml:lang="en">https://upb.ro/en/</foaf:homepage>
+        <edm:organizationSector xml:lang="ro">învățământ superior</edm:organizationSector>
+        <dc:identifier xml:lang="en">https://upb.ro/en/</dc:identifier>
+        <edm:acronym xml:lang="en">PUB</edm:acronym>
+        <skos:prefLabel xml:lang="ro">Universitatea Politehnica din București</skos:prefLabel>
+      </foaf:Organization>
+    </edm:provider>
+    <edm:aggregatedCHO>
+      <edm:ProvidedCHO rdf:about="http://opendata.cs.pub.ro/resource/ro/cho/CIMEC/003567D33B3B495F8BBD5872A58039D1">
+        <j.0:length>10,1cm</j.0:length>
+        <edm:wasPresentAt>
+          <edm:Event rdf:about="http://opendata.cs.pub.ro/resource/ro/event/Production/CIMEC/003567D33B3B495F8BBD5872A58039D1">
+            <edm:isRelatedTo xml:lang="ro">cultură: Noua</edm:isRelatedTo>
+            <edm:isRelatedTo xml:lang="en">culture: Noua</edm:isRelatedTo>
+            <edm:hasType>Production</edm:hasType>
+          </edm:Event>
+        </edm:wasPresentAt>
+        <dc:subject xml:lang="ro">Celt transilvănean, varianta răsăriteană</dc:subject>
+        <edm:hasType xml:lang="en">archaeology</edm:hasType>
+        <j.0:width>4,3cm</j.0:width>
+        <edm:hasType xml:lang="ro">arheologie</edm:hasType>
+        <openData:inventoryNumber>856</openData:inventoryNumber>
+        <dcterms:alternative xml:lang="ro">preferred</dcterms:alternative>
+        <dc:type xml:lang="ro">artefact</dc:type>
+        <openData:overallDescription xml:lang="ro">Celt de tip transilvănean, varianta răsăriteană, cu laturile late fațetate, cu tortiță rotundă și gura îngroșată.</openData:overallDescription>
+        <edm:wasPresentAt>
+          <edm:Event rdf:about="http://opendata.cs.pub.ro/resource/ro/event/Finding/CIMEC/003567D33B3B495F8BBD5872A58039D1">
+            <edm:occuredAt>
+              <edm:TimeSpan rdf:about="http://dbpedia.org/page/20th_century"/>
+            </edm:occuredAt>
+            <edm:happenedAt>
+              <edm:Place rdf:about="http://opendata.cs.pub.ro/resource/ro/place/Negrești_Vaslui_Vaslui">
+                <skos:prefLabel>Negrești</skos:prefLabel>
+                <skos:note>locality</skos:note>
+              </edm:Place>
+            </edm:happenedAt>
+            <edm:happenedAt>
+              <edm:Place rdf:about="http://opendata.cs.pub.ro/resource/ro/place/Vaslui">
+                <skos:prefLabel>Vaslui</skos:prefLabel>
+                <skos:note>county</skos:note>
+              </edm:Place>
+            </edm:happenedAt>
+            <edm:happenedAt>
+              <edm:Place rdf:about="http://opendata.cs.pub.ro/resource/ro/place/România">
+                <skos:prefLabel>România</skos:prefLabel>
+                <skos:note>country</skos:note>
+              </edm:Place>
+            </edm:happenedAt>
+            <edm:hasType>Finding</edm:hasType>
+          </edm:Event>
+        </edm:wasPresentAt>
+        <dc:type xml:lang="en">man-made object</dc:type>
+        <edm:type>IMAGE</edm:type>
+        <openData:mouthdiameter>4cm</openData:mouthdiameter>
+        <openData:displayState>foarte bună</openData:displayState>
+        <edm:currentLocation>
+          <foaf:Organization rdf:about="http://opendata.cs.pub.ro/resource/ro/organization/Muzeul_de_Istorie_a_Moldovei_IAȘI">
+            <skos:prefLabel>Muzeul de Istorie a Moldovei - IAȘI</skos:prefLabel>
+            <dc:identifier xml:lang="en">http://ghidulmuzeelor.cimec.ro/muzeeen.asp?ctext=6946501</dc:identifier>
+            <dc:identifier xml:lang="ro">http://ghidulmuzeelor.cimec.ro/muzee.asp?ctext=6946501</dc:identifier>
+          </foaf:Organization>
+        </edm:currentLocation>
+        <dc:subject xml:lang="ro">Celt transilvănean</dc:subject>
+        <dc:title xml:lang="ro">Celt transilvănean, varianta răsăriteană</dc:title>
+      </edm:ProvidedCHO>
+    </edm:aggregatedCHO>
+  </ore:Aggregation>
+  <rdf:Description rdf:about="http://opendata.cs.pub.ro/property/ro/inventoryNumber">
+    <rdfs:subPropertyOf rdf:resource="http://purl.org/dc/elements/1.1/identifier"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/page/dimensions">
+    <rdfs:subPropertyOf rdf:resource="http://purl.org/dc/elements/1.1/description"/>
+  </rdf:Description>
+  <ore:Aggregation rdf:about="http://opendata.cs.pub.ro/resource/ro/aggregation/GUID/002D2C6AFF3B433280012FFE43A40CA4">
+    <edm:object>
+      <edm:WebResource rdf:about="http://clasate.cimec.ro/medium/ARH_520201005_973-67.jpg">
+        <edm:rights rdf:resource="http://www.europeana.eu/rights/rr-f/"/>
+        <dc:format>jpg</dc:format>
+      </edm:WebResource>
+    </edm:object>
+    <edm:isShownBy rdf:resource="http://clasate.cimec.ro/medium/ARH_520201005_973-67.jpg"/>
+    <edm:rights rdf:resource="http://creativecommons.org/licenses/by-sa/4.0/"/>
+    <edm:dataProvider rdf:resource="http://opendata.cs.pub.ro/resource/ro/organization/Institutul_Național_al_Patrimoniului"/>
+    <edm:intermediateProvider rdf:resource="http://opendata.cs.pub.ro/resource/ro/organization_Romanian_Open_Data_Portal"/>
+    <edm:provider rdf:resource="http://opendata.cs.pub.ro/resource/ro/organization_Politehnica_University_of_Bucharest"/>
+    <edm:aggregatedCHO>
+      <edm:ProvidedCHO rdf:about="http://opendata.cs.pub.ro/resource/ro/cho/CIMEC/002D2C6AFF3B433280012FFE43A40CA4">
+        <edm:wasPresentAt>
+          <edm:Event rdf:about="http://opendata.cs.pub.ro/resource/ro/event/Production/CIMEC/002D2C6AFF3B433280012FFE43A40CA4">
+            <edm:occuredAt>
+              <edm:TimeSpan rdf:about="http://dbpedia.org/page/6th_century"/>
+            </edm:occuredAt>
+            <edm:occuredAt>
+              <edm:TimeSpan rdf:about="http://dbpedia.org/page/5th_century"/>
+            </edm:occuredAt>
+            <edm:hasType>Production</edm:hasType>
+          </edm:Event>
+        </edm:wasPresentAt>
+        <edm:hasType xml:lang="ro">arheologie</edm:hasType>
+        <edm:currentLocation>
+          <foaf:Organization rdf:about="http://opendata.cs.pub.ro/resource/ro/organization/Arhiepiscopia_Romano_Catolică_ALBA_IULIA">
+            <skos:prefLabel>Arhiepiscopia Romano-Catolică - ALBA IULIA</skos:prefLabel>
+            <dc:identifier xml:lang="en">http://ghidulmuzeelor.cimec.ro/muzeeen.asp?ctext=520201005</dc:identifier>
+            <dc:identifier xml:lang="ro">http://ghidulmuzeelor.cimec.ro/muzee.asp?ctext=520201005</dc:identifier>
+          </foaf:Organization>
+        </edm:currentLocation>
+        <dcterms:alternative xml:lang="ro">preferred</dcterms:alternative>
+        <j.0:width>3 cm</j.0:width>
+        <edm:type>IMAGE</edm:type>
+        <openData:displayState>mediocră</openData:displayState>
+        <dc:type xml:lang="en">man-made object</dc:type>
+        <openData:inventoryNumber>A-M-31</openData:inventoryNumber>
+        <dc:type xml:lang="ro">artefact</dc:type>
+        <openData:overallDescription xml:lang="ro">Bronz, turnată. Placa are forma unui scut, una dintre laturi este rotunjită și are marginea arcuită, iar în interior au fost ajurate motive în formă de semilună. La capătul rupt s-a mai păstrat unul dintre orificiile care serveau la fixarea plăcii de cureaua centurii.</openData:overallDescription>
+        <dc:title xml:lang="ro">Placă de centură</dc:title>
+        <edm:wasPresentAt>
+          <edm:Event rdf:about="http://opendata.cs.pub.ro/resource/ro/event/Finding/CIMEC/002D2C6AFF3B433280012FFE43A40CA4">
+            <edm:occuredAt>
+              <edm:TimeSpan rdf:about="http://dbpedia.org/page/21st_century"/>
+            </edm:occuredAt>
+            <edm:happenedAt>
+              <edm:Place rdf:about="http://opendata.cs.pub.ro/resource/ro/place/str_Mihai_Viteazul_nr_21_Alba_Iulia_Alba_Alba">
+                <skos:prefLabel>str. Mihai Viteazul nr. 21</skos:prefLabel>
+                <skos:note>point</skos:note>
+              </edm:Place>
+            </edm:happenedAt>
+            <edm:happenedAt>
+              <edm:Place rdf:about="http://opendata.cs.pub.ro/resource/ro/place/Alba_Iulia_Alba_Alba">
+                <skos:prefLabel>Alba Iulia</skos:prefLabel>
+                <skos:note>locality</skos:note>
+              </edm:Place>
+            </edm:happenedAt>
+            <edm:happenedAt>
+              <edm:Place rdf:about="http://opendata.cs.pub.ro/resource/ro/place/Alba">
+                <skos:prefLabel>Alba</skos:prefLabel>
+                <skos:note>county</skos:note>
+              </edm:Place>
+            </edm:happenedAt>
+            <edm:happenedAt>
+              <edm:Place rdf:about="http://opendata.cs.pub.ro/resource/ro/place/Transilvania">
+                <skos:prefLabel>Transilvania</skos:prefLabel>
+                <skos:note>region</skos:note>
+              </edm:Place>
+            </edm:happenedAt>
+            <edm:happenedAt rdf:resource="http://opendata.cs.pub.ro/resource/ro/place/România"/>
+            <edm:hasType>Finding</edm:hasType>
+          </edm:Event>
+        </edm:wasPresentAt>
+        <dc:subject xml:lang="ro">Placă de centură</dc:subject>
+        <edm:hasType xml:lang="en">archaeology</edm:hasType>
+      </edm:ProvidedCHO>
+    </edm:aggregatedCHO>
+  </ore:Aggregation>
+  <ore:Aggregation rdf:about="http://opendata.cs.pub.ro/resource/ro/aggregation/GUID/0019331C06474C68A9E62135E15A22CA">
+    <edm:object>
+      <edm:WebResource rdf:about="http://clasate.cimec.ro/medium/ARH_7035400_696-13.jpg">
+        <edm:rights rdf:resource="http://www.europeana.eu/rights/rr-f/"/>
+        <dc:format>jpg</dc:format>
+      </edm:WebResource>
+    </edm:object>
+    <edm:isShownBy rdf:resource="http://clasate.cimec.ro/medium/ARH_7035400_696-13.jpg"/>
+    <edm:rights rdf:resource="http://creativecommons.org/licenses/by-sa/4.0/"/>
+    <edm:dataProvider rdf:resource="http://opendata.cs.pub.ro/resource/ro/organization/Institutul_Național_al_Patrimoniului"/>
+    <edm:intermediateProvider rdf:resource="http://opendata.cs.pub.ro/resource/ro/organization_Romanian_Open_Data_Portal"/>
+    <edm:provider rdf:resource="http://opendata.cs.pub.ro/resource/ro/organization_Politehnica_University_of_Bucharest"/>
+    <edm:aggregatedCHO>
+      <edm:ProvidedCHO rdf:about="http://opendata.cs.pub.ro/resource/ro/cho/CIMEC/0019331C06474C68A9E62135E15A22CA">
+        <edm:type>IMAGE</edm:type>
+        <dc:type xml:lang="ro">artefact</dc:type>
+        <dc:subject xml:lang="ro">fibulă cu semidisc și picior romboidal</dc:subject>
+        <openData:inventoryNumber>7817</openData:inventoryNumber>
+        <dc:title xml:lang="ro">fibulă cu semidisc și picior romboidal</dc:title>
+        <edm:hasType xml:lang="ro">arheologie</edm:hasType>
+        <openData:overallDescription xml:lang="ro">Fibulă care face parte din tipul celor cu semidisc și picior romboidal; executată din argint, placată cu foiță de aur; pe picior foița de aur lipsește; s-a păstrat numai pe semidisc și pe arcul fibulei; acul fibulei este lipsă; pe semidisc are trei almandine fixate în tehnica en cabochon; placa de aur este decorată cu puncte în tehnica au repousse de jur împrejurul almandinelor din partea de jos sunt înconjurate de un decor circular executat în aceeași tehnică de mai sus; almandina din mjiloc încadrată de un decor sub formă de lacrimă; plăcuța de aur fixată pe margine cu o sârmă perlată; pe arc foița de aur este fixată cu două inele din sârmă perlată.</openData:overallDescription>
+        <dc:subject xml:lang="ro">Fibulă cu semidisc</dc:subject>
+        <dc:type xml:lang="en">man-made object</dc:type>
+        <j.0:width>33 mm</j.0:width>
+        <edm:hasType xml:lang="en">archaeology</edm:hasType>
+        <edm:wasPresentAt>
+          <edm:Event rdf:about="http://opendata.cs.pub.ro/resource/ro/event/Production/CIMEC/0019331C06474C68A9E62135E15A22CA">
+            <edm:occuredAt>
+              <edm:TimeSpan rdf:about="http://dbpedia.org/page/4th_century"/>
+            </edm:occuredAt>
+            <edm:isRelatedTo xml:lang="ro">cultură: Sântana de Mureș-Cerneahov</edm:isRelatedTo>
+            <edm:isRelatedTo xml:lang="en">culture: Sântana de Mureș-Cerneahov</edm:isRelatedTo>
+            <edm:hasType>Production</edm:hasType>
+          </edm:Event>
+        </edm:wasPresentAt>
+        <edm:currentLocation>
+          <foaf:Organization rdf:about="http://opendata.cs.pub.ro/resource/ro/organization/Muzeul_Orășenesc_TECUCI">
+            <skos:prefLabel>Muzeul Orășenesc - TECUCI</skos:prefLabel>
+            <dc:identifier xml:lang="en">http://ghidulmuzeelor.cimec.ro/muzeeen.asp?ctext=7035400</dc:identifier>
+            <dc:identifier xml:lang="ro">http://ghidulmuzeelor.cimec.ro/muzee.asp?ctext=7035400</dc:identifier>
+          </foaf:Organization>
+        </edm:currentLocation>
+        <j.0:fineness>AG</j.0:fineness>
+        <j.0:weight>9,23 gr</j.0:weight>
+        <edm:wasPresentAt>
+          <edm:Event rdf:about="http://opendata.cs.pub.ro/resource/ro/event/Finding/CIMEC/0019331C06474C68A9E62135E15A22CA">
+            <edm:occuredAt rdf:resource="http://dbpedia.org/page/20th_century"/>
+            <edm:happenedAt>
+              <edm:Place rdf:about="http://opendata.cs.pub.ro/resource/ro/place/BARCEA_Barcea_Galați">
+                <skos:prefLabel>BARCEA</skos:prefLabel>
+                <skos:note>locality</skos:note>
+              </edm:Place>
+            </edm:happenedAt>
+            <edm:happenedAt>
+              <edm:Place rdf:about="http://opendata.cs.pub.ro/resource/ro/place/Barcea_Galați">
+                <skos:prefLabel>Barcea</skos:prefLabel>
+                <skos:note>commune</skos:note>
+              </edm:Place>
+            </edm:happenedAt>
+            <edm:happenedAt>
+              <edm:Place rdf:about="http://opendata.cs.pub.ro/resource/ro/place/Galați">
+                <skos:prefLabel>Galați</skos:prefLabel>
+                <skos:note>county</skos:note>
+              </edm:Place>
+            </edm:happenedAt>
+            <edm:happenedAt>
+              <edm:Place rdf:about="http://opendata.cs.pub.ro/resource/ro/place/Sudul_Moldovei">
+                <skos:prefLabel>Sudul Moldovei</skos:prefLabel>
+                <skos:note>region</skos:note>
+              </edm:Place>
+            </edm:happenedAt>
+            <edm:happenedAt rdf:resource="http://opendata.cs.pub.ro/resource/ro/place/România"/>
+            <edm:hasType>Finding</edm:hasType>
+          </edm:Event>
+        </edm:wasPresentAt>
+        <dc:subject xml:lang="ro">Accesorii vestimentare</dc:subject>
+        <dcterms:alternative xml:lang="ro">preferred</dcterms:alternative>
+        <j.0:length>69 mm</j.0:length>
+        <openData:displayState>bună</openData:displayState>
+        <openData:thickness>3 mm</openData:thickness>
+      </edm:ProvidedCHO>
+    </edm:aggregatedCHO>
+  </ore:Aggregation>
+  <ore:Aggregation rdf:about="http://opendata.cs.pub.ro/resource/ro/aggregation/GUID/00080E574196499AA467EED326360881">
+    <edm:object>
+      <edm:WebResource rdf:about="http://clasate.cimec.ro/medium/11180.jpg">
+        <edm:rights rdf:resource="http://www.europeana.eu/rights/rr-f/"/>
+        <dc:format>jpg</dc:format>
+      </edm:WebResource>
+    </edm:object>
+    <edm:isShownBy rdf:resource="http://clasate.cimec.ro/medium/11180.jpg"/>
+    <edm:rights rdf:resource="http://creativecommons.org/licenses/by-sa/4.0/"/>
+    <edm:dataProvider rdf:resource="http://opendata.cs.pub.ro/resource/ro/organization/Institutul_Național_al_Patrimoniului"/>
+    <edm:intermediateProvider rdf:resource="http://opendata.cs.pub.ro/resource/ro/organization_Romanian_Open_Data_Portal"/>
+    <edm:provider rdf:resource="http://opendata.cs.pub.ro/resource/ro/organization_Politehnica_University_of_Bucharest"/>
+    <edm:aggregatedCHO>
+      <edm:ProvidedCHO rdf:about="http://opendata.cs.pub.ro/resource/ro/cho/CIMEC/00080E574196499AA467EED326360881">
+        <openData:inventoryNumber>11180</openData:inventoryNumber>
+        <edm:wasPresentAt>
+          <edm:Event rdf:about="http://opendata.cs.pub.ro/resource/ro/event/Production/CIMEC/00080E574196499AA467EED326360881">
+            <edm:occuredAt>
+              <edm:TimeSpan rdf:about="http://dbpedia.org/page/4th_century_BC"/>
+            </edm:occuredAt>
+            <edm:isRelatedTo>
+              <skos:Concept rdf:about="http://opendata.cs.pub.ro/resource/ro/technique/ciocănire">
+                <skos:note>technique</skos:note>
+                <skos:prefLabel xml:lang="ro">ciocănire</skos:prefLabel>
+              </skos:Concept>
+            </edm:isRelatedTo>
+            <edm:isRelatedTo>
+              <skos:Concept rdf:about="http://opendata.cs.pub.ro/resource/ro/material/argint">
+                <skos:note>material</skos:note>
+                <skos:prefLabel xml:lang="ro">argint</skos:prefLabel>
+              </skos:Concept>
+            </edm:isRelatedTo>
+            <edm:isRelatedTo xml:lang="ro">atelier: Traco-getică</edm:isRelatedTo>
+            <edm:isRelatedTo xml:lang="en">workshop: Traco-getică</edm:isRelatedTo>
+            <edm:hasType>Production</edm:hasType>
+          </edm:Event>
+        </edm:wasPresentAt>
+        <openData:overallDescription xml:lang="ro">Pocal-situla cu corp din două trunchiuri de con. Decor cu ghirlandă de capete de vulturi, doi țapi cu opt picioare. Pe fund, animal cu mistreț în gheare. Degradări fizico-mecanice. Deformare mecanică. Două crăpături pe buză de cca 0,5 cm. Degradări chimice. Restaurare prin lipire cu rășină și completarea locurilor libere cu strat de rășină la interiorul vasului.</openData:overallDescription>
+        <dcterms:alternative xml:lang="ro">preferred</dcterms:alternative>
+        <j.0:weight>227 g</j.0:weight>
+        <dc:subject xml:lang="ro">Pocal-situla</dc:subject>
+        <edm:hasType xml:lang="ro">arheologie</edm:hasType>
+        <j.0:dimensions>D. sup. = 98 mm; Î =165 mm</j.0:dimensions>
+        <dc:title xml:lang="ro">Pocal-situla</dc:title>
+        <dc:type xml:lang="ro">artefact</dc:type>
+        <openData:comments xml:lang="ro">Degradări fizico-mecanice. Deformare mecanică. Două crăpături pe buză de cca 0,5 cm. Degradări chimice. Restaurare prin lipire cu rășină și completarea locurilor libere cu strat de rășină la interiorul vasului.</openData:comments>
+        <edm:currentLocation>
+          <foaf:Organization rdf:about="http://opendata.cs.pub.ro/resource/ro/organization/Muzeul_Național_de_Istorie_a_României_BUCUREȘTI">
+            <skos:prefLabel>Muzeul Național de Istorie a României - BUCUREȘTI</skos:prefLabel>
+            <dc:identifier xml:lang="en">http://ghidulmuzeelor.cimec.ro/muzeeen.asp?ctext=7300100</dc:identifier>
+            <dc:identifier xml:lang="ro">http://ghidulmuzeelor.cimec.ro/muzee.asp?ctext=7300100</dc:identifier>
+          </foaf:Organization>
+        </edm:currentLocation>
+        <edm:hasType xml:lang="en">archaeology</edm:hasType>
+        <edm:type>IMAGE</edm:type>
+        <dc:type xml:lang="en">man-made object</dc:type>
+      </edm:ProvidedCHO>
+    </edm:aggregatedCHO>
+  </ore:Aggregation>
+  <edm:Agent rdf:about="http://opendata.cs.pub.ro/resource/ro/agent/discoverer/Stela_Țau_Mircea_Nicu">
+    <edm:wasPresentAt rdf:resource="http://opendata.cs.pub.ro/resource/ro/event/Finding/CIMEC/0019331C06474C68A9E62135E15A22CA"/>
+    <skos:prefLabel xml:lang="ro">descoperitor</skos:prefLabel>
+    <skos:prefLabel xml:lang="en">discoverer</skos:prefLabel>
+    <foaf:name>Stela Țau, Mircea Nicu</foaf:name>
+  </edm:Agent>
+  <rdf:Description rdf:about="http://opendata.cs.pub.ro/property/ro/thickness">
+    <rdfs:subPropertyOf rdf:resource="http://purl.org/dc/elements/1.1/description"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://opendata.cs.pub.ro/property/ro/mouthdiameter">
+    <rdfs:subPropertyOf rdf:resource="http://purl.org/dc/elements/1.1/description"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://opendata.cs.pub.ro/property/ro/displayState">
+    <rdfs:subPropertyOf rdf:resource="http://purl.org/dc/elements/1.1/description"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/page/width">
+    <rdfs:subPropertyOf rdf:resource="http://purl.org/dc/elements/1.1/description"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/page/weight">
+    <rdfs:subPropertyOf rdf:resource="http://purl.org/dc/elements/1.1/description"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://opendata.cs.pub.ro/property/ro/comments">
+    <rdfs:subPropertyOf rdf:resource="http://purl.org/dc/elements/1.1/description"/>
+  </rdf:Description>
+  <edm:Agent rdf:about="http://opendata.cs.pub.ro/resource/ro/agent/discoverer/Petre_Aurelian">
+    <edm:wasPresentAt>
+      <edm:Event rdf:about="http://opendata.cs.pub.ro/resource/ro/event/Finding/CIMEC/00138C33DCAC402EA03B3641D66AE6FF">
+        <edm:happenedAt>
+          <edm:Place rdf:about="http://opendata.cs.pub.ro/resource/ro/place/Beroe_Piatra_Frecăței_Ostrov_Ostrov_Tulcea">
+            <skos:prefLabel>Beroe Piatra Frecăței</skos:prefLabel>
+            <skos:note>point</skos:note>
+          </edm:Place>
+        </edm:happenedAt>
+        <edm:happenedAt>
+          <edm:Place rdf:about="http://opendata.cs.pub.ro/resource/ro/place/Ostrov_Ostrov_Tulcea">
+            <skos:prefLabel>Ostrov</skos:prefLabel>
+            <skos:note>locality</skos:note>
+          </edm:Place>
+        </edm:happenedAt>
+        <edm:happenedAt>
+          <edm:Place rdf:about="http://opendata.cs.pub.ro/resource/ro/place/Ostrov_Tulcea">
+            <skos:prefLabel>Ostrov</skos:prefLabel>
+            <skos:note>commune</skos:note>
+          </edm:Place>
+        </edm:happenedAt>
+        <edm:happenedAt>
+          <edm:Place rdf:about="http://opendata.cs.pub.ro/resource/ro/place/Tulcea">
+            <skos:prefLabel>Tulcea</skos:prefLabel>
+            <skos:note>county</skos:note>
+          </edm:Place>
+        </edm:happenedAt>
+        <edm:happenedAt>
+          <edm:Place rdf:about="http://opendata.cs.pub.ro/resource/ro/place/Dobrogea">
+            <skos:prefLabel>Dobrogea</skos:prefLabel>
+            <skos:note>region</skos:note>
+          </edm:Place>
+        </edm:happenedAt>
+        <edm:happenedAt rdf:resource="http://opendata.cs.pub.ro/resource/ro/place/România"/>
+        <edm:hasType>Finding</edm:hasType>
+      </edm:Event>
+    </edm:wasPresentAt>
+    <skos:prefLabel xml:lang="ro">descoperitor</skos:prefLabel>
+    <skos:prefLabel xml:lang="en">discoverer</skos:prefLabel>
+    <foaf:name>Petre Aurelian</foaf:name>
+  </edm:Agent>
+  <rdf:Description rdf:about="http://dbpedia.org/page/fineness">
+    <rdfs:subPropertyOf rdf:resource="http://purl.org/dc/elements/1.1/description"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://dbpedia.org/page/length">
+    <rdfs:subPropertyOf rdf:resource="http://purl.org/dc/elements/1.1/description"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://opendata.cs.pub.ro/property/ro/overallDescription">
+    <rdfs:subPropertyOf rdf:resource="http://purl.org/dc/elements/1.1/description"/>
+  </rdf:Description>
+  <edm:Agent rdf:about="http://opendata.cs.pub.ro/resource/ro/agent/discoverer/Marcu_Daniela">
+    <edm:wasPresentAt rdf:resource="http://opendata.cs.pub.ro/resource/ro/event/Finding/CIMEC/002D2C6AFF3B433280012FFE43A40CA4"/>
+    <skos:prefLabel xml:lang="ro">descoperitor</skos:prefLabel>
+    <skos:prefLabel xml:lang="en">discoverer</skos:prefLabel>
+    <foaf:name>Marcu Daniela</foaf:name>
+  </edm:Agent>
+  <edm:Agent rdf:about="http://opendata.cs.pub.ro/resource/ro/agent/discoverer/Șt_Mititelu">
+    <edm:wasPresentAt rdf:resource="http://opendata.cs.pub.ro/resource/ro/event/Finding/CIMEC/003567D33B3B495F8BBD5872A58039D1"/>
+    <skos:prefLabel xml:lang="ro">descoperitor</skos:prefLabel>
+    <skos:prefLabel xml:lang="en">discoverer</skos:prefLabel>
+    <foaf:name>Șt.Mititelu</foaf:name>
+  </edm:Agent>
+  <ore:Aggregation rdf:about="http://opendata.cs.pub.ro/resource/ro/aggregation/GUID/00138C33DCAC402EA03B3641D66AE6FF">
+    <edm:object>
+      <edm:WebResource rdf:about="http://clasate.cimec.ro/medium/ARH_6975507_688-68.jpg">
+        <edm:rights rdf:resource="http://www.europeana.eu/rights/rr-f/"/>
+        <dc:format>jpg</dc:format>
+      </edm:WebResource>
+    </edm:object>
+    <edm:isShownBy rdf:resource="http://clasate.cimec.ro/medium/ARH_6975507_688-68.jpg"/>
+    <edm:rights rdf:resource="http://creativecommons.org/licenses/by-sa/4.0/"/>
+    <edm:dataProvider rdf:resource="http://opendata.cs.pub.ro/resource/ro/organization/Institutul_Național_al_Patrimoniului"/>
+    <edm:intermediateProvider rdf:resource="http://opendata.cs.pub.ro/resource/ro/organization_Romanian_Open_Data_Portal"/>
+    <edm:provider rdf:resource="http://opendata.cs.pub.ro/resource/ro/organization_Politehnica_University_of_Bucharest"/>
+    <edm:aggregatedCHO>
+      <edm:ProvidedCHO rdf:about="http://opendata.cs.pub.ro/resource/ro/cho/CIMEC/00138C33DCAC402EA03B3641D66AE6FF">
+        <edm:type>IMAGE</edm:type>
+        <openData:inventoryNumber>2926, 11521-11654</openData:inventoryNumber>
+        <dc:subject xml:lang="ro">Podoabe</dc:subject>
+        <edm:currentLocation>
+          <foaf:Organization rdf:about="http://opendata.cs.pub.ro/resource/ro/organization/Muzeul_de_Istorie_și_Arheologie_TULCEA">
+            <skos:prefLabel>Muzeul de Istorie și Arheologie - TULCEA</skos:prefLabel>
+            <dc:identifier xml:lang="en">http://ghidulmuzeelor.cimec.ro/muzeeen.asp?ctext=6975507</dc:identifier>
+            <dc:identifier xml:lang="ro">http://ghidulmuzeelor.cimec.ro/muzee.asp?ctext=6975507</dc:identifier>
+          </foaf:Organization>
+        </edm:currentLocation>
+        <dc:type xml:lang="en">man-made object</dc:type>
+        <dcterms:alternative xml:lang="ro">preferred</dcterms:alternative>
+        <dc:title xml:lang="ro">Colier</dc:title>
+        <edm:wasPresentAt rdf:resource="http://opendata.cs.pub.ro/resource/ro/event/Finding/CIMEC/00138C33DCAC402EA03B3641D66AE6FF"/>
+        <openData:displayState>bună</openData:displayState>
+        <edm:hasType xml:lang="en">archaeology</edm:hasType>
+        <edm:wasPresentAt>
+          <edm:Event rdf:about="http://opendata.cs.pub.ro/resource/ro/event/Production/CIMEC/00138C33DCAC402EA03B3641D66AE6FF">
+            <edm:occuredAt rdf:resource="http://dbpedia.org/page/5th_century"/>
+            <edm:occuredAt rdf:resource="http://dbpedia.org/page/4th_century"/>
+            <edm:isRelatedTo xml:lang="ro">cultură: romană târzie</edm:isRelatedTo>
+            <edm:isRelatedTo xml:lang="en">culture: romană târzie</edm:isRelatedTo>
+            <edm:hasType>Production</edm:hasType>
+          </edm:Event>
+        </edm:wasPresentAt>
+        <dc:subject xml:lang="ro">Colier</dc:subject>
+        <dc:type xml:lang="ro">artefact</dc:type>
+        <j.0:length>57 cm</j.0:length>
+        <openData:overallDescription xml:lang="ro">Colier din mărgele de sticlă și rășină naturală. Culori: verde, bej, maron, negru, bleu-transparent. Forme globulare, cilindrice neregulate, patrulatere.</openData:overallDescription>
+        <edm:hasType xml:lang="ro">arheologie</edm:hasType>
+      </edm:ProvidedCHO>
+    </edm:aggregatedCHO>
+  </ore:Aggregation>
+</rdf:RDF>

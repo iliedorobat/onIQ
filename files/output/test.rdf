@@ -1,0 +1,9 @@
+@prefix edm: <http://www.europeana.eu/schemas/edm/> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+
+<http://opendata.cs.pub.ro/resource/ro/organization/Institutul_Național_al_Patrimoniului> a foaf:Organization ;
+    edm:country "tt"@en,
+        "tt"@ro ;
+    skos:prefLabel "tt"@ro .
+

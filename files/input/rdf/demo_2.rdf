@@ -1,0 +1,18 @@
+<rdf:RDF
+    xmlns:dcterms="http://purl.org/dc/terms/"
+    xmlns:dc="http://purl.org/dc/elements/1.1/"
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:openData="http://opendata.cs.pub.ro/property/ro/"
+    xmlns:ore="http://www.openarchives.org/ore/terms/"
+    xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+    xmlns:dbpedia="http://dbpedia.org/page"
+    xmlns:edm="http://www.europeana.eu/schemas/edm/"
+    xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+    xmlns:foaf="http://xmlns.com/foaf/0.1/"
+    xmlns:j.0="http://dbpedia.org/page/">
+  <foaf:Organization rdf:about="http://opendata.cs.pub.ro/resource/ro/organization/Institutul_Național_al_Patrimoniului">
+    <skos:prefLabel xml:lang="ro">Institutul Național al Patrimoniului</skos:prefLabel>
+    <edm:country xml:lang="ro">România</edm:country>
+    <edm:country xml:lang="en">Romania</edm:country>
+  </foaf:Organization>
+</rdf:RDF>
