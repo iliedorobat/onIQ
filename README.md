@@ -1,2 +1,2 @@
 # semIQ
-Intelligent Querying Framework for Semantic Data Warehouses
+Intelligent Querying Framework for Semantic Data Stores
