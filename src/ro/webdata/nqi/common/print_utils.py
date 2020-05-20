@@ -1,3 +1,24 @@
+def print_statements(statements):
+    print()
+
+    for statement in statements:
+        print(f'statement:')
+
+        for key in statement:
+            stmt_value = statement[key]
+            key = str(key) + ":"
+
+            if isinstance(stmt_value, list) and len(stmt_value) > 0:
+                print(f'\t{key}')
+
+                for key_2 in stmt_value:
+                    print(f'\t\t{key_2}')
+            else:
+                print(f'\t{key:{20}} {stmt_value}')
+
+        print()
+
+
 def print_tokens(document):
     print(f'--------------------------------------------------------------------------------------------------'
           f'\n{"text":{15}}|{"lemma_":{15}}|{"pos_":{10}}|{"tag_":{10}}|'

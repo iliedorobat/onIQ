@@ -5,7 +5,17 @@ from langdetect import detect
 
 
 ENDPOINT = "http://localhost:7200/repositories/eCHM"
-QUERY = 'Display the artefacts hosted in Romania'
+# QUERY = 'Display the artefacts hosted in Romania'
+# QUERY = 'Where can I find some interesting artefacts'
+# QUERY = 'Where the artefacts are?'
+# QUERY = 'What are some of the most interesting challenges of natural language processing?'
+# QUERY = 'Which are the most visited museums which exposed at least 10 but not more than 20 artifacts'
+# TODO: handle comparison operators
+# QUERY = 'Which are the most visited museums which exposed >= 10 artifacts'
+# TODO: handle the and/or
+# QUERY = 'What tools and techniques does the Python programming language provide for such work?'
+QUERY = 'Find the student name and the student age where instructor name is "Christian"'
+# QUERY = 'Give me the most beautiful museums'
 SHOULD_PRINT = True
 
 # https://blog.einstein.ai/how-to-talk-to-your-database/
