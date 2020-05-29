@@ -37,7 +37,7 @@ WHERE {{
     # return generated_sparql_query.strip()
 
     statements = get_statements(query, should_print)
-    print_statements(statements)
+    print_statements(statements, 'statement')
 
     return ""
 

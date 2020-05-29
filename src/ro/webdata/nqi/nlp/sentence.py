@@ -1,3 +1,4 @@
+from ro.webdata.nqi.common.constants import PRONOUNS, SENTENCE_TYPE
 from ro.webdata.nqi.nlp.nlp import get_wh_words
 
 
@@ -39,7 +40,7 @@ def get_nouns(sentence):
     return nouns
 
 
-def get_type(document, sentence, has_main_sentence):
+def get_type(document, sentence):
     """
     Get the type of sentence:\n
     - wh_start: the fist sentence if the query starts with a WH-word
@@ -53,37 +54,52 @@ def get_type(document, sentence, has_main_sentence):
 
     :param document: The document
     :param sentence: The sentence
-    :param has_main_sentence: A flag which specifies if the main sentence has been already detected
     :return: The type of the sentence
     """
 
-    wh_words = get_wh_words(document)
-    root = sentence.root
-
-    if root in wh_words:
-        return "wh_start"
+    if sentence.text.lower() in PRONOUNS:
+        return SENTENCE_TYPE["PRONOUN"]
+    elif sentence.root in get_wh_words(document):
+        return SENTENCE_TYPE["WH_START"]
+    elif is_main_sentence(document, sentence) is True:
+        return SENTENCE_TYPE["MAIN"]
     else:
-        if has_main_sentence is False and root.tag_[0:2] == "NN":
-            return "main"
-        else:
-            return "secondary"
+        return SENTENCE_TYPE["SECONDARY"]
 
 
-def get_verb(sentence, verb_list):
+def is_main_sentence(document, sentence):
     """
-    TODO: update the documentation
-    Get the verb in a sentence
+    TODO: documentation
+    """
 
-    :param sentence: The sentence
-    :param verb_list: The list of verbs
-    :return: The verb
+    # Get the list of wh determiners excepting the first one which is used for asking
+    wh_determiners = [token for token in get_wh_words(document) if token.i > 0]
+    determiners = list(
+        filter(
+            lambda token: token.i < sentence.start, wh_determiners
+        )
+    )
+
+    return len(determiners) == 0
+
+
+def get_action(document, sentence, verb_list):
+    """
+    TODO: documentation
+    Get the verb in a sentence
     """
 
     index_range = range(0, len(verb_list))
 
     for index in reversed(index_range):
-        verb_item = verb_list[index]
+        verb = verb_list[index]
 
-        if verb_item["is_available"] is True and sentence.start > verb_item["token"].i:
-            verb_list[index]["is_available"] = False
-            return verb_list[index]["token"]
+        if sentence.start > verb["token"].i:
+            if is_main_sentence(document, sentence) is True:
+                verb["is_available"] = False
+                verb["is_main"] = True
+                return verb["token"]
+            else:
+                if verb["is_main"] is False and verb["is_available"] is True:
+                    verb["is_available"] = False
+                    return verb["token"]

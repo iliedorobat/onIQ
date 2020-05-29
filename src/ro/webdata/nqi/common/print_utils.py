@@ -1,8 +1,8 @@
-def print_statements(statements):
+def print_statements(statements, description):
     print()
 
     for statement in statements:
-        print(f'statement:')
+        print(f'{description}:')
 
         for key in statement:
             stmt_value = statement[key]

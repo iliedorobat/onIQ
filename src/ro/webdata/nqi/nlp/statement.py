@@ -1,9 +1,10 @@
 import spacy
 from iteration_utilities import unique_everseen
 
-from ro.webdata.nqi.common.print_utils import print_tokens
+from ro.webdata.nqi.common.constants import SENTENCE_TYPE
+from ro.webdata.nqi.common.print_utils import print_statements, print_tokens
 from ro.webdata.nqi.nlp.nlp import get_verbs, retokenize
-from ro.webdata.nqi.nlp.sentence import get_cardinals, get_nouns, get_type, get_verb
+from ro.webdata.nqi.nlp.sentence import get_action, get_cardinals, get_nouns, get_type
 
 nlp = spacy.load('../../../../lib/en_core_web_sm/en_core_web_sm-2.2.5')
 
@@ -21,8 +22,8 @@ def get_statements(query, should_print=False):
             {"dependency": "compound", "is_root": False, "value": "student"},\n
             {"dependency": "dobj", "is_root": True, "value": "name"}\n
         ],\n
-        "sentence_type": "main",\n
-        "sentence_value": "the student name"\n
+        "sentence": "the student name"\n",
+        "statement_type": SENTENCE_TYPE["MAIN"]\n"
     }
 
     :param query: The query provided by the user in natural language
@@ -36,28 +37,28 @@ def get_statements(query, should_print=False):
     for sentence in document.sents:
         retokenize(document, sentence)
 
+        verb_list = [
+            {"is_available": True, "is_main": False, "token": verb}
+            for verb in get_verbs(sentence)
+            if verb.text.lower() not in ["do", "does", "did"]
+        ]
+
         if should_print:
             print_tokens(sentence)
             print(f'\nsentence: {sentence}')
-
-        verb_list = [
-            {"is_available": True, "token": verb}
-            for verb in get_verbs(sentence)
-        ]
+            print_statements(verb_list, 'verb')
 
         for chunk in document.noun_chunks:
-            main_sentences = list(filter(lambda item: item["sentence_type"] == "main", statements))
-            has_main_sentence = len(main_sentences) > 0
-
             statement = {
-                "action": get_verb(chunk, verb_list),
+                "action": get_action(document, chunk, verb_list),
                 "cardinals": get_cardinals(chunk),
                 "nouns": get_nouns(chunk),
-                "sentence_type": get_type(document, chunk, has_main_sentence),
-                "sentence_value": chunk
+                "sentence": chunk,
+                "statement_type": get_type(document, chunk)
             }
 
-            if bool(statement):
+            # avoid adding a statement which consists only in pronouns or wh-words
+            if bool(statement) and statement["statement_type"] not in [SENTENCE_TYPE["PRONOUN"], SENTENCE_TYPE["WH_START"]]:
                 statements.append(statement)
 
         statements = list(unique_everseen(statements))
