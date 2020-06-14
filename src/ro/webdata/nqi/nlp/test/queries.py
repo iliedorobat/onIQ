@@ -11,6 +11,6 @@ QUERY_GENERAL_1 = "What are some of the most interesting challenges of natural l
 QUERY_STUD_1 = "Find the student name and the student age where instructor name is \"Arthur\""
 QUERY_STUD_2 = "Find the student name, the student address or the age where instructor name is Arthur and the museum name is \"Amsterdam\""
 # TODO: ... where instructor name is Arthur or Amsterdam
-QUERY_STUD_3 = "Find the student name, the student address or the age where instructor name is Arthur or is Amsterdam"
+QUERY_STUD_3 = "Find the student name, the student address or the age where instructor name is Arthur or isn\'t Andrew"
 QUERY_STUD_4 = "Find the student name, the student address or the age which have 20 friends"
 QUERY_STUD_5 = "Find the student name, the student address or the age where instructor name is Arthur and has classes"

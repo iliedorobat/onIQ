@@ -39,8 +39,10 @@ PRONOUNS = [
 
 
 SENTENCE_TYPE = {
-    "MAIN": "main sentence",
+    "SELECT_CLAUSE": "select clause",
+    "WHERE_CLAUSE": "where clause",
+
     "PRONOUN": "pronoun sentence",
-    "SECONDARY": "secondary sentence",
+    "WH_PRONOUN_START": "WH Pronoun start sentence",
     "WH_START": "WH start sentence"
 }

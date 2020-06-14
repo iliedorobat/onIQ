@@ -116,7 +116,7 @@ def get_ns_name(uri):
 
 
 def get_ns_label(ns_name):
-    if ns_name == "http://opendata.cs.pub.ro/property/ro/":
+    if ns_name == "http://opendata.cs.pub.ro/property/":
         return "opendata"
     elif ns_name == "http://purl.org/dc/elements/1.1/":
         return "dc"
@@ -128,6 +128,8 @@ def get_ns_label(ns_name):
         return "rdf"
     elif ns_name == "http://www.w3.org/2000/01/rdf-schema#":
         return "rdfs"
+    elif ns_name == "http://www.w3.org/2002/07/owl#":
+        return "owl";
     elif ns_name == "http://www.w3.org/2004/02/skos/core#":
         return "skos"
     elif ns_name == "http://xmlns.com/foaf/0.1/":

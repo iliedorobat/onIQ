@@ -28,3 +28,4 @@ def print_tokens(document):
         print(f'{token.text:{15}}|{token.lemma_:{15}}|{token.pos_:{10}}|{token.tag_:{10}}|{token.dep_:{10}}|'
               f'{token.shape_:{10}}|{token.is_alpha:{10}}|{token.is_stop:{10}}')
     print('--------------------------------------------------------------------------------------------------')
+    print(f'sentence: {document}')

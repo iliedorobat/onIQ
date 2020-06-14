@@ -1,10 +1,12 @@
 import spacy
+from spacy import displacy
 
 import ro.webdata.nqi.rdf.graph_processor as graph
 from ro.webdata.nqi.common.print_utils import print_statements
 from ro.webdata.nqi.nlp.statement import get_statements
 
 nlp = spacy.load('../../../../lib/en_core_web_sm/en_core_web_sm-2.2.5')
+# nlp = spacy.load('../../../../lib/en_core_web_md/en_core_web_md-2.2.5')
 
 
 # TODO:
@@ -24,7 +26,7 @@ WHERE {{
     subject_var = "?s"
 
     # filter_statement = prepare_filer_statement(endpoint, query, should_print)
-    # prefixes = prepare_query_prefixes(namespaces)
+    prefixes = prepare_query_prefixes(namespaces)
     # where_block = prepare_query_where_block(properties, subject_var)
     #
     # generated_sparql_query = sparql_query.format(
@@ -37,7 +39,11 @@ WHERE {{
     # return generated_sparql_query.strip()
 
     statements = get_statements(query, should_print)
-    print_statements(statements, 'statement')
+    if should_print:
+        print_statements(statements, 'statement')
+
+    nlp_query = nlp(query)
+    # displacy.serve(nlp_query, style="dep")
 
     return ""
 

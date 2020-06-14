@@ -1,15 +1,14 @@
 import spacy
 from iteration_utilities import unique_everseen
 
-from ro.webdata.nqi.common.constants import SENTENCE_TYPE
+from ro.webdata.nqi.common.constants import PRONOUNS, SENTENCE_TYPE
 from ro.webdata.nqi.common.print_utils import print_statements, print_tokens
-from ro.webdata.nqi.nlp.nlp import get_verbs, retokenize
-from ro.webdata.nqi.nlp.sentence import get_action, get_cardinals, get_nouns, get_type
+from ro.webdata.nqi.nlp.nlp_utils import get_wh_pronouns, get_wh_words, retokenize
+from ro.webdata.nqi.nlp.sentence import get_action, get_actions, get_cardinals, get_nouns, get_preposition
 
 nlp = spacy.load('../../../../lib/en_core_web_sm/en_core_web_sm-2.2.5')
 
 
-# TODO: lemmatization
 def get_statements(query, should_print=False):
     """
     TODO: update the documentation
@@ -23,7 +22,7 @@ def get_statements(query, should_print=False):
             {"dependency": "dobj", "is_root": True, "value": "name"}\n
         ],\n
         "sentence": "the student name"\n",
-        "statement_type": SENTENCE_TYPE["MAIN"]\n"
+        "statement_type": SENTENCE_TYPE["SELECT_CLAUSE"]\n"
     }
 
     :param query: The query provided by the user in natural language
@@ -36,31 +35,84 @@ def get_statements(query, should_print=False):
 
     for sentence in document.sents:
         retokenize(document, sentence)
-
-        verb_list = [
-            {"is_available": True, "is_main": False, "token": verb}
-            for verb in get_verbs(sentence)
-            if verb.text.lower() not in ["do", "does", "did"]
-        ]
+        actions = get_actions(sentence)
 
         if should_print:
             print_tokens(sentence)
-            print(f'\nsentence: {sentence}')
-            print_statements(verb_list, 'verb')
+            print_statements(actions, 'actions')
 
-        for chunk in document.noun_chunks:
-            statement = {
-                "action": get_action(document, chunk, verb_list),
-                "cardinals": get_cardinals(chunk),
-                "nouns": get_nouns(chunk),
-                "sentence": chunk,
-                "statement_type": get_type(document, chunk)
-            }
+        chunks = list(document.noun_chunks)
+        for chunk_index in range(0, len(chunks)):
+            chunk = chunks[chunk_index]
+            prev_chunk = get_prev_chunk(chunks, chunk_index)
+            preposition = get_preposition(sentence, chunk)
 
-            # avoid adding a statement which consists only in pronouns or wh-words
-            if bool(statement) and statement["statement_type"] not in [SENTENCE_TYPE["PRONOUN"], SENTENCE_TYPE["WH_START"]]:
-                statements.append(statement)
+            # preposition.i > 1 (which of the museums... => preposition.i == 1)
+            if preposition is not None and preposition.i > 1:
+                start_index = prev_chunk[0].i
+                end_index = chunk[len(chunk) - 1].i + 1
+                statements[len(statements) - 1]["phrase"] = sentence[start_index: end_index]
+            else:
+                cardinals = get_cardinals(chunk)
+                statement_type = get_statement_type(chunks, chunk_index, statements)
+                # TODO: move the statement_type inside of get_action method
+                action = get_action(sentence, chunks, chunk_index, actions, statements, statement_type)
 
-        statements = list(unique_everseen(statements))
+                statements.append({
+                    "action": action,
+                    "cardinals": cardinals,
+                    "phrase": chunk,
+                    "statement_type": statement_type
+                })
+
+    statements = list(unique_everseen(statements))
+    # avoid adding a statement which consists only in pronouns or wh-words
+    statements = list(
+        filter(
+            lambda statement: statement["statement_type"] not in [
+                  # WH_PRONOUN_START ???
+                SENTENCE_TYPE["PRONOUN"], SENTENCE_TYPE["WH_START"], SENTENCE_TYPE["WH_PRONOUN_START"]
+            ], statements
+        )
+    )
 
     return statements
+
+
+def get_prev_chunk(chunks, chunk_index):
+    if chunk_index > 0:
+        return chunks[chunk_index - 1]
+    return None
+
+
+def get_statement_type(chunks, chunk_index, statements):
+    chunk = chunks[chunk_index]
+
+    if chunk.text.lower() in PRONOUNS:
+        return SENTENCE_TYPE["PRONOUN"]
+    elif chunk.root in get_wh_pronouns(chunk):
+        return SENTENCE_TYPE["WH_PRONOUN_START"]
+    elif chunk.root in get_wh_words(chunk):
+        return SENTENCE_TYPE["WH_START"]
+    # if the type of the first sentence is not SENTENCE_TYPE["PRONOUN"] or SENTENCE_TYPE["WH_START"],
+    # then the target subjects are found in the first sentence
+    elif chunk_index == 0:
+        return SENTENCE_TYPE["SELECT_CLAUSE"]
+    else:
+        nouns = get_nouns(chunk)
+        conj_nouns = list(filter(lambda noun: noun["dependency"] == "conj", nouns))
+        prev_statement = get_last_statement(statements)
+
+        if prev_statement["statement_type"] in [SENTENCE_TYPE["PRONOUN"], SENTENCE_TYPE["WH_START"], SENTENCE_TYPE["WH_PRONOUN_START"]]:
+            return SENTENCE_TYPE["SELECT_CLAUSE"]
+        elif prev_statement["statement_type"] == SENTENCE_TYPE["SELECT_CLAUSE"] and len(conj_nouns) > 0:
+            return SENTENCE_TYPE["SELECT_CLAUSE"]
+        else:
+            return SENTENCE_TYPE["WHERE_CLAUSE"]
+
+
+def get_last_statement(statements):
+    if len(statements) > 0:
+        return statements[len(statements) - 1]
+    return None
+
