@@ -22,6 +22,7 @@ WHERE {{
 }}
     """
 
+    statements = get_statements(query)
     properties = parser.get_properties(endpoint)
     namespaces = parser.get_namespaces(endpoint)
 
@@ -43,7 +44,6 @@ WHERE {{
 
     # return generated_sparql_query.strip()
 
-    statements = get_statements(query)
     if SHOULD_PRINT:
         print_statements(statements)
         print(generated_sparql_query)
