@@ -1,7 +1,8 @@
+import re
 import spacy
 from spacy import displacy
 
-import ro.webdata.nqi.rdf.graph_processor as graph
+import ro.webdata.nqi.rdf.parser as parser
 from ro.webdata.nqi.common.print_utils import print_statements
 from ro.webdata.nqi.nlp.statement import get_statements
 
@@ -20,32 +21,36 @@ WHERE {{
 }}
     """
 
-    properties = graph.generate_properties_map(endpoint)
-    namespaces = graph.generate_namespaces_map(properties)
+    properties = parser.get_properties(endpoint)
+    namespaces = parser.get_namespaces(endpoint)
 
     subject_var = "?s"
 
     # filter_statement = prepare_filer_statement(endpoint, query, should_print)
     prefixes = prepare_query_prefixes(namespaces)
     # where_block = prepare_query_where_block(properties, subject_var)
-    #
-    # generated_sparql_query = sparql_query.format(
-    #     filter_statement=filter_statement,
-    #     prefixes=prefixes,
-    #     subject_variables="*",
-    #     where_block=where_block
-    # )
-    #
+
+    filter_statement = ""
+    where_block = ""
+
+    generated_sparql_query = sparql_query.format(
+        filter_statement=filter_statement,
+        prefixes=prefixes,
+        subject_variables="*",
+        where_block=where_block
+    )
+
     # return generated_sparql_query.strip()
 
     statements = get_statements(query, should_print)
     if should_print:
         print_statements(statements, 'statement')
+        print(generated_sparql_query)
 
     nlp_query = nlp(query)
     # displacy.serve(nlp_query, style="dep")
 
-    return ""
+    return generated_sparql_query
 
 
 def prepare_query_prefixes(namespaces):
@@ -56,7 +61,7 @@ def prepare_query_prefixes(namespaces):
         left_space = ""
         if i > 0:
             left_space = "\n"
-        prefixes += left_space + "PREFIX " + namespace["ns_label"] + ": <" + namespace["ns_name"] + ">"
+        prefixes += left_space + "PREFIX " + namespace.label + ": <" + namespace.name + ">"
 
     return prefixes
 
@@ -69,8 +74,11 @@ def prepare_query_where_block(properties, subject_var):
         left_space = ""
         if i > 0:
             left_space = "\n\t"
-        where_block += left_space + "OPTIONAL { " + subject_var + " " + value["short_name"] + " ?" + value[
-            "prop_name_extended"] + " } ."
+        where_block += left_space + "OPTIONAL { " \
+                       + subject_var + " " \
+                       + value["prop_name_extended"] \
+                       + " ?" + re.sub(':', '_', value["prop_name_extended"]) \
+                       + " } ."
 
     return where_block
 
@@ -78,7 +86,7 @@ def prepare_query_where_block(properties, subject_var):
 def prepare_filer_statement(endpoint, query, should_print=False):
     filter_statement = ""
     statements = get_statements(query)
-    graph_properties = graph.generate_properties_map(endpoint)
+    graph_properties = parser.get_properties(endpoint)
 
     for i in range(len(statements)):
         statement = statements[i]
@@ -105,19 +113,3 @@ def prepare_filer_statement(endpoint, query, should_print=False):
             filter_statement += "\n\t)"
 
     return filter_statement
-
-
-def test_statements():
-    print()
-    get_statements('which is the largest city in the world?')
-    # TODO:
-    get_statements('Show me the most interesting, visited and the most beautiful museums')
-    # TODO: but unlisted...
-    get_statements('which are the first 10 artifacts hosted by John Kane but unlisted')
-    get_statements('tell me where the TX\'s location is')
-    get_statements('where the TX\'s location is')
-    get_statements('which is the most interesting museum?')
-    get_statements('give me the artifacts hosted by somebody')
-    get_statements('Show me the most interesting museums in New York')
-    get_statements('How many players from the United States play PG')
-

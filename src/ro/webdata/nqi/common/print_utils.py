@@ -1,3 +1,21 @@
+import logging
+
+from langdetect import detect
+
+
+def print_lang_warning(query):
+    if detect(query) != "en":
+        logging.warning(
+            f'\n\tLanguage detected: "{detect(query)}"'
+            f'\n\tLanguage required: "en"'
+        )
+
+
+def print_properties(properties):
+    for prop in properties:
+        print(f'property:    {prop.prop_name_extended}   {prop.ns_name}')
+
+
 def print_statements(statements, description):
     print()
 

@@ -46,3 +46,6 @@ SENTENCE_TYPE = {
     "WH_PRONOUN_START": "WH Pronoun start sentence",
     "WH_START": "WH start sentence"
 }
+
+
+SHOULD_PRINT = True

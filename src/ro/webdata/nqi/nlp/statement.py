@@ -3,7 +3,7 @@ from iteration_utilities import unique_everseen
 
 from ro.webdata.nqi.common.constants import PRONOUNS, SENTENCE_TYPE
 from ro.webdata.nqi.common.print_utils import print_statements, print_tokens
-from ro.webdata.nqi.nlp.nlp_utils import get_wh_pronouns, get_wh_words, retokenize
+from ro.webdata.nqi.nlp.nlp_utils import get_wh_adverbs, get_wh_pronouns, get_wh_words, retokenize
 from ro.webdata.nqi.nlp.sentence import get_action, get_actions, get_cardinals, get_nouns, get_preposition
 
 nlp = spacy.load('../../../../lib/en_core_web_sm/en_core_web_sm-2.2.5')
@@ -54,7 +54,7 @@ def get_statements(query, should_print=False):
                 statements[len(statements) - 1]["phrase"] = sentence[start_index: end_index]
             else:
                 cardinals = get_cardinals(chunk)
-                statement_type = get_statement_type(chunks, chunk_index, statements)
+                statement_type = get_statement_type(chunk, statements)
                 # TODO: move the statement_type inside of get_action method
                 action = get_action(sentence, chunks, chunk_index, actions, statements, statement_type)
 
@@ -70,7 +70,7 @@ def get_statements(query, should_print=False):
     statements = list(
         filter(
             lambda statement: statement["statement_type"] not in [
-                  # WH_PRONOUN_START ???
+                # WH_PRONOUN_START ???
                 SENTENCE_TYPE["PRONOUN"], SENTENCE_TYPE["WH_START"], SENTENCE_TYPE["WH_PRONOUN_START"]
             ], statements
         )
@@ -85,18 +85,21 @@ def get_prev_chunk(chunks, chunk_index):
     return None
 
 
-def get_statement_type(chunks, chunk_index, statements):
-    chunk = chunks[chunk_index]
-
+def get_statement_type(chunk, statements):
     if chunk.text.lower() in PRONOUNS:
         return SENTENCE_TYPE["PRONOUN"]
+    # "who is the director who own..." => classify only the first chunk which contains
+    # the "who" word as being WH_PRONOUN_START
     elif chunk.root in get_wh_pronouns(chunk):
-        return SENTENCE_TYPE["WH_PRONOUN_START"]
-    elif chunk.root in get_wh_words(chunk):
+        if chunk.root.i == 0:
+            return SENTENCE_TYPE["WH_PRONOUN_START"]
+        else:
+            return SENTENCE_TYPE["WH_START"]
+    elif chunk.root in get_wh_words(chunk) and chunk.root.i == 0:
         return SENTENCE_TYPE["WH_START"]
     # if the type of the first sentence is not SENTENCE_TYPE["PRONOUN"] or SENTENCE_TYPE["WH_START"],
     # then the target subjects are found in the first sentence
-    elif chunk_index == 0:
+    elif len(statements) == 0:
         return SENTENCE_TYPE["SELECT_CLAUSE"]
     else:
         nouns = get_nouns(chunk)

@@ -62,7 +62,7 @@ def get_action(sentence, chunks, chunk_index, actions, statements, statement_typ
                 # WP: who are your friends which own a car?
                 # WP: what is the name of the biggest museum which hosts 10 pictures?
                 # WRB: where the artifacts are hosted in museums which hosts more than 10 artifacts?
-                if first_word.tag_ == "WP" or first_word.tag_ == "WRB":
+                if first_word.tag_ in ["WP", "WRB"]:
                     if action["is_available"] is True:
                         action["is_available"] = False
                         return action

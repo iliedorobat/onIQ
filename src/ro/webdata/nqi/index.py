@@ -1,36 +1,20 @@
-import logging
-
-import nltk
-
 import ro.webdata.nqi.nlp.sparql as sparql
-import ro.webdata.nqi.rdf.graph_processor as graph
-import ro.webdata.nqi.nlp.test.queries as queries
-from langdetect import detect
+import ro.webdata.nqi.rdf.parser as parser
 
+from ro.webdata.nqi.common.constants import SHOULD_PRINT
+from ro.webdata.nqi.common.print_utils import print_lang_warning
+from ro.webdata.nqi.rdf.Match import Match
 
-ENDPOINT = "http://localhost:7200/repositories/eCHO"
-QUERY = 'what is the name of the biggest museum which hosts more than 10 pictures and exposed one sword?'
+ENDPOINT = "http://localhost:7200/repositories/TESTING_BCU_CLUJ"
+QUERY = 'when the artifact was issued?'
+QUERY = 'when the artifacts was published?'
 
-SHOULD_PRINT = True
-
-if detect(QUERY) != "en":
-    logging.warning(
-        f'\n\tLanguage detected: "{detect(QUERY)}"'
-        f'\n\tLanguage required: "en"'
-    )
-
-
-tokens = nltk.word_tokenize(QUERY)
-print(nltk.pos_tag(tokens))
-
+print_lang_warning(QUERY)
 sparql_query = sparql.get_query(ENDPOINT, QUERY, SHOULD_PRINT)
 
-if SHOULD_PRINT:
-    print(f'\nsparql_query:\n{sparql_query}')
 
-
-# https://blog.einstein.ai/how-to-talk-to-your-database/
-# rdf_parser.parse_rdf("../../../../files/input/rdf/demo_2.rdf")
-# properties = graph.generate_properties_map(ENDPOINT)
-# for value in properties:
-#     print(value)
+# # https://blog.einstein.ai/how-to-talk-to-your-database/
+# parser.parse_rdf("../../../../files/input/rdf/demo_2.rdf")
+properties = parser.get_properties(ENDPOINT)
+match = Match('published', properties)
+print(match)
