@@ -26,26 +26,4 @@ NAMED_ENTITY_MAP = {
 }
 
 
-PRONOUNS = [
-    "i", "me",
-    "you", "thee",
-    "he", "him",
-    "she", "her",
-    "it",
-    "we", "us",
-    "they", "them",
-    "its"
-]
-
-
-SENTENCE_TYPE = {
-    "SELECT_CLAUSE": "select clause",
-    "WHERE_CLAUSE": "where clause",
-
-    "PRONOUN": "pronoun sentence",
-    "WH_PRONOUN_START": "WH Pronoun start sentence",
-    "WH_START": "WH start sentence"
-}
-
-
 SHOULD_PRINT = True

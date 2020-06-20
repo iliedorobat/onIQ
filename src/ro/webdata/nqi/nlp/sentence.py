@@ -1,7 +1,28 @@
 import numpy
 
-from ro.webdata.nqi.common.constants import SENTENCE_TYPE
 from ro.webdata.nqi.nlp.nlp_utils import get_verb_statements
+
+
+PRONOUNS = [
+    "i", "me",
+    "you", "thee",
+    "he", "him",
+    "she", "her",
+    "it",
+    "we", "us",
+    "they", "them",
+    "its"
+]
+
+
+SENTENCE_TYPE = {
+    "SELECT_CLAUSE": "select clause",
+    "WHERE_CLAUSE": "where clause",
+
+    "PRONOUN": "pronoun sentence",
+    "WH_PRONOUN_START": "WH Pronoun start sentence",
+    "WH_START": "WH start sentence"
+}
 
 
 def get_cardinals(chunk):
@@ -48,11 +69,11 @@ def get_preposition(sentence, chunk):
     return None
 
 
-def get_action(sentence, chunks, chunk_index, actions, statements, statement_type):
-    if statement_type not in [SENTENCE_TYPE["PRONOUN"], SENTENCE_TYPE["WH_START"], SENTENCE_TYPE["WH_PRONOUN_START"]]:
+def get_action(sentence, chunks, chunk_index, actions, statements, stmt_type):
+    if stmt_type not in [SENTENCE_TYPE["PRONOUN"], SENTENCE_TYPE["WH_START"], SENTENCE_TYPE["WH_PRONOUN_START"]]:
         chunk = chunks[chunk_index]
         conj_nouns = get_nouns(chunk, ["conj"])
-        last_statement = statements[len(statements) - 1]["action"] if len(statements) > 0 else {}
+        last_statement = statements[len(statements) - 1].action if len(statements) > 0 else {}
 
         first_word = sentence[0]
         prev_word = sentence[chunk.start - 1] if chunk.start > 0 else None
@@ -85,3 +106,9 @@ def get_actions(sentence):
         })
 
     return actions
+
+
+def get_prev_chunk(chunks, chunk_index):
+    if chunk_index > 0:
+        return chunks[chunk_index - 1]
+    return None

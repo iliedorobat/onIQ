@@ -1,17 +1,18 @@
 import re
 import spacy
 from spacy import displacy
-
 import ro.webdata.nqi.rdf.parser as parser
+
+from ro.webdata.nqi.common.constants import SHOULD_PRINT
 from ro.webdata.nqi.common.print_utils import print_statements
-from ro.webdata.nqi.nlp.statement import get_statements
+from ro.webdata.nqi.nlp.parser import get_statements
 
 nlp = spacy.load('../../../../lib/en_core_web_sm/en_core_web_sm-2.2.5')
 # nlp = spacy.load('../../../../lib/en_core_web_md/en_core_web_md-2.2.5')
 
 
 # TODO:
-def get_query(endpoint, query, should_print=False):
+def get_query(endpoint, query):
     sparql_query = """
 {prefixes}
 SELECT {subject_variables}
@@ -26,7 +27,7 @@ WHERE {{
 
     subject_var = "?s"
 
-    # filter_statement = prepare_filer_statement(endpoint, query, should_print)
+    # filter_statement = prepare_filer_statement(endpoint, query)
     prefixes = prepare_query_prefixes(namespaces)
     # where_block = prepare_query_where_block(properties, subject_var)
 
@@ -42,9 +43,9 @@ WHERE {{
 
     # return generated_sparql_query.strip()
 
-    statements = get_statements(query, should_print)
-    if should_print:
-        print_statements(statements, 'statement')
+    statements = get_statements(query)
+    if SHOULD_PRINT:
+        print_statements(statements)
         print(generated_sparql_query)
 
     nlp_query = nlp(query)
@@ -83,7 +84,7 @@ def prepare_query_where_block(properties, subject_var):
     return where_block
 
 
-def prepare_filer_statement(endpoint, query, should_print=False):
+def prepare_filer_statement(endpoint, query):
     filter_statement = ""
     statements = get_statements(query)
     graph_properties = parser.get_properties(endpoint)
@@ -91,7 +92,7 @@ def prepare_filer_statement(endpoint, query, should_print=False):
     for i in range(len(statements)):
         statement = statements[i]
 
-        if should_print:
+        if SHOULD_PRINT:
             print(f'statement[{i}]: {statement}')
 
         if i == 0:

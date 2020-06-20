@@ -16,14 +16,40 @@ def print_properties(properties):
         print(f'property:    {prop.prop_name_extended}   {prop.ns_name}')
 
 
-def print_statements(statements, description):
+def print_statements(statements):
     print()
 
     for statement in statements:
-        print(f'{description}:')
+        print("statement:")
 
-        for key in statement:
-            stmt_value = statement[key]
+        keys = list([
+            attr for attr in dir(statement)
+            if not callable(getattr(statement, attr)) and not attr.startswith("__")
+        ])
+
+        for key in keys:
+            stmt_value = statement.__dict__[key]
+            key = str(key) + ":"
+
+            if isinstance(stmt_value, list) and len(stmt_value) > 0:
+                print(f'\t{key}')
+
+                for key_2 in stmt_value:
+                    print(f'\t\t{key_2}')
+            else:
+                print(f'\t{key:{20}} {stmt_value}')
+
+        print()
+
+
+def print_actions(actions):
+    print()
+
+    for action in actions:
+        print("action:")
+
+        for key in action:
+            stmt_value = action[key]
             key = str(key) + ":"
 
             if isinstance(stmt_value, list) and len(stmt_value) > 0:
