@@ -3,9 +3,9 @@ from ro.webdata.nqi.nlp.sentence import PRONOUNS, SENTENCE_TYPE, get_nouns
 
 
 class Statement:
-    def __init__(self, action, cardinals, phrase, statements):
+    def __init__(self, action, cardinality_constr, phrase, statements):
         self.action = action
-        self.cardinals = cardinals
+        self.cardinality_constr = cardinality_constr
         self.phrase = phrase
         self.type = get_stmt_type(phrase, statements)
 
