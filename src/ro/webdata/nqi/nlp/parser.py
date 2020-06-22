@@ -3,9 +3,9 @@ from iteration_utilities import unique_everseen
 
 from ro.webdata.nqi.common.constants import SHOULD_PRINT
 from ro.webdata.nqi.common.print_utils import print_actions, print_tokens
-from ro.webdata.nqi.nlp.Statement import Statement, get_stmt_type
-from ro.webdata.nqi.nlp.nlp_utils import retokenize
-from ro.webdata.nqi.nlp.sentence import SENTENCE_TYPE, get_action, get_actions, get_cardinals, get_prev_chunk, get_preposition
+from ro.webdata.nqi.nlp.sentence.Statement import Statement, get_stmt_type
+from ro.webdata.nqi.nlp.sentence.Action import get_actions, get_action
+from ro.webdata.nqi.nlp.sentence.utils import SENTENCE_TYPE, get_cardinals, get_preposition, get_prev_chunk, retokenize
 
 nlp = spacy.load('../../../../lib/en_core_web_sm/en_core_web_sm-2.2.5')
 

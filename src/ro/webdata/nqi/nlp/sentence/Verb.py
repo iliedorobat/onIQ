@@ -1,4 +1,27 @@
-from ro.webdata.nqi.nlp.Action import Verb
+from ro.webdata.nqi.nlp.sentence.utils import get_wh_words
+
+
+class Verb:
+    def __init__(self, aux_vb, neg, main_vb, modal_vb, wh_word):
+        self.aux_vb = aux_vb
+        self.neg = neg
+        self.main_vb = main_vb
+        self.modal_vb = modal_vb
+        self.wh_word = wh_word
+
+    def __str__(self):
+        return self.get_str()
+
+    def get_str(self, indentation=''):
+        return (
+            f'{indentation}{{ '
+            f'{indentation}aux_vb: {self.aux_vb}, '
+            f'{indentation}neg: {self.neg}, '
+            f'{indentation}main_vb: {self.main_vb}, '
+            f'{indentation}modal_vb: {self.modal_vb}, '
+            f'{indentation}wh_word: {self.wh_word} '
+            f'{indentation}}}'
+        )
 
 
 def get_verb_statements(sentence):
@@ -12,7 +35,7 @@ def get_verb_statements(sentence):
             if verb.pos_ == "AUX":
                 aux_verb = verb
                 next_verb = _get_main_verb(sentence, aux_verb)
-                wh_word = get_wh_before_vb(sentence, token)
+                wh_word = _get_wh_before_vb(sentence, token)
 
                 if wh_word is None and verb.dep_ == "conj":
                     wh_word = verb_statements[len(verb_statements) - 1].wh_word
@@ -20,14 +43,14 @@ def get_verb_statements(sentence):
                 # TODO: OLD condition: if next_verb is None or next_verb.pos_ != "VERB":
                 print('aux_verb, next_verb', aux_verb, next_verb)
                 if next_verb is None:
-                    negation = get_negation_token(sentence, aux_verb, negation)
+                    negation = _get_negation_token(sentence, aux_verb, negation)
                     verb_statements.append(
                         Verb(aux_verb, negation, None, modal_verb, wh_word)
                     )
                     aux_verb = modal_verb = negation = wh_word = None
             else:
                 if wh_word is None:
-                    wh_word = get_wh_before_vb(sentence, token)
+                    wh_word = _get_wh_before_vb(sentence, token)
 
                     if wh_word is None and verb.dep_ == "conj":
                         wh_word = verb_statements[len(verb_statements) - 1].wh_word
@@ -35,7 +58,7 @@ def get_verb_statements(sentence):
                 if verb.tag_ == "MD":
                     modal_verb = verb
                 else:
-                    negation = get_negation_token(sentence, verb, negation)
+                    negation = _get_negation_token(sentence, verb, negation)
                     verb_statements.append(
                         Verb(aux_verb, negation, verb, modal_verb, wh_word)
                     )
@@ -85,7 +108,7 @@ def _get_next_token(document, verb, pos_list):
     return next_word
 
 
-def get_wh_before_vb(document, token):
+def _get_wh_before_vb(document, token):
     prev_word = document[token.i - 1]
 
     # E.g.: ... in museums which hosts ...
@@ -111,7 +134,7 @@ def get_wh_before_vb(document, token):
     return None
 
 
-def get_negation_token(document, verb, init_value):
+def _get_negation_token(document, verb, init_value):
     negation = init_value
     next_index = verb.i + 1
 
@@ -120,83 +143,3 @@ def get_negation_token(document, verb, init_value):
         negation = next_word if next_word.dep_ == "neg" else negation
 
     return negation
-
-
-def get_wh_adverbs(document):
-    """
-    Get the list of WH-adverbs:\n
-    - when, where, why\n
-    - whence, whereby, wherein, whereupon\n
-    - how\n
-
-    Resources:\n
-    - https://grammar.collinsdictionary.com/easy-learning/wh-words\n
-    - https://www.ling.upenn.edu/hist-corpora/annotation/pos-wh.htm
-
-    :param document: The document
-    :return: The list of WH-adverbs
-    """
-    return list([token for token in document if token.tag_ == 'WRB'])
-
-
-def get_wh_determiner(document):
-    """
-    Get the list of WH-determiners:\n
-    - what, which, whose\n
-
-    Resources:\n
-    - https://grammar.collinsdictionary.com/easy-learning/wh-words\n
-    - https://www.ling.upenn.edu/hist-corpora/annotation/pos-wh.htm
-
-    :param document: The document
-    :return: The list of WH-determiners
-    """
-    return list([token for token in document if token.tag_ == 'WDT'])
-
-
-def get_wh_pronouns(document):
-    """
-    Get the list of WH-pronouns\n
-    - who, whose, which, what\n
-
-    Resources:\n
-    - https://grammar.collinsdictionary.com/easy-learning/wh-words\n
-    - https://www.ling.upenn.edu/hist-corpora/annotation/pos-wh.htm
-
-    :param document: The document
-    :return: The list of WH-pronouns
-    """
-    return list([token for token in document if token.tag_ in ['WP', 'WP$']])
-
-
-def get_wh_words(document):
-    """
-    Get the list of WH-words\n
-    - when, where, why\n
-    - whence, whereby, wherein, whereupon\n
-    - how\n
-    - what, which, whose\n
-    - who, whose, which, what\n
-
-    Resources:\n
-    - https://grammar.collinsdictionary.com/easy-learning/wh-words\n
-    - https://www.ling.upenn.edu/hist-corpora/annotation/pos-wh.htm
-
-    :param document: The document
-    :return: The list of WH-words
-    """
-    return list([token for token in document if token.tag_ in ['WRB', 'WDT', 'WP', 'WP$']])
-
-
-def retokenize(document, sentence):
-    """
-    Integrate the named entities into the document and retokenize it
-
-    :param document: The document
-    :param sentence: The sentence
-    :return: Nothing
-    """
-
-    for named_entity in sentence.ents:
-        with document.retokenize() as retokenizer:
-            retokenizer.merge(named_entity)

@@ -1,5 +1,5 @@
-from ro.webdata.nqi.nlp.nlp_utils import get_wh_pronouns, get_wh_words
-from ro.webdata.nqi.nlp.sentence import PRONOUNS, SENTENCE_TYPE, get_nouns
+from ro.webdata.nqi.nlp.sentence.Noun import get_nouns
+from ro.webdata.nqi.nlp.sentence.utils import PRONOUNS, SENTENCE_TYPE, get_wh_pronouns, get_wh_words
 
 
 class Statement:
