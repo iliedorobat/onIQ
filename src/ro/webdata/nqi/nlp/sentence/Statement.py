@@ -43,7 +43,7 @@ def get_stmt_type(chunk, statements):
         return SENTENCE_TYPE["SELECT_CLAUSE"]
     else:
         nouns = get_nouns(chunk)
-        conj_nouns = list(filter(lambda noun: noun["dependency"] == "conj", nouns))
+        conj_nouns = list(filter(lambda noun: noun.dep == "conj", nouns))
         prev_statement = get_last_statement(statements)
 
         if prev_statement.type in [SENTENCE_TYPE["PRONOUN"], SENTENCE_TYPE["WH_START"], SENTENCE_TYPE["WH_PRONOUN_START"]]:
