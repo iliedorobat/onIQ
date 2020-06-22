@@ -2,6 +2,7 @@ import logging
 
 from langdetect import detect
 from ro.webdata.nqi.nlp.sentence.Action import Action
+from ro.webdata.nqi.nlp.sentence.Statement import Statement
 
 
 def print_lang_warning(query):
@@ -19,43 +20,16 @@ def print_properties(properties):
 
 def print_statements(statements):
     print()
-
     for statement in statements:
-        print("statement:")
-
-        keys = list([
-            attr for attr in dir(statement)
-            if not callable(getattr(statement, attr)) and not attr.startswith("__")
-        ])
-
-        for key in keys:
-            stmt_value = statement.__dict__[key]
-            key = str(key) + ":"
-
-            if isinstance(stmt_value, list) and len(stmt_value) > 0:
-                print(f'\t{key}')
-
-                for key_2 in stmt_value:
-                    print(f'\t\t{key_2}')
-            else:
-                if isinstance(stmt_value, Action):
-                    print_action(stmt_value, '\t')
-                else:
-                    print(f'\t{key:{20}} {stmt_value}')
-
+        print(Statement.get_str(statement))
         print()
 
 
 def print_actions(actions):
     print()
-
     for action in actions:
-        print_action(action)
-
-
-def print_action(action, indentation=''):
-    print(Action.get_str(action, indentation))
-    print()
+        print(Action.get_str(action))
+        print()
 
 
 def print_tokens(document):

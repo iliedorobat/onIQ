@@ -1,3 +1,4 @@
+from ro.webdata.nqi.nlp.sentence.Action import Action
 from ro.webdata.nqi.nlp.sentence.Noun import get_nouns
 from ro.webdata.nqi.nlp.sentence.utils import PRONOUNS, SENTENCE_TYPE, get_wh_pronouns, get_wh_words
 
@@ -8,6 +9,20 @@ class Statement:
         self.cardinality_constr = cardinality_constr
         self.phrase = phrase
         self.type = get_stmt_type(phrase, statements)
+
+    def __str__(self):
+        return self.get_str()
+
+    def get_str(self, indentation=''):
+        tab = '\t'
+        return (
+            f'{indentation}statement: {{\n'
+            f'{indentation}{Action.get_str(self.action, tab)}\n'
+            f'{indentation}\tcardinality_constr: {self.cardinality_constr}\n'
+            f'{indentation}\tphrase: {self.phrase}\n'
+            f'{indentation}\ttype: {self.type}\n'
+            f'{indentation}}}'
+        )
 
 
 def get_stmt_type(chunk, statements):
