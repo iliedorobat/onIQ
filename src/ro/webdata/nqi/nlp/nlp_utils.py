@@ -12,9 +12,11 @@ def get_verb_statements(document):
                 aux_verb = verb
                 negation = get_negation_token(document, aux_verb, negation)
                 next_verb = get_next_verb(document, aux_verb)
-
                 wh_word = get_wh_before_vb(document, token)
+
                 if wh_word is None and verb.dep_ == "conj":
+                    print('wh_word:', wh_word)
+                    # TODO:
                     wh_word = verb_statements[len(verb_statements) - 1]["wh_word"]
 
                 if next_verb is None or next_verb.pos_ != "VERB":
@@ -31,6 +33,8 @@ def get_verb_statements(document):
                 if wh_word is None:
                     wh_word = get_wh_before_vb(document, token)
                     if wh_word is None and verb.dep_ == "conj":
+                        print('wh_word:', wh_word)
+                        # TODO:
                         wh_word = verb_statements[len(verb_statements) - 1]["wh_word"]
 
                 negation = get_negation_token(document, verb, negation)
@@ -102,59 +106,6 @@ def get_negation_token(document, verb, init_value):
         negation = next_word if next_word.dep_ == "neg" else negation
 
     return negation
-
-
-def get_verb_statements_bk(document):
-    """
-    Get the list of verb statements\n
-    E.g.: "Give me museums which don't have artifacts"
-    [
-        {'aux': None, 'neg': None, 'verb': Give},
-        {'aux': do, 'neg': n't, 'verb': have}
-    ]
-
-    :param document: The document
-    :return: The list of verbs
-    """
-
-    verb_statements = []
-    aux_verb = None
-    negation = None
-
-    for token in document:
-        verb_tags = ['VB', 'VBD', 'VBG', 'VBN', 'VBP', 'VBZ']
-        verb = token if token.tag_ in verb_tags else None
-
-        # [are, are, made]
-        if verb is not None:
-            prev_word = document[token.i - 1]
-            wh_word = prev_word if prev_word in get_wh_words(document) else None
-
-            if verb.pos_ == "AUX" or verb.dep_ in ["aux", "auxpass"]:
-                aux_verb = verb
-                negation = get_negation_token(document, aux_verb, negation)
-
-                if document[aux_verb.i + 1].tag_ not in verb_tags:
-                    verb_statements.append({
-                        "aux": aux_verb,
-                        "neg": negation,
-                        "verb": None,
-                        "wh_word": wh_word
-                    })
-                    aux_verb = None
-                    negation = None
-            else:
-                negation = get_negation_token(document, verb, negation)
-                verb_statements.append({
-                    "aux": aux_verb,
-                    "neg": negation,
-                    "verb": verb,
-                    "wh_word": wh_word
-                })
-                aux_verb = None
-                negation = None
-
-    return verb_statements
 
 
 def get_wh_adverbs(document):

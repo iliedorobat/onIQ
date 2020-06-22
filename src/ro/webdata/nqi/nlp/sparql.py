@@ -28,8 +28,8 @@ WHERE {{
 
     subject_var = "?s"
 
-    # filter_statement = prepare_filer_statement(endpoint, query)
     prefixes = prepare_query_prefixes(namespaces)
+    # filter_statement = prepare_filer_statement(endpoint, query)
     # where_block = prepare_query_where_block(properties, subject_var)
 
     filter_statement = ""

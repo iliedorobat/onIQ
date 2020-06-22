@@ -7,8 +7,8 @@ nlp = spacy.load('../../../../lib/en_core_web_sm/en_core_web_sm-2.2.5', disable=
 
 
 class Match:
-    def __init__(self, prop_name, properties):
-        similarity_list = _get_similarity_list(prop_name, properties)
+    def __init__(self, verb, properties):
+        similarity_list = _get_similarity_list(verb, properties)
         finest_similarity = min(
             similarity_list, key=lambda item: item.similarity
         ).similarity
@@ -39,9 +39,9 @@ class SimilarityMap:
                f'similarity: {self.similarity:{5}}'
 
 
-def _get_similarity_list(prop_name, properties):
+def _get_similarity_list(verb, properties):
     similarity_list = []
-    synonyms = wordnet.synsets(prop_name)
+    synonyms = wordnet.synsets(verb)
 
     for prop in properties:
         for syn in synonyms:

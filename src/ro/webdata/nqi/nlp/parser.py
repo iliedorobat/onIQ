@@ -47,7 +47,7 @@ def get_statements(query):
             prev_chunk = get_prev_chunk(chunks, chunk_index)
             preposition = get_preposition(sentence, chunk)
 
-            # preposition.i > 1 (which of the museums... => preposition.i == 1)
+            # preposition.i > 1 (which of the factors... => preposition.i == 1)
             if preposition is not None and preposition.i > 1:
                 start_index = prev_chunk[0].i
                 end_index = chunk[len(chunk) - 1].i + 1
