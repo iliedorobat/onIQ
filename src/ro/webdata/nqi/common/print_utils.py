@@ -1,6 +1,7 @@
 import logging
 
 from langdetect import detect
+from ro.webdata.nqi.nlp.Action import Action
 
 
 def print_lang_warning(query):
@@ -37,7 +38,10 @@ def print_statements(statements):
                 for key_2 in stmt_value:
                     print(f'\t\t{key_2}')
             else:
-                print(f'\t{key:{20}} {stmt_value}')
+                if isinstance(stmt_value, Action):
+                    print_action(stmt_value, '\t')
+                else:
+                    print(f'\t{key:{20}} {stmt_value}')
 
         print()
 
@@ -46,21 +50,12 @@ def print_actions(actions):
     print()
 
     for action in actions:
-        print("action:")
+        print_action(action)
 
-        for key in action:
-            stmt_value = action[key]
-            key = str(key) + ":"
 
-            if isinstance(stmt_value, list) and len(stmt_value) > 0:
-                print(f'\t{key}')
-
-                for key_2 in stmt_value:
-                    print(f'\t\t{key_2}')
-            else:
-                print(f'\t{key:{20}} {stmt_value}')
-
-        print()
+def print_action(action, indentation=''):
+    print(Action.get_str(action, indentation))
+    print()
 
 
 def print_tokens(document):

@@ -1,74 +1,88 @@
-def get_verb_statements(document):
-    verb_statements = []
-    aux_verb = None
-    negation = None
-    wh_word = None
+from ro.webdata.nqi.nlp.Action import Verb
 
-    for token in document:
+
+def get_verb_statements(sentence):
+    verb_statements = []
+    aux_verb = modal_verb = negation = wh_word = None
+
+    for token in sentence:
         verb = token if token.pos_ in ["AUX", "VERB"] else None
 
         if verb is not None:
             if verb.pos_ == "AUX":
                 aux_verb = verb
-                negation = get_negation_token(document, aux_verb, negation)
-                next_verb = get_next_verb(document, aux_verb)
-                wh_word = get_wh_before_vb(document, token)
+                next_verb = _get_main_verb(sentence, aux_verb)
+                wh_word = get_wh_before_vb(sentence, token)
 
                 if wh_word is None and verb.dep_ == "conj":
-                    print('wh_word:', wh_word)
-                    # TODO:
-                    wh_word = verb_statements[len(verb_statements) - 1]["wh_word"]
+                    wh_word = verb_statements[len(verb_statements) - 1].wh_word
 
-                if next_verb is None or next_verb.pos_ != "VERB":
-                    verb_statements.append({
-                        "aux": aux_verb,
-                        "neg": negation,
-                        "verb": None,
-                        "wh_word": wh_word
-                    })
-                    aux_verb = None
-                    negation = None
-                    wh_word = None
+                # TODO: OLD condition: if next_verb is None or next_verb.pos_ != "VERB":
+                print('aux_verb, next_verb', aux_verb, next_verb)
+                if next_verb is None:
+                    negation = get_negation_token(sentence, aux_verb, negation)
+                    verb_statements.append(
+                        Verb(aux_verb, negation, None, modal_verb, wh_word)
+                    )
+                    aux_verb = modal_verb = negation = wh_word = None
             else:
                 if wh_word is None:
-                    wh_word = get_wh_before_vb(document, token)
-                    if wh_word is None and verb.dep_ == "conj":
-                        print('wh_word:', wh_word)
-                        # TODO:
-                        wh_word = verb_statements[len(verb_statements) - 1]["wh_word"]
+                    wh_word = get_wh_before_vb(sentence, token)
 
-                negation = get_negation_token(document, verb, negation)
-                verb_statements.append({
-                    "aux": aux_verb,
-                    "neg": negation,
-                    "verb": verb,
-                    "wh_word": wh_word
-                })
-                aux_verb = None
-                negation = None
-                wh_word = None
+                    if wh_word is None and verb.dep_ == "conj":
+                        wh_word = verb_statements[len(verb_statements) - 1].wh_word
+
+                if verb.tag_ == "MD":
+                    modal_verb = verb
+                else:
+                    negation = get_negation_token(sentence, verb, negation)
+                    verb_statements.append(
+                        Verb(aux_verb, negation, verb, modal_verb, wh_word)
+                    )
+                    aux_verb = modal_verb = negation = wh_word = None
 
     return verb_statements
 
 
-def get_next_verb(document, verb):
-    next_word = document[verb.i + 1]
+def _get_main_verb(sentence, verb):
+    """
+    Get the main verb
 
-    # when was the museum opened
-    # why are they always arrive late
-    if next_word.pos_ == "DET":
-        next_word = document[next_word.i + 1]
+    E.g.:\n
+    - question: "when was the museum opened?"
+        * the verb chain: "was opened" => return "opened"
+    - question: "why do they always arrive late?"
+        * the verb chain: "do arrive" => return "arrive"
+    - question: "when were the panama papers published"
+        * the verb chain: "were published" => return "published"
 
-    if next_word.pos_ in ["NOUN", "PRON"]:
-        next_word = document[next_word.i + 1]
+    :param sentence: The sentence
+    :param verb: The auxiliary verb
+    :return: The main verb or None
+    """
 
-    if next_word.pos_ in ["ADV"]:
-        next_word = document[next_word.i + 1]
+    next_word = _get_next_token(sentence, verb, ["DET", "ADV", "ADJ", "NOUN", "PRON", "PROPN"])
 
     if next_word.pos_ == "VERB":
-        return next_word
+        # who is the director who own 10 cars and sold a house or a panel?
+        if sentence[next_word.i - 1] not in get_wh_words(sentence):
+            return next_word
 
     return None
+
+
+def _get_next_token(document, verb, pos_list):
+    next_word = document[verb.i + 1]
+
+    for i in range(next_word.i, len(document)):
+        token = document[i]
+
+        if token.pos_ in pos_list:
+            next_word = document[token.i + 1]
+        else:
+            break
+
+    return next_word
 
 
 def get_wh_before_vb(document, token):

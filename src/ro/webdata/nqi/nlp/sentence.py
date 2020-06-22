@@ -1,5 +1,6 @@
 import numpy
 
+from ro.webdata.nqi.nlp.Action import Action
 from ro.webdata.nqi.nlp.nlp_utils import get_verb_statements
 
 
@@ -73,7 +74,7 @@ def get_action(sentence, chunks, chunk_index, actions, statements, stmt_type):
     if stmt_type not in [SENTENCE_TYPE["PRONOUN"], SENTENCE_TYPE["WH_START"], SENTENCE_TYPE["WH_PRONOUN_START"]]:
         chunk = chunks[chunk_index]
         conj_nouns = get_nouns(chunk, ["conj"])
-        last_statement = statements[len(statements) - 1].action if len(statements) > 0 else {}
+        last_action = statements[len(statements) - 1].action if len(statements) > 0 else {}
 
         first_word = sentence[0]
         prev_word = sentence[chunk.start - 1] if chunk.start > 0 else None
@@ -82,28 +83,24 @@ def get_action(sentence, chunks, chunk_index, actions, statements, stmt_type):
             if prev_word is not None and prev_word.tag_ != "IN":
                 # WP: who are your friends which own a car?
                 # WP: what is the name of the biggest museum which hosts 10 pictures?
-                # WRB: where the artifacts are hosted in museums which hosts more than 10 artifacts?
+                # WRB: where the artifacts are located in museums which hosts more than 10 artifacts?
                 if first_word.tag_ in ["WP", "WRB"]:
-                    if action["is_available"] is True:
-                        action["is_available"] = False
+                    if action.is_available is True:
+                        action.is_available = False
                         return action
                     if len(conj_nouns) > 0:
-                        return last_statement
+                        return last_action
 
 
 def get_actions(sentence):
     actions = []
     verb_statements = get_verb_statements(sentence)
 
-    for verb_statement in verb_statements:
-        aux = verb_statement["aux"]
-        verb = verb_statement["verb"]
-
-        actions.append({
-            "dependency": verb.dep_ if verb is not None else aux.dep_,
-            "is_available": True,
-            "verb_statement": verb_statement
-        })
+    for verb_stmt in verb_statements:
+        dep = verb_stmt.main_vb.dep_ \
+            if verb_stmt.main_vb is not None \
+            else verb_stmt.aux_vb.dep_
+        actions.append(Action(dep, verb_stmt))
 
     return actions
 
