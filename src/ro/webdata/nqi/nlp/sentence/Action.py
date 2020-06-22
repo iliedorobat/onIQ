@@ -3,6 +3,14 @@ from ro.webdata.nqi.nlp.sentence.Verb import Verb, get_verb_statements
 from ro.webdata.nqi.nlp.sentence.utils import SENTENCE_TYPE
 
 
+ACTION_EXCEPTIONS = [
+    SENTENCE_TYPE["PRONOUN"],
+    SENTENCE_TYPE["WH"],
+    SENTENCE_TYPE["WH_START"],
+    SENTENCE_TYPE["WH_PRONOUN_START"]
+]
+
+
 class Action:
     def __init__(self, dep, verb_stmt):
         self.dep = dep
@@ -13,17 +21,21 @@ class Action:
         return self.get_str()
     
     def get_str(self, indentation=''):
+        dep = self.dep if self else None
+        is_available = self.is_available if self else None
+        verb_stmt = self.verb_stmt if self else None
+
         return (
             f'{indentation}action: {{\n'
-            f'{indentation}\tdep: {self.dep}\n'
-            f'{indentation}\tis_available: {self.is_available}\n'
-            f'{indentation}\tverb_stmt: {Verb.get_str(self.verb_stmt)}\n'
+            f'{indentation}\tdep: {dep}\n'
+            f'{indentation}\tis_available: {is_available}\n'
+            f'{indentation}\tverb_stmt: {Verb.get_str(verb_stmt)}\n'
             f'{indentation}}}'
         )
 
 
 def get_action(sentence, chunks, chunk_index, actions, statements, stmt_type):
-    if stmt_type not in [SENTENCE_TYPE["PRONOUN"], SENTENCE_TYPE["WH_START"], SENTENCE_TYPE["WH_PRONOUN_START"]]:
+    if stmt_type not in ACTION_EXCEPTIONS:
         chunk = chunks[chunk_index]
         conj_nouns = get_nouns(chunk, ["conj"])
         last_action = statements[len(statements) - 1].action if len(statements) > 0 else {}

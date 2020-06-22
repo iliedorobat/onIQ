@@ -28,15 +28,12 @@ class Statement:
 def get_stmt_type(chunk, statements):
     if chunk.text.lower() in PRONOUNS:
         return SENTENCE_TYPE["PRONOUN"]
-    # "who is the director who own..." => classify only the first chunk which contains
-    # the "who" word as being WH_PRONOUN_START
+    # "who is the director who own..." => classify only the first chunk
+    # which contains the "who" word as being WH_PRONOUN_START
     elif chunk.root in get_wh_pronouns(chunk):
-        if chunk.root.i == 0:
-            return SENTENCE_TYPE["WH_PRONOUN_START"]
-        else:
-            return SENTENCE_TYPE["WH_START"]
-    elif chunk.root in get_wh_words(chunk) and chunk.root.i == 0:
-        return SENTENCE_TYPE["WH_START"]
+        return SENTENCE_TYPE["WH_PRONOUN_START"] if chunk.root.i == 0 else SENTENCE_TYPE["WH"]
+    elif chunk.root in get_wh_words(chunk):
+        return SENTENCE_TYPE["WH_START"] if chunk.root.i == 0 else SENTENCE_TYPE["WH"]
     # if the type of the first sentence is not SENTENCE_TYPE["PRONOUN"] or SENTENCE_TYPE["WH_START"],
     # then the target subjects are found in the first sentence
     elif len(statements) == 0:

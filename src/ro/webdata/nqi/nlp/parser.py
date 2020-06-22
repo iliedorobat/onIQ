@@ -4,8 +4,8 @@ from iteration_utilities import unique_everseen
 from ro.webdata.nqi.common.constants import SHOULD_PRINT
 from ro.webdata.nqi.common.print_utils import print_actions, print_tokens
 from ro.webdata.nqi.nlp.sentence.Statement import Statement, get_stmt_type
-from ro.webdata.nqi.nlp.sentence.Action import get_actions, get_action
-from ro.webdata.nqi.nlp.sentence.utils import SENTENCE_TYPE, get_cardinals, get_preposition, get_prev_chunk, retokenize
+from ro.webdata.nqi.nlp.sentence.Action import ACTION_EXCEPTIONS, get_actions, get_action
+from ro.webdata.nqi.nlp.sentence.utils import get_cardinals, get_preposition, get_prev_chunk, retokenize
 
 nlp = spacy.load('../../../../lib/en_core_web_sm/en_core_web_sm-2.2.5')
 
@@ -39,7 +39,8 @@ def get_statements(query):
 
         if SHOULD_PRINT:
             print_tokens(sentence)
-            print_actions(actions)
+            # print_actions(actions)
+            print('actions len:', len(actions))
 
         chunks = list(document.noun_chunks)
         for chunk_index in range(0, len(chunks)):
@@ -66,9 +67,6 @@ def _filter_statements(statements):
     # avoid adding a statement which consists only in pronouns or wh-words
     return list(
         filter(
-            lambda statement: statement.type not in [
-                # WH_PRONOUN_START ???
-                SENTENCE_TYPE["PRONOUN"], SENTENCE_TYPE["WH_START"], SENTENCE_TYPE["WH_PRONOUN_START"]
-            ], statements
+            lambda statement: statement.type not in ACTION_EXCEPTIONS, statements
         )
     )

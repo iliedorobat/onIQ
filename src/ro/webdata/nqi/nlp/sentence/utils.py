@@ -15,6 +15,7 @@ SENTENCE_TYPE = {
     "WHERE_CLAUSE": "where clause",
 
     "PRONOUN": "pronoun sentence",
+    "WH": "WH sentence",
     "WH_PRONOUN_START": "WH Pronoun start sentence",
     "WH_START": "WH start sentence"
 }

@@ -13,13 +13,19 @@ class Verb:
         return self.get_str()
 
     def get_str(self, indentation=''):
+        aux_vb = self.aux_vb if self else None
+        neg = self.neg if self else None
+        main_vb = self.main_vb if self else None
+        modal_vb = self.modal_vb if self else None
+        wh_word = self.wh_word if self else None
+
         return (
             f'{indentation}{{ '
-            f'{indentation}aux_vb: {self.aux_vb}, '
-            f'{indentation}neg: {self.neg}, '
-            f'{indentation}main_vb: {self.main_vb}, '
-            f'{indentation}modal_vb: {self.modal_vb}, '
-            f'{indentation}wh_word: {self.wh_word} '
+            f'{indentation}aux_vb: {aux_vb}, '
+            f'{indentation}neg: {neg}, '
+            f'{indentation}main_vb: {main_vb}, '
+            f'{indentation}modal_vb: {modal_vb}, '
+            f'{indentation}wh_word: {wh_word} '
             f'{indentation}}}'
         )
 
