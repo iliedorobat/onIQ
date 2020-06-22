@@ -13,7 +13,7 @@ nlp = spacy.load('../../../../lib/en_core_web_sm/en_core_web_sm-2.2.5')
 
 # TODO:
 def get_query(endpoint, query):
-    sparql_query = """
+    sparql_query_skeleton = """
 {prefixes}
 SELECT {subject_variables}
 WHERE {{
@@ -26,19 +26,18 @@ WHERE {{
     properties = parser.get_properties(endpoint)
     namespaces = parser.get_namespaces(endpoint)
 
-    subject_var = "?s"
-
     prefixes = prepare_query_prefixes(namespaces)
     # filter_statement = prepare_filer_statement(endpoint, query)
     # where_block = prepare_query_where_block(properties, subject_var)
 
+    subject_var = "*"
     filter_statement = ""
     where_block = ""
 
-    generated_sparql_query = sparql_query.format(
+    sparql_query = sparql_query_skeleton.format(
         filter_statement=filter_statement,
         prefixes=prefixes,
-        subject_variables="*",
+        subject_variables=subject_var,
         where_block=where_block
     )
 
@@ -46,12 +45,12 @@ WHERE {{
 
     if SHOULD_PRINT:
         print_statements(statements)
-        print(generated_sparql_query)
+        print(sparql_query)
 
-    nlp_query = nlp(query)
+    # nlp_query = nlp(query)
     # displacy.serve(nlp_query, style="dep")
 
-    return generated_sparql_query
+    return sparql_query
 
 
 def prepare_query_prefixes(namespaces):

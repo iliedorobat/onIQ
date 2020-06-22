@@ -15,16 +15,7 @@ def get_statements(query):
     TODO: update the documentation
     Build the list of statements\n
     Example of statement:\n
-    {
-        "action": "Find",\n
-        "cardinals": [],\n
-        "nouns": [\n
-            {"dependency": "compound", "is_root": False, "value": "student"},\n
-            {"dependency": "dobj", "is_root": True, "value": "name"}\n
-        ],\n
-        "sentence": "the student name"\n",
-        "statement_type": SENTENCE_TYPE["SELECT_CLAUSE"]\n"
-    }
+    ...
 
     :param query: The query provided by the user in natural language
     :return: A list of statements

@@ -1,13 +1,12 @@
 from ro.webdata.nqi.nlp.sentence.Noun import get_nouns
 from ro.webdata.nqi.nlp.sentence.Verb import Verb, get_verb_statements
-from ro.webdata.nqi.nlp.sentence.utils import SENTENCE_TYPE
-
+from ro.webdata.nqi.nlp.sentence.constants import TYPE_PRON, TYPE_WH, TYPE_WH_PRON_START, TYPE_WH_START
 
 ACTION_EXCEPTIONS = [
-    SENTENCE_TYPE["PRONOUN"],
-    SENTENCE_TYPE["WH"],
-    SENTENCE_TYPE["WH_START"],
-    SENTENCE_TYPE["WH_PRONOUN_START"]
+    TYPE_PRON,
+    TYPE_WH,
+    TYPE_WH_PRON_START,
+    TYPE_WH_START
 ]
 
 
@@ -19,7 +18,7 @@ class Action:
 
     def __str__(self):
         return self.get_str()
-    
+
     def get_str(self, indentation=''):
         dep = self.dep if self else None
         is_available = self.is_available if self else None

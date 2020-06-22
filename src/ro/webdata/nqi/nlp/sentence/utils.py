@@ -1,26 +1,3 @@
-PRONOUNS = [
-    "i", "me",
-    "you", "thee",
-    "he", "him",
-    "she", "her",
-    "it",
-    "we", "us",
-    "they", "them",
-    "its"
-]
-
-
-SENTENCE_TYPE = {
-    "SELECT_CLAUSE": "select clause",
-    "WHERE_CLAUSE": "where clause",
-
-    "PRONOUN": "pronoun sentence",
-    "WH": "WH sentence",
-    "WH_PRONOUN_START": "WH Pronoun start sentence",
-    "WH_START": "WH start sentence"
-}
-
-
 def get_cardinals(chunk):
     """
     Get the list of cardinals in a chunk
