@@ -21,10 +21,10 @@ class Verb:
 
         return (
             f'{{'
-            f'\n{indentation}\taux_vb: {aux_vb}, '
-            f'\n{indentation}\tneg: {neg}, '
-            f'\n{indentation}\tmain_vb: {main_vb}, '
-            f'\n{indentation}\tmodal_vb: {modal_vb}, '
+            f'\n{indentation}\taux_vb: {aux_vb},'
+            f'\n{indentation}\tneg: {neg},'
+            f'\n{indentation}\tmain_vb: {main_vb},'
+            f'\n{indentation}\tmodal_vb: {modal_vb},'
             f'\n{indentation}\twh_word: {wh_word}'
             f'\n{indentation}}}'
         )

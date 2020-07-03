@@ -27,8 +27,8 @@ class Action:
 
         return (
             f'{indentation}action: {{\n'
-            f'{indentation}\tdep: {dep}\n'
-            f'{indentation}\tis_available: {is_available}\n'
+            f'{indentation}\tdep: {dep},\n'
+            f'{indentation}\tis_available: {is_available},\n'
             f'{indentation}\tverb_stmt: {Verb.get_str(verb_stmt, verb_indentation)}\n'
             f'{indentation}}}'
         )

@@ -20,7 +20,7 @@ class Query:
 
         return (
             f'{indentation}query: {{\n'
-            f'{indentation}\ttargets: {self.targets}\n'
+            f'{indentation}\ttargets: {self.targets},\n'
             f'{indentation}\tmeta triples: [\n'
             f'{indentation}{meta_triples_str}\n'
             f'{indentation}\t]\n'
@@ -39,7 +39,7 @@ class MetaTriple:
     def get_str(self, indentation=''):
         return (
             f'{indentation}meta triple: {{\n'
-            f'{indentation}\ttriple: {Triple.get_str(self.triple)}\n'
+            f'{indentation}\ttriple: {Triple.get_str(self.triple)},\n'
             f'{indentation}\tnegation: {self.negation}\n'
             f'{indentation}}}'
         )

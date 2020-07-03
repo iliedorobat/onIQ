@@ -16,12 +16,13 @@ class Statement:
         return self.get_str()
 
     def get_str(self, indentation=''):
-        tab = '\t'
+        action_indentation = '\t'
+
         return (
             f'{indentation}statement: {{\n'
-            f'{indentation}{Action.get_str(self.action, tab)}\n'
-            f'{indentation}\tcardinality: {self.cardinality}\n'
-            f'{indentation}\tphrase: {self.phrase}\n'
+            f'{indentation}{Action.get_str(self.action, action_indentation)},\n'
+            f'{indentation}\tcardinality: {self.cardinality},\n'
+            f'{indentation}\tphrase: {self.phrase},\n'
             f'{indentation}\ttype: {self.type}\n'
             f'{indentation}}}'
         )
