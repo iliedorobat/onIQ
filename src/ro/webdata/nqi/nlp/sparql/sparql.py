@@ -1,11 +1,12 @@
 import re
 import spacy
-from spacy import displacy
 import ro.webdata.nqi.rdf.parser as parser
 
+from spacy import displacy
 from ro.webdata.nqi.common.constants import SHOULD_PRINT
 from ro.webdata.nqi.common.print_utils import print_statements
 from ro.webdata.nqi.nlp.parser import get_statements
+from ro.webdata.nqi.nlp.sparql.Query import Query
 
 nlp = spacy.load('../../../../lib/en_core_web_sm/en_core_web_sm-2.2.5')
 # nlp = spacy.load('../../../../lib/en_core_web_md/en_core_web_md-2.2.5')
@@ -23,6 +24,9 @@ WHERE {{
     """
 
     statements = get_statements(query)
+    _sparql_query = Query(statements)
+    print(_sparql_query)
+
     properties = parser.get_properties(endpoint)
     namespaces = parser.get_namespaces(endpoint)
 
