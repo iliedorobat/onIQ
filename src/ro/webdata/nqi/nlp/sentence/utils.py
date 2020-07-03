@@ -26,7 +26,7 @@ def get_prev_chunk(chunks, chunk_index):
 
 def get_wh_adverbs(document):
     """
-    Get the list of WH-adverbs:\n
+    Get the list of WH-adverbs (tag = 'WRB'):\n
     - when, where, why\n
     - whence, whereby, wherein, whereupon\n
     - how\n
@@ -43,7 +43,7 @@ def get_wh_adverbs(document):
 
 def get_wh_determiner(document):
     """
-    Get the list of WH-determiners:\n
+    Get the list of WH-determiners (tag = 'WDT'):\n
     - what, which, whose\n
 
     Resources:\n
@@ -58,7 +58,7 @@ def get_wh_determiner(document):
 
 def get_wh_pronouns(document):
     """
-    Get the list of WH-pronouns\n
+    Get the list of WH-pronouns (tag in ['WP', 'WP$'])\n
     - who, whose, which, what\n
 
     Resources:\n

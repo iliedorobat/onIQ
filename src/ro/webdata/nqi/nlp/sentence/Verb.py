@@ -20,13 +20,13 @@ class Verb:
         wh_word = self.wh_word if self else None
 
         return (
-            f'{indentation}{{ '
-            f'{indentation}aux_vb: {aux_vb}, '
-            f'{indentation}neg: {neg}, '
-            f'{indentation}main_vb: {main_vb}, '
-            f'{indentation}modal_vb: {modal_vb}, '
-            f'{indentation}wh_word: {wh_word} '
-            f'{indentation}}}'
+            f'{{'
+            f'\n{indentation}\taux_vb: {aux_vb}, '
+            f'\n{indentation}\tneg: {neg}, '
+            f'\n{indentation}\tmain_vb: {main_vb}, '
+            f'\n{indentation}\tmodal_vb: {modal_vb}, '
+            f'\n{indentation}\twh_word: {wh_word}'
+            f'\n{indentation}}}'
         )
 
 
@@ -90,7 +90,7 @@ def _get_main_verb(sentence, verb):
     :return: The main verb or None
     """
 
-    next_word = _get_next_token(sentence, verb, ["DET", "ADV", "ADJ", "NOUN", "PRON", "PROPN"])
+    next_word = _get_next_token(sentence, verb, ["DET", "ADV", "ADJ", "CCONJ", "NOUN", "PRON", "PROPN"])
 
     if next_word.pos_ == "VERB":
         # who is the director who own 10 cars and sold a house or a panel?

@@ -10,9 +10,9 @@ PRONOUNS = [
 ]
 
 # Sentence type
-TYPE_PRON = "pronoun sentence"
-TYPE_WH = "WH sentence"
-TYPE_WH_PRON_START = "WH Pronoun start sentence"
-TYPE_WH_START = "WH start sentence"
-TYPE_SELECT_CLAUSE = "select clause"
-TYPE_WHERE_CLAUSE = "where clause"
+TYPE_PRON = "Pronoun Sentence"
+TYPE_WH = "WH Sentence"
+TYPE_WH_PRON_START = "WH Pronoun Start Sentence"
+TYPE_WH_START = "WH Start Sentence"
+TYPE_SELECT_CLAUSE = "Select Clause"
+TYPE_WHERE_CLAUSE = "Where clause"
