@@ -5,7 +5,7 @@ from ro.webdata.nqi.common.constants import SHOULD_PRINT
 from ro.webdata.nqi.common.print_utils import print_actions, print_tokens
 from ro.webdata.nqi.nlp.sentence.Statement import Statement, get_stmt_type
 from ro.webdata.nqi.nlp.sentence.Action import ACTION_EXCEPTIONS, get_actions, get_action
-from ro.webdata.nqi.nlp.sentence.utils import get_cardinals, get_preposition, get_prev_chunk, retokenize
+from ro.webdata.nqi.nlp.sentence.utils import get_cardinals, get_conjunction, get_preposition, get_prev_chunk, retokenize
 
 nlp = spacy.load('../../../../lib/en_core_web_sm/en_core_web_sm-2.2.5')
 
@@ -48,7 +48,8 @@ def get_statements(query):
                 stmt_type = get_stmt_type(chunk, statements)
                 action = get_action(sentence, chunks, chunk_index, actions, statements, stmt_type)
                 cardinals = get_cardinals(chunk)
-                statements.append(Statement(action, cardinals, chunk, statements))
+                conjunction = get_conjunction(document, chunks, chunk_index)
+                statements.append(Statement(action, cardinals, chunk, conjunction, statements))
 
     return _filter_statements(statements)
 

@@ -25,7 +25,6 @@ WHERE {{
 
     statements = get_statements(query)
     _sparql_query = Query(statements)
-    print(_sparql_query)
 
     properties = parser.get_properties(endpoint)
     namespaces = parser.get_namespaces(endpoint)
@@ -34,7 +33,7 @@ WHERE {{
     # filter_statement = prepare_filer_statement(endpoint, query)
     # where_block = prepare_query_where_block(properties, subject_var)
 
-    subject_var = "*"
+    subject_var = _sparql_query.get_targets_str()
     filter_statement = ""
     where_block = ""
 
@@ -48,8 +47,10 @@ WHERE {{
     # return generated_sparql_query.strip()
 
     if SHOULD_PRINT:
+        print(_sparql_query)
         print_statements(statements)
         print(sparql_query)
+        print('ffff', _sparql_query.get_triples_str())
 
     # nlp_query = nlp(query)
     # displacy.serve(nlp_query, style="dep")

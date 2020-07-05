@@ -92,7 +92,7 @@ def _get_main_verb(sentence, verb):
 
     next_word = _get_next_token(sentence, verb, ["DET", "ADV", "ADJ", "CCONJ", "NOUN", "PRON", "PROPN"])
 
-    if next_word.pos_ == "VERB":
+    if next_word is not None and next_word.pos_ == "VERB":
         # who is the director who own 10 cars and sold a house or a panel?
         if sentence[next_word.i - 1] not in get_wh_words(sentence):
             return next_word
@@ -101,6 +101,9 @@ def _get_main_verb(sentence, verb):
 
 
 def _get_next_token(document, verb, pos_list):
+    if verb.i + 1 >= len(document):
+        return None
+
     next_word = document[verb.i + 1]
 
     for i in range(next_word.i, len(document)):

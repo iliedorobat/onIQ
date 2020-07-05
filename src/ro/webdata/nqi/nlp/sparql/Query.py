@@ -6,6 +6,32 @@ class Query:
         self.targets = _get_targets(statements)
         self.meta_triples = _get_meta_triples(statements, self.targets)
 
+    def get_targets_str(self):
+        targets_str = ''
+
+        for i in range(len(self.targets)):
+            targets_str += f'?{self.targets[i]}'
+            targets_str += ' ' if i < len(self.targets) - 1 else ''
+
+        return targets_str
+
+    def get_triples_str(self):
+        triples_str = ''
+
+        for i in range(len(self.meta_triples)):
+            meta_triple = self.meta_triples[i]
+            conjunction = meta_triple.conjunction.text.upper() if meta_triple.conjunction is not None else None
+
+            # TODO: OR
+            if conjunction is None or conjunction == 'AND':
+                if conjunction == 'AND':
+                    triples_str += ' .\n'
+
+                # TODO: predicate
+                triples_str += f'?{meta_triple.triple.s} {meta_triple.triple.p} ?{meta_triple.triple.o}'
+
+        return triples_str
+
     def __str__(self):
         return self.get_str()
 
@@ -29,9 +55,10 @@ class Query:
 
 
 class MetaTriple:
-    def __init__(self, s=None, p=None, o=None, negation=None):
+    def __init__(self, s=None, p=None, o=None, negation=None, conjunction=None):
         self.triple = Triple(s, p, o)
         self.negation = negation
+        self.conjunction = conjunction
 
     def __str__(self):
         return self.get_str()
@@ -41,6 +68,7 @@ class MetaTriple:
             f'{indentation}meta triple: {{\n'
             f'{indentation}\ttriple: {Triple.get_str(self.triple)},\n'
             f'{indentation}\tnegation: {self.negation}\n'
+            f'{indentation}\tconjunction: {self.conjunction}\n'
             f'{indentation}}}'
         )
 
@@ -67,9 +95,7 @@ def _get_targets(statements):
         if stmt.type == TYPE_SELECT_CLAUSE:
             stmt_targets = [
                 token for token in stmt.phrase
-                # TODO: "which is the largest museum which hosts more than 10 pictures and exposed one sword?"
-                # if token.pos_ == "NOUN" and token.dep_ in ["nsubj", "nsubjpass", "conj", "attr"]
-                if token.pos_ == "NOUN" and token.tag_ == "NN"
+                if token.pos_ == "NOUN" and token.tag_ in ["NN", "NNS"]
             ]
             targets = targets + stmt_targets
 
@@ -86,10 +112,11 @@ def _get_meta_triples(statements, targets):
                 if verb_stmt.main_vb is not None \
                 else verb_stmt.aux_vb
             negation = verb_stmt.neg
+            conjunction = stmt.conjunction
             noun_list = [token for token in stmt.phrase if token.pos_ == "NOUN"]
 
             for target in targets:
                 for noun in noun_list:
-                    triples.append(MetaTriple(target, verb, noun, negation))
+                    triples.append(MetaTriple(target, verb, noun, negation, conjunction))
 
     return triples

@@ -1,3 +1,5 @@
+from spacy.tokens import Span, Token
+
 from ro.webdata.nqi.nlp.sentence.Action import Action
 from ro.webdata.nqi.nlp.sentence.Noun import get_nouns
 from ro.webdata.nqi.nlp.sentence.constants import PRONOUNS, TYPE_PRON, TYPE_WH, TYPE_WH_PRON_START, TYPE_WH_START, \
@@ -6,9 +8,10 @@ from ro.webdata.nqi.nlp.sentence.utils import get_wh_pronouns, get_wh_words
 
 
 class Statement:
-    def __init__(self, action, cardinality, phrase, statements):
+    def __init__(self, action, cardinality, phrase, conjunction, statements):
         self.action = action
         self.cardinality = cardinality
+        self.conjunction = conjunction
         self.phrase = phrase
         self.type = get_stmt_type(phrase, statements)
 
@@ -22,6 +25,7 @@ class Statement:
             f'{indentation}statement: {{\n'
             f'{indentation}{Action.get_str(self.action, action_indentation)},\n'
             f'{indentation}\tcardinality: {self.cardinality},\n'
+            f'{indentation}\tconjunction: {self.conjunction},\n'
             f'{indentation}\tphrase: {self.phrase},\n'
             f'{indentation}\ttype: {self.type}\n'
             f'{indentation}}}'

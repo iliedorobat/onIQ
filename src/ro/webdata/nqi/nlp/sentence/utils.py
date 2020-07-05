@@ -8,6 +8,25 @@ def get_cardinals(chunk):
     return list([token for token in chunk if token.tag_ == "CD"])
 
 
+def get_conjunction(document, chunks, chunk_index):
+    # TODO: pos_ == "PUNCT" => comma: "which is the museum which hosts more than 10 pictures, one sword?"
+    chunk = chunks[chunk_index]
+    prev_chunk = chunks[chunk_index - 1] if chunk_index > 0 else None
+    # The index of the last token of the previous chunk
+    prev_chunk_last_index = prev_chunk[len(prev_chunk) - 1].i if prev_chunk is not None else 0
+
+    for i in reversed(range(chunk[0].i + 1)):
+        prev_token_index = i - 1
+
+        if prev_token_index > prev_chunk_last_index:
+            prev_token = document[prev_token_index]
+
+            if prev_token.pos_ == "CCONJ" and prev_token.tag_ == "CC":
+                return prev_token
+
+    return None
+
+
 def get_preposition(sentence, chunk):
     first_index = chunk[0].i
     prev_word = sentence[first_index - 1] if first_index > 0 else None

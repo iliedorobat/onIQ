@@ -30,6 +30,21 @@ class Property:
     def __bool__(self):
         return self.lemma and self.ns_label and self.ns_name and self.prop_name and self.prop_name_extended
 
+    def __str__(self):
+        return self.get_str()
+
+    def get_str(self, indentation=''):
+        return (
+            f'{{'
+            f'\n{indentation}\tlemma.prop_label: {self.lemma.prop_label},'
+            f'\n{indentation}\tlemma.prop_name: {self.lemma.prop_name},'
+            f'\n{indentation}\tns_name: {self.ns_name},'
+            f'\n{indentation}\tns_label: {self.ns_label},'
+            f'\n{indentation}\tprop_name: {self.prop_name},'
+            f'\n{indentation}\tprop_name_extended: {self.prop_name_extended},'
+            f'\n{indentation}}}'
+        )
+
 
 class _Lemma:
     def __init__(self, prop_label, prop_name):
