@@ -1,6 +1,4 @@
-import re
 import spacy
-import ro.webdata.nqi.rdf.parser as parser
 
 from spacy import displacy
 from ro.webdata.nqi.common.constants import SHOULD_PRINT
@@ -12,109 +10,34 @@ nlp = spacy.load('../../../../lib/en_core_web_sm/en_core_web_sm-2.2.5')
 # nlp = spacy.load('../../../../lib/en_core_web_md/en_core_web_md-2.2.5')
 
 
-# TODO:
-def get_query(endpoint, query):
+def get_query(endpoint, nl_query):
     sparql_query_skeleton = """
 {prefixes}
-SELECT {subject_variables}
+SELECT {targets}
 WHERE {{
     {where_block}
     {filter_statement}
 }}
     """
 
-    statements = get_statements(query)
-    _sparql_query = Query(statements)
-
-    properties = parser.get_properties(endpoint)
-    namespaces = parser.get_namespaces(endpoint)
-
-    prefixes = prepare_query_prefixes(namespaces)
-    # filter_statement = prepare_filer_statement(endpoint, query)
-    # where_block = prepare_query_where_block(properties, subject_var)
-
-    subject_var = _sparql_query.get_targets_str()
-    filter_statement = ""
-    where_block = ""
+    statements = get_statements(nl_query)
+    query = Query(endpoint, statements)
 
     sparql_query = sparql_query_skeleton.format(
-        filter_statement=filter_statement,
-        prefixes=prefixes,
-        subject_variables=subject_var,
-        where_block=where_block
+        prefixes=Query.get_prefixes(endpoint),
+        targets=query.get_targets_str(),
+        where_block=query.get_where_block(),
+        filter_statement=query.get_filter_block()
     )
 
     # return generated_sparql_query.strip()
 
     if SHOULD_PRINT:
-        print(_sparql_query)
+        print(query)
         print_statements(statements)
         print(sparql_query)
-        print('ffff', _sparql_query.get_triples_str())
 
     # nlp_query = nlp(query)
     # displacy.serve(nlp_query, style="dep")
 
     return sparql_query
-
-
-def prepare_query_prefixes(namespaces):
-    prefixes = ""
-
-    for i in range(len(namespaces)):
-        namespace = namespaces[i]
-        left_space = ""
-        if i > 0:
-            left_space = "\n"
-        prefixes += left_space + "PREFIX " + namespace.label + ": <" + namespace.name + ">"
-
-    return prefixes
-
-
-def prepare_query_where_block(properties, subject_var):
-    where_block = ""
-
-    for i in range(len(properties)):
-        value = properties[i]
-        left_space = ""
-        if i > 0:
-            left_space = "\n\t"
-        where_block += left_space + "OPTIONAL { " \
-                       + subject_var + " " \
-                       + value["prop_name_extended"] \
-                       + " ?" + re.sub(':', '_', value["prop_name_extended"]) \
-                       + " } ."
-
-    return where_block
-
-
-def prepare_filer_statement(endpoint, query):
-    filter_statement = ""
-    statements = get_statements(query)
-    graph_properties = parser.get_properties(endpoint)
-
-    for i in range(len(statements)):
-        statement = statements[i]
-
-        if SHOULD_PRINT:
-            print(f'statement[{i}]: {statement}')
-
-        if i == 0:
-            filter_statement = "FILTER ("
-
-        if statement["is_main_statement"]:
-            # TODO:
-            # filter_statement += "\n\t\t" + "contains(" + subject_var + ", \"" + str(stmt["complement"][0]) + "\") ."
-            None
-        else:
-            for g_property in graph_properties:
-                for complement in statement["complement"]:
-                    # TODO: nlp validation (use the lemmatization to find similar words)
-                    if g_property["prop_label"] == complement:
-                        filter_statement += "\n\t\t" + "contains(" + g_property["short_name"] + ", \"" + str(
-                            statement["predicate"]) + "\") ."
-
-        if i == len(statements) - 1:
-            filter_statement += "\n\t)"
-
-    return filter_statement

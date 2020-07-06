@@ -1,27 +1,36 @@
+import math
 import nltk
 import spacy
 
 from nltk.corpus import wordnet
+from ro.webdata.nqi.rdf import parser
 
 nlp = spacy.load('../../../../lib/en_core_web_sm/en_core_web_sm-2.2.5', disable=['parser', 'ner'])
 
 
 class Match:
-    def __init__(self, verb, properties):
+    def __init__(self, endpoint, verb):
+        properties = parser.get_properties(endpoint)
         similarity_list = _get_similarity_list(verb, properties)
-        finest_similarity = min(
+        finest_similarity_score = min(
             similarity_list, key=lambda item: item.similarity
         ).similarity
-        self.matched = list(
-            filter(
-                lambda item: item.similarity == finest_similarity, similarity_list
-            )
+
+        # list of distinct properties name which have the finest similarity score
+        self.matched = set(
+            [
+                similarityMap.prop_name for similarityMap in list(
+                    filter(
+                        lambda item: item.similarity == finest_similarity_score, similarity_list
+                    )
+                )
+            ]
         )
 
     def __str__(self):
         output = f'match size: {len(self.matched)}\n'
-        for item in self.matched:
-            output += str(item) + "\n"
+        for prop_name in self.matched:
+            output += f'prop_name: {prop_name}\n'
         return output
 
 
@@ -47,9 +56,12 @@ def _get_similarity_score(prop_name, prop_lemma, syn_name, syn_lemma):
                 (prop_name == item["syn_name"] and syn_name == item["prop_name"]):
             return 0
 
-    return nltk.jaccard_distance(
-        frozenset(prop_lemma), frozenset(syn_lemma)
-    )
+    jaccard_distance = nltk.jaccard_distance(frozenset(prop_lemma), frozenset(syn_lemma))
+    edit_distance = nltk.edit_distance(prop_lemma, syn_lemma)
+    root_edit_distance = math.pow(edit_distance, 1/len(prop_lemma))
+    similarity_score = math.pow(jaccard_distance * root_edit_distance, 1/2)
+
+    return similarity_score
 
 
 def _get_similarity_list(verb, properties):
@@ -60,7 +72,7 @@ def _get_similarity_list(verb, properties):
         for syn in synonyms:
             for lemma in syn.lemmas():
                 prop_name = prop.prop_name
-                prop_lemma = prop.lemma.prop_name
+                prop_lemma = prop.lemma
                 syn_name = syn.name().split('.')[0]
                 syn_lemma = lemma.name()
 

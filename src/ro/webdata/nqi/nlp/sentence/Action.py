@@ -42,7 +42,9 @@ def get_action(sentence, chunks, chunk_index, actions, statements, stmt_type):
         prev_word = sentence[chunk.start - 1] if chunk.start > 0 else None
 
         for action in actions:
-            if prev_word is not None and prev_word.tag_ != "IN":
+            # e.g.: chunk[0].tag_ == "WDT": "which paintings are located in Tulcea"
+            if chunk[0].tag_ == "WDT" or \
+                    (prev_word is not None and prev_word.tag_ != "IN"):
                 if action.is_available is True:
                     action.is_available = False
                     return action

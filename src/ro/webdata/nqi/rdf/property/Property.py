@@ -19,9 +19,9 @@ class Property:
         prop_name = _get_prop_name(uri)
         prop_label = split_camel_case_string(prop_name)
 
-        # TODO: check for http://www.w3.org/1999/02/22-rdf-syntax-ns#_1 in the triple
-        if prop_name != "_1":
-            self.lemma = _Lemma(prop_label, prop_name)
+        # TODO: check for http://www.w3.org/1999/02/22-rdf-syntax-ns#_1 in the triplestore
+        if prop_name not in ["_1", "first", "object", "predicate", "rest", "subject", "value"]:
+            self.lemma = _get_lemma(prop_label)
             self.ns_label = ns_label
             self.ns_name = ns_name
             self.prop_name = prop_name
@@ -36,8 +36,7 @@ class Property:
     def get_str(self, indentation=''):
         return (
             f'{{'
-            f'\n{indentation}\tlemma.prop_label: {self.lemma.prop_label},'
-            f'\n{indentation}\tlemma.prop_name: {self.lemma.prop_name},'
+            f'\n{indentation}\tlemma: {self.lemma},'
             f'\n{indentation}\tns_name: {self.ns_name},'
             f'\n{indentation}\tns_label: {self.ns_label},'
             f'\n{indentation}\tprop_name: {self.prop_name},'
@@ -46,15 +45,19 @@ class Property:
         )
 
 
-class _Lemma:
-    def __init__(self, prop_label, prop_name):
-        self.prop_label = _get_prop_label_lemma(prop_label)
-        self.prop_name = _get_prop_name_lemma(prop_name)
+def _get_lemma(prop_label):
+    # e.g.: prop_name = "currentLocation"
+    # prop_label = "current location"
+    # result = "location" (the adjective is removed)
 
-
-def _get_prop_label_lemma(prop_label):
     document = nlp(prop_label)
-    return " ".join(token.lemma_ for token in document)
+    label = next((
+        token for token in document
+        # TODO: check to see if we need more exceptions
+        if token.dep_ in [None, "", "ROOT"] and token.pos_ not in ["ADJ"]),
+        None
+    )
+    return label.lemma_
 
 
 def _get_prop_name(uri):
@@ -80,8 +83,3 @@ def _get_prop_name(uri):
         return "transverseDiameter"
     else:
         return prop_name
-
-
-def _get_prop_name_lemma(prop_name):
-    document = nlp(prop_name)
-    return document[0].lemma_
