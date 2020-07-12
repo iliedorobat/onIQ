@@ -15,8 +15,8 @@ def get_query(endpoint, nl_query):
 {prefixes}
 SELECT {targets}
 WHERE {{
-    {where_block}
-    {filter_statement}
+{where_block}
+{filter_statement}
 }}
     """
 
@@ -37,7 +37,7 @@ WHERE {{
         print_statements(statements)
         print(sparql_query)
 
-    # nlp_query = nlp(query)
+    # nlp_query = nlp(nl_query)
     # displacy.serve(nlp_query, style="dep")
 
     return sparql_query

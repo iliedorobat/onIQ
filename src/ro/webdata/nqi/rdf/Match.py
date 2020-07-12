@@ -51,6 +51,7 @@ class SimilarityMap:
 
 
 def _get_similarity_score(prop_name, prop_lemma, syn_name, syn_lemma):
+    # TODO: customizable fit
     for item in CUSTOM_FIT:
         if (prop_name == item["prop_name"] and syn_name == item["syn_name"]) or \
                 (prop_name == item["syn_name"] and syn_name == item["prop_name"]):
@@ -60,6 +61,8 @@ def _get_similarity_score(prop_name, prop_lemma, syn_name, syn_lemma):
     edit_distance = nltk.edit_distance(prop_lemma, syn_lemma)
     root_edit_distance = math.pow(edit_distance, 1/len(prop_lemma))
     similarity_score = math.pow(jaccard_distance * root_edit_distance, 1/2)
+
+    print('sim:', prop_name, '   ', prop_lemma, '    ', syn_name, '    ', syn_lemma, '  ', similarity_score, jaccard_distance, edit_distance)
 
     return similarity_score
 
