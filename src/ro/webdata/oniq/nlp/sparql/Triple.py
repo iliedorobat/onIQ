@@ -1,4 +1,4 @@
-from ro.webdata.nqi.common.constants import STR_SEPARATOR
+from ro.webdata.oniq.common.constants import STR_SEPARATOR
 
 
 class Triple:

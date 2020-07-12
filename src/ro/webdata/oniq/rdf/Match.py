@@ -3,7 +3,7 @@ import nltk
 import spacy
 
 from nltk.corpus import wordnet
-from ro.webdata.nqi.rdf import parser
+from ro.webdata.oniq.rdf import parser
 
 nlp = spacy.load('../../../../lib/en_core_web_sm/en_core_web_sm-2.2.5', disable=['parser', 'ner'])
 

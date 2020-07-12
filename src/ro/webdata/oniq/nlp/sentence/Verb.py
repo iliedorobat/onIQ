@@ -1,4 +1,4 @@
-from ro.webdata.nqi.nlp.sentence.utils import get_wh_words
+from ro.webdata.oniq.nlp.sentence.utils import get_wh_words
 
 
 class Verb:

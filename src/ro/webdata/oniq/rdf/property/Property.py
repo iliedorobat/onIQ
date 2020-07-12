@@ -1,7 +1,7 @@
 import spacy
 
-from ro.webdata.nqi.common.text_utils import split_camel_case_string
-from ro.webdata.nqi.rdf.namespace.Namespace import get_ns_label, get_ns_name
+from ro.webdata.oniq.common.text_utils import split_camel_case_string
+from ro.webdata.oniq.rdf.namespace.Namespace import get_ns_label, get_ns_name
 
 nlp = spacy.load('../../../../lib/en_core_web_sm/en_core_web_sm-2.2.5', disable=['parser', 'ner'])
 

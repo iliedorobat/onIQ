@@ -3,8 +3,8 @@ from SPARQLWrapper import SPARQLWrapper, JSON
 from pathlib import Path
 from rdflib import Graph, Literal
 
-from ro.webdata.nqi.rdf.namespace.Namespace import Namespace
-from ro.webdata.nqi.rdf.property.Property import Property
+from ro.webdata.oniq.rdf.namespace.Namespace import Namespace
+from ro.webdata.oniq.rdf.property.Property import Property
 
 CLASSES_QUERY = """
     PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>

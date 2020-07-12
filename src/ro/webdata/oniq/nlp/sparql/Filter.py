@@ -1,5 +1,5 @@
-from ro.webdata.nqi.common.constants import VARIABLE_PREFIX
-from ro.webdata.nqi.common.operators import COMPARISON_OPERATORS, MATH_OPERATORS
+from ro.webdata.oniq.common.constants import VARIABLE_PREFIX
+from ro.webdata.oniq.common.operators import COMPARISON_OPERATORS, MATH_OPERATORS
 
 
 class Filter:

@@ -1,6 +1,6 @@
-from ro.webdata.nqi.nlp.sentence.Noun import get_nouns
-from ro.webdata.nqi.nlp.sentence.Verb import Verb, get_verb_statements
-from ro.webdata.nqi.nlp.sentence.constants import TYPE_PRON, TYPE_WH, TYPE_WH_PRON_START, TYPE_WH_START
+from ro.webdata.oniq.nlp.sentence.Noun import get_nouns
+from ro.webdata.oniq.nlp.sentence.Verb import Verb, get_verb_statements
+from ro.webdata.oniq.nlp.sentence.constants import TYPE_PRON, TYPE_WH, TYPE_WH_PRON_START, TYPE_WH_START
 
 ACTION_EXCEPTIONS = [
     TYPE_PRON,

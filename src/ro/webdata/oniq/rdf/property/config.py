@@ -1,4 +1,4 @@
-from ro.webdata.nqi.rdf.namespace.constants import NS_DC, NS_DC_TERMS
+from ro.webdata.oniq.rdf.namespace.constants import NS_DC, NS_DC_TERMS
 
 PROPERTIES_TYPE = {
     "AGE": [],

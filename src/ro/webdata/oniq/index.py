@@ -1,6 +1,6 @@
-import ro.webdata.nqi.nlp.sparql.sparql as sparql
+import ro.webdata.oniq.nlp.sparql.sparql as sparql
 
-from ro.webdata.nqi.common.print_utils import print_lang_warning
+from ro.webdata.oniq.common.print_utils import print_lang_warning
 
 ENDPOINT = "http://localhost:7200/repositories/TESTING_BCU_CLUJ"
 ENDPOINT = "http://localhost:7200/repositories/eCHO"

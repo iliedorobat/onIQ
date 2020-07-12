@@ -1,9 +1,9 @@
-from ro.webdata.nqi.common.constants import STR_SEPARATOR, VARIABLE_PREFIX
-from ro.webdata.nqi.nlp.sentence.constants import TYPE_SELECT_CLAUSE, TYPE_WHERE_CLAUSE
-from ro.webdata.nqi.nlp.sparql.MetaTriple import MetaTriple
-from ro.webdata.nqi.nlp.sparql.Triple import Triple
-from ro.webdata.nqi.rdf import parser
-from ro.webdata.nqi.rdf.Match import Match
+from ro.webdata.oniq.common.constants import STR_SEPARATOR, VARIABLE_PREFIX
+from ro.webdata.oniq.nlp.sentence.constants import TYPE_SELECT_CLAUSE, TYPE_WHERE_CLAUSE
+from ro.webdata.oniq.nlp.sparql.MetaTriple import MetaTriple
+from ro.webdata.oniq.nlp.sparql.Triple import Triple
+from ro.webdata.oniq.rdf import parser
+from ro.webdata.oniq.rdf.Match import Match
 
 
 # TODO: check if the sentence start with WHEN and WHERE

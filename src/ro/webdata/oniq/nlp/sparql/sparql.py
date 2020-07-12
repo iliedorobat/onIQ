@@ -1,10 +1,10 @@
 import spacy
 
 from spacy import displacy
-from ro.webdata.nqi.common.constants import SHOULD_PRINT
-from ro.webdata.nqi.common.print_utils import print_statements
-from ro.webdata.nqi.nlp.parser import get_statements
-from ro.webdata.nqi.nlp.sparql.Query import Query
+from ro.webdata.oniq.common.constants import SHOULD_PRINT
+from ro.webdata.oniq.common.print_utils import print_statements
+from ro.webdata.oniq.nlp.parser import get_statements
+from ro.webdata.oniq.nlp.sparql.Query import Query
 
 nlp = spacy.load('../../../../lib/en_core_web_sm/en_core_web_sm-2.2.5')
 # nlp = spacy.load('../../../../lib/en_core_web_md/en_core_web_md-2.2.5')

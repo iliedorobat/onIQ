@@ -1,8 +1,8 @@
 import logging
 
 from langdetect import detect
-from ro.webdata.nqi.nlp.sentence.Action import Action
-from ro.webdata.nqi.nlp.sentence.Statement import Statement
+from ro.webdata.oniq.nlp.sentence.Action import Action
+from ro.webdata.oniq.nlp.sentence.Statement import Statement
 
 
 def print_lang_warning(query):

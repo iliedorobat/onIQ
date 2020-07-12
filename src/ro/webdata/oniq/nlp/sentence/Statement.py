@@ -1,10 +1,10 @@
 from spacy.tokens import Span, Token
 
-from ro.webdata.nqi.nlp.sentence.Action import Action
-from ro.webdata.nqi.nlp.sentence.Noun import get_nouns
-from ro.webdata.nqi.nlp.sentence.constants import PRONOUNS, TYPE_PRON, TYPE_WH, TYPE_WH_PRON_START, TYPE_WH_START, \
+from ro.webdata.oniq.nlp.sentence.Action import Action
+from ro.webdata.oniq.nlp.sentence.Noun import get_nouns
+from ro.webdata.oniq.nlp.sentence.constants import PRONOUNS, TYPE_PRON, TYPE_WH, TYPE_WH_PRON_START, TYPE_WH_START, \
     TYPE_SELECT_CLAUSE, TYPE_WHERE_CLAUSE
-from ro.webdata.nqi.nlp.sentence.utils import get_wh_pronouns, get_wh_words
+from ro.webdata.oniq.nlp.sentence.utils import get_wh_pronouns, get_wh_words
 
 
 class Statement:

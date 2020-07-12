@@ -1,6 +1,6 @@
-from ro.webdata.nqi.nlp.sentence.constants import TYPE_SELECT_CLAUSE
-from ro.webdata.nqi.nlp.sparql.Filter import Filter, COMPARISON_OPERATORS
-from ro.webdata.nqi.nlp.sparql.Triple import Triple
+from ro.webdata.oniq.nlp.sentence.constants import TYPE_SELECT_CLAUSE
+from ro.webdata.oniq.nlp.sparql.Filter import Filter, COMPARISON_OPERATORS
+from ro.webdata.oniq.nlp.sparql.Triple import Triple
 
 
 class MetaTriple:

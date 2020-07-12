@@ -1,11 +1,11 @@
 import spacy
 from iteration_utilities import unique_everseen
 
-from ro.webdata.nqi.common.constants import SHOULD_PRINT
-from ro.webdata.nqi.common.print_utils import print_actions, print_tokens
-from ro.webdata.nqi.nlp.sentence.Statement import Statement, get_stmt_type
-from ro.webdata.nqi.nlp.sentence.Action import ACTION_EXCEPTIONS, get_actions, get_action
-from ro.webdata.nqi.nlp.sentence.utils import get_cardinals, get_conjunction, get_preposition, get_prev_chunk, retokenize
+from ro.webdata.oniq.common.constants import SHOULD_PRINT
+from ro.webdata.oniq.common.print_utils import print_actions, print_tokens
+from ro.webdata.oniq.nlp.sentence.Statement import Statement, get_stmt_type
+from ro.webdata.oniq.nlp.sentence.Action import ACTION_EXCEPTIONS, get_actions, get_action
+from ro.webdata.oniq.nlp.sentence.utils import get_cardinals, get_conjunction, get_preposition, get_prev_chunk, retokenize
 
 nlp = spacy.load('../../../../lib/en_core_web_sm/en_core_web_sm-2.2.5')
 
