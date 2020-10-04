@@ -1,4 +1,4 @@
-class MATH_OPERATORS:
+class LOGICAL_OPERATORS:
     AND = '&&'
     OR = '||'
 

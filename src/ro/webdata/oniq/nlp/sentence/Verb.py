@@ -30,6 +30,12 @@ class Verb:
         )
 
 
+def get_verb(verb_stmt):
+    if verb_stmt.main_vb is not None:
+        return verb_stmt.main_vb
+    return verb_stmt.aux_vb
+
+
 def get_verb_statements(sentence):
     verb_statements = []
     aux_verb = modal_verb = negation = wh_word = None

@@ -1,62 +1,100 @@
-from ro.webdata.oniq.common.constants import VARIABLE_PREFIX
-from ro.webdata.oniq.common.operators import COMPARISON_OPERATORS, MATH_OPERATORS
+from ro.webdata.oniq.common.constants import VARIABLE_PREFIX, VARIABLE_SEPARATOR
+from ro.webdata.oniq.common.math_utils import COMPARISON_OPERATORS, LOGICAL_OPERATORS
+
+
+class Pill:
+    def __init__(self, conjunction: str = None, key: str = None, negation: str = None, operator=None, values: str = None):
+        self.key = key
+        self.operator = operator
+        self.values = values
+        self.conjunction = conjunction
+        self.negation = negation
+
+    def __str__(self):
+        return self.get_str('\t\t')
+
+    def get_str(self, indentation=''):
+        conjunction = f'[{self.conjunction}]' if self.conjunction is not None else '[]'
+        key = f'<{self.key}>'
+        operator = f'<{self.operator}>'
+        values = f'<{self.values}>'
+
+        return (
+            f'{indentation}{{ {conjunction} {key} {operator} {values} }}'
+        )
+
+    def get_pill_pattern(self, indentation='\t'):
+        variable = f'{VARIABLE_PREFIX}{self.key}'
+        return (
+            f'{indentation}'
+            f'{_get_operand(variable, True, True)}{VARIABLE_SEPARATOR}'
+            f'{_get_operator(self)}{VARIABLE_SEPARATOR}'
+            f'{_get_operand(self.values, False, True)}'
+        )
+
+
+class Pills:
+    def __init__(self, targets: [Pill] = None, conditions: [Pill] = None):
+        self.targets = targets if targets is not None else []
+        self.conditions = conditions if conditions is not None else []
+
+    def __str__(self):
+        return self.get_str()
+
+    # TODO: print the conditions
+    def get_str(self, indentation='\t'):
+        targets_str = '{'
+        targets_str += f'\n{indentation}{indentation}target pills: ['
+
+        for target in self.targets:
+            targets_str += f'\n{indentation}' + str(target)
+
+        targets_str += f'\n{indentation}{indentation}]' if len(self.targets) > 0 else ']'
+        targets_str += f'\n{indentation}'
+
+        return targets_str
+
+    def get_target_pills_pattern(self, indentation='\t\t'):
+        statement = ''
+
+        for i in range(0, len(self.targets)):
+            pill = self.targets[i]
+            statement += pill.get_pill_pattern(indentation) + VARIABLE_SEPARATOR
+            statement += LOGICAL_OPERATORS.OR + '\n' if i < len(self.targets) - 1 else ''
+
+        return statement.rstrip()
+
+    # TODO:
+    def get_conditions_pills_pattern(self, indentation='\t\t'):
+        return ''
 
 
 class Filter:
-    def __init__(self, operator, obj, constraints):
-        self.operator = operator
-        self.obj = obj
-        self.constraints = constraints
+    def __init__(self, pills: Pills = None):
+        self.pills = pills if pills is not None else Pills()
 
-    def __str__(self, is_sensitive=False):
-        filter_str = 'FILTER({statement})'
+    def get_filter_pattern(self, indentation='\t'):
+        if len(self.pills.targets) == 0 and len(self.pills.conditions) == 0:
+            return None
 
-        # TODO: implement the REGEX operator
-        if self.operator in [
-            COMPARISON_OPERATORS.CONTAINS,
-            COMPARISON_OPERATORS.NOT_CONTAINS
-        ]:
-            # TODO: check if len(constraints) > 0
-            statement = f'{_generate_contains_clause(self.operator, self.obj, self.constraints, is_sensitive)}'
-            filter_str = filter_str.format(statement=statement)
-        elif self.operator in [
-            COMPARISON_OPERATORS.EQ,
-            COMPARISON_OPERATORS.NOT_EQ,
-            COMPARISON_OPERATORS.GT,
-            COMPARISON_OPERATORS.GTE,
-            COMPARISON_OPERATORS.LT,
-            COMPARISON_OPERATORS.LTE
-        ]:
-            # TODO: check if len(constraints) == 1
-            variable = _get_variable(self.obj)
-            statement = f'{variable} {self.operator} "{self.constraints[0]}"'
-            filter_str = filter_str.format(statement=statement)
-        else:
-            filter_str = ''
+        # TODO: get_conditions_pills_pattern
+        statement = self.pills.get_target_pills_pattern()
 
-        return filter_str
+        return (
+            f'{indentation}'
+            f'FILTER(\n{statement}\n\t)'
+        )
 
 
-def _generate_contains_clause(operator, obj, constraints, is_sensitive):
-    clause = None
-
-    for i in range(len(constraints)):
-        constraint = constraints[i]
-        variable = _get_variable(obj)
-        sens_constraint = _get_sens_operand(constraint, is_sensitive)
-
-        if i == 0:
-            clause = f'{operator}({variable}, {sens_constraint})'
-        else:
-            clause += f' {MATH_OPERATORS.OR} {operator}({variable}, {sens_constraint})'
-
-    return clause
+def _get_operator(pill: Pill):
+    if pill.negation is not None:
+        if pill.operator == COMPARISON_OPERATORS.CONTAINS:
+            return COMPARISON_OPERATORS.NOT_CONTAINS
+        if pill.operator == COMPARISON_OPERATORS.EQ:
+            return COMPARISON_OPERATORS.NOT_EQ
+    return pill.operator
 
 
-def _get_sens_operand(operand, is_sensitive=False):
-    return f'"{operand}"' if is_sensitive else f'lcase("{operand}")'
-
-
-# TODO: move the method into utils (it's also used in Query.py)
-def _get_variable(var_name):
-    return f'{VARIABLE_PREFIX}{var_name}'
+def _get_operand(operand, is_variable=False, is_sensitive=False):
+    value = operand if is_variable else f'"{operand}"'
+    return f'{value}' if not is_sensitive else f'lcase({value})'

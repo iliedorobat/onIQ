@@ -30,6 +30,16 @@ class Property:
     def __bool__(self):
         return self.lemma and self.ns_label and self.ns_name and self.prop_name and self.prop_name_extended
 
+    def __eq__(self, other):
+        if not isinstance(other, Property):
+            return NotImplemented
+        return other is not None and \
+               self.lemma == other.lemma and \
+               self.ns_name == other.ns_name and \
+               self.ns_label == other.ns_label and \
+               self.prop_name == other.prop_name and \
+               self.prop_name_extended == other.prop_name_extended
+
     def __str__(self):
         return self.get_str()
 

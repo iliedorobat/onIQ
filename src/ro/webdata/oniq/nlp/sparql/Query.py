@@ -1,16 +1,22 @@
-from ro.webdata.oniq.common.constants import STR_SEPARATOR, VARIABLE_PREFIX
+from ro.webdata.oniq.common.constants import STR_SEPARATOR
+from ro.webdata.oniq.common.math_utils import COMPARISON_OPERATORS
+from ro.webdata.oniq.nlp.sentence.Verb import get_verb
 from ro.webdata.oniq.nlp.sentence.constants import TYPE_SELECT_CLAUSE, TYPE_WHERE_CLAUSE
+from ro.webdata.oniq.nlp.sparql.Filter import Pill, Pills
 from ro.webdata.oniq.nlp.sparql.MetaTriple import MetaTriple
+from ro.webdata.oniq.nlp.sparql.Target import Target
 from ro.webdata.oniq.nlp.sparql.Triple import Triple
 from ro.webdata.oniq.rdf import parser
 from ro.webdata.oniq.rdf.Match import Match
+
+NS_SEPARATOR = ':'
 
 
 # TODO: check if the sentence start with WHEN and WHERE
 class Query:
     def __init__(self, endpoint, statements):
-        self.targets = _get_targets(statements)
-        self.meta_triples = _get_meta_triples(endpoint, statements)
+        self.targets = _prepare_targets(endpoint, statements)
+        self.meta_triples = _consolidate_meta_triples(endpoint, statements)
 
     @staticmethod
     def get_prefixes(endpoint):
@@ -24,41 +30,29 @@ class Query:
 
         return prefixes
 
-    def get_targets_str(self):
+    def get_targets_str(self, indentation=''):
         targets_str = ''
 
-        for i in range(len(self.targets)):
-            targets_str += f'?{self.targets[i].lemma_}'
-            targets_str += ' ' if i < len(self.targets) - 1 else ''
+        for target in self.targets:
+            targets_str += target.get_variable_pattern()
 
-        return targets_str
+        return targets_str.rstrip()
 
     def get_where_block(self, indentation='\t'):
         triples_str = ''
 
-        for i in range(len(self.meta_triples)):
-            meta_triple = self.meta_triples[i]
-            conjunction = meta_triple.conjunction.text.upper() if meta_triple.conjunction is not None else None
+        for meta_triple in self.meta_triples:
+            triples_str += meta_triple.triple.get_triple_pattern() + '.\n'
 
-            # TODO: OR
-            if conjunction is None or conjunction == 'AND':
-                triples_str += f'{indentation}' \
-                               f'{VARIABLE_PREFIX}{STR_SEPARATOR.join(meta_triple.triple.s)} ' \
-                               f'{meta_triple.triple.p} ' \
-                               f'{VARIABLE_PREFIX}{meta_triple.triple.o} .'
-                triples_str += '\n' if i < len(self.meta_triples) - 1 else ''
-
-        return triples_str
+        return triples_str.rstrip()
 
     def get_filter_block(self, indentation='\t'):
         filter_str = ''
 
-        for i in range(len(self.meta_triples)):
-            meta_triple = self.meta_triples[i]
-            filter_str += f'{indentation}{str(meta_triple.filter_clause)}'
-            filter_str += ' .\n' if i < len(self.meta_triples) - 1 else ''
+        for meta_triple in self.meta_triples:
+            filter_str += f'{meta_triple.filter.get_filter_pattern()}\n'
 
-        return filter_str
+        return filter_str.rstrip()
 
     def __str__(self):
         return self.get_str()
@@ -82,19 +76,37 @@ class Query:
         )
 
 
-def _get_targets(statements):
+def _prepare_targets(endpoint, statements):
     targets = []
+    prev_prop = None
+    prev_stmt_type = None
 
-    for stmt in statements:
-        target = _get_target(stmt)
+    for i in range(0, len(statements)):
+        stmt = statements[i]
+        verb = get_verb(stmt.action.verb_stmt)
+        prop = _get_matched_property(endpoint, verb)
+        target_token = _get_target_token(stmt)
 
-        if target is not None:
-            targets.append(target)
+        if stmt.type != prev_stmt_type or not prop.__eq__(prev_prop):
+            targets.append(Target(target_token.lemma_, [target_token], stmt.type))
+        else:
+            target = targets[i - 1]
+            target.values.append(target_token)
+            target.name = STR_SEPARATOR.join([value.lemma_ for value in target.values])
+
+        prev_prop = prop
+        prev_stmt_type = stmt.type
 
     return targets
 
 
-def _get_target(stmt):
+def _get_target_token(stmt):
+    """
+    Get the target from the user query (the noun in the TYPE_SELECT_CLAUSE statement)
+    :param stmt: The query statement
+    :return: The noun (singular / mass / plural)
+    """
+
     if stmt.type == TYPE_SELECT_CLAUSE:
         return next((
             token for token in stmt.phrase
@@ -104,65 +116,117 @@ def _get_target(stmt):
     return None
 
 
-def _get_meta_triples(endpoint, statements):
-    m_triples: [MetaTriple] = []
+"""
+_consolidate_meta_triples documentation
+input = Which paintings or statues are located in Bacau?
+
+prep_meta_triples = [
+    {
+        triple: { <painting_statue> <edm:currentLocation> <edm_currentLocation> },
+        pill: target pills: [ { [] <painting_statue> <contains> <paintings> } ]
+    },
+    {
+        triple: { <painting_statue> <edm:currentLocation> <edm_currentLocation> },
+        pill: target pills: [ { [or] <painting_statue> <contains> <statues> } ]
+    }
+]
+meta_triples = [
+    {
+        triple: { <painting_statue> <edm:currentLocation> <edm_currentLocation> },
+        pill: target pills: [
+            { [] <painting_statue> <contains> <paintings> },
+            { [or] <painting_statue> <contains> <statues> }
+        ]
+    }
+]
+"""
+
+
+def _consolidate_meta_triples(endpoint, statements):
+    prep_meta_triples: [MetaTriple] = _prepare_meta_triples(endpoint, statements)
+    meta_triples = _get_base_meta_triples(endpoint, statements)
+
+    for prep_meta_triple in prep_meta_triples:
+        for meta_triple in meta_triples:
+            if meta_triple.triple.__eq__(prep_meta_triple.triple):
+                meta_triple.pills.targets = meta_triple.pills.targets + prep_meta_triple.pills.targets
+
+    print('------')
+    for meta in prep_meta_triples:
+        print(meta)
+    print('------')
+    for meta in meta_triples:
+        print(meta)
+
+    return meta_triples
+
+
+"""
+_get_base_meta_triples documentation
+input = Which paintings or statues are located in Bacau?
+
+in_meta_triples = [
+    {
+        triple: { <painting_statue> <edm:currentLocation> <edm_currentLocation> },
+        pill: target pills: [{  <painting_statue> <contains> <paintings> }]
+    },
+    {
+        triple: { <painting_statue> <edm:currentLocation> <edm_currentLocation> },
+        pill: target pills: [{ [or] <painting_statue> <contains> <statues> }]
+    }
+]
+base_meta_triples = [
+    {
+        triple: { <painting_statue> <edm:currentLocation> <edm_currentLocation> },
+        pill: None
+    }
+]
+"""
+
+
+def _get_base_meta_triples(endpoint, statements):
+    base_meta_triples: [MetaTriple] = []
+    in_meta_triples: [MetaTriple] = _prepare_meta_triples(endpoint, statements)
+
+    for in_meta_triple in in_meta_triples:
+        in_triple = in_meta_triple.triple
+
+        filtered = [meta_triple.triple for meta_triple in base_meta_triples if in_triple.__eq__(meta_triple.triple)]
+        if len(filtered) == 0:
+            base_meta_triples.append(MetaTriple(in_triple))
+
+    return base_meta_triples
+
+
+def _prepare_meta_triples(endpoint, statements):
+    meta_triples: [MetaTriple] = []
+    targets = _prepare_targets(endpoint, statements)
 
     for stmt in statements:
         verb_stmt = stmt.action.verb_stmt
-        verb = verb_stmt.main_vb \
-            if verb_stmt.main_vb is not None \
-            else verb_stmt.aux_vb
+        verb = get_verb(verb_stmt)
         negation = verb_stmt.neg
         conjunction = stmt.conjunction
 
         prop = _get_matched_property(endpoint, verb)
-        print('pp:', prop)
-        target = _get_target(stmt)
-
-        triple_s = target.lemma_
-        triple_p = prop.prop_name_extended if prop is not None else None
-        triple_o = prop.prop_name_extended.replace(':', '_') if prop is not None else None
-
-        new_triple = Triple(triple_s, triple_p, triple_o)
+        target_item = _get_target_token(stmt)
 
         if stmt.type == TYPE_SELECT_CLAUSE:
-            _append_select(stmt, m_triples, prop, target, negation, conjunction)
+            target = list(filter(lambda item: target_item in item.values != -1, targets))
+            triple_s = target[0].name
+            triple_p = prop.prop_name_extended if prop is not None else None
+            triple_o = prop.prop_name_extended.replace(NS_SEPARATOR, STR_SEPARATOR) if prop is not None else None
+
+            triple = Triple(triple_s, triple_p, triple_o)
+            target_pill = Pill(conjunction, triple_s, negation, COMPARISON_OPERATORS.CONTAINS, target_item.text)
+            pills = Pills([target_pill])
+
+            meta_triples.append(MetaTriple(triple, pills))
         elif stmt.type == TYPE_WHERE_CLAUSE:
-            # TODO: if len(noun_list) == 0 ???
-            noun_list = [token for token in stmt.phrase if token.pos_ == "NOUN"]
-            for noun in noun_list:
-                m_triples.append(MetaTriple(new_triple, noun.text, negation, conjunction))
+            # TODO: TYPE_WHERE_CLAUSE
+            print(f'Query.py: stmt.type {stmt.type} is not implemented')
 
-    return m_triples
-
-
-def _append_select(stmt, m_triples, prop, target, negation, conjunction):
-    pobj_tokens = [token for token in stmt.phrase if token.dep_ == "pobj"]
-    triple_s = target.lemma_
-    triple_p = prop.prop_name_extended if prop is not None else None
-    triple_o = prop.prop_name_extended.replace(':', '_') if prop is not None else None
-
-    # Find if there already exists a triple with the predicate == triple_p
-    crr_m_triple = next((
-        m_triple for m_triple in m_triples if m_triple.triple.p == triple_p
-    ), None)
-    new_triple: Triple = crr_m_triple.triple if crr_m_triple is not None else Triple([triple_s], triple_p, triple_o)
-
-    if len(pobj_tokens) == 0:
-        if crr_m_triple is not None:
-            crr_m_triple.triple.s.append(triple_s)
-            crr_m_triple.value.append(target.text)
-            crr_m_triple.def_filter_clause(stmt.type)
-        else:
-            m_triples.append(MetaTriple(new_triple, [target.text], negation, conjunction, stmt.type))
-    else:
-        for token in pobj_tokens:
-            if crr_m_triple is not None:
-                crr_m_triple.triple.s.append(triple_s)
-                crr_m_triple.value.append(token.text)
-                crr_m_triple.def_filter_clause(stmt.type)
-            else:
-                m_triples.append(MetaTriple(new_triple, [token.text], negation, conjunction, stmt.type))
+    return meta_triples
 
 
 def _get_matched_property(endpoint, verb):
