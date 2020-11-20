@@ -1,4 +1,5 @@
 from ro.webdata.oniq.nlp.sentence.utils import get_wh_words
+from spacy.tokens import Token
 
 
 class Verb:
@@ -36,60 +37,126 @@ def get_verb(verb_stmt):
     return verb_stmt.aux_vb
 
 
-def get_verb_statements(sentence):
+def prepare_verb_list(sentence):
     verb_statements = []
     aux_verb = modal_verb = negation = wh_word = None
+    verb_list = _get_verb_list(sentence)
+
+    for verb in verb_list:
+        if isinstance(verb, list):
+            aux_verb = verb
+            next_verb = _get_main_verb(sentence, aux_verb[len(aux_verb) - 1])
+            negation = _get_negation_token(sentence, aux_verb[0], negation)
+            wh_word = _get_wh_before_vb(sentence, aux_verb[0])
+            wh_word = _get_prev_wh_word(wh_word, verb_statements, aux_verb)
+
+            if next_verb is None:
+                verb_statements.append(
+                    Verb(aux_verb, negation, None, modal_verb, wh_word)
+                )
+                aux_verb = modal_verb = negation = wh_word = None
+        elif isinstance(verb, Token):
+            if wh_word is None:
+                wh_word = _get_wh_before_vb(sentence, verb)
+                wh_word = _get_prev_wh_word(wh_word, verb_statements, [verb])
+
+            if verb.tag_ == "MD":
+                modal_verb = verb
+            else:
+                negation = _get_negation_token(sentence, verb, negation)
+                verb_statements.append(
+                    Verb(aux_verb, negation, verb, modal_verb, wh_word)
+                )
+                aux_verb = modal_verb = negation = wh_word = None
+
+    return verb_statements
+
+
+def _get_prev_wh_word(wh_word, verb_statements, verb_list):
+    # TODO: check the conj_list
+    conj_list = list(
+        filter(
+            lambda item: item.dep_ == "conj", verb_list
+        )
+    )
+
+    # TODO: check the statement
+    if wh_word is None and len(conj_list) > 0:
+        return verb_statements[len(verb_statements) - 1].wh_word
+
+    return wh_word
+
+
+def _get_verb_list(sentence):
+    """
+    Prepare the list of verbs as follows:
+        - the auxiliary verbs are stored as a list of tokens,
+        - the main verb is stored as a single token
+
+    E.g.:
+        TODO: a better example
+        sentence: "have not been displayed" => return [[has, been], displayed]
+
+    :param sentence:
+    :return:
+    """
+
+    verb_list = []
 
     for token in sentence:
         verb = token if token.pos_ in ["AUX", "VERB"] else None
 
         if verb is not None:
-            if verb.pos_ == "AUX":
-                aux_verb = verb
-                next_verb = _get_main_verb(sentence, aux_verb)
-                wh_word = _get_wh_before_vb(sentence, token)
-
-                if wh_word is None and verb.dep_ == "conj":
-                    wh_word = verb_statements[len(verb_statements) - 1].wh_word
-
-                # TODO: OLD condition: if next_verb is None or next_verb.pos_ != "VERB":
-                print('aux_verb, next_verb', aux_verb, next_verb)
-                if next_verb is None:
-                    negation = _get_negation_token(sentence, aux_verb, negation)
-                    verb_statements.append(
-                        Verb(aux_verb, negation, None, modal_verb, wh_word)
-                    )
-                    aux_verb = modal_verb = negation = wh_word = None
+            if _is_aux_preceded_by_aux(sentence, verb):
+                length = len(verb_list)
+                verb_list[length - 1].append(verb)
             else:
-                if wh_word is None:
-                    wh_word = _get_wh_before_vb(sentence, token)
-
-                    if wh_word is None and verb.dep_ == "conj":
-                        wh_word = verb_statements[len(verb_statements) - 1].wh_word
-
-                if verb.tag_ == "MD":
-                    modal_verb = verb
+                if verb.pos_ == "AUX":
+                    verb_list.append([verb])
                 else:
-                    negation = _get_negation_token(sentence, verb, negation)
-                    verb_statements.append(
-                        Verb(aux_verb, negation, verb, modal_verb, wh_word)
-                    )
-                    aux_verb = modal_verb = negation = wh_word = None
+                    verb_list.append(verb)
 
-    return verb_statements
+    return verb_list
+
+
+def _is_aux_preceded_by_aux(sentence, verb):
+    """
+    Check if the auxiliary verb is preceded by another auxiliary verb
+
+    E.g.:
+        question: "which statues do not have more than three owners?"
+            * aux ("have") preceded by aux ("do"): "do not have"
+
+    :param sentence: The sentence
+    :param verb: The auxiliary verb
+    :return:
+    """
+
+    if verb.pos_ != "AUX" or verb.i == 0:
+        return False
+
+    prev_word = sentence[verb.i - 1]
+
+    if prev_word.dep_ == "neg" and verb.i > 1:
+        prev_word = sentence[verb.i - 2]
+
+    if prev_word.pos_ == "AUX":
+        return True
+
+    return False
 
 
 def _get_main_verb(sentence, verb):
     """
     Get the main verb
 
-    E.g.:\n
-    - question: "when was the museum opened?"
-        * the verb chain: "was opened" => return "opened"
-    - question: "why do they always arrive late?"
-        * the verb chain: "do arrive" => return "arrive"
-    - question: "when were the panama papers published"
-        * the verb chain: "were published" => return "published"
+    E.g.:
+        question: "when was the museum opened?"
+            * the verb chain: "was opened" => return "opened"
+        question: "why do they always arrive late?"
+            * the verb chain: "do arrive" => return "arrive"
+        question: "when were the panama papers published"
+            * the verb chain: "were published" => return "published"
 
     :param sentence: The sentence
     :param verb: The auxiliary verb
@@ -115,7 +182,7 @@ def _get_next_token(document, verb, pos_list):
     for i in range(next_word.i, len(document)):
         token = document[i]
 
-        if token.pos_ in pos_list:
+        if token.pos_ in pos_list or token.dep_ == "neg":
             next_word = document[token.i + 1]
         else:
             break
@@ -124,12 +191,17 @@ def _get_next_token(document, verb, pos_list):
 
 
 def _get_wh_before_vb(document, token):
+    if token.i == 0:
+        return None
+
+    wh_words = get_wh_words(document)
     prev_word = document[token.i - 1]
 
     # E.g.: ... in museums which hosts ...
-    if prev_word in get_wh_words(document):
+    if prev_word in wh_words:
         return prev_word
 
+    #             DET  ADJ      NOUN   AUX
     # E.g.: where the famous artifacts are hosted?
     if prev_word.pos_ == "AUX":
         prev_word = document[prev_word.i - 1]
@@ -140,10 +212,10 @@ def _get_wh_before_vb(document, token):
     if prev_word.pos_ in ["ADJ"]:
         prev_word = document[prev_word.i - 1]
 
-    if prev_word.pos_ == "DET":
+    if prev_word.pos_ == "DET" and prev_word.tag_ != "WDT":
         prev_word = document[prev_word.i - 1]
 
-    if prev_word in get_wh_words(document):
+    if prev_word in wh_words:
         return prev_word
 
     return None

@@ -87,15 +87,17 @@ def _prepare_targets(endpoint, statements):
         prop = _get_matched_property(endpoint, verb)
         target_token = _get_target_token(stmt)
 
-        if stmt.type != prev_stmt_type or not prop.__eq__(prev_prop):
-            targets.append(Target(target_token.lemma_, [target_token], stmt.type))
-        else:
-            target = targets[i - 1]
-            target.values.append(target_token)
-            target.name = STR_SEPARATOR.join([value.lemma_ for value in target.values])
+        if target_token is not None:
+            if stmt.type != prev_stmt_type or not prop.__eq__(prev_prop):
+                # TODO: 'Which statues do not have more than three owners?'
+                targets.append(Target(target_token.lemma_, [target_token], stmt.type))
+            else:
+                target = targets[i - 1]
+                target.values.append(target_token)
+                target.name = STR_SEPARATOR.join([value.lemma_ for value in target.values])
 
-        prev_prop = prop
-        prev_stmt_type = stmt.type
+            prev_prop = prop
+            prev_stmt_type = stmt.type
 
     return targets
 
@@ -230,6 +232,10 @@ def _prepare_meta_triples(endpoint, statements):
 
 
 def _get_matched_property(endpoint, verb):
+    # if there is an auxiliary verb
+    if isinstance(verb, list):
+        return None
+
     properties = parser.get_properties(endpoint)
     match = Match(endpoint, verb.text)
 

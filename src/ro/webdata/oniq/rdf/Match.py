@@ -3,6 +3,7 @@ import nltk
 import spacy
 
 from nltk.corpus import wordnet
+from ro.webdata.oniq.common.print import console
 from ro.webdata.oniq.rdf import parser
 
 nlp = spacy.load('../../../../lib/en_core_web_sm/en_core_web_sm-2.2.5', disable=['parser', 'ner'])
@@ -62,7 +63,8 @@ def _get_similarity_score(prop_name, prop_lemma, syn_name, syn_lemma):
     root_edit_distance = math.pow(edit_distance, 1/len(prop_lemma))
     similarity_score = math.pow(jaccard_distance * root_edit_distance, 1/2)
 
-    print('sim:', prop_name, '   ', prop_lemma, '    ', syn_name, '    ', syn_lemma, '  ', similarity_score, jaccard_distance, edit_distance)
+    console.extra_debug(f'sim: {prop_name},   {prop_lemma},   {syn_name},   {syn_lemma},'
+                        f'   {similarity_score},   {jaccard_distance},   {edit_distance}')
 
     return similarity_score
 

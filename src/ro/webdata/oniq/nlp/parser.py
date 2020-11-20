@@ -1,10 +1,10 @@
 import spacy
 from iteration_utilities import unique_everseen
 
-from ro.webdata.oniq.common.constants import SHOULD_PRINT
-from ro.webdata.oniq.common.print_utils import print_actions, print_tokens
+from ro.webdata.oniq.common.print import console, print_token_list
+from ro.webdata.oniq.common.print_utils import print_action_list
 from ro.webdata.oniq.nlp.sentence.Statement import Statement, get_stmt_type
-from ro.webdata.oniq.nlp.sentence.Action import ACTION_EXCEPTIONS, get_actions, get_action
+from ro.webdata.oniq.nlp.sentence.Action import ACTION_EXCEPTIONS, prepare_action_list, get_action
 from ro.webdata.oniq.nlp.sentence.utils import get_cardinals, get_conjunction, get_preposition, get_prev_chunk, retokenize
 
 nlp = spacy.load('../../../../lib/en_core_web_sm/en_core_web_sm-2.2.5')
@@ -26,17 +26,18 @@ def get_statements(query):
 
     for sentence in document.sents:
         retokenize(document, sentence)
-        actions = get_actions(sentence)
+        action_list = prepare_action_list(sentence)
 
-        if SHOULD_PRINT:
-            print_tokens(sentence)
-            # print_actions(actions)
-            print('actions len:', len(actions))
+        print_token_list(sentence)
+        print_action_list(action_list)
+        console.debug(f'len(action_list) = {len(action_list)}')
 
         chunks = list(document.noun_chunks)
-        for chunk_index in range(0, len(chunks)):
-            chunk = chunks[chunk_index]
-            prev_chunk = get_prev_chunk(chunks, chunk_index)
+        for index in range(0, len(chunks)):
+            chunk = chunks[index]
+            console.debug(f'chunks[{index}] = {chunk}')
+
+            prev_chunk = get_prev_chunk(chunks, index)
             preposition = get_preposition(sentence, chunk)
 
             # preposition.i > 1 (which of the factors... => preposition.i == 1)
@@ -46,9 +47,9 @@ def get_statements(query):
                 statements[len(statements) - 1].phrase = sentence[start_index: end_index]
             else:
                 stmt_type = get_stmt_type(chunk, statements)
-                action = get_action(sentence, chunks, chunk_index, actions, statements, stmt_type)
+                action = get_action(sentence, chunks, index, action_list, statements, stmt_type)
                 cardinals = get_cardinals(chunk)
-                conjunction = get_conjunction(document, chunks, chunk_index)
+                conjunction = get_conjunction(document, chunks, index)
                 statements.append(Statement(action, cardinals, chunk, conjunction, statements))
 
     return _filter_statements(statements)

@@ -1,5 +1,5 @@
 from ro.webdata.oniq.nlp.sentence.Noun import get_nouns
-from ro.webdata.oniq.nlp.sentence.Verb import Verb, get_verb_statements
+from ro.webdata.oniq.nlp.sentence.Verb import Verb, prepare_verb_list
 from ro.webdata.oniq.nlp.sentence.constants import TYPE_PRON, TYPE_WH, TYPE_WH_PRON_START, TYPE_WH_START
 
 ACTION_EXCEPTIONS = [
@@ -42,7 +42,7 @@ def get_action(sentence, chunks, chunk_index, actions, statements, stmt_type):
         prev_word = sentence[chunk.start - 1] if chunk.start > 0 else None
 
         for action in actions:
-            # e.g.: chunk[0].tag_ == "WDT": "which paintings are located in Tulcea"
+            # E.g.: chunk[0].tag_ == "WDT": "which paintings are located in Bacau"
             if chunk[0].tag_ == "WDT" or \
                     (prev_word is not None and prev_word.tag_ != "IN"):
                 if action.is_available is True:
@@ -52,14 +52,19 @@ def get_action(sentence, chunks, chunk_index, actions, statements, stmt_type):
                     return last_action
 
 
-def get_actions(sentence):
+def prepare_action_list(sentence):
     actions = []
-    verb_statements = get_verb_statements(sentence)
+    verb_statements = prepare_verb_list(sentence)
 
     for verb_stmt in verb_statements:
-        dep = verb_stmt.main_vb.dep_ \
-            if verb_stmt.main_vb is not None \
-            else verb_stmt.aux_vb.dep_
+        dep = None
+
+        if verb_stmt.main_vb is not None:
+            dep = verb_stmt.main_vb.dep_
+        elif verb_stmt.aux_vb is not None:
+            last_index = len(verb_stmt.aux_vb) - 1
+            dep = verb_stmt.aux_vb[last_index].dep_
+
         actions.append(Action(dep, verb_stmt))
 
     return actions

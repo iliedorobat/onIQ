@@ -1,7 +1,7 @@
 import spacy
 
 from spacy import displacy
-from ro.webdata.oniq.common.constants import SHOULD_PRINT
+from ro.webdata.oniq.common.constants import IS_DEBUG_MODE
 from ro.webdata.oniq.common.print_utils import print_statements
 from ro.webdata.oniq.nlp.parser import get_statements
 from ro.webdata.oniq.nlp.sparql.Query import Query
@@ -32,7 +32,7 @@ WHERE {{
 
     # return generated_sparql_query.strip()
 
-    if SHOULD_PRINT:
+    if IS_DEBUG_MODE:
         print(query)
         print_statements(statements)
         print(sparql_query)
