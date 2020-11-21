@@ -191,34 +191,35 @@ def _get_next_token(document, verb, pos_list):
 
 
 def _get_wh_before_vb(document, token):
-    if token.i == 0:
-        return None
+    fragment = _get_prev_fragment(document[0: token.i + 1], ["AUX"])
+    fragment = _get_prev_fragment(fragment, ["ADJ", "ADV", "NOUN", "PRON"])
 
-    wh_words = get_wh_words(document)
-    prev_word = document[token.i - 1]
-
-    # E.g.: ... in museums which hosts ...
-    if prev_word in wh_words:
-        return prev_word
-
-    #             DET  ADJ      NOUN   AUX
-    # E.g.: where the famous artifacts are hosted?
-    if prev_word.pos_ == "AUX":
-        prev_word = document[prev_word.i - 1]
-
-    if prev_word.pos_ in ["NOUN", "PRON"]:
-        prev_word = document[prev_word.i - 1]
-
-    if prev_word.pos_ in ["ADJ"]:
-        prev_word = document[prev_word.i - 1]
-
-    if prev_word.pos_ == "DET" and prev_word.tag_ != "WDT":
-        prev_word = document[prev_word.i - 1]
-
-    if prev_word in wh_words:
-        return prev_word
-
+    if fragment is not None and len(fragment) == 1 and fragment[0] in get_wh_words(document):
+        return fragment[0]
     return None
+
+
+def _get_prev_fragment(document, main_pos_list):
+    if document is None:
+        return None
+    if len(document) == 1:
+        return document[0: 1]
+
+    # [...] and [...] one of the [...]
+    #      CCONJ      NUM ADP DET
+    pos_list = main_pos_list + ["ADP", "CCONJ", "DET", "NUM", "PUNCT"]
+    prev_token = None
+    wh_words = get_wh_words(document)
+
+    for i in reversed(range(len(document))):
+        token = document[i]
+        if i == 0 or token in wh_words:
+            return document[token.i: token.i + 1]
+        elif token.pos_ not in pos_list:
+            return document[0: i + 1]
+        prev_token = document[i - 1]
+
+    return document[0: prev_token.i + 1]
 
 
 def _get_negation_token(document, verb, init_value):
