@@ -50,7 +50,7 @@ def get_statements(query):
                 stmt_type = get_stmt_type(chunk, statements)
                 action = get_action(sentence, chunks, index, action_list, statements, stmt_type)
                 cardinals = get_cardinals(chunk)
-                logical_operation = LogicalOperation(document, chunk)
+                logical_operation = LogicalOperation(sentence, chunk)
                 statements.append(Statement(action, cardinals, chunk, logical_operation, statements))
 
     return _filter_statements(statements)

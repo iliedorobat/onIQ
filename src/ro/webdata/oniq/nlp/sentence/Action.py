@@ -1,3 +1,4 @@
+from spacy.tokens import Span
 from ro.webdata.oniq.nlp.sentence.Noun import get_nouns
 from ro.webdata.oniq.nlp.sentence.Verb import Verb, prepare_verb_list
 from ro.webdata.oniq.nlp.sentence.constants import TYPE_PRON, TYPE_WH, TYPE_WH_PRON_START, TYPE_WH_START
@@ -11,10 +12,10 @@ ACTION_EXCEPTIONS = [
 
 
 class Action:
-    def __init__(self, dep, verb_stmt):
+    def __init__(self, dep: str, verb: Verb):
         self.dep = dep
         self.is_available = True
-        self.verb_stmt = verb_stmt
+        self.verb = verb
 
     def __str__(self):
         return self.get_str()
@@ -22,26 +23,26 @@ class Action:
     def get_str(self, indentation=''):
         dep = self.dep if self else None
         is_available = self.is_available if self else None
-        verb_stmt = self.verb_stmt if self else None
+        verb = self.verb if self else None
         verb_indentation = "\t\t"
 
         return (
             f'{indentation}action: {{\n'
             f'{indentation}\tdep: {dep},\n'
             f'{indentation}\tis_available: {is_available},\n'
-            f'{indentation}\tverb_stmt: {Verb.get_str(verb_stmt, verb_indentation)}\n'
+            f'{indentation}\tverb: {Verb.get_str(verb, verb_indentation)}\n'
             f'{indentation}}}'
         )
 
 
-def get_action(sentence, chunks, chunk_index, actions, statements, stmt_type):
+def get_action(sentence: Span, chunks: [Span], chunk_index: int, action_list: [Action], statements, stmt_type: str): # statements: [Statement]
     if stmt_type not in ACTION_EXCEPTIONS:
         chunk = chunks[chunk_index]
         conj_nouns = get_nouns(chunk, ["conj"])
         last_action = statements[len(statements) - 1].action if len(statements) > 0 else {}
         prev_word = sentence[chunk.start - 1] if chunk.start > 0 else None
 
-        for action in actions:
+        for action in action_list:
             # E.g.: chunk[0].tag_ == "WDT": "which paintings are located in Bacau"
             if chunk[0].tag_ == "WDT" or \
                     (prev_word is not None and prev_word.tag_ != "IN"):
@@ -52,19 +53,19 @@ def get_action(sentence, chunks, chunk_index, actions, statements, stmt_type):
                     return last_action
 
 
-def prepare_action_list(sentence):
-    actions = []
-    verb_statements = prepare_verb_list(sentence)
+def prepare_action_list(sentence: Span):
+    action_list = []
+    verb_list = prepare_verb_list(sentence)
 
-    for verb_stmt in verb_statements:
+    for verb in verb_list:
         dep = None
 
-        if verb_stmt.main_vb is not None:
-            dep = verb_stmt.main_vb.dep_
-        elif verb_stmt.aux_vb is not None:
-            last_index = len(verb_stmt.aux_vb) - 1
-            dep = verb_stmt.aux_vb[last_index].dep_
+        if verb.main_vb is not None:
+            dep = verb.main_vb.dep_
+        elif verb.aux_vb is not None:
+            last_index = len(verb.aux_vb) - 1
+            dep = verb.aux_vb[last_index].dep_
 
-        actions.append(Action(dep, verb_stmt))
+        action_list.append(Action(dep, verb))
 
-    return actions
+    return action_list

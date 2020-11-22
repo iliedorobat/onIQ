@@ -1,10 +1,11 @@
+from spacy.tokens import Span, Token
 from ro.webdata.oniq.common.math_utils import LOGICAL_OPERATIONS
 
 
 class LogicalOperation:
-    def __init__(self, document, token):
-        self.name = _get_operation_name(document, token)
-        self.token = token
+    def __init__(self, sentence: Span, value: Span):
+        self.name = _get_operation_name(sentence, value)
+        self.value = value
 
     def __str__(self):
         return self.get_str()
@@ -17,17 +18,17 @@ class LogicalOperation:
         )
 
 
-def _get_operation_name(document, chunk):
+def _get_operation_name(sentence: Span, chunk: Span):
     first_index = chunk[0].i
 
     if first_index > 0:
-        prev_word = document[first_index - 1]
+        prev_word = sentence[first_index - 1]
         return _map_operation_name(prev_word)
 
     return None
 
 
-def _map_operation_name(token):
+def _map_operation_name(token: Token):
     operation = token.lower_
     if operation in [',', 'and']:
         return LOGICAL_OPERATIONS.AND

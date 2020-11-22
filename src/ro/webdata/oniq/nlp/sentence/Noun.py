@@ -1,8 +1,9 @@
+from spacy.tokens import Token
 import numpy
 
 
 class Noun:
-    def __init__(self, dep, is_root, value):
+    def __init__(self, dep: str, is_root: bool, value: Token):
         self.dep = dep
         self.is_root = is_root
         self.value = value

@@ -83,7 +83,7 @@ def _prepare_targets(endpoint, statements):
 
     for i in range(0, len(statements)):
         stmt = statements[i]
-        verb = get_verb(stmt.action.verb_stmt)
+        verb = get_verb(stmt.action.verb)
         prop = _get_matched_property(endpoint, verb)
         target_token = _get_target_token(stmt)
 
@@ -205,9 +205,8 @@ def _prepare_meta_triples(endpoint, statements):
     targets = _prepare_targets(endpoint, statements)
 
     for stmt in statements:
-        verb_stmt = stmt.action.verb_stmt
-        verb = get_verb(verb_stmt)
-        negation = verb_stmt.neg
+        verb = get_verb(stmt.action.verb)
+        negation = stmt.action.verb.neg
         logical_operation = stmt.logical_operation
 
         prop = _get_matched_property(endpoint, verb)
