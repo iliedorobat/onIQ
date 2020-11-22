@@ -208,7 +208,7 @@ def _prepare_meta_triples(endpoint, statements):
         verb_stmt = stmt.action.verb_stmt
         verb = get_verb(verb_stmt)
         negation = verb_stmt.neg
-        conjunction = stmt.conjunction
+        logical_operation = stmt.logical_operation
 
         prop = _get_matched_property(endpoint, verb)
         target_item = _get_target_token(stmt)
@@ -220,7 +220,7 @@ def _prepare_meta_triples(endpoint, statements):
             triple_o = prop.prop_name_extended.replace(NS_SEPARATOR, STR_SEPARATOR) if prop is not None else None
 
             triple = Triple(triple_s, triple_p, triple_o)
-            target_pill = Pill(conjunction, triple_s, negation, COMPARISON_OPERATORS.CONTAINS, target_item.text)
+            target_pill = Pill(logical_operation, triple_s, negation, COMPARISON_OPERATORS.CONTAINS, target_item.text)
             pills = Pills([target_pill])
 
             meta_triples.append(MetaTriple(triple, pills))

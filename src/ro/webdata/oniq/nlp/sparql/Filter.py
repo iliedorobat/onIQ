@@ -3,24 +3,24 @@ from ro.webdata.oniq.common.math_utils import COMPARISON_OPERATORS, LOGICAL_OPER
 
 
 class Pill:
-    def __init__(self, conjunction: str = None, key: str = None, negation: str = None, operator=None, values: str = None):
+    def __init__(self, logical_operation=None, key: str = None, negation: str = None, operator=None, values: str = None):
         self.key = key
         self.operator = operator
         self.values = values
-        self.conjunction = conjunction
+        self.logical_operation = logical_operation
         self.negation = negation
 
     def __str__(self):
         return self.get_str('\t\t')
 
     def get_str(self, indentation=''):
-        conjunction = f'[{self.conjunction}]' if self.conjunction is not None else '[]'
+        logical_operation = f'[{self.logical_operation}]' if self.logical_operation.name is not None else '[]'
         key = f'<{self.key}>'
         operator = f'<{self.operator}>'
         values = f'<{self.values}>'
 
         return (
-            f'{indentation}{{ {conjunction} {key} {operator} {values} }}'
+            f'{indentation}{{ {logical_operation} {key} {operator} {values} }}'
         )
 
     def get_pill_pattern(self, indentation='\t'):

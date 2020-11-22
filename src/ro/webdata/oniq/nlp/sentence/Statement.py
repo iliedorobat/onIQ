@@ -1,20 +1,22 @@
 from spacy.tokens import Span, Token
 
 from ro.webdata.oniq.nlp.sentence.Action import Action
+from ro.webdata.oniq.nlp.sentence.LogicalOperation import LogicalOperation
 from ro.webdata.oniq.nlp.sentence.Noun import get_nouns
 from ro.webdata.oniq.nlp.sentence.constants import PRONOUNS, TYPE_PRON, TYPE_WH, TYPE_WH_PRON_START, TYPE_WH_START, \
     TYPE_SELECT_CLAUSE, TYPE_WHERE_CLAUSE
+from ro.webdata.oniq.common.math_utils import LOGICAL_OPERATIONS
 from ro.webdata.oniq.nlp.sentence.utils import get_wh_pronouns, get_wh_words
 
 
 class Statement:
-    def __init__(self, action, cardinality, phrase, conjunction, statements):
+    def __init__(self, action, cardinality, phrase, logical_operation, statements):
         self.action = action
         self.cardinality = cardinality
-        self.conjunction = conjunction
+        self.logical_operation = logical_operation
         self.phrase = phrase
         self.type = get_stmt_type(phrase, statements)
-        self.wh_word = _prepare_wh_word(phrase, conjunction, statements)
+        self.wh_word = _prepare_wh_word(phrase, logical_operation, statements)
 
     def __str__(self):
         return self.get_str()
@@ -26,7 +28,7 @@ class Statement:
             f'{indentation}statement: {{\n'
             f'{indentation}{Action.get_str(self.action, action_indentation)},\n'
             f'{indentation}\tcardinality: {self.cardinality},\n'
-            f'{indentation}\tconjunction: {self.conjunction},\n'
+            f'{indentation}\t{LogicalOperation.get_str(self.logical_operation)},\n'
             f'{indentation}\tphrase: {self.phrase},\n'
             f'{indentation}\ttype: {self.type}\n'
             f'{indentation}\twh_word: {self.wh_word}\n'
@@ -66,8 +68,8 @@ def get_last_statement(statements):
     return None
 
 
-def _prepare_wh_word(phrase, conjunction, statements):
-    if conjunction is not None and conjunction.lower_ in ['and', 'or']:
+def _prepare_wh_word(phrase, logical_operation, statements):
+    if logical_operation is not None and logical_operation.name in [LOGICAL_OPERATIONS.AND, LOGICAL_OPERATIONS.AND]:
         last_stmt = statements[len(statements) - 1]
         return last_stmt.wh_word
     return _get_wh_word(phrase)

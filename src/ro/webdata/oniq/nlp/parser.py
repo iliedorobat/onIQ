@@ -5,7 +5,8 @@ from ro.webdata.oniq.common.print import console, print_token_list
 from ro.webdata.oniq.common.print_utils import print_action_list
 from ro.webdata.oniq.nlp.sentence.Statement import Statement, get_stmt_type
 from ro.webdata.oniq.nlp.sentence.Action import ACTION_EXCEPTIONS, prepare_action_list, get_action
-from ro.webdata.oniq.nlp.sentence.utils import get_cardinals, get_conjunction, get_preposition, get_prev_chunk, retokenize
+from ro.webdata.oniq.nlp.sentence.LogicalOperation import LogicalOperation
+from ro.webdata.oniq.nlp.sentence.utils import get_cardinals, get_preposition, get_prev_chunk, retokenize
 
 nlp = spacy.load('../../../../lib/en_core_web_sm/en_core_web_sm-2.2.5')
 
@@ -35,10 +36,10 @@ def get_statements(query):
         chunks = list(document.noun_chunks)
         for index in range(0, len(chunks)):
             chunk = chunks[index]
-            console.debug(f'chunks[{index}] = {chunk}')
-
             prev_chunk = get_prev_chunk(chunks, index)
             preposition = get_preposition(sentence, chunk)
+
+            console.debug(f'chunks[{index}] = {chunk}')
 
             # preposition.i > 1 (which of the factors... => preposition.i == 1)
             if preposition is not None and preposition.i > 1:
@@ -49,8 +50,8 @@ def get_statements(query):
                 stmt_type = get_stmt_type(chunk, statements)
                 action = get_action(sentence, chunks, index, action_list, statements, stmt_type)
                 cardinals = get_cardinals(chunk)
-                conjunction = get_conjunction(document, chunks, index)
-                statements.append(Statement(action, cardinals, chunk, conjunction, statements))
+                logical_operation = LogicalOperation(document, chunk)
+                statements.append(Statement(action, cardinals, chunk, logical_operation, statements))
 
     return _filter_statements(statements)
 

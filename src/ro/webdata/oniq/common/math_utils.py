@@ -1,3 +1,8 @@
+class LOGICAL_OPERATIONS:
+    AND = 'conjunction'
+    OR = 'disjunction'
+
+
 class LOGICAL_OPERATORS:
     AND = '&&'
     OR = '||'
