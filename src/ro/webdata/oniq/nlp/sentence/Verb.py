@@ -1,9 +1,9 @@
+from spacy.tokens import Doc, Span, Token
 from ro.webdata.oniq.nlp.sentence.utils import get_wh_words
-from spacy.tokens import Token
 
 
 class Verb:
-    def __init__(self, aux_vb, neg, main_vb, modal_vb):
+    def __init__(self, aux_vb: [Token], neg: Token, main_vb: Token, modal_vb: Token):
         self.aux_vb = aux_vb
         self.neg = neg
         self.main_vb = main_vb
@@ -28,13 +28,13 @@ class Verb:
         )
 
 
-def get_verb(verb_stmt):
-    if verb_stmt.main_vb is not None:
-        return verb_stmt.main_vb
-    return verb_stmt.aux_vb
+def get_verb(verb: Verb):
+    if verb.main_vb is not None:
+        return verb.main_vb
+    return verb.aux_vb
 
 
-def prepare_verb_list(sentence):
+def prepare_verb_list(sentence: Span):
     verb_statements = []
     aux_verb = modal_verb = negation = None
     verb_list = _get_verb_list(sentence)
@@ -43,27 +43,25 @@ def prepare_verb_list(sentence):
         if isinstance(verb, list):
             aux_verb = verb
             next_verb = _get_main_verb(sentence, aux_verb[len(aux_verb) - 1])
-            negation = _get_negation_token(sentence, aux_verb[0], negation)
+            negation = _get_negation(sentence, aux_verb[0], negation)
 
             if next_verb is None:
-                verb_statements.append(
-                    Verb(aux_verb, negation, None, modal_verb)
-                )
+                verb = Verb(aux_verb, negation, None, modal_verb)
+                verb_statements.append(verb)
                 aux_verb = modal_verb = negation = None
         elif isinstance(verb, Token):
             if verb.tag_ == "MD":
                 modal_verb = verb
             else:
-                negation = _get_negation_token(sentence, verb, negation)
-                verb_statements.append(
-                    Verb(aux_verb, negation, verb, modal_verb)
-                )
+                negation = _get_negation(sentence, verb, negation)
+                verb = Verb(aux_verb, negation, verb, modal_verb)
+                verb_statements.append(verb)
                 aux_verb = modal_verb = negation = None
 
     return verb_statements
 
 
-def _get_verb_list(sentence):
+def _get_verb_list(sentence: Span):
     """
     Prepare the list of verbs as follows:
         - the auxiliary verbs are stored as a list of tokens,
@@ -95,7 +93,7 @@ def _get_verb_list(sentence):
     return verb_list
 
 
-def _is_aux_preceded_by_aux(sentence, verb):
+def _is_aux_preceded_by_aux(sentence: Span, verb: Token):
     """
     Check if the auxiliary verb is preceded by another auxiliary verb
 
@@ -122,7 +120,7 @@ def _is_aux_preceded_by_aux(sentence, verb):
     return False
 
 
-def _get_main_verb(sentence, verb):
+def _get_main_verb(sentence: Span, aux_verb: Token):
     """
     Get the main verb
 
@@ -135,75 +133,65 @@ def _get_main_verb(sentence, verb):
             * the verb chain: "were published" => return "published"
 
     :param sentence: The sentence
-    :param verb: The auxiliary verb
+    :param aux_verb: The auxiliary verb
     :return: The main verb or None
     """
 
-    next_word = _get_next_token(sentence, verb, ["DET", "ADV", "ADJ", "CCONJ", "NOUN", "PRON", "PROPN"])
+    next_word = _get_next_token(sentence, aux_verb, ["DET", "ADV", "ADJ", "CCONJ", "NOUN", "PRON", "PROPN"])
 
     if next_word is not None and next_word.pos_ == "VERB":
-        # who is the director who own 10 cars and sold a house or a panel?
+        # E.g.: "Who is the director who own 10 cars and sold a house or a panel?"
         if sentence[next_word.i - 1] not in get_wh_words(sentence):
             return next_word
 
     return None
 
 
-def _get_next_token(document, verb, pos_list):
-    if verb.i + 1 >= len(document):
+def _get_next_token(sentence: Span, aux_verb: Token, pos_list: [str]):
+    """
+    Get the next token which POS is not in pos_list
+    :param sentence: The sentence
+    :param aux_verb: The auxiliary verb
+    :param pos_list: The list of POS for which the iteration is allowed
+    :return: The token after the auxiliary verb which POS not in pos_list
+    """
+
+    last_index = len(sentence) - 1
+    next_index = aux_verb.i + 1
+    next_word = None
+
+    if next_index > last_index:
         return None
 
-    next_word = document[verb.i + 1]
+    if next_index == last_index:
+        return sentence[next_index]
 
-    for i in range(next_word.i, len(document)):
-        token = document[i]
+    for i in range(next_index, last_index):
+        token = sentence[i]
 
         if token.pos_ in pos_list or token.dep_ == "neg":
-            next_word = document[token.i + 1]
+            next_word = sentence[token.i + 1]
         else:
             break
 
     return next_word
 
 
-def _get_wh_before_vb(document, token):
-    fragment = _get_prev_fragment(document[0: token.i + 1], ["AUX"])
-    fragment = _get_prev_fragment(fragment, ["ADJ", "ADV", "NOUN", "PRON"])
+def _get_negation(sentence: Span, verb: Token, init_negation: Token):
+    """
+    Get the negation
 
-    if fragment is not None and len(fragment) == 1 and fragment[0] in get_wh_words(document):
-        return fragment[0]
-    return None
+    :param sentence: The sentence
+    :param verb: Main verb, auxiliary verb or modal verb
+    :param init_negation: The initial value of the negation
+    :return: The identified negation
+    """
 
-
-def _get_prev_fragment(document, main_pos_list):
-    if document is None:
-        return None
-    if len(document) == 1:
-        return document[0: 1]
-
-    # [...] and [...] one of the [...]
-    #      CCONJ      NUM ADP DET
-    pos_list = main_pos_list + ["ADP", "CCONJ", "DET", "NUM", "PUNCT"]
-    prev_token = None
-    wh_words = get_wh_words(document)
-
-    for i in reversed(range(len(document))):
-        token = document[i]
-        if i == 0 or token in wh_words:
-            return document[token.i: token.i + 1]
-        elif token.pos_ not in pos_list:
-            return document[0: i + 1]
-        prev_token = document[i - 1]
-
-    return document[0: prev_token.i + 1]
-
-
-def _get_negation_token(document, verb, init_value):
-    negation = init_value
+    negation = init_negation
     next_index = verb.i + 1
 
-    if len(document) > next_index:
-        next_word = document[next_index]
+    if next_index < len(sentence):
+        next_word = sentence[next_index]
         negation = next_word if next_word.dep_ == "neg" else negation
 
     return negation
