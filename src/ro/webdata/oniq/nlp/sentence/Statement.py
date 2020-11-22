@@ -14,6 +14,7 @@ class Statement:
         self.conjunction = conjunction
         self.phrase = phrase
         self.type = get_stmt_type(phrase, statements)
+        self.wh_word = _prepare_wh_word(phrase, conjunction, statements)
 
     def __str__(self):
         return self.get_str()
@@ -28,6 +29,7 @@ class Statement:
             f'{indentation}\tconjunction: {self.conjunction},\n'
             f'{indentation}\tphrase: {self.phrase},\n'
             f'{indentation}\ttype: {self.type}\n'
+            f'{indentation}\twh_word: {self.wh_word}\n'
             f'{indentation}}}'
         )
 
@@ -61,4 +63,30 @@ def get_stmt_type(chunk, statements):
 def get_last_statement(statements):
     if len(statements) > 0:
         return statements[len(statements) - 1]
+    return None
+
+
+def _prepare_wh_word(phrase, conjunction, statements):
+    if conjunction is not None and conjunction.lower_ in ['and', 'or']:
+        last_stmt = statements[len(statements) - 1]
+        return last_stmt.wh_word
+    return _get_wh_word(phrase)
+
+
+def _get_wh_word(phrase):
+    if phrase is None:
+        return None
+
+    # [...] and [...] one of the [...]
+    #      CCONJ      NUM ADP DET
+    pos_list = ["ADJ", "ADV", "NOUN", "PRON"] + ["ADP", "CCONJ", "DET", "NUM", "PUNCT"]
+    wh_words = get_wh_words(phrase)
+
+    for i in reversed(range(len(phrase))):
+        token = phrase[i]
+        if token in wh_words:
+            return phrase[token.i: token.i + 1]
+        elif token.pos_ not in pos_list:
+            return phrase[0: i + 1]
+
     return None

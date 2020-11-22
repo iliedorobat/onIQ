@@ -3,12 +3,11 @@ from spacy.tokens import Token
 
 
 class Verb:
-    def __init__(self, aux_vb, neg, main_vb, modal_vb, wh_word):
+    def __init__(self, aux_vb, neg, main_vb, modal_vb):
         self.aux_vb = aux_vb
         self.neg = neg
         self.main_vb = main_vb
         self.modal_vb = modal_vb
-        self.wh_word = wh_word
 
     def __str__(self):
         return self.get_str()
@@ -18,7 +17,6 @@ class Verb:
         neg = self.neg if self else None
         main_vb = self.main_vb if self else None
         modal_vb = self.modal_vb if self else None
-        wh_word = self.wh_word if self else None
 
         return (
             f'{{'
@@ -26,7 +24,6 @@ class Verb:
             f'\n{indentation}\tneg: {neg},'
             f'\n{indentation}\tmain_vb: {main_vb},'
             f'\n{indentation}\tmodal_vb: {modal_vb},'
-            f'\n{indentation}\twh_word: {wh_word}'
             f'\n{indentation}}}'
         )
 
@@ -39,7 +36,7 @@ def get_verb(verb_stmt):
 
 def prepare_verb_list(sentence):
     verb_statements = []
-    aux_verb = modal_verb = negation = wh_word = None
+    aux_verb = modal_verb = negation = None
     verb_list = _get_verb_list(sentence)
 
     for verb in verb_list:
@@ -47,44 +44,23 @@ def prepare_verb_list(sentence):
             aux_verb = verb
             next_verb = _get_main_verb(sentence, aux_verb[len(aux_verb) - 1])
             negation = _get_negation_token(sentence, aux_verb[0], negation)
-            wh_word = _get_wh_before_vb(sentence, aux_verb[0])
-            wh_word = _get_prev_wh_word(wh_word, verb_statements, aux_verb)
 
             if next_verb is None:
                 verb_statements.append(
-                    Verb(aux_verb, negation, None, modal_verb, wh_word)
+                    Verb(aux_verb, negation, None, modal_verb)
                 )
-                aux_verb = modal_verb = negation = wh_word = None
+                aux_verb = modal_verb = negation = None
         elif isinstance(verb, Token):
-            if wh_word is None:
-                wh_word = _get_wh_before_vb(sentence, verb)
-                wh_word = _get_prev_wh_word(wh_word, verb_statements, [verb])
-
             if verb.tag_ == "MD":
                 modal_verb = verb
             else:
                 negation = _get_negation_token(sentence, verb, negation)
                 verb_statements.append(
-                    Verb(aux_verb, negation, verb, modal_verb, wh_word)
+                    Verb(aux_verb, negation, verb, modal_verb)
                 )
-                aux_verb = modal_verb = negation = wh_word = None
+                aux_verb = modal_verb = negation = None
 
     return verb_statements
-
-
-def _get_prev_wh_word(wh_word, verb_statements, verb_list):
-    # TODO: check the conj_list
-    conj_list = list(
-        filter(
-            lambda item: item.dep_ == "conj", verb_list
-        )
-    )
-
-    # TODO: check the statement
-    if wh_word is None and len(conj_list) > 0:
-        return verb_statements[len(verb_statements) - 1].wh_word
-
-    return wh_word
 
 
 def _get_verb_list(sentence):
