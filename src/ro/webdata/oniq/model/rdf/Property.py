@@ -1,9 +1,19 @@
 import spacy
 
 from ro.webdata.oniq.common.text_utils import split_camel_case_string
-from ro.webdata.oniq.rdf.namespace.Namespace import get_ns_label, get_ns_name
+from ro.webdata.oniq.common.rdf_ns_utils import NS_DC, NS_DC_TERMS, get_ns_label, get_ns_name
 
 nlp = spacy.load('../../../../lib/en_core_web_sm/en_core_web_sm-2.2.5', disable=['parser', 'ner'])
+
+
+PROPERTIES_TYPE = {
+    "AGE": [],
+    "PLACE": [],
+    "TIMESPAN": [
+        {"ns_name": NS_DC, "prop_name": "date"},
+        {"ns_name": NS_DC_TERMS, "prop_name": "issued"}
+    ]
+}
 
 
 class Property:
@@ -34,11 +44,11 @@ class Property:
         if not isinstance(other, Property):
             return NotImplemented
         return other is not None and \
-               self.lemma == other.lemma and \
-               self.ns_name == other.ns_name and \
-               self.ns_label == other.ns_label and \
-               self.prop_name == other.prop_name and \
-               self.prop_name_extended == other.prop_name_extended
+            self.lemma == other.lemma and \
+            self.ns_name == other.ns_name and \
+            self.ns_label == other.ns_label and \
+            self.prop_name == other.prop_name and \
+            self.prop_name_extended == other.prop_name_extended
 
     def __str__(self):
         return self.get_str()

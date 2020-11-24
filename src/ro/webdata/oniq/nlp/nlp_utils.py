@@ -35,7 +35,7 @@ def get_wh_adverbs(document):
     - https://grammar.collinsdictionary.com/easy-learning/wh-words\n
     - https://www.ling.upenn.edu/hist-corpora/annotation/pos-wh.htm
 
-    :param document: The document
+    :param document: The parsed document
     :return: The list of WH-adverbs
     """
     return list([token for token in document if token.tag_ == 'WRB'])
@@ -50,7 +50,7 @@ def get_wh_determiner(document):
     - https://grammar.collinsdictionary.com/easy-learning/wh-words\n
     - https://www.ling.upenn.edu/hist-corpora/annotation/pos-wh.htm
 
-    :param document: The document
+    :param document: The parsed document
     :return: The list of WH-determiners
     """
     return list([token for token in document if token.tag_ == 'WDT'])
@@ -65,7 +65,7 @@ def get_wh_pronouns(document):
     - https://grammar.collinsdictionary.com/easy-learning/wh-words\n
     - https://www.ling.upenn.edu/hist-corpora/annotation/pos-wh.htm
 
-    :param document: The document
+    :param document: The parsed document
     :return: The list of WH-pronouns
     """
     return list([token for token in document if token.tag_ in ['WP', 'WP$']])
@@ -84,7 +84,7 @@ def get_wh_words(document):
     - https://grammar.collinsdictionary.com/easy-learning/wh-words\n
     - https://www.ling.upenn.edu/hist-corpora/annotation/pos-wh.htm
 
-    :param document: The document
+    :param document: The parsed document
     :return: The list of WH-words
     """
     return list([token for token in document if token.tag_ in ['WRB', 'WDT', 'WP', 'WP$']])
@@ -94,7 +94,7 @@ def retokenize(document, sentence):
     """
     Integrate the named entities into the document and retokenize it
 
-    :param document: The document
+    :param document: The parsed document
     :param sentence: The sentence
     :return: Nothing
     """

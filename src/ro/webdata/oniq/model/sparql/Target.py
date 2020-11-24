@@ -1,4 +1,4 @@
-from ro.webdata.oniq.common.constants import VARIABLE_PREFIX, VARIABLE_SEPARATOR
+from ro.webdata.oniq.common.constants import PREFIX, SEPARATOR
 
 
 class Target:
@@ -19,5 +19,5 @@ class Target:
     def get_variable_pattern(self, indentation=''):
         return (
             f'{indentation}'
-            f'{VARIABLE_PREFIX}{self.name}{VARIABLE_SEPARATOR}'
+            f'{PREFIX.VARIABLE}{self.name}{SEPARATOR.TRIPLE_PATTERN}'
         )

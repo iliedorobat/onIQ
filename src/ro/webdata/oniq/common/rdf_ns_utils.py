@@ -1,19 +1,9 @@
 import re
 
-
-class Namespace:
-    def __init__(self, uri):
-        self.name = get_ns_name(uri)
-        self.label = get_ns_label(self.name)
-
-    def __hash__(self):
-        return hash(self.name)
-
-    def __eq__(self, other):
-        if not isinstance(other, Namespace):
-            # only equality tests to other 'Namespace' instances are supported
-            return NotImplemented
-        return self.name == other.name
+NS_DC = "http://purl.org/dc/elements/1.1/"
+NS_DC_TERMS = "http://purl.org/dc/terms/"
+NS_EDM = "http://www.europeana.eu/schemas/edm/"
+NS_OPENDATA = "http://opendata.cs.pub.ro/property/"
 
 
 def get_ns_label(ns_name):

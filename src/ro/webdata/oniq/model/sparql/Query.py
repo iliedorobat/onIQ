@@ -1,15 +1,11 @@
-from ro.webdata.oniq.common.constants import STR_SEPARATOR
-from ro.webdata.oniq.common.math_utils import COMPARISON_OPERATORS
-from ro.webdata.oniq.nlp.sentence.Verb import get_verb
-from ro.webdata.oniq.nlp.sentence.constants import TYPE_SELECT_CLAUSE, TYPE_WHERE_CLAUSE
-from ro.webdata.oniq.nlp.sparql.Filter import Pill, Pills
-from ro.webdata.oniq.nlp.sparql.MetaTriple import MetaTriple
-from ro.webdata.oniq.nlp.sparql.Target import Target
-from ro.webdata.oniq.nlp.sparql.Triple import Triple
-from ro.webdata.oniq.rdf import parser
-from ro.webdata.oniq.rdf.Match import Match
+from ro.webdata.oniq.model.rdf.Match import Match
+from ro.webdata.oniq.model.sparql.MetaTriple import MetaTriple
+from ro.webdata.oniq.model.sparql.Pill import Pill, Pills
+from ro.webdata.oniq.model.sparql.Target import Target
+from ro.webdata.oniq.model.sparql.Triple import Triple
 
-NS_SEPARATOR = ':'
+from ro.webdata.oniq.common.constants import COMPARISON_OPERATORS, SENTENCE_TYPE, SEPARATOR
+from ro.webdata.oniq.common import rdf_utils
 
 
 # TODO: check if the sentence start with WHEN and WHERE
@@ -20,7 +16,7 @@ class Query:
 
     @staticmethod
     def get_prefixes(endpoint):
-        namespaces = parser.get_namespaces(endpoint)
+        namespaces = rdf_utils.get_namespaces(endpoint)
         prefixes = ''
 
         for i in range(len(namespaces)):
@@ -83,7 +79,7 @@ def _prepare_targets(endpoint, statements):
 
     for i in range(0, len(statements)):
         stmt = statements[i]
-        verb = get_verb(stmt.action.verb)
+        verb = stmt.action.verb.get_verb()
         prop = _get_matched_property(endpoint, verb)
         target_token = _get_target_token(stmt)
 
@@ -94,7 +90,7 @@ def _prepare_targets(endpoint, statements):
             else:
                 target = targets[i - 1]
                 target.values.append(target_token)
-                target.name = STR_SEPARATOR.join([value.lemma_ for value in target.values])
+                target.name = SEPARATOR.STRING.join([value.lemma_ for value in target.values])
 
             prev_prop = prop
             prev_stmt_type = stmt.type
@@ -109,7 +105,7 @@ def _get_target_token(stmt):
     :return: The noun (singular / mass / plural)
     """
 
-    if stmt.type == TYPE_SELECT_CLAUSE:
+    if stmt.type == SENTENCE_TYPE.SELECT_CLAUSE:
         return next((
             token for token in stmt.phrase
             if token.pos_ == "NOUN" and token.tag_ in ["NN", "NNS"]
@@ -205,25 +201,25 @@ def _prepare_meta_triples(endpoint, statements):
     targets = _prepare_targets(endpoint, statements)
 
     for stmt in statements:
-        verb = get_verb(stmt.action.verb)
+        verb = stmt.action.verb.get_verb()
         negation = stmt.action.verb.neg
         logical_operation = stmt.logical_operation
 
         prop = _get_matched_property(endpoint, verb)
         target_item = _get_target_token(stmt)
 
-        if stmt.type == TYPE_SELECT_CLAUSE:
+        if stmt.type == SENTENCE_TYPE.SELECT_CLAUSE:
             target = list(filter(lambda item: target_item in item.values != -1, targets))
             triple_s = target[0].name
             triple_p = prop.prop_name_extended if prop is not None else None
-            triple_o = prop.prop_name_extended.replace(NS_SEPARATOR, STR_SEPARATOR) if prop is not None else None
+            triple_o = prop.prop_name_extended.replace(SEPARATOR.NAMESPACE, SEPARATOR.STRING) if prop is not None else None
 
             triple = Triple(triple_s, triple_p, triple_o)
             target_pill = Pill(logical_operation, triple_s, negation, COMPARISON_OPERATORS.CONTAINS, target_item.text)
             pills = Pills([target_pill])
 
             meta_triples.append(MetaTriple(triple, pills))
-        elif stmt.type == TYPE_WHERE_CLAUSE:
+        elif stmt.type == SENTENCE_TYPE.WHERE_CLAUSE:
             # TODO: TYPE_WHERE_CLAUSE
             print(f'Query.py: stmt.type {stmt.type} is not implemented')
 
@@ -235,7 +231,7 @@ def _get_matched_property(endpoint, verb):
     if isinstance(verb, list):
         return None
 
-    properties = parser.get_properties(endpoint)
+    properties = rdf_utils.get_properties(endpoint)
     match = Match(endpoint, verb.text)
 
     # TODO: add support for all properties from "matched" set

@@ -1,4 +1,4 @@
-from ro.webdata.oniq.common.constants import VARIABLE_PREFIX, VARIABLE_SEPARATOR
+from ro.webdata.oniq.common.constants import PREFIX, SEPARATOR
 
 
 class Triple:
@@ -23,7 +23,7 @@ class Triple:
     def get_triple_pattern(self, indentation='\t'):
         return (
             f'{indentation}'
-            f'{VARIABLE_PREFIX}{self.s}{VARIABLE_SEPARATOR}'
-            f'{self.p}{VARIABLE_SEPARATOR}'
-            f'{VARIABLE_PREFIX}{self.o}{VARIABLE_SEPARATOR}'
+            f'{PREFIX.VARIABLE}{self.s}{SEPARATOR.TRIPLE_PATTERN}'
+            f'{self.p}{SEPARATOR.TRIPLE_PATTERN}'
+            f'{PREFIX.VARIABLE}{self.o}{SEPARATOR.TRIPLE_PATTERN}'
         )

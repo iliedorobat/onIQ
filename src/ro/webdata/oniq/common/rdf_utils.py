@@ -3,10 +3,10 @@ from SPARQLWrapper import SPARQLWrapper, JSON
 from pathlib import Path
 from rdflib import Graph, Literal
 
-from ro.webdata.oniq.rdf.namespace.Namespace import Namespace
-from ro.webdata.oniq.rdf.property.Property import Property
+from ro.webdata.oniq.model.rdf.Namespace import Namespace
+from ro.webdata.oniq.model.rdf.Property import Property
 
-CLASSES_QUERY = """
+_CLASSES_QUERY = """
     PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
     
     SELECT DISTINCT ?uri
@@ -17,7 +17,7 @@ CLASSES_QUERY = """
     ORDER BY ?uri
 """
 
-PROPERTIES_QUERY = """
+_PROPERTIES_QUERY = """
     PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
     PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
     
@@ -39,7 +39,7 @@ def get_namespaces(endpoint):
     """
 
     nss = []
-    uris = _get_uris(endpoint, CLASSES_QUERY) + _get_uris(endpoint, PROPERTIES_QUERY)
+    uris = _get_uris(endpoint, _CLASSES_QUERY) + _get_uris(endpoint, _PROPERTIES_QUERY)
 
     for uri in uris:
         nss.append(Namespace(uri))
@@ -53,7 +53,7 @@ def get_properties(endpoint):
     """
 
     props = []
-    uris = _get_uris(endpoint, PROPERTIES_QUERY)
+    uris = _get_uris(endpoint, _PROPERTIES_QUERY)
 
     for uri in uris:
         prop = Property(uri)

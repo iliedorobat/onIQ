@@ -132,4 +132,4 @@ dmypy.json
 **.DS_Store
 .idea
 out/production
-src/ro/webdata/oniq/nlp/test
+test

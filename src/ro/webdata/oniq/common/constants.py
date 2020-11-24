@@ -1,3 +1,61 @@
+class APP_MODE:
+    IS_DEBUG = True
+    IS_DEBUG_EXTRA = False
+
+
+class COMPARISON_OPERATORS:
+    CONTAINS = 'contains'
+    NOT_CONTAINS = '!contains'
+    REGEX = 'regex'
+    EQ = '='
+    NOT_EQ = '!='
+    GT = '>'
+    GTE = '>='
+    LT = '<'
+    LTE = '<='
+
+
+class LOGICAL_OPERATIONS:
+    AND = 'conjunction'
+    OR = 'disjunction'
+
+
+class LOGICAL_OPERATORS:
+    AND = '&&'
+    OR = '||'
+
+
+class PREFIX:
+    VARIABLE = '?'
+
+
+PRONOUNS = [
+    "i", "me",
+    "you", "thee",
+    "he", "him",
+    "she", "her",
+    "it",
+    "we", "us",
+    "they", "them",
+    "its"
+]
+
+
+class SENTENCE_TYPE:
+    PRON = "Pronoun Sentence"
+    WH = "WH Sentence"
+    WH_PRON_START = "WH Pronoun Start Sentence"
+    WH_START = "WH Start Sentence"
+    SELECT_CLAUSE = "Select Clause"
+    WHERE_CLAUSE = "Where clause"
+
+
+class SEPARATOR:
+    NAMESPACE = ':'
+    STRING = '_'
+    TRIPLE_PATTERN = ' '
+
+
 # TODO: complete the map
 NAMED_ENTITY_MAP = {
     # TODO: CARDINAL = Numerals that do not fall under another type
@@ -24,10 +82,3 @@ NAMED_ENTITY_MAP = {
     "TIME": ["date", "minute", "second", "time"],
     "WORK_OF_ART": ["art", "book", "song"]
 }
-
-
-IS_DEBUG_MODE = True
-IS_DEBUG_EXTRA_MODE = False
-STR_SEPARATOR = '_'
-VARIABLE_PREFIX = '?'
-VARIABLE_SEPARATOR = ' '

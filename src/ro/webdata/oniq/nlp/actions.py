@@ -1,41 +1,20 @@
 from spacy.tokens import Span
-from ro.webdata.oniq.nlp.sentence.Noun import get_nouns
-from ro.webdata.oniq.nlp.sentence.Verb import Verb, prepare_verb_list
-from ro.webdata.oniq.nlp.sentence.constants import TYPE_PRON, TYPE_WH, TYPE_WH_PRON_START, TYPE_WH_START
+
+from ro.webdata.oniq.common.constants import SENTENCE_TYPE
+from ro.webdata.oniq.model.sentence.Action import Action
+from ro.webdata.oniq.model.sentence.Statement import Statement
+from ro.webdata.oniq.nlp.nouns import get_nouns
+from ro.webdata.oniq.nlp.verbs import prepare_verb_list
 
 ACTION_EXCEPTIONS = [
-    TYPE_PRON,
-    TYPE_WH,
-    TYPE_WH_PRON_START,
-    TYPE_WH_START
+    SENTENCE_TYPE.PRON,
+    SENTENCE_TYPE.WH,
+    SENTENCE_TYPE.WH_PRON_START,
+    SENTENCE_TYPE.WH_START
 ]
 
 
-class Action:
-    def __init__(self, dep: str, verb: Verb):
-        self.dep = dep
-        self.is_available = True
-        self.verb = verb
-
-    def __str__(self):
-        return self.get_str()
-
-    def get_str(self, indentation=''):
-        dep = self.dep if self else None
-        is_available = self.is_available if self else None
-        verb = self.verb if self else None
-        verb_indentation = "\t\t"
-
-        return (
-            f'{indentation}action: {{\n'
-            f'{indentation}\tdep: {dep},\n'
-            f'{indentation}\tis_available: {is_available},\n'
-            f'{indentation}\tverb: {Verb.get_str(verb, verb_indentation)}\n'
-            f'{indentation}}}'
-        )
-
-
-def get_action(sentence: Span, chunks: [Span], chunk_index: int, action_list: [Action], statements, stmt_type: str): # statements: [Statement]
+def get_action(sentence: Span, chunks: [Span], chunk_index: int, action_list: [Action], statements: [Statement], stmt_type: str):
     if stmt_type not in ACTION_EXCEPTIONS:
         chunk = chunks[chunk_index]
         conj_nouns = get_nouns(chunk, ["conj"])

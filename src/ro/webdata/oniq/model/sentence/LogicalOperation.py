@@ -1,5 +1,5 @@
 from spacy.tokens import Span, Token
-from ro.webdata.oniq.common.math_utils import LOGICAL_OPERATIONS
+from ro.webdata.oniq.common.constants import LOGICAL_OPERATIONS
 
 
 class LogicalOperation:

@@ -1,5 +1,6 @@
-from ro.webdata.oniq.nlp.sparql.Filter import Pills, Filter
-from ro.webdata.oniq.nlp.sparql.Triple import Triple
+from ro.webdata.oniq.model.sparql.Filter import Filter
+from ro.webdata.oniq.model.sparql.Pill import Pills
+from ro.webdata.oniq.model.sparql.Triple import Triple
 
 
 class MetaTriple:

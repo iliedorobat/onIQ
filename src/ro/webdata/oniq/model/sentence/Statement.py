@@ -1,12 +1,8 @@
-from spacy.tokens import Span, Token
-
-from ro.webdata.oniq.nlp.sentence.Action import Action
-from ro.webdata.oniq.nlp.sentence.LogicalOperation import LogicalOperation
-from ro.webdata.oniq.nlp.sentence.Noun import get_nouns
-from ro.webdata.oniq.nlp.sentence.constants import PRONOUNS, TYPE_PRON, TYPE_WH, TYPE_WH_PRON_START, TYPE_WH_START, \
-    TYPE_SELECT_CLAUSE, TYPE_WHERE_CLAUSE
-from ro.webdata.oniq.common.math_utils import LOGICAL_OPERATIONS
-from ro.webdata.oniq.nlp.sentence.utils import get_wh_pronouns, get_wh_words
+from ro.webdata.oniq.common.constants import LOGICAL_OPERATIONS
+from ro.webdata.oniq.model.sentence.Action import Action
+from ro.webdata.oniq.model.sentence.LogicalOperation import LogicalOperation
+from ro.webdata.oniq.nlp.nlp_utils import get_wh_words
+from ro.webdata.oniq.nlp.statements import get_stmt_type
 
 
 class Statement:
@@ -34,38 +30,6 @@ class Statement:
             f'{indentation}\twh_word: {self.wh_word}\n'
             f'{indentation}}}'
         )
-
-
-def get_stmt_type(chunk, statements):
-    if chunk.text.lower() in PRONOUNS:
-        return TYPE_PRON
-    # "who is the director who own..." => classify only the first chunk
-    # which contains the "who" word as being TYPE_WH_PRON_START
-    elif chunk.root in get_wh_pronouns(chunk):
-        return TYPE_WH_PRON_START if chunk.root.i == 0 else TYPE_WH
-    elif chunk.root in get_wh_words(chunk):
-        return TYPE_WH_START if chunk.root.i == 0 else TYPE_WH
-    # if the type of the first sentence is not TYPE_PRON or TYPE_WH_START,
-    # then the target subjects are found in the first sentence
-    elif len(statements) == 0:
-        return TYPE_SELECT_CLAUSE
-    else:
-        nouns = get_nouns(chunk)
-        conj_nouns = list(filter(lambda noun: noun.dep == "conj", nouns))
-        prev_statement = get_last_statement(statements)
-
-        if prev_statement.type in [TYPE_PRON, TYPE_WH_PRON_START, TYPE_WH_START]:
-            return TYPE_SELECT_CLAUSE
-        elif prev_statement.type == TYPE_SELECT_CLAUSE and len(conj_nouns) > 0:
-            return TYPE_SELECT_CLAUSE
-        else:
-            return TYPE_WHERE_CLAUSE
-
-
-def get_last_statement(statements):
-    if len(statements) > 0:
-        return statements[len(statements) - 1]
-    return None
 
 
 def _prepare_wh_word(phrase, logical_operation, statements):

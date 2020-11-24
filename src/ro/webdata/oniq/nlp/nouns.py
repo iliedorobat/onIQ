@@ -1,12 +1,5 @@
-from spacy.tokens import Token
 import numpy
-
-
-class Noun:
-    def __init__(self, dep: str, is_root: bool, value: Token):
-        self.dep = dep
-        self.is_root = is_root
-        self.value = value
+from ro.webdata.oniq.model.sentence.Noun import Noun
 
 
 def get_nouns(chunk, *dependencies: []):
