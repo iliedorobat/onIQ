@@ -2,7 +2,6 @@ from ro.webdata.oniq.common.constants import LOGICAL_OPERATIONS
 from ro.webdata.oniq.model.sentence.Action import Action
 from ro.webdata.oniq.model.sentence.LogicalOperation import LogicalOperation
 from ro.webdata.oniq.nlp.nlp_utils import get_wh_words
-from ro.webdata.oniq.nlp.statements import get_stmt_type
 
 
 class Statement:
@@ -11,7 +10,6 @@ class Statement:
         self.cardinality = cardinality
         self.logical_operation = logical_operation
         self.phrase = phrase
-        self.type = get_stmt_type(phrase, statements)
         self.wh_word = _prepare_wh_word(phrase, logical_operation, statements)
 
     def __str__(self):
@@ -26,7 +24,6 @@ class Statement:
             f'{indentation}\tcardinality: {self.cardinality},\n'
             f'{indentation}\t{LogicalOperation.get_str(self.logical_operation)},\n'
             f'{indentation}\tphrase: {self.phrase},\n'
-            f'{indentation}\ttype: {self.type}\n'
             f'{indentation}\twh_word: {self.wh_word}\n'
             f'{indentation}}}'
         )

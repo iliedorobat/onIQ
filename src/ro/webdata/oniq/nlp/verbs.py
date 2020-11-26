@@ -5,7 +5,7 @@ from ro.webdata.oniq.nlp.nlp_utils import get_wh_words
 
 def prepare_verb_list(sentence: Span):
     verb_statements = []
-    aux_verb = modal_verb = negation = None
+    aux_verb = modal_verb = negation = adjective = None
     verb_list = _get_verb_list(sentence)
 
     for verb in verb_list:
@@ -13,19 +13,21 @@ def prepare_verb_list(sentence: Span):
             aux_verb = verb
             next_verb = _get_main_verb(sentence, aux_verb[len(aux_verb) - 1])
             negation = _get_negation(sentence, aux_verb[0], negation)
+            # ADJ: "is married"
+            adjective = _get_adjective(sentence, aux_verb[len(aux_verb) - 1])
 
             if next_verb is None:
-                verb = Verb(aux_verb, negation, None, modal_verb)
+                verb = Verb(aux_verb, negation, None, modal_verb, adjective)
                 verb_statements.append(verb)
-                aux_verb = modal_verb = negation = None
+                aux_verb = modal_verb = negation = adjective = None
         elif isinstance(verb, Token):
             if verb.tag_ == "MD":
                 modal_verb = verb
             else:
                 negation = _get_negation(sentence, verb, negation)
-                verb = Verb(aux_verb, negation, verb, modal_verb)
+                verb = Verb(aux_verb, negation, verb, modal_verb, None)
                 verb_statements.append(verb)
-                aux_verb = modal_verb = negation = None
+                aux_verb = modal_verb = negation = adjective = None
 
     return verb_statements
 
@@ -116,6 +118,14 @@ def _get_main_verb(sentence: Span, aux_verb: Token):
     return None
 
 
+# TODO: detecting 2 or more adjectives: 'Which is the noisiest and the largest city?'
+def _get_adjective(sentence: Span, aux_verb: Token):
+    next_word = _get_next_token(sentence, aux_verb, ["DET", "ADV", "CCONJ", "NOUN", "PRON", "PROPN", "VERB"])
+
+    if next_word is not None and next_word.pos_ == "ADJ":
+        return next_word
+
+
 def _get_next_token(sentence: Span, aux_verb: Token, pos_list: [str]):
     """
     Get the next token which POS is not in pos_list
@@ -127,13 +137,14 @@ def _get_next_token(sentence: Span, aux_verb: Token, pos_list: [str]):
 
     last_index = len(sentence) - 1
     next_index = aux_verb.i + 1
-    next_word = None
 
     if next_index > last_index:
         return None
 
     if next_index == last_index:
         return sentence[next_index]
+
+    next_word = sentence[next_index]
 
     for i in range(next_index, last_index):
         token = sentence[i]

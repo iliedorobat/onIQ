@@ -18,7 +18,8 @@ def get_preposition(sentence, chunk):
     return None
 
 
-def get_prev_chunk(chunks, chunk_index):
+def get_prev_chunk(chunks, chunk):
+    chunk_index = chunks.index(chunk)
     if chunk_index > 0:
         return chunks[chunk_index - 1]
     return None

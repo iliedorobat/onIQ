@@ -2,8 +2,8 @@ from ro.webdata.oniq.model.sentence.Verb import Verb
 
 
 class Action:
-    def __init__(self, dep: str, verb: Verb):
-        self.dep = dep
+    def __init__(self, verb: Verb):
+        self.dep = _get_dep(verb)
         self.is_available = True
         self.verb = verb
 
@@ -23,3 +23,11 @@ class Action:
             f'{indentation}\tverb: {Verb.get_str(verb, verb_indentation)}\n'
             f'{indentation}}}'
         )
+
+
+def _get_dep(verb):
+    if verb.main_vb is not None:
+        return verb.main_vb.dep_
+    elif verb.aux_vb is not None:
+        last_index = len(verb.aux_vb) - 1
+        return verb.aux_vb[last_index].dep_
