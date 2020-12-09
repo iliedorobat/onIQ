@@ -1,5 +1,7 @@
+from typing import Union
+
 import spacy
-from spacy.tokens import Span
+from spacy.tokens import Doc, Span
 from iteration_utilities import unique_everseen
 
 from ro.webdata.oniq.common.constants import APP_MODE
@@ -9,7 +11,9 @@ from ro.webdata.oniq.model.sparql.Query import Query
 from ro.webdata.oniq.model.sentence.Statement import Statement
 from ro.webdata.oniq.model.sentence.LogicalOperation import LogicalOperation
 from ro.webdata.oniq.nlp.verbs import prepare_verb_list
-from ro.webdata.oniq.nlp.nlp_utils import get_cardinals, get_preposition, get_prev_chunk, retokenize
+from ro.webdata.oniq.nlp.nlp_utils import get_cardinals, get_preposition, get_prev_chunk, get_wh_words, retokenize
+from ro.webdata.oniq.nlp.phrase import get_conj_phrases, get_main_noun_chunks, get_noun_chunks, get_phrase, \
+    get_phrase_list, get_related_phrase, get_related_wh_phrase, is_nsubj_wh_word
 
 
 nlp = spacy.load('../../../../lib/en_core_web_sm/en_core_web_sm-2.2.5')
@@ -19,8 +23,8 @@ nlp = spacy.load('../../../../lib/en_core_web_sm/en_core_web_sm-2.2.5')
 _QUERY_SKELETON = "{prefixes}" \
                   "SELECT {targets}" \
                   "WHERE {{" \
-                    "{where_block}" \
-                    "{filter_statement}" \
+                  "{where_block}" \
+                  "{filter_statement}" \
                   "}}"
 
 
@@ -73,16 +77,17 @@ def _prepare_statement_list(document):
 
     for sentence in document.sents:
         retokenize(document, sentence)
-        action_list = _prepare_action_list(sentence)
-        chunks = list(document.noun_chunks)
+        action_list = _get_action_list(sentence)
+        chunk_list = get_main_noun_chunks(sentence)
 
         echo.token_list(sentence)
         echo.action_list(action_list)
         console.debug(f'len(action_list) = {len(action_list)}')
 
-        for i in range(len(chunks)):
-            chunk = chunks[i]
-            phrase = _get_phrase(sentence, chunk)
+        for i in range(len(chunk_list)):
+            chunk = chunk_list[i]
+            phrase = get_phrase(sentence, chunk)
+            first_word = phrase[0]
             phrase_actions = []
 
             for j in range(len(action_list)):
@@ -108,7 +113,14 @@ def _prepare_statement_list(document):
                         # acomp => 'Which female actor played in Casablanca and is married to a writer born in Rome and has three children?'
                         elif len(statements) > 0 \
                                 and statements[len(statements) - 1].phrase != phrase \
-                                and sentence[phrase[0].i - 1].dep_ in ["acl", "acomp"]:
+                                and sentence[first_word.i - 1].dep_ in ["acl", "acomp"]:
+                            action.is_available = False
+                            phrase_actions.append(action)
+                        # 1. daca primul element din fraza este wh-determiner
+                        # 2. daca primul element din fraza are dependinta de nsubj
+                        # 3. daca dupa primul element se afla un verb
+                        # E.g.: "Which is the noisiest and the largest city?"
+                        elif first_word.tag_ == "WDT" and first_word.dep_ == "nsubj" and phrase[1].pos_ in ["AUX", "VERB"]:
                             action.is_available = False
                             phrase_actions.append(action)
 
@@ -117,13 +129,18 @@ def _prepare_statement_list(document):
                 #         cardinals = get_cardinals(chunk)
                 #         logical_operation = LogicalOperation(sentence, chunk)
 
-                next_phrase = _get_related_phrase(sentence, chunks, i, j)
+                next_phrase = get_related_wh_phrase(sentence, i, j) \
+                    if is_nsubj_wh_word(sentence, chunk_list, i) \
+                    else get_related_phrase(sentence, i, j)
+                conj_phrases = [] \
+                    if is_nsubj_wh_word(sentence, chunk_list, i) \
+                    else get_conj_phrases(sentence, i)
                 statements.append(Stmt(phrase_actions[j], phrase, next_phrase))
 
-                conj_phrases = _get_conj_phrases(sentence, chunks, i)
                 for conj_phrase in conj_phrases:
                     statements.append(Stmt(phrase_actions[i], conj_phrase, next_phrase))
 
+        # TODO: Stmt print method
         for stmt in statements:
             console.warning(stmt.actions)
             print(f'{stmt.phrase}      {stmt.related_phrase}')
@@ -131,35 +148,13 @@ def _prepare_statement_list(document):
         return statements
 
 
-def _prepare_action_list(sentence: Span):
-    action_list = []
+def _get_action_list(sentence: Span):
+    """
+    Get the list of actions
+
+    :param sentence: The target sentence
+    :return: The list of actions
+    """
+
     verb_list = prepare_verb_list(sentence)
-
-    for verb in verb_list:
-        action_list.append(Action(verb))
-
-    return action_list
-
-
-def _get_conj_phrases(sentence, chunks, chunk_index):
-    conj_chunks = list(filter(lambda chunk: chunk.root.dep_ == "conj" and chunk != chunks[chunk_index], chunks))
-    return list(map(lambda chunk: _get_phrase(sentence, chunk), conj_chunks))
-
-
-def _get_related_phrase(sentence: Span, chunks: [Span], chunk_index: int = 0, action_index: int = 0, increment: int = 1):
-    index = chunk_index + action_index + increment
-    if index >= len(chunks):
-        return None
-    if chunks[index].root.dep_ == 'conj':
-        # e.g.: 'Which painting, swords or statues do not have more than three owners?'
-        return _get_related_phrase(sentence, chunks, chunk_index, action_index, increment + 1)
-    else:
-        return _get_phrase(sentence, chunks[index])
-
-
-# create a phrase by adding the preposition to the chunk
-def _get_phrase(sentence: Span, chunk: Span):
-    preposition = get_preposition(sentence, chunk)
-    first_index = preposition.i if preposition is not None else chunk[0].i
-    last_index = chunk[len(chunk) - 1].i + 1
-    return sentence[first_index: last_index]
+    return [Action(verb) for verb in verb_list]

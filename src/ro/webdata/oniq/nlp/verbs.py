@@ -5,7 +5,7 @@ from ro.webdata.oniq.nlp.nlp_utils import get_wh_words
 
 def prepare_verb_list(sentence: Span):
     verb_statements = []
-    aux_verb = modal_verb = negation = adjective = None
+    aux_verb = modal_verb = negation = None
     verb_list = _get_verb_list(sentence)
 
     for verb in verb_list:
@@ -13,13 +13,18 @@ def prepare_verb_list(sentence: Span):
             aux_verb = verb
             next_verb = _get_main_verb(sentence, aux_verb[len(aux_verb) - 1])
             negation = _get_negation(sentence, aux_verb[0], negation)
-            # ADJ: "is married"
-            adjective = _get_adjective(sentence, aux_verb[len(aux_verb) - 1])
+            adj_list = _get_adj_list(sentence, aux_verb[len(aux_verb) - 1])
 
             if next_verb is None:
-                verb = Verb(aux_verb, negation, None, modal_verb, adjective)
-                verb_statements.append(verb)
-                aux_verb = modal_verb = negation = adjective = None
+                # Adding a neutral value ("None") in order to assure the loop iteration
+                if len(adj_list) == 0:
+                    adj_list.append(None)
+
+                for adjective in adj_list:
+                    verb = Verb(aux_verb, negation, None, modal_verb, adjective)
+                    verb_statements.append(verb)
+
+                aux_verb = modal_verb = negation = None
         elif isinstance(verb, Token):
             if verb.tag_ == "MD":
                 modal_verb = verb
@@ -27,7 +32,7 @@ def prepare_verb_list(sentence: Span):
                 negation = _get_negation(sentence, verb, negation)
                 verb = Verb(aux_verb, negation, verb, modal_verb, None)
                 verb_statements.append(verb)
-                aux_verb = modal_verb = negation = adjective = None
+                aux_verb = modal_verb = negation = None
 
     return verb_statements
 
@@ -69,12 +74,12 @@ def _is_aux_preceded_by_aux(sentence: Span, verb: Token):
     Check if the auxiliary verb is preceded by another auxiliary verb
 
     E.g.:
-        question: "which statues do not have more than three owners?"
+        - question: "which statues do not have more than three owners?"
             * aux ("have") preceded by aux ("do"): "do not have"
 
-    :param sentence: The sentence
+    :param sentence: The target sentence
     :param verb: The auxiliary verb
-    :return:
+    :return: True/False
     """
 
     if verb.pos_ != "AUX" or verb.i == 0:
@@ -96,14 +101,14 @@ def _get_main_verb(sentence: Span, aux_verb: Token):
     Get the main verb
 
     E.g.:
-        question: "when was the museum opened?"
+        - question: "when was the museum opened?"
             * the verb chain: "was opened" => return "opened"
-        question: "why do they always arrive late?"
+        - question: "why do they always arrive late?"
             * the verb chain: "do arrive" => return "arrive"
-        question: "when were the panama papers published"
+        - question: "when were the panama papers published"
             * the verb chain: "were published" => return "published"
 
-    :param sentence: The sentence
+    :param sentence: The target sentence
     :param aux_verb: The auxiliary verb
     :return: The main verb or None
     """
@@ -118,18 +123,37 @@ def _get_main_verb(sentence: Span, aux_verb: Token):
     return None
 
 
-# TODO: detecting 2 or more adjectives: 'Which is the noisiest and the largest city?'
-def _get_adjective(sentence: Span, aux_verb: Token):
-    next_word = _get_next_token(sentence, aux_verb, ["DET", "ADV", "CCONJ", "NOUN", "PRON", "PROPN", "VERB"])
+# TODO: extracting long adjectives: "most beautiful"
+def _get_adj_list(sentence: Span, aux_verb: Token):
+    """
+    Get the list of adjectives
 
-    if next_word is not None and next_word.pos_ == "ADJ":
-        return next_word
+    :param sentence: The target sentence
+    :param aux_verb: The auxiliary verb
+    :return: The list of adjectives
+    """
+
+    next_word = _get_next_token(sentence, aux_verb, ["DET", "ADV", "CCONJ", "NOUN", "PRON", "PROPN", "VERB"])
+    next_words = []
+
+    if next_word is not None:
+        # E.g.: "is married"
+        if next_word.pos_ == "ADJ" or (next_word.pos_ == "NOUN" and next_word.dep_ == "attr"):
+            next_words.append(next_word)
+
+        # Example of question which has two adjectives => "Which is the noisiest and the largest city?"
+        next_word = _get_next_token(sentence, next_word, ["DET", "ADV", "NOUN", "PRON", "PROPN", "VERB"])
+        if next_word.pos_ == "CCONJ":
+            next_words = next_words + _get_adj_list(sentence, next_word)
+
+    return next_words
 
 
 def _get_next_token(sentence: Span, aux_verb: Token, pos_list: [str]):
     """
     Get the next token which POS is not in pos_list
-    :param sentence: The sentence
+
+    :param sentence: The target sentence
     :param aux_verb: The auxiliary verb
     :param pos_list: The list of POS for which the iteration is allowed
     :return: The token after the auxiliary verb which POS not in pos_list
@@ -149,7 +173,8 @@ def _get_next_token(sentence: Span, aux_verb: Token, pos_list: [str]):
     for i in range(next_index, last_index):
         token = sentence[i]
 
-        if token.pos_ in pos_list or token.dep_ == "neg":
+        # E.g.: token.dep_ != 'attr' => "Which is the noisiest and the largest city?"
+        if (token.pos_ in pos_list or token.dep_ == "neg") and token.dep_ != "attr":
             next_word = sentence[token.i + 1]
         else:
             break
@@ -161,7 +186,7 @@ def _get_negation(sentence: Span, verb: Token, init_negation: Token):
     """
     Get the negation
 
-    :param sentence: The sentence
+    :param sentence: The target sentence
     :param verb: Main verb, auxiliary verb or modal verb
     :param init_negation: The initial value of the negation
     :return: The identified negation
