@@ -2,6 +2,16 @@ from spacy.tokens import Token
 
 
 class Verb:
+    """
+    A data structure for representing the verbs that are part of an event (Action)
+
+    :attr aux_vb: The list of auxiliary verbs
+    :attr neg: TODO move the attribute to the Action
+    :attr main_vb: The main verb
+    :attr modal_vb: The modal verb
+    :attr adjective: TODO move the attribute to the Action
+    """
+
     def __init__(self, aux_vb: [Token], neg: Token, main_vb: Token, modal_vb: Token, adjective: Token):
         self.aux_vb = aux_vb
         self.neg = neg
@@ -30,6 +40,12 @@ class Verb:
         )
 
     def get_verb(self):
+        """
+        Get the main verb if it exists, otherwise the auxiliary verb
+
+        :return: The verb
+        """
+
         if self.main_vb is not None:
             return self.main_vb
         return self.aux_vb

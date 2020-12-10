@@ -2,6 +2,7 @@ from spacy.tokens import Span, Token
 from ro.webdata.oniq.common.constants import LOGICAL_OPERATIONS
 
 
+# TODO: documentation
 class LogicalOperation:
     def __init__(self, sentence: Span, value: Span):
         self.name = _get_operation_name(sentence, value)

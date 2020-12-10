@@ -3,6 +3,8 @@ from ro.webdata.oniq.model.sentence.Verb import Verb
 from ro.webdata.oniq.nlp.nlp_utils import get_wh_words
 
 
+# TODO: prepare_action_list => build the actions here
+# TODO: move the negation and the adjective inside of the actions
 def prepare_verb_list(sentence: Span):
     verb_statements = []
     aux_verb = modal_verb = negation = None

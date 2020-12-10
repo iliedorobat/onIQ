@@ -4,6 +4,7 @@ from ro.webdata.oniq.model.sentence.LogicalOperation import LogicalOperation
 from ro.webdata.oniq.nlp.nlp_utils import get_wh_words
 
 
+# TODO: refactorize && documentation
 class Statement:
     def __init__(self, action, cardinality, phrase, logical_operation, statements):
         self.action = action
