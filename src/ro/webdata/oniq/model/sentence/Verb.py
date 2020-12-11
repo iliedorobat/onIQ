@@ -1,4 +1,5 @@
 from spacy.tokens import Span, Token
+from ro.webdata.oniq.model.sentence.Adjective import Adjective
 from ro.webdata.oniq.nlp.nlp_utils import get_next_token, get_wh_words
 
 
@@ -63,11 +64,63 @@ def _get_acomp(sentence: Span, aux_verbs: [Token]):
     verb = aux_verbs[len(aux_verbs) - 1]
     next_index = verb.i + 1
 
+    adj_determiner = _get_adj_determiner(sentence, verb)
+    if adj_determiner is not None:
+        next_index = next_index + 1
+
+    adj_prefix = _get_adj_prefix(sentence, verb)
+    if adj_prefix is not None:
+        next_index = next_index + 1
+
+    if next_index >= len(sentence):
+        return None
+
+    return Adjective(sentence, sentence[next_index])
+
+
+def _get_adj_determiner(sentence: Span, verb: Token):
+    """
+    Get the determiner placed before the adjective
+
+    :param sentence: The target sentence
+    :param verb: The last auxiliary verb
+    :return: The determiner (E.g.: "the")
+    """
+
+    if verb is None:
+        return None
+
+    next_index = verb.i + 1
     if next_index >= len(sentence):
         return None
 
     next_word = sentence[next_index]
-    if next_word.pos_ == "ADJ" and next_word.dep_ == "acomp":
+    if next_word.pos_ == "DET" and next_word.tag_ == "DT":
+        return next_word
+
+    return None
+
+
+def _get_adj_prefix(sentence: Span, verb: Token):
+    """
+    Get the superlative/comparative adjective prefix
+
+    :param sentence: The target sentence
+    :param verb: The last auxiliary verb
+    :return: The superlative/comparative adjective prefix (E.g.: "most")
+    """
+    # the most beautiful ("most")
+
+    if verb is None:
+        return None
+
+    determiner = _get_adj_determiner(sentence, verb)
+    next_index = verb.i + 1 if determiner is None else verb.i + 2
+    if next_index >= len(sentence):
+        return None
+
+    next_word = sentence[next_index]
+    if next_word.pos_ == "ADV" and next_word.tag_ in ["RBR", "RBS"]:
         return next_word
 
     return None

@@ -23,7 +23,7 @@ def get_action_list(sentence: Span):
 
                 for adjective in adj_list:
                     verb = Verb(sentence, aux_verbs, None, modal_verb)
-                    action = Action(sentence, verb, adjective)
+                    action = Action(sentence, verb)
                     action_list.append(action)
 
                 aux_verbs = modal_verb = None
@@ -32,7 +32,7 @@ def get_action_list(sentence: Span):
                 modal_verb = verb
             else:
                 verb = Verb(sentence, aux_verbs, verb, modal_verb)
-                action = Action(sentence, verb, None)
+                action = Action(sentence, verb)
                 action_list.append(action)
                 aux_verbs = modal_verb = None
 

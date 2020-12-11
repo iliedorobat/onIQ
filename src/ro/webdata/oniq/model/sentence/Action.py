@@ -1,5 +1,4 @@
 from spacy.tokens import Span, Token
-from ro.webdata.oniq.model.sentence.Adjective import Adjective
 from ro.webdata.oniq.model.sentence.Verb import Verb
 
 
@@ -7,7 +6,6 @@ class Action:
     """
     An event that links two chunks/phrases
 
-    TODO :attr adj: move the adjective to the Noun
     :attr dep: the syntactic dependence
     :attr is_available: a flag that specifies if the action was assigned to a chunk/phrase
     :attr neg: The negation of the event
@@ -18,8 +16,7 @@ class Action:
         - event: "do not have"
     """
 
-    def __init__(self, sentence: Span, verb: Verb = None, adj: Adjective = None):
-        self.adj = adj
+    def __init__(self, sentence: Span, verb: Verb = None):
         self.dep = _get_dependency(verb)
         self.is_available = True
         self.neg = _get_negation(sentence, verb.aux_vbs)
@@ -29,7 +26,6 @@ class Action:
         return self.get_str()
 
     def get_str(self, indentation=''):
-        adj = self.adj if self else None
         dep = self.dep if self else None
         is_available = self.is_available if self else None
         neg = self.neg if self else None
@@ -40,7 +36,6 @@ class Action:
             f'{indentation}action: {{\n'
             f'{indentation}\tdep: {dep},\n'
             f'{indentation}\tis_available: {is_available},\n'
-            f'{indentation}\tadj: {adj},\n'
             f'{indentation}\tneg: {neg},\n'
             f'{indentation}\tverb: {Verb.get_str(verb, verb_indentation)}\n'
             f'{indentation}}}'

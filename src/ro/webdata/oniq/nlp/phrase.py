@@ -57,7 +57,7 @@ def get_noun_chunks(sentence: Union[Doc, Span]):
     chunk_list = []
     first_chunk = sentence[0:1]
 
-    # include the "Which" chunk to the noun chunks list
+    # include the "which" chunk to the noun chunks list
     if is_nsubj_wh_word(sentence, [first_chunk], 0):
         chunk_list.append(first_chunk)
 
@@ -180,7 +180,11 @@ def is_nsubj_wh_word(sentence: Span, chunk_list: [Span], index: int):
     """
 
     first_word = chunk_list[index][0]
-    return first_word in get_wh_words(sentence) and sentence[first_word.i + 1].pos_ == "AUX"
+    is_wh_word = first_word in get_wh_words(sentence)
+    is_pron_chunk = first_word.pos_ == "PRON" and first_word.tag_ == "WP"
+    is_preceded_by_aux = sentence[first_word.i + 1].pos_ == "AUX"
+
+    return is_wh_word and is_preceded_by_aux and not is_pron_chunk
 
 
 def is_preceded_by_nsubj_wh_word(sentence: Span, chunk_list: [Span], index: int):

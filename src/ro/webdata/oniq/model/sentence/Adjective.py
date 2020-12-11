@@ -12,11 +12,13 @@ class Adjective:
     E.g.:
         - sentence: "Which is the most beautiful city?"
         - adj: "beautiful"
+        - det: "the"
         - prefix: "most"
     """
 
     def __init__(self, sentence: Span, word: Token = None):
         self.adj = _get_adj(word)
+        self.det = _get_determiner(sentence, self.adj)
         self.prefix = _get_prefix(sentence, self.adj)
 
     def __str__(self):
@@ -24,8 +26,10 @@ class Adjective:
 
     def get_str(self, indentation=''):
         adj = self.adj if self else None
+        det = self.det if self else None
         prefix = self.prefix if self else None
         full_adj = f'{prefix} {adj}' if prefix is not None else adj
+        full_adj = f'{det} {full_adj}' if det is not None else full_adj
 
         return (
             f'{indentation}{full_adj}'
@@ -34,20 +38,42 @@ class Adjective:
 
 def _get_adj(word: Token = None):
     """
-    Get the adjective if has syntactic dependency of adjectival modifier (amod)
-    or get the noun if has syntactic dependency of attribute (attr)
+    Get the adjective or get the noun if the latter
+    has syntactic dependency of attribute (attr)
 
     :param word: The target adjective or noun
-    :return: The amod or the attr
+    :return: The adjective or the attribute
     """
 
     if word is None:
         return None
 
-    #                                                E.g.: "is married", "the noisiest"
-    if (word.pos_ == "ADJ" and word.dep_ == "amod") or (word.pos_ == "NOUN" and word.dep_ == "attr"):
+    #                        E.g.: "is married", "the noisiest"
+    if word.pos_ == "ADJ" or (word.pos_ == "NOUN" and word.dep_ == "attr"):
         return word
     return None
+
+
+def _get_determiner(sentence: Span, adj: Token = None):
+    """
+    Get the determiner placed before the adjective
+
+    :param sentence: The target sentence
+    :param adj: The main adjective
+    :return: The determiner
+    """
+
+    if adj is None:
+        return None
+
+    prev_index = adj.i - 1
+
+    prefix = _get_prefix(sentence, adj)
+    if prefix is not None:
+        prev_index = prev_index - 1
+
+    prev_word = sentence[prev_index] if prev_index > -1 else None
+    return prev_word if prev_word.pos_ == "DET" and prev_word.tag_ == "DT" else None
 
 
 def _get_prefix(sentence: Span, adj: Token = None):
