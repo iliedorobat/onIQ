@@ -32,7 +32,7 @@ class Adjective:
         )
 
 
-def _get_adj(word):
+def _get_adj(word: Token = None):
     """
     Get the adjective if has syntactic dependency of adjectival modifier (amod)
     or get the noun if has syntactic dependency of attribute (attr)
@@ -40,6 +40,9 @@ def _get_adj(word):
     :param word: The target adjective or noun
     :return: The amod or the attr
     """
+
+    if word is None:
+        return None
 
     #                                                E.g.: "is married", "the noisiest"
     if (word.pos_ == "ADJ" and word.dep_ == "amod") or (word.pos_ == "NOUN" and word.dep_ == "attr"):
@@ -55,6 +58,9 @@ def _get_prefix(sentence: Span, adj: Token = None):
     :param adj: The main adjective
     :return: The superlative/comparative adjective prefix
     """
+
+    if adj is None:
+        return None
 
     prev_word = sentence[adj.i - 1] if adj.i > 0 else None
     return prev_word if prev_word is not None and prev_word.tag_ in ["RBR", "RBS"] else None
