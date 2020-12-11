@@ -1,5 +1,5 @@
 from typing import Union
-from spacy.tokens import Doc, Span
+from spacy.tokens import Doc, Span, Token
 import warnings
 
 
@@ -11,6 +11,39 @@ def get_cardinals(chunk):
     :return: The list of cardinals
     """
     return list([token for token in chunk if token.tag_ == "CD"])
+
+
+def get_next_token(sentence: Span, aux_verb: Token, pos_list: [str]):
+    """
+    Get the next token which POS is not in pos_list
+
+    :param sentence: The target sentence
+    :param aux_verb: The auxiliary verb
+    :param pos_list: The list of POS for which the iteration is allowed
+    :return: The token after the auxiliary verb which POS not in pos_list
+    """
+
+    last_index = len(sentence) - 1
+    next_index = aux_verb.i + 1
+
+    if next_index > last_index:
+        return None
+
+    if next_index == last_index:
+        return sentence[next_index]
+
+    next_word = sentence[next_index]
+
+    for i in range(next_index, last_index):
+        token = sentence[i]
+
+        # E.g.: token.dep_ != 'attr' => "Which is the noisiest and the largest city?"
+        if (token.pos_ in pos_list or token.dep_ == "neg") and token.dep_ != "attr":
+            next_word = sentence[token.i + 1]
+        else:
+            break
+
+    return next_word
 
 
 def get_preposition(sentence: Span, chunk: Span):

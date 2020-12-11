@@ -87,6 +87,9 @@ def get_related_phrase(sentence: Span, chunk_index: int = 0, action_index: int =
 
     chunk_list = get_noun_chunks(sentence)
     index = chunk_index + action_index + increment
+    if index >= len(chunk_list):
+        return None
+
     next_chunk = chunk_list[index]
 
     if index >= len(chunk_list):

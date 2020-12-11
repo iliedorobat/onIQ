@@ -10,10 +10,10 @@ from ro.webdata.oniq.model.sentence.Action import Action
 from ro.webdata.oniq.model.sparql.Query import Query
 from ro.webdata.oniq.model.sentence.Statement import Statement
 from ro.webdata.oniq.model.sentence.LogicalOperation import LogicalOperation
-from ro.webdata.oniq.nlp.verbs import prepare_verb_list
-from ro.webdata.oniq.nlp.nlp_utils import get_cardinals, get_preposition, get_prev_chunk, get_wh_words, retokenize
-from ro.webdata.oniq.nlp.phrase import get_conj_phrases, get_main_noun_chunks, get_noun_chunks, get_phrase, \
-    get_phrase_list, get_related_phrase, get_related_wh_phrase, is_nsubj_wh_word
+from ro.webdata.oniq.nlp.actions import get_action_list
+from ro.webdata.oniq.nlp.nlp_utils import get_cardinals, get_preposition, retokenize
+from ro.webdata.oniq.nlp.phrase import get_conj_phrases, get_main_noun_chunks, get_phrase, get_related_phrase, \
+    get_related_wh_phrase, is_nsubj_wh_word
 
 
 nlp = spacy.load('../../../../lib/en_core_web_sm/en_core_web_sm-2.2.5')
@@ -77,7 +77,7 @@ def _prepare_statement_list(document):
 
     for sentence in document.sents:
         retokenize(document, sentence)
-        action_list = _get_action_list(sentence)
+        action_list = get_action_list(sentence)
         chunk_list = get_main_noun_chunks(sentence)
 
         echo.token_list(sentence)
@@ -146,15 +146,3 @@ def _prepare_statement_list(document):
             print(f'{stmt.phrase}      {stmt.related_phrase}')
             print('-----')
         return statements
-
-
-def _get_action_list(sentence: Span):
-    """
-    Get the list of actions
-
-    :param sentence: The target sentence
-    :return: The list of actions
-    """
-
-    verb_list = prepare_verb_list(sentence)
-    return [Action(verb) for verb in verb_list]
