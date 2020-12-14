@@ -1,5 +1,6 @@
 from typing import Union
-from spacy.tokens import Doc, Span
+from spacy.tokens import Doc, Span, Token
+from ro.webdata.oniq.nlp.actions import get_action_list
 from ro.webdata.oniq.nlp.nlp_utils import get_preposition, get_wh_words
 
 
@@ -36,10 +37,16 @@ def get_main_noun_chunks(sentence: Union[Doc, Span]):
     """
 
     chunk_list = get_noun_chunks(sentence)
-    return [
-        chunk for index, chunk in enumerate(chunk_list)
-        if not is_preceded_by_nsubj_wh_word(sentence, chunk_list, index)
-    ]
+    return chunk_list
+
+    # for index, chunk in enumerate(chunk_list):
+    #     checking = is_preceded_by_nsubj_wh_word(sentence, chunk_list, index)
+    #     print()
+    #
+    # return [
+    #     chunk for index, chunk in enumerate(chunk_list)
+    #     if not is_preceded_by_nsubj_wh_word(sentence, chunk_list, index)
+    # ]
 
 
 def get_noun_chunks(sentence: Union[Doc, Span]):
@@ -63,7 +70,44 @@ def get_noun_chunks(sentence: Union[Doc, Span]):
 
     chunk_list = chunk_list + list(sentence.noun_chunks)
 
-    return chunk_list
+    return consolidate_noun_chunks(sentence, chunk_list)
+
+
+# 'Which female actor played in Casablanca and has been married to a writer born in Rome and has three children?'
+# => 'what is the name of the largest museum which hosts more than 10 pictures and exposed one sword?'
+def consolidate_noun_chunks(sentence: Union[Doc, Span], chunk_list):
+    consolidated_list = []
+
+    for index, chunk in enumerate(chunk_list):
+        prev_word = sentence[chunk[0].i - 1]
+
+        # E.g.: 'what is the name of the largest museum?'
+        #   - chunks: "what", "the name", "the largest museum"
+        #   - consolidated: "what", "the name of the largest museum"
+        if prev_word.pos_ == "ADP" and prev_word.dep_ == "prep":
+            prev_word = sentence[prev_word.i - 1]
+            if len(consolidated_list) > 0 and not checking(sentence, prev_word):
+                prev_chunk = consolidated_list[len(consolidated_list) - 1]
+                start_index = prev_chunk[0].i
+                end_index = chunk[len(chunk) - 1].i + 1
+                consolidated_list[len(consolidated_list) - 1] = sentence[start_index: end_index]
+            else:
+                consolidated_list.append(chunk)
+        else:
+            consolidated_list.append(chunk)
+
+    return consolidated_list
+
+
+def checking(sentence: Union[Doc, Span], word: Token):
+    action_list = get_action_list(sentence)
+
+    for action in action_list:
+        for token in action.verb.to_list():
+            if token.text == word.text:
+                return True
+
+    return False
 
 
 def get_related_phrase(sentence: Span, chunk_index: int = 0, action_index: int = 0, increment: int = 1):

@@ -11,7 +11,7 @@ from ro.webdata.oniq.model.sparql.Query import Query
 from ro.webdata.oniq.model.sentence.Statement import Statement
 from ro.webdata.oniq.model.sentence.LogicalOperation import LogicalOperation
 from ro.webdata.oniq.nlp.actions import get_action_list
-from ro.webdata.oniq.nlp.nlp_utils import get_cardinals, get_preposition, retokenize
+from ro.webdata.oniq.nlp.nlp_utils import get_cardinals, get_preposition, is_wh_noun_phrase, retokenize
 from ro.webdata.oniq.nlp.phrase import get_conj_phrases, get_main_noun_chunks, get_phrase, get_related_phrase, \
     get_related_wh_phrase, is_nsubj_wh_word
 
@@ -94,51 +94,79 @@ def _prepare_statement_list(document):
                 action = action_list[j]
 
                 if action.is_available is True:
-                    # adauga in lista prima actiune
-                    if j == 0:
+                    is_first_action = j == 0
+                    is_prev_action_available = action_list[j - 1].is_available
+
+                    # Add the first action to the action list
+                    if is_first_action is True:
                         action.is_available = False
                         phrase_actions.append(action)
+                    # Add the rest of actions to the action list
                     else:
-                        # adauga in lista urmatoarea actiune care se afla in relatie de conjuctie/disjunctie cu actiunea anterioara:
-                        # 1. daca urmatoarea actiune se afla in relatie de conjuctie/disjunctie cu actiunea anterioara
-                        # 2. daca anterioara actiune a fost deja atribuita
-                        if action.dep == 'conj' \
-                                and action_list[j - 1].is_available is False:
+                        # 1. Check if the next action is in the relation of 'conj'
+                        # 2. Check if the previous action has already been assigned to a phrase
+                        if action.dep == 'conj' and is_prev_action_available is False:
                             action.is_available = False
                             phrase_actions.append(action)
-                        # 1. daca exista cel putin un statement inregistrat
-                        # 2. daca fraza curenta != fraza ultimului statement inregistrat
-                        # 3. daca fraza curenta nu este precedata de un verb
-                        # acl => 'Which female actor played in Casablanca and has been married to a writer born in Rome and has three children?'
-                        # acomp => 'Which female actor played in Casablanca and is married to a writer born in Rome and has three children?'
+
+                        # TODO: documentation: 'what is the name of the largest museum which hosts more than 10 pictures and exposed one sword?"
+                        # 1. Check if at least one statement has already been added
+                        # 2. TODO: documentation
+                        # 3. Check if the previous action has already been assigned to a phrase
+                        # E.g.: "What is the name of the largest museum which hosts more than 10 pictures and exposed one sword?"
+                        elif len(statements) > 0 and action.dep == "relcl" and is_prev_action_available is False:
+                            action.is_available = False
+                            phrase_actions.append(action)
+
+                        # 1. Check if at least one statement has already been added
+                        # 2. Check if the current phrase != the phrase of the last statement
+                        # 3. Check if the current phrase is not preceded by a verb
+                        # acl => "Which female actor played in Casablanca and has been married to a writer born in Rome and has three children?"
+                        # acomp => "Which female actor played in Casablanca and is married to a writer born in Rome and has three children?"
                         elif len(statements) > 0 \
                                 and statements[len(statements) - 1].phrase != phrase \
                                 and sentence[first_word.i - 1].dep_ in ["acl", "acomp"]:
                             action.is_available = False
                             phrase_actions.append(action)
-                        # 1. daca primul element din fraza este wh-determiner
-                        # 2. daca primul element din fraza are dependinta de nsubj
-                        # 3. daca dupa primul element se afla un verb
-                        # E.g.: "Which is the noisiest and the largest city?"
-                        elif first_word.tag_ == "WDT" and first_word.dep_ == "nsubj" and phrase[1].pos_ in ["AUX", "VERB"]:
+
+                        # 1. Check if at least one statement has already been added
+                        # 2. Check if the current phrase != the phrase of the last statement
+                        # 3. Check if the current phrase is followed by a verb
+                        # E.g.: "Which female actor played in Casablanca and has been married to a writer born in Rome and has three children?"
+                        elif len(statements) > 0 \
+                                and statements[len(statements) - 1].phrase != phrase \
+                                and sentence[phrase[len(phrase) - 1].i + 1].dep_ in ["acl", "acomp"]:
                             action.is_available = False
                             phrase_actions.append(action)
 
-            # creaza cate un statement pentru fiecare actiune a unei fraze
+            # Create a statement for each action
             for j in range(len(phrase_actions)):
-                #         cardinals = get_cardinals(chunk)
-                #         logical_operation = LogicalOperation(sentence, chunk)
+                # cardinals = get_cardinals(chunk)
+                # logical_operation = LogicalOperation(sentence, chunk)
 
                 next_phrase = get_related_wh_phrase(sentence, i, j) \
                     if is_nsubj_wh_word(sentence, chunk_list, i) \
                     else get_related_phrase(sentence, i, j)
-                conj_phrases = [] \
-                    if is_nsubj_wh_word(sentence, chunk_list, i) \
-                    else get_conj_phrases(sentence, i)
+                conj_phrases = get_conj_phrases(sentence, j)
+
+                # E.g.: "Which is the museum which hosts more than 10 pictures and exposed one sword?"
                 statements.append(Stmt(phrase_actions[j], phrase, next_phrase))
 
                 for conj_phrase in conj_phrases:
-                    statements.append(Stmt(phrase_actions[i], conj_phrase, next_phrase))
+                    if first_word.pos_ == "DET" and first_word.tag_ == "WDT":
+                        if first_word.dep_ == "det":
+                            # E.g.: "Which paintings, swords or statues do not have more than three owners?"
+                            statements.append(Stmt(phrase_actions[j], conj_phrase, next_phrase))
+                        if first_word.dep_ == "nsubj":
+                            if sentence[first_word.i + 1].pos_ in ["AUX", "VERB"]:
+                                # E.g.: "Which is the noisiest and the most beautiful city?"
+                                statements.append(Stmt(phrase_actions[j], phrase, conj_phrase))
+                            else:
+                                # E.g.: "Which paintings, white swords or statues do not have more than three owners?"
+                                statements.append(Stmt(phrase_actions[j], conj_phrase, next_phrase))
+                    else:
+                        # E.g.: "Who is the most beautiful woman and the most generous person?"
+                        statements.append(Stmt(phrase_actions[j], phrase, conj_phrase))
 
         # TODO: Stmt print method
         for stmt in statements:

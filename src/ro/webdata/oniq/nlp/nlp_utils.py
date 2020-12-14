@@ -1,6 +1,7 @@
+import warnings
 from typing import Union
 from spacy.tokens import Doc, Span, Token
-import warnings
+from ro.webdata.oniq.common.constants import SYSTEM_MESSAGES
 
 
 def get_cardinals(chunk):
@@ -57,7 +58,7 @@ def get_preposition(sentence: Span, chunk: Span):
 
 
 def get_prev_chunk(chunks: [Span], chunk: Span):
-    warnings.warn("The method is not used anymore", DeprecationWarning)
+    warnings.warn(SYSTEM_MESSAGES.METHOD_NOT_USED, DeprecationWarning)
 
     chunk_index = chunks.index(chunk)
     if chunk_index > 0:
@@ -129,6 +130,28 @@ def get_wh_words(document: Union[Doc, Span]):
     :return: The list of WH-words
     """
     return list([token for token in document if token.tag_ in ['WRB', 'WDT', 'WP', 'WP$']])
+
+
+def is_wh_noun_phrase(phrase: Union[Doc, Span]):
+    """
+    Determine if the phrase is a WH-noun phrase
+
+    E.g.:
+        - question: "Which is the noisiest and the largest city?"
+        - Wh-noun phrase: "Which"
+
+    E.g.:
+        - question: "Who is the most beautiful woman?"
+        - Wh-noun phrase: "Who"
+
+    :param phrase: The target phrase/chunk/document
+    :return: True/False
+    """
+
+    warnings.warn(SYSTEM_MESSAGES.METHOD_NOT_USED, DeprecationWarning)
+
+    first_word = phrase[0]
+    return first_word.tag_ in ["WDT", "WP"] and first_word.dep_ == "nsubj"
 
 
 def retokenize(document: Union[Doc, Span], sentence: Span):

@@ -1,4 +1,6 @@
+import warnings
 from spacy.tokens import Span, Token
+from ro.webdata.oniq.common.constants import SYSTEM_MESSAGES
 from ro.webdata.oniq.model.sentence.Adjective import Adjective
 from ro.webdata.oniq.nlp.nlp_utils import get_next_token, get_wh_words
 
@@ -7,14 +9,14 @@ class Verb:
     """
     Data structure for representing the verbs that are part of an event (Action)
 
-    :attr sentence: The target sentence
     :attr aux_vbs: The list of auxiliary verbs
     :attr main_vb: The main verb
     :attr modal_vb: The modal verb
+    :attr acomp: The adjectival complement
     """
 
-    def __init__(self, sentence: Span, aux_vbs: [Token] = None, main_vb: Token = None, modal_vb: Token = None):
-        self.acomp = _get_acomp(sentence, aux_vbs)
+    def __init__(self, aux_vbs: [Token] = None, main_vb: Token = None, modal_vb: Token = None, acomp: Adjective = None):
+        self.acomp = acomp
         self.aux_vbs = aux_vbs
         self.main_vb = main_vb
         self.modal_vb = modal_vb
@@ -48,15 +50,31 @@ class Verb:
             return self.main_vb
         return self.aux_vbs
 
+    def to_list(self):
+        adj_list = self.acomp.to_list() if self.acomp is not None else [None]
+        verb_list = [self.main_vb, self.modal_vb]
+
+        if self.aux_vbs is not None:
+            for aux_verb in self.aux_vbs:
+                verb_list.append(aux_verb)
+
+        return [token for token in adj_list + verb_list if token is not None]
+
 
 def _get_acomp(sentence: Span, aux_verbs: [Token]):
     """
     Get the adjective if has syntactic dependency of adjectival complement (acomp)
 
+    E.g.:
+        - question: "[...] the most beautiful [...]" =>
+        - adj: "beautiful"
+
     :param sentence: The target sentence
     :param aux_verbs: The list of auxiliary verbs
-    :return: The acomp
+    :return: The adjectival complement
     """
+
+    warnings.warn(SYSTEM_MESSAGES.METHOD_NOT_USED, DeprecationWarning)
 
     if aux_verbs is None:
         return None
@@ -82,10 +100,16 @@ def _get_adj_determiner(sentence: Span, verb: Token):
     """
     Get the determiner placed before the adjective
 
+    E.g.:
+        - question: "[...] the most beautiful [...]" =>
+        - determiner: "the"
+
     :param sentence: The target sentence
     :param verb: The last auxiliary verb
     :return: The determiner (E.g.: "the")
     """
+
+    warnings.warn(SYSTEM_MESSAGES.METHOD_NOT_USED, DeprecationWarning)
 
     if verb is None:
         return None
@@ -105,11 +129,16 @@ def _get_adj_prefix(sentence: Span, verb: Token):
     """
     Get the superlative/comparative adjective prefix
 
+    E.g.:
+        - question: "[...] the most beautiful [...]" =>
+        - prefix: "most"
+
     :param sentence: The target sentence
     :param verb: The last auxiliary verb
     :return: The superlative/comparative adjective prefix (E.g.: "most")
     """
-    # the most beautiful ("most")
+
+    warnings.warn(SYSTEM_MESSAGES.METHOD_NOT_USED, DeprecationWarning)
 
     if verb is None:
         return None

@@ -15,14 +15,15 @@ def get_action_list(sentence: Span):
             aux_verbs = verb
             next_verb = get_main_verb(sentence, aux_verbs[len(aux_verbs) - 1])
             adj_list = _get_adj_list(sentence, aux_verbs[len(aux_verbs) - 1])
+            acomp_list = [adjective for adjective in adj_list if adjective.adj.dep_ == "acomp"]
 
             if next_verb is None:
                 # Adding a neutral value ("None") in order to assure the loop iteration
-                if len(adj_list) == 0:
-                    adj_list.append(None)
+                if len(acomp_list) == 0:
+                    acomp_list.append(None)
 
-                for adjective in adj_list:
-                    verb = Verb(sentence, aux_verbs, None, modal_verb)
+                for acomp in acomp_list:
+                    verb = Verb(aux_verbs, None, modal_verb, acomp)
                     action = Action(sentence, verb)
                     action_list.append(action)
 
@@ -31,7 +32,7 @@ def get_action_list(sentence: Span):
             if verb.tag_ == "MD":
                 modal_verb = verb
             else:
-                verb = Verb(sentence, aux_verbs, verb, modal_verb)
+                verb = Verb(aux_verbs, verb, modal_verb, None)
                 action = Action(sentence, verb)
                 action_list.append(action)
                 aux_verbs = modal_verb = None
@@ -91,6 +92,11 @@ def _get_adj_list(sentence: Span, aux_verb: Token):
 
         # Example of question which has two adjectives => "Which is the noisiest and the largest city?"
         next_word = get_next_token(sentence, next_word, ["DET", "ADV", "NOUN", "PRON", "PROPN", "VERB"])
+
+        # # E.g.: "Who is the most beautiful woman and the most generous person?"
+        if next_word is not None and next_word.pos_ == "NOUN" and next_word.dep_ == "attr":
+            next_word = get_next_token(sentence, next_word, ["DET", "ADV", "NOUN", "PRON", "PROPN", "VERB"])
+
         if next_word is not None and next_word.pos_ == "CCONJ":
             adj_list = adj_list + _get_adj_list(sentence, next_word)
 

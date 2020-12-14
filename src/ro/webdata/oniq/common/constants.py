@@ -56,6 +56,10 @@ class SEPARATOR:
     TRIPLE_PATTERN = ' '
 
 
+class SYSTEM_MESSAGES:
+    METHOD_NOT_USED = "The method is not used anymore!"
+
+
 # TODO: complete the map
 NAMED_ENTITY_MAP = {
     # TODO: CARDINAL = Numerals that do not fall under another type

@@ -35,6 +35,27 @@ class Adjective:
             f'{indentation}{full_adj}'
         )
 
+    def to_list(self):
+        adj_list = [self.adj, self.det, self.prefix]
+        return [token for token in adj_list if token is not None]
+
+    @staticmethod
+    def get_first_token(adjective):
+        if adjective.det is not None:
+            return adjective.det
+        elif adjective.prefix is not None:
+            return adjective.prefix
+        else:
+            return adjective.adj
+
+    @staticmethod
+    def get_first_index(adjective):
+        first_token = Adjective.get_first_token(adjective)
+        if first_token is not None:
+            return first_token.i
+        else:
+            return -1
+
 
 def _get_adj(word: Token = None):
     """
