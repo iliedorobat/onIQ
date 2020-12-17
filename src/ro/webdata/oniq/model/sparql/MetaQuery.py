@@ -43,24 +43,8 @@ class MetaQuery:
         #     filter_statement=query.get_filter_block()
         # )
         #
-        # if APP_MODE.IS_DEBUG:
-        #     print(query)
-        #     echo.statements(statements)
-        #     print(self.query)
-        #
         # # nlp_query = nlp(nl_query)
         # # displacy.serve(nlp_query, style="dep")
-
-
-class Stmt:
-    # TODO: merge it with the Statement class
-    #    phrase                      related phrase
-    # ---------------                 --------
-    # Which paintings are not located in Bacau?
-    def __init__(self, action, phrase, related_phrase):
-        self.actions = action
-        self.phrase = phrase
-        self.related_phrase = related_phrase
 
 
 def _prepare_statement_list(document):
@@ -82,7 +66,6 @@ def _prepare_statement_list(document):
 
         echo.token_list(sentence)
         echo.action_list(action_list)
-        console.debug(f'len(action_list) = {len(action_list)}')
 
         for i in range(len(chunk_list)):
             chunk = chunk_list[i]
@@ -150,27 +133,23 @@ def _prepare_statement_list(document):
                 conj_phrases = get_conj_phrases(sentence, j)
 
                 # E.g.: "Which is the museum which hosts more than 10 pictures and exposed one sword?"
-                statements.append(Stmt(phrase_actions[j], phrase, next_phrase))
+                statements.append(Statement(phrase, phrase_actions[j], next_phrase))
 
                 for conj_phrase in conj_phrases:
                     if first_word.pos_ == "DET" and first_word.tag_ == "WDT":
                         if first_word.dep_ == "det":
                             # E.g.: "Which paintings, swords or statues do not have more than three owners?"
-                            statements.append(Stmt(phrase_actions[j], conj_phrase, next_phrase))
+                            statements.append(Statement(conj_phrase, phrase_actions[j], next_phrase))
                         if first_word.dep_ == "nsubj":
                             if sentence[first_word.i + 1].pos_ in ["AUX", "VERB"]:
                                 # E.g.: "Which is the noisiest and the most beautiful city?"
-                                statements.append(Stmt(phrase_actions[j], phrase, conj_phrase))
+                                statements.append(Statement(phrase, phrase_actions[j], conj_phrase))
                             else:
                                 # E.g.: "Which paintings, white swords or statues do not have more than three owners?"
-                                statements.append(Stmt(phrase_actions[j], conj_phrase, next_phrase))
+                                statements.append(Statement(conj_phrase, phrase_actions[j], next_phrase))
                     else:
                         # E.g.: "Who is the most beautiful woman and the most generous person?"
-                        statements.append(Stmt(phrase_actions[j], phrase, conj_phrase))
+                        statements.append(Statement(phrase, phrase_actions[j], conj_phrase))
 
-        # TODO: Stmt print method
-        for stmt in statements:
-            console.warning(stmt.actions)
-            print(f'{stmt.phrase}      {stmt.related_phrase}')
-            print('-----')
+        echo.statement_list(statements)
         return statements

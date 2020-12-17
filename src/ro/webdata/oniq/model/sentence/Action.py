@@ -30,7 +30,7 @@ class Action:
         is_available = self.is_available if self else None
         neg = self.neg if self else None
         verb = self.verb if self else None
-        verb_indentation = "\t"
+        verb_indentation = "\t\t"
 
         return (
             f'{indentation}action: {{\n'

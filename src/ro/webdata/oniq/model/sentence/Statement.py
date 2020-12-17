@@ -1,17 +1,32 @@
+from ro.webdata.oniq.common.print_const import COLORS
 from ro.webdata.oniq.common.constants import LOGICAL_OPERATIONS
 from ro.webdata.oniq.model.sentence.Action import Action
 from ro.webdata.oniq.model.sentence.LogicalOperation import LogicalOperation
 from ro.webdata.oniq.nlp.nlp_utils import get_wh_words
 
 
-# TODO: refactorize && documentation
 class Statement:
-    def __init__(self, action, cardinality, phrase, logical_operation, statements):
+    """
+    Data structure for representing the relationship between two phrases
+
+    E.g.: "Which paintings are not located in Bacau?"
+        - phrase: "Which paintings"
+        - action: "are not located"
+        - related phrase: "in Bacau"
+
+    :attr phrase: The main phrase for which the statement is built
+    :attr action: The event in which the "phrase" is involved
+    :attr related_phrase: The phrase which is linked by the "main phrase" through the "action"
+    """
+
+    def __init__(self, phrase, action, related_phrase):
         self.action = action
-        self.cardinality = cardinality
-        self.logical_operation = logical_operation
         self.phrase = phrase
-        self.wh_word = _prepare_wh_word(phrase, logical_operation, statements)
+        self.related_phrase = related_phrase
+
+        # self.cardinality = cardinality
+        # self.logical_operation = logical_operation
+        # self.wh_word = _prepare_wh_word(phrase, logical_operation, statements)
 
     def __str__(self):
         return self.get_str()
@@ -20,37 +35,25 @@ class Statement:
         action_indentation = '\t'
 
         return (
+            f'{COLORS.CYAN}'
             f'{indentation}statement: {{\n'
-            f'{indentation}{Action.get_str(self.action, action_indentation)},\n'
-            f'{indentation}\tcardinality: {self.cardinality},\n'
-            f'{indentation}\t{LogicalOperation.get_str(self.logical_operation)},\n'
+            f'{COLORS.RESET_ALL}'
+
+            f'{COLORS.LIGHT_CYAN}'
             f'{indentation}\tphrase: {self.phrase},\n'
-            f'{indentation}\twh_word: {self.wh_word}\n'
+            f'{COLORS.RESET_ALL}'
+
+            f'{COLORS.LIGHT_YELLOW}'
+            f'{indentation}{Action.get_str(self.action, action_indentation)},\n'
+            f'{COLORS.RESET_ALL}'
+
+            f'{COLORS.LIGHT_CYAN}'
+            f'{indentation}\trelated_phrase: {self.related_phrase},\n'
+            f'{COLORS.RESET_ALL}'
+
+            f'{COLORS.CYAN}'
+            # f'{indentation}\tcardinality: {self.cardinality},\n'
+            # f'{indentation}\t{LogicalOperation.get_str(self.logical_operation)},\n'
             f'{indentation}}}'
+            f'{COLORS.RESET_ALL}'
         )
-
-
-def _prepare_wh_word(phrase, logical_operation, statements):
-    if logical_operation is not None and logical_operation.name in [LOGICAL_OPERATIONS.AND, LOGICAL_OPERATIONS.AND]:
-        last_stmt = statements[len(statements) - 1]
-        return last_stmt.wh_word
-    return _get_wh_word(phrase)
-
-
-def _get_wh_word(phrase):
-    if phrase is None:
-        return None
-
-    # [...] and [...] one of the [...]
-    #      CCONJ      NUM ADP DET
-    pos_list = ["ADJ", "ADV", "NOUN", "PRON"] + ["ADP", "CCONJ", "DET", "NUM", "PUNCT"]
-    wh_words = get_wh_words(phrase)
-
-    for i in reversed(range(len(phrase))):
-        token = phrase[i]
-        if token in wh_words:
-            return phrase[token.i: token.i + 1]
-        elif token.pos_ not in pos_list:
-            return phrase[0: i + 1]
-
-    return None
