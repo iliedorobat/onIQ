@@ -40,7 +40,7 @@ class Statement:
             f'{COLORS.RESET_ALL}'
 
             f'{COLORS.LIGHT_CYAN}'
-            f'{indentation}\tphrase: {self.phrase},\n'
+            f'{indentation}\ttarget_phrase: {self.phrase},\n'
             f'{COLORS.RESET_ALL}'
 
             f'{COLORS.LIGHT_YELLOW}'

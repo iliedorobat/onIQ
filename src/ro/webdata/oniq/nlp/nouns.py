@@ -2,7 +2,7 @@ import numpy
 from ro.webdata.oniq.model.sentence.Noun import Noun
 
 
-def get_nouns(chunk, *dependencies: []):
+def get_noun_list(chunk, *dependencies: []):
     """
     Get the list of nouns in a sentence
 

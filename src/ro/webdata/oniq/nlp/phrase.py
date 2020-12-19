@@ -9,7 +9,7 @@ def get_conj_phrases(sentence: Span, index: int):
     Get the phrases which are in the relation of conjunction to the current phrase (phrase_list[index])
 
     :param sentence: The target sentence
-    :param index: The index of the current phrase
+    :param index: The index of the current chunk/phrase
     :return: The list of linked phrases
     """
 
@@ -65,7 +65,7 @@ def get_noun_chunks(sentence: Union[Doc, Span]):
     first_chunk = sentence[0:1]
 
     # include the "which" chunk to the noun chunks list
-    if is_nsubj_wh_word(sentence, [first_chunk], 0):
+    if is_nsubj_wh_word(sentence, first_chunk):
         chunk_list.append(first_chunk)
 
     chunk_list = chunk_list + list(sentence.noun_chunks)
@@ -112,7 +112,7 @@ def checking(sentence: Union[Doc, Span], word: Token):
 
 def get_related_phrase(sentence: Span, chunk_index: int = 0, action_index: int = 0, increment: int = 1):
     """
-    Get he phrase which is the object of the current iterated action
+    Get the phrase which is the object of the current iterated action
 
     E.g.:
         - question: "Which painting, swords or statues do not have more than three owners?"
@@ -208,7 +208,7 @@ def _get_token_before_aux(sentence: Span, chunk_list: [Span], index: int):
     return None
 
 
-def is_nsubj_wh_word(sentence: Span, chunk_list: [Span], index: int):
+def is_nsubj_wh_word(sentence: Span, chunk: Span):
     """
     Check if the current iterated chunk is composed by only a WH-word in relation of "nsubj"
 
@@ -223,7 +223,7 @@ def is_nsubj_wh_word(sentence: Span, chunk_list: [Span], index: int):
     :return: True/False
     """
 
-    first_word = chunk_list[index][0]
+    first_word = chunk[0]
     is_wh_word = first_word in get_wh_words(sentence)
     is_pron_chunk = first_word.pos_ == "PRON" and first_word.tag_ == "WP"
     is_preceded_by_aux = sentence[first_word.i + 1].pos_ == "AUX"
