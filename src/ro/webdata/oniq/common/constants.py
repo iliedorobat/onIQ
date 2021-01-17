@@ -5,7 +5,8 @@ class APP_MODE:
 
 class PRINT_MODE:
     PRINT_ACTION = False
-    PRINT_STATEMENT = True
+    PRINT_CONSOLIDATED_STATEMENT = True
+    PRINT_STATEMENT = False
     PRINT_TOKEN = True
 
 

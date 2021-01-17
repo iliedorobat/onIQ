@@ -67,8 +67,8 @@ class echo:
                 print(f'property:    {prop.prop_name_extended}   {prop.ns_name}')
 
     @staticmethod
-    def statement_list(statements):
-        if APP_MODE.IS_DEBUG and PRINT_MODE.PRINT_STATEMENT:
+    def statement_list(statements, print_mode=PRINT_MODE.PRINT_STATEMENT):
+        if APP_MODE.IS_DEBUG and print_mode:
             print()
             for statement in statements:
                 print(Statement.get_str(statement))

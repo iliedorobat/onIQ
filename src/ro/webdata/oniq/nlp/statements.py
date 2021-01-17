@@ -2,17 +2,51 @@ from typing import Union
 from spacy.tokens import Doc, Span
 from iteration_utilities import unique_everseen
 
-from ro.webdata.oniq.common.print_utils import console, echo
+from ro.webdata.oniq.common.constants import PRINT_MODE
+from ro.webdata.oniq.common.print_utils import echo
 from ro.webdata.oniq.model.sentence.Action import Action
 from ro.webdata.oniq.model.sentence.Statement import Statement
 from ro.webdata.oniq.model.sentence.LogicalOperation import LogicalOperation
 from ro.webdata.oniq.nlp.actions import get_action_list
-from ro.webdata.oniq.nlp.nlp_utils import get_cardinals, get_preposition, is_wh_noun_phrase, retokenize
+from ro.webdata.oniq.nlp.nlp_utils import get_cardinals, retokenize
 from ro.webdata.oniq.nlp.phrase import get_conj_phrases, get_main_noun_chunks, get_phrase, get_related_phrase, \
     get_related_wh_phrase, is_nsubj_wh_word
 
 
-def get_statement_list(document):
+def consolidate_statement_list(document):
+    """
+    Consolidate the list of statements by grouping the statements which
+    have the same action and target_phrase into a new statement
+
+    :param document: The parsed document
+    :return: The consolidated list of statements
+    """
+
+    statements = _get_statement_list(document)
+    aux_stmt = statements[0] if len(statements) > 0 else None
+    prepared_list = []
+
+    for i in range(1, len(statements)):
+        crr_stmt = statements[i]
+        prev_stmt = statements[i - 1]
+        is_similar_stmt = Statement.is_similar_statement(crr_stmt, prev_stmt)
+
+        if is_similar_stmt is True:
+            related_phrases = aux_stmt.related_phrases + crr_stmt.related_phrases
+            aux_stmt.related_phrases = list(unique_everseen(related_phrases))
+
+            if i == len(statements) - 1:
+                prepared_list.append(aux_stmt)
+        elif is_similar_stmt is False:
+            prepared_list.append(aux_stmt)
+            aux_stmt = crr_stmt
+
+    echo.statement_list(prepared_list, PRINT_MODE.PRINT_CONSOLIDATED_STATEMENT)
+
+    return prepared_list
+
+
+def _get_statement_list(document):
     """
     Get the list of statements generated around the target phrases
 

@@ -39,6 +39,7 @@ def get_next_token(sentence: Span, aux_verb: Token, pos_list: [str]):
         token = sentence[i]
 
         # E.g.: token.dep_ != 'attr' => "Which is the noisiest and the largest city?"
+        # TODO: token.pos_ == "PUNCT"; e.g.: "Where are the coins, pictures and swords located?"
         if (token.pos_ in pos_list or token.dep_ == "neg") and token.dep_ != "attr":
             next_word = sentence[token.i + 1]
         else:

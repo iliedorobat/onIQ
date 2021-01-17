@@ -40,6 +40,12 @@ class Statement:
     def __str__(self):
         return self.get_str()
 
+    @staticmethod
+    def is_similar_statement(stmt_1, stmt_2):
+        has_same_action = stmt_1.action.__eq__(stmt_2.action)
+        has_same_target = stmt_1.phrase == stmt_2.phrase
+        return has_same_action and has_same_target
+
     def get_str(self, indentation=''):
         action_indentation = '\t'
 
