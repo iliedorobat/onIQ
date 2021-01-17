@@ -126,23 +126,23 @@ def _get_target_statements(sentence: Span, phrase: Span, target_actions: [Action
         next_phrase = _get_next_phrase(sentence, chunk_list, chunk_index, index)
         conj_phrases = get_conj_phrases(sentence, chunk_index)
         # E.g.: "Which is the museum which hosts more than 10 pictures and exposed one sword?"
-        statements.append(Statement(phrase, action, next_phrase))
+        statements.append(Statement(phrase, action, [next_phrase]))
 
         for conj_phrase in conj_phrases:
             if first_word.pos_ == "DET" and first_word.tag_ == "WDT":
                 if first_word.dep_ == "det":
                     # E.g.: "Which paintings, swords or statues do not have more than three owners?"
-                    statements.append(Statement(conj_phrase, action, next_phrase))
+                    statements.append(Statement(conj_phrase, action, [next_phrase]))
                 if first_word.dep_ == "nsubj":
                     if sentence[first_word.i + 1].pos_ in ["AUX", "VERB"]:
                         # E.g.: "Which is the noisiest and the most beautiful city?"
-                        statements.append(Statement(phrase, action, conj_phrase))
+                        statements.append(Statement(phrase, action, [conj_phrase]))
                     else:
                         # E.g.: "Which paintings, white swords or statues do not have more than three owners?"
-                        statements.append(Statement(conj_phrase, action, next_phrase))
+                        statements.append(Statement(conj_phrase, action, [next_phrase]))
             else:
                 # E.g.: "Who is the most beautiful woman and the most generous person?"
-                statements.append(Statement(phrase, action, conj_phrase))
+                statements.append(Statement(phrase, action, [conj_phrase]))
 
     return statements
 

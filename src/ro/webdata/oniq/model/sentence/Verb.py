@@ -1,3 +1,4 @@
+import numpy
 import warnings
 from spacy.tokens import Span, Token
 from ro.webdata.oniq.common.constants import SYSTEM_MESSAGES
@@ -21,6 +22,15 @@ class Verb:
         self.main_vb = main_vb
         self.modal_vb = modal_vb
 
+    def __eq__(self, other):
+        if not isinstance(other, Verb):
+            return NotImplemented
+        return other is not None and \
+            self.acomp == other.acomp and \
+            numpy.array_equal(self.aux_vbs, other.aux_vbs) and \
+            self.main_vb == other.main_vb and \
+            self.modal_vb == other.modal_vb
+
     def __str__(self):
         return self.get_str()
 
@@ -39,16 +49,16 @@ class Verb:
             f'\n{indentation}}}'
         )
 
-    def get_verb(self):
+    def has_main_verb(self):
         """
-        Get the main verb if it exists, otherwise the auxiliary verb
+        Check if the instance contains the main_verb
 
-        :return: The verb
+        :return: True if the main_verb != None, otherwise False
         """
 
         if self.main_vb is not None:
-            return self.main_vb
-        return self.aux_vbs
+            return True
+        return False
 
     def to_list(self):
         adj_list = self.acomp.to_list() if self.acomp is not None else [None]

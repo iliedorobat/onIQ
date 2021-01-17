@@ -1,3 +1,4 @@
+import numpy
 from ro.webdata.oniq.common.print_const import COLORS
 from ro.webdata.oniq.common.constants import LOGICAL_OPERATIONS
 from ro.webdata.oniq.model.sentence.Action import Action
@@ -16,17 +17,25 @@ class Statement:
 
     :attr phrase: The main phrase for which the statement is built
     :attr action: The event in which the "phrase" is involved
-    :attr related_phrase: The phrase which is linked by the "main phrase" through the "action"
+    :attr related_phrase: The phrases which are linked by the "main phrase" through the "action"
     """
 
-    def __init__(self, phrase, action, related_phrase):
+    def __init__(self, phrase, action, related_phrases):
         self.action = action
         self.phrase = phrase
-        self.related_phrase = related_phrase
+        self.related_phrases = related_phrases
 
         # self.cardinality = cardinality
         # self.logical_operation = logical_operation
         # self.wh_word = _prepare_wh_word(phrase, logical_operation, statements)
+
+    def __eq__(self, other):
+        if not isinstance(other, Statement):
+            return NotImplemented
+        return other is not None and \
+            self.action.__eq__(other.action) and \
+            self.phrase == other.phrase and \
+            numpy.array_equal(self.related_phrases, other.related_phrases)
 
     def __str__(self):
         return self.get_str()
@@ -48,7 +57,7 @@ class Statement:
             f'{COLORS.RESET_ALL}'
 
             f'{COLORS.LIGHT_CYAN}'
-            f'{indentation}\trelated_phrase: {self.related_phrase},\n'
+            f'{indentation}\trelated_phrases: {self.related_phrases},\n'
             f'{COLORS.RESET_ALL}'
 
             f'{COLORS.CYAN}'

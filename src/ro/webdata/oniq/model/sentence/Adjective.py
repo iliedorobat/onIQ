@@ -21,6 +21,14 @@ class Adjective:
         self.det = _get_determiner(sentence, self.adj)
         self.prefix = _get_prefix(sentence, self.adj)
 
+    def __eq__(self, other):
+        if not isinstance(other, Adjective):
+            return NotImplemented
+        return other is not None and \
+            self.adj == other.adj and \
+            self.det == other.det and \
+            self.prefix == other.prefix
+
     def __str__(self):
         return self.get_str()
 

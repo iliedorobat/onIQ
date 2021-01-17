@@ -8,6 +8,13 @@ class LogicalOperation:
         self.name = _get_operation_name(sentence, value)
         self.value = value
 
+    def __eq__(self, other):
+        if not isinstance(other, LogicalOperation):
+            return NotImplemented
+        return other is not None and \
+            self.name == other.name and \
+            self.value == other.value
+
     def __str__(self):
         return self.get_str()
 

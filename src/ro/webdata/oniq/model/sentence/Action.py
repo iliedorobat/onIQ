@@ -22,6 +22,15 @@ class Action:
         self.neg = _get_negation(sentence, verb.aux_vbs)
         self.verb = verb
 
+    def __eq__(self, other):
+        if not isinstance(other, Action):
+            return NotImplemented
+        return other is not None and \
+            self.dep == other.dep and \
+            self.is_available == other.is_available and \
+            self.neg == other.neg and \
+            self.verb.__eq__(other.verb)
+
     def __str__(self):
         return self.get_str()
 
