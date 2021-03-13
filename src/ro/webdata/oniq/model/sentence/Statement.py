@@ -48,6 +48,7 @@ class Statement:
 
     def get_str(self, indentation=''):
         action_indentation = '\t'
+        related_phrases = _get_related_phrases(self.related_phrases)
 
         return (
             f'{COLORS.CYAN}'
@@ -63,7 +64,7 @@ class Statement:
             f'{COLORS.RESET_ALL}'
 
             f'{COLORS.LIGHT_CYAN}'
-            f'{indentation}\trelated_phrases: {self.related_phrases},\n'
+            f'{indentation}\trelated_phrases: {related_phrases}\n'
             f'{COLORS.RESET_ALL}'
 
             f'{COLORS.CYAN}'
@@ -72,3 +73,15 @@ class Statement:
             f'{indentation}}}'
             f'{COLORS.RESET_ALL}'
         )
+
+
+def _get_related_phrases(related_phrases):
+    text = ''
+
+    for index, related_phrase in enumerate(related_phrases):
+        text += related_phrase.content.text
+
+        if index < len(related_phrases) - 1:
+            text += ', '
+
+    return text if text != '' else None

@@ -1,7 +1,9 @@
+import warnings
 from typing import Union
 from spacy.tokens import Doc, Span, Token
+from ro.webdata.oniq.model.sentence.Phrase import Phrase
 from ro.webdata.oniq.nlp.actions import get_action_list
-from ro.webdata.oniq.nlp.nlp_utils import get_preposition, get_wh_words
+from ro.webdata.oniq.nlp.nlp_utils import get_wh_words
 
 
 def get_conj_phrases(sentence: Span, index: int):
@@ -16,7 +18,7 @@ def get_conj_phrases(sentence: Span, index: int):
     phrase_list = get_phrase_list(sentence)
     return [
         phrase for phrase in phrase_list
-        if phrase.root.dep_ == "conj" and phrase != phrase_list[index]
+        if phrase.content.root.dep_ == "conj" and phrase != phrase_list[index]
     ]
 
 
@@ -71,6 +73,22 @@ def get_noun_chunks(sentence: Union[Doc, Span]):
     chunk_list = chunk_list + list(sentence.noun_chunks)
 
     return consolidate_noun_chunks(sentence, chunk_list)
+
+
+def get_nouns(sentences: [Span]):
+    noun_list = []
+
+    for sentence in sentences:
+        for token in sentence:
+            if token.lower_ in ["when", "where", "who", "whose"]:
+                # E.g.: 'where are the coins and swords located?'
+                # E.g.: 'whose picture is it?'
+                noun_list.append(token)
+                break
+            elif token.pos_ in ["NOUN", "PROPN"] or is_nsubj_wh_word(sentence, token):
+                noun_list.append(token)
+
+    return noun_list
 
 
 # 'Which female actor played in Casablanca and has been married to a writer born in Rome and has three children?'
@@ -142,7 +160,7 @@ def get_related_phrase(sentence: Span, chunk_index: int = 0, action_index: int =
         # E.g.: "Which painting, swords or statues do not have more than three owners?"
         return get_related_phrase(sentence, chunk_index, action_index, increment + 1)
     else:
-        return get_phrase(sentence, next_chunk)
+        return Phrase(sentence, next_chunk)
 
 
 def get_related_wh_phrase(sentence: Span, chunk_index: int = 0, action_index: int = 0, increment: int = 1):
@@ -172,7 +190,7 @@ def get_related_wh_phrase(sentence: Span, chunk_index: int = 0, action_index: in
         return None
     if len(chunk) == 1 and chunk[0] in get_wh_words(sentence):
         if index == 1 or chunk_list[index].root.dep_ == "conj":
-            return get_phrase(sentence, chunk_list[index])
+            return Phrase(sentence, chunk_list[index])
 
 
 def _get_token_before_aux(sentence: Span, chunk_list: [Span], index: int):
@@ -208,7 +226,7 @@ def _get_token_before_aux(sentence: Span, chunk_list: [Span], index: int):
     return None
 
 
-def is_nsubj_wh_word(sentence: Span, chunk: Span):
+def is_nsubj_wh_word(sentence: Span, chunk: [Span, Token]):
     """
     Check if the current iterated chunk is composed by only a WH-word in relation of "nsubj"
 
@@ -223,10 +241,12 @@ def is_nsubj_wh_word(sentence: Span, chunk: Span):
     :return: True/False
     """
 
-    first_word = chunk[0]
+    first_word = chunk if isinstance(chunk, Token) else chunk[0]
     is_wh_word = first_word in get_wh_words(sentence)
     is_pron_chunk = first_word.pos_ == "PRON" and first_word.tag_ == "WP"
-    is_preceded_by_aux = sentence[first_word.i + 1].pos_ == "AUX"
+    # TODO: check the change: sentence[..] => sentence.doc[...]
+    # old: is_preceded_by_aux = sentence[first_word.i + 1].pos_ == "AUX"
+    is_preceded_by_aux = sentence.doc[first_word.i + 1].pos_ == "AUX"
 
     return is_wh_word and is_preceded_by_aux and not is_pron_chunk
 
@@ -248,21 +268,6 @@ def is_preceded_by_nsubj_wh_word(sentence: Span, chunk_list: [Span], index: int)
     return prev_token in get_wh_words(sentence) and sentence[prev_token.i + 1].pos_ == "AUX"
 
 
-def get_phrase(sentence: Span, chunk: Span):
-    """
-    Generate the phrase by including the preposition for the target chunk
-
-    :param sentence: The target sentence
-    :param chunk: The target chunk
-    :return: The generated phrase
-    """
-
-    preposition = get_preposition(sentence, chunk)
-    first_index = preposition.i if preposition is not None else chunk[0].i
-    last_index = chunk[len(chunk) - 1].i + 1
-    return sentence[first_index: last_index]
-
-
 def get_phrase_list(sentence: Union[Doc, Span]):
     """
     Generate the list of phrases by including the preposition for each chunk
@@ -272,4 +277,4 @@ def get_phrase_list(sentence: Union[Doc, Span]):
     """
 
     chunk_list = get_noun_chunks(sentence)
-    return [get_phrase(sentence, chunk) for chunk in chunk_list]
+    return [Phrase(sentence, chunk) for chunk in chunk_list]

@@ -5,11 +5,12 @@ from iteration_utilities import unique_everseen
 from ro.webdata.oniq.common.constants import PRINT_MODE
 from ro.webdata.oniq.common.print_utils import echo
 from ro.webdata.oniq.model.sentence.Action import Action
+from ro.webdata.oniq.model.sentence.Phrase import Phrase
 from ro.webdata.oniq.model.sentence.Statement import Statement
 from ro.webdata.oniq.model.sentence.LogicalOperation import LogicalOperation
 from ro.webdata.oniq.nlp.actions import get_action_list
 from ro.webdata.oniq.nlp.nlp_utils import get_cardinals, retokenize
-from ro.webdata.oniq.nlp.phrase import get_conj_phrases, get_main_noun_chunks, get_phrase, get_related_phrase, \
+from ro.webdata.oniq.nlp.phrase import get_conj_phrases, get_main_noun_chunks, get_related_phrase, \
     get_related_wh_phrase, is_nsubj_wh_word
 
 
@@ -25,6 +26,9 @@ def consolidate_statement_list(document):
     statements = _get_statement_list(document)
     aux_stmt = statements[0] if len(statements) > 0 else None
     prepared_list = []
+
+    if len(statements) == 1:
+        prepared_list.append(aux_stmt)
 
     for i in range(1, len(statements)):
         crr_stmt = statements[i]
@@ -61,7 +65,7 @@ def _get_statement_list(document):
         chunk_list = get_main_noun_chunks(sentence)
 
         for index, chunk in enumerate(chunk_list):
-            target_phrase = get_phrase(sentence, chunk)
+            target_phrase = Phrase(sentence, chunk, True)
             target_actions = _get_target_actions(sentence, target_phrase, action_list, statements)
             target_statements = _get_target_statements(sentence, target_phrase, target_actions, chunk_list, index)
             statements = statements + target_statements
@@ -73,7 +77,7 @@ def _get_statement_list(document):
     return statements
 
 
-def _get_target_actions(sentence: Span, phrase: Span, action_list: [Action], statements: [Statement]):
+def _get_target_actions(sentence: Span, phrase: Phrase, action_list: [Action], statements: [Statement]):
     """
     Get the list of events (actions) in which the target phrase is involved
 
@@ -85,7 +89,7 @@ def _get_target_actions(sentence: Span, phrase: Span, action_list: [Action], sta
     """
 
     target_actions = []
-    first_word = phrase[0]
+    first_word = phrase.content[0]
 
     for index, action in enumerate(action_list):
         if action.is_available is True:
@@ -119,7 +123,7 @@ def _get_target_actions(sentence: Span, phrase: Span, action_list: [Action], sta
                 # acl => "Which female actor played in Casablanca and has been married to a writer born in Rome and has three children?"
                 # acomp => "Which female actor played in Casablanca and is married to a writer born in Rome and has three children?"
                 elif len(statements) > 0 \
-                        and statements[len(statements) - 1].phrase != phrase \
+                        and statements[len(statements) - 1].phrase.content != phrase.content \
                         and sentence[first_word.i - 1].dep_ in ["acl", "acomp"]:
                     action.is_available = False
                     target_actions.append(action)
@@ -129,15 +133,15 @@ def _get_target_actions(sentence: Span, phrase: Span, action_list: [Action], sta
                 # 3. Check if the current phrase is followed by a verb
                 # E.g.: "Which female actor played in Casablanca and has been married to a writer born in Rome and has three children?"
                 elif len(statements) > 0 \
-                        and statements[len(statements) - 1].phrase != phrase \
-                        and sentence[phrase[len(phrase) - 1].i + 1].dep_ in ["acl", "acomp"]:
+                        and statements[len(statements) - 1].phrase.content != phrase.content \
+                        and sentence[phrase.content[len(phrase.content) - 1].i + 1].dep_ in ["acl", "acomp"]:
                     action.is_available = False
                     target_actions.append(action)
 
     return target_actions
 
 
-def _get_target_statements(sentence: Span, phrase: Span, target_actions: [Action], chunk_list: [Span], chunk_index: int):
+def _get_target_statements(sentence: Span, phrase: Phrase, target_actions: [Action], chunk_list: [Span], chunk_index: int):
     """
     Get the list of statements generated around the target phrase
 
@@ -150,7 +154,7 @@ def _get_target_statements(sentence: Span, phrase: Span, target_actions: [Action
     """
 
     statements = []
-    first_word = phrase[0]
+    first_word = phrase.content[0]
 
     # Create a statement for each action
     for index, action in enumerate(target_actions):
@@ -166,6 +170,7 @@ def _get_target_statements(sentence: Span, phrase: Span, target_actions: [Action
             if first_word.pos_ == "DET" and first_word.tag_ == "WDT":
                 if first_word.dep_ == "det":
                     # E.g.: "Which paintings, swords or statues do not have more than three owners?"
+                    # TODO: conj_phrase.is_target = True
                     statements.append(Statement(conj_phrase, action, [next_phrase]))
                 if first_word.dep_ == "nsubj":
                     if sentence[first_word.i + 1].pos_ in ["AUX", "VERB"]:
@@ -173,6 +178,7 @@ def _get_target_statements(sentence: Span, phrase: Span, target_actions: [Action
                         statements.append(Statement(phrase, action, [conj_phrase]))
                     else:
                         # E.g.: "Which paintings, white swords or statues do not have more than three owners?"
+                        # TODO: conj_phrase.is_target = True
                         statements.append(Statement(conj_phrase, action, [next_phrase]))
             else:
                 # E.g.: "Who is the most beautiful woman and the most generous person?"
