@@ -7,9 +7,10 @@ class Phrase:
     def __init__(self, sentence: Span, chunk: Span, is_target: bool = False):
         self.main_content = chunk
         self.prep = get_preposition(sentence, chunk)  # TODO: check
-        self.meta_prep = None
+        self._meta_prep = None
         self.content = _get_content(sentence, self.main_content, self.prep)
-        self.text = _get_text(self.main_content, self.prep, self.meta_prep, is_target)
+        self._is_target = is_target
+        self.text = _get_text(self.main_content, self.prep, self._meta_prep, self._is_target)
 
     def __eq__(self, other):
         if not isinstance(other, Phrase):
@@ -25,6 +26,24 @@ class Phrase:
         return (
             f'{indentation}{self.text}'
         )
+
+    @property
+    def is_target(self):
+        return self._is_target
+
+    @property
+    def meta_prep(self):
+        return self._meta_prep
+
+    @is_target.setter
+    def is_target(self, value):
+        self._is_target = value
+        self.text = _get_text(self.main_content, self.prep, self._meta_prep, self._is_target)
+
+    @meta_prep.setter
+    def meta_prep(self, value):
+        self._meta_prep = value
+        self.text = _get_text(self.main_content, self.prep, self._meta_prep, self._is_target)
 
 
 def _get_content(sentence, main_content, prep):

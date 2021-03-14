@@ -79,7 +79,7 @@ def _get_related_phrases(related_phrases):
     text = ''
 
     for index, related_phrase in enumerate(related_phrases):
-        text += related_phrase.content.text
+        text += related_phrase.text
 
         if index < len(related_phrases) - 1:
             text += ', '

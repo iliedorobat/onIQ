@@ -170,18 +170,20 @@ def _get_target_statements(sentence: Span, phrase: Phrase, target_actions: [Acti
             if first_word.pos_ == "DET" and first_word.tag_ == "WDT":
                 if first_word.dep_ == "det":
                     # E.g.: "Which paintings, swords or statues do not have more than three owners?"
-                    # TODO: conj_phrase.is_target = True
+                    conj_phrase.is_target = True
                     statements.append(Statement(conj_phrase, action, [next_phrase]))
                 if first_word.dep_ == "nsubj":
                     if sentence[first_word.i + 1].pos_ in ["AUX", "VERB"]:
                         # E.g.: "Which is the noisiest and the most beautiful city?"
+                        conj_phrase.meta_prep = statements[len(statements) - 1].related_phrases[0].prep
                         statements.append(Statement(phrase, action, [conj_phrase]))
                     else:
                         # E.g.: "Which paintings, white swords or statues do not have more than three owners?"
-                        # TODO: conj_phrase.is_target = True
+                        conj_phrase.is_target = True
                         statements.append(Statement(conj_phrase, action, [next_phrase]))
             else:
                 # E.g.: "Who is the most beautiful woman and the most generous person?"
+                conj_phrase.meta_prep = statements[len(statements) - 1].related_phrases[0].prep
                 statements.append(Statement(phrase, action, [conj_phrase]))
 
     return statements
