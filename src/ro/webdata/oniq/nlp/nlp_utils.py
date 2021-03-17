@@ -48,16 +48,6 @@ def get_next_token(sentence: Span, aux_verb: Token, pos_list: [str]):
     return next_word
 
 
-def get_preposition(sentence: Span, chunk: Span):
-    first_index = chunk[0].i
-    prev_word = sentence[first_index - 1] if first_index > 0 else None
-
-    if prev_word is not None and prev_word.dep_ == "prep":
-        return prev_word
-
-    return None
-
-
 def get_prev_chunk(chunks: [Span], chunk: Span):
     warnings.warn(SYSTEM_MESSAGES.METHOD_NOT_USED, DeprecationWarning)
 

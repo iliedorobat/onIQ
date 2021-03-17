@@ -6,10 +6,11 @@ class Action:
     """
     An event that links two chunks/phrases
 
-    :attr dep: the syntactic dependence
-    :attr is_available: a flag that specifies if the action was assigned to a chunk/phrase
+    :attr dep: The syntactic dependence
+    :attr is_available: Specifies if the event (Action) was assigned to a chunk/phrase
     :attr neg: The negation of the event
-    :attr verb: an object that contains the main verb, the auxiliary verb(s) and the modal verb
+    :attr verb: An object that contains the main verb, the auxiliary verb(s) and the modal verb
+    :attr: i: The index of the first token which composes the event (Action)
 
     E.g.:
         - query: "Which paintings do not have more than three owners?"
@@ -21,6 +22,7 @@ class Action:
         self.is_available = True
         self.neg = _get_negation(sentence, verb.aux_vbs)
         self.verb = verb
+        self.i = _get_verb_index(self.verb)
 
     def __eq__(self, other):
         if not isinstance(other, Action):
@@ -89,3 +91,23 @@ def _get_negation(sentence: Span, aux_verbs: [Token]):
         return next_word
 
     return None
+
+
+def _get_verb_index(verb: Verb):
+    """
+    Get the index of the first token which composes the verb
+    (which is also the first token which composes the event)
+
+    :param verb: The verb related to the event (Action)
+    :return: The index of the first token
+    """
+
+    action_verb = verb.main_vb
+
+    # E.g.: Which paintings and statues have not been deposited in Bacau?
+    if verb.aux_vbs is not None and len(verb.aux_vbs) > 0:
+        action_verb = verb.aux_vbs[0]
+    elif verb.modal_vb is not None:
+        action_verb = verb.modal_vb
+
+    return action_verb.i if action_verb is not None else -1

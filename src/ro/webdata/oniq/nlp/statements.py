@@ -1,4 +1,3 @@
-from typing import Union
 from spacy.tokens import Doc, Span
 from iteration_utilities import unique_everseen
 
@@ -10,11 +9,11 @@ from ro.webdata.oniq.model.sentence.Statement import Statement
 from ro.webdata.oniq.model.sentence.LogicalOperation import LogicalOperation
 from ro.webdata.oniq.nlp.actions import get_action_list
 from ro.webdata.oniq.nlp.nlp_utils import get_cardinals, retokenize
-from ro.webdata.oniq.nlp.phrase import get_conj_phrases, get_main_noun_chunks, get_related_phrase, \
-    get_related_wh_phrase, is_nsubj_wh_word
+from ro.webdata.oniq.nlp.phrase import get_phrase_list, get_related_phrase, get_related_phrases, \
+    get_related_wh_phrase, get_target_phrases, is_nsubj_wh_word
 
 
-def consolidate_statement_list(document):
+def consolidate_statement_list(document: Doc):
     """
     Consolidate the list of statements by grouping the statements which
     have the same action and target_phrase into a new statement
@@ -24,33 +23,32 @@ def consolidate_statement_list(document):
     """
 
     statements = _get_statement_list(document)
-    aux_stmt = statements[0] if len(statements) > 0 else None
-    prepared_list = []
+    prepared_list = [statements[0]] if len(statements) > 0 else []
 
-    if len(statements) == 1:
-        prepared_list.append(aux_stmt)
+    if len(statements) > 1:
+        aux_stmt = statements[0] if len(statements) > 0 else None
 
-    for i in range(1, len(statements)):
-        crr_stmt = statements[i]
-        prev_stmt = statements[i - 1]
-        is_similar_stmt = Statement.is_similar_statement(crr_stmt, prev_stmt)
+        for i in range(1, len(statements)):
+            crr_stmt = statements[i]
+            prev_stmt = statements[i - 1]
+            is_similar_stmt = Statement.is_similar_statement(crr_stmt, prev_stmt)
 
-        if is_similar_stmt is True:
-            related_phrases = aux_stmt.related_phrases + crr_stmt.related_phrases
-            aux_stmt.related_phrases = list(unique_everseen(related_phrases))
+            if is_similar_stmt is True:
+                related_phrases = aux_stmt.related_phrases + crr_stmt.related_phrases
+                aux_stmt.related_phrases = list(unique_everseen(related_phrases))
 
-            if i == len(statements) - 1:
-                prepared_list.append(aux_stmt)
-        elif is_similar_stmt is False:
-            prepared_list.append(aux_stmt)
-            aux_stmt = crr_stmt
+                if i == len(statements) - 1:
+                    prepared_list.append(aux_stmt)
+            elif is_similar_stmt is False:
+                prepared_list.append(crr_stmt)
+                aux_stmt = crr_stmt
 
     echo.statement_list(prepared_list, PRINT_MODE.PRINT_CONSOLIDATED_STATEMENT)
 
     return prepared_list
 
 
-def _get_statement_list(document):
+def _get_statement_list(document: Doc):
     """
     Get the list of statements generated around the target phrases
 
@@ -62,12 +60,11 @@ def _get_statement_list(document):
     for sentence in document.sents:
         retokenize(document, sentence)
         action_list = get_action_list(sentence)
-        chunk_list = get_main_noun_chunks(sentence)
+        phrase_list = get_phrase_list(sentence, True)
 
-        for index, chunk in enumerate(chunk_list):
-            target_phrase = Phrase(sentence, chunk, True)
-            target_actions = _get_target_actions(sentence, target_phrase, action_list, statements)
-            target_statements = _get_target_statements(sentence, target_phrase, target_actions, chunk_list, index)
+        for index, phrase in enumerate(phrase_list):
+            target_actions = _get_target_actions(sentence, phrase_list, index, action_list, statements)
+            target_statements = _get_target_statements(sentence, phrase_list, index, target_actions)
             statements = statements + target_statements
 
         echo.token_list(sentence)
@@ -77,28 +74,41 @@ def _get_statement_list(document):
     return statements
 
 
-def _get_target_actions(sentence: Span, phrase: Phrase, action_list: [Action], statements: [Statement]):
+def _get_target_actions(sentence: Span, phrase_list: [Phrase], phrase_index: int, action_list: [Action], statements: [Statement]):
     """
-    Get the list of events (actions) in which the target phrase is involved
+    Get the list of events (Actions) in which the target phrase is involved
 
     :param sentence: The target sentence
-    :param phrase: The target phrase
+    :param phrase_list: The list of phrases
+    :param phrase_index: The index of the current phrase
     :param action_list: The list of events (actions)
     :param statements: The list of generated statements
-    :return: The list of target events (actions)
+    :return: The list of target events (Actions)
     """
 
     target_actions = []
+    phrase = phrase_list[phrase_index]
     first_word = phrase.content[0]
+    next_phrase = phrase_list[phrase_index + 1] \
+        if len(phrase_list) - 1 > phrase_index \
+        else None
 
     for index, action in enumerate(action_list):
-        if action.is_available is True:
+        target_phrases = get_target_phrases(sentence, phrase_list, phrase_index, action)
+        last_target_phrase = target_phrases[len(target_phrases) - 1] if len(target_phrases) > 1 else None
+
+        if action.is_available is True and (last_target_phrase is None or action.i == last_target_phrase.last_i + 1):
             is_first_action = index == 0
             is_prev_action_available = action_list[index - 1].is_available
 
             # Add the first action to the action list
             if is_first_action is True:
-                action.is_available = False
+                # 1. check if the phrase is not the last
+                # 2. check if the next phrase is not a "target phrase" (the index
+                # of the first item is greater than the index of the action)
+                # E.g.: "Which is the noisiest and the largest city?"
+                if next_phrase is None or next_phrase.content[0].i > action.i:
+                    action.is_available = False
                 target_actions.append(action)
             # Add the rest of actions to the action list
             else:
@@ -141,19 +151,19 @@ def _get_target_actions(sentence: Span, phrase: Phrase, action_list: [Action], s
     return target_actions
 
 
-def _get_target_statements(sentence: Span, phrase: Phrase, target_actions: [Action], chunk_list: [Span], chunk_index: int):
+def _get_target_statements(sentence: Span, phrase_list: [Phrase], phrase_index: int, target_actions: [Action]):
     """
     Get the list of statements generated around the target phrase
 
     :param sentence: The target sentence
-    :param phrase: The target phrase
+    :param phrase_list: The list of phrases
+    :param phrase_index: The index of the current phrase
     :param target_actions: The list of events in which the target phrase is involved
-    :param chunk_list: The list of chunks
-    :param chunk_index: The index of the current iterated chunk
     :return: The list of target statements
     """
 
     statements = []
+    phrase = phrase_list[phrase_index]
     first_word = phrase.content[0]
 
     # Create a statement for each action
@@ -161,37 +171,46 @@ def _get_target_statements(sentence: Span, phrase: Phrase, target_actions: [Acti
         # TODO: cardinals = get_cardinals(chunk)
         # TODO: logical_operation = LogicalOperation(sentence, chunk)
 
-        next_phrase = _get_next_phrase(sentence, chunk_list, chunk_index, index)
-        conj_phrases = get_conj_phrases(sentence, chunk_index)
+        next_phrase = _get_next_phrase(sentence, phrase, phrase_index, index)
+        related_phrases = get_related_phrases(sentence, phrase_index, action)
         # E.g.: "Which is the museum which hosts more than 10 pictures and exposed one sword?"
         statements.append(Statement(phrase, action, [next_phrase]))
 
-        for conj_phrase in conj_phrases:
+        for related_phrase in related_phrases:
             if first_word.pos_ == "DET" and first_word.tag_ == "WDT":
                 if first_word.dep_ == "det":
                     # E.g.: "Which paintings, swords or statues do not have more than three owners?"
-                    conj_phrase.is_target = True
-                    statements.append(Statement(conj_phrase, action, [next_phrase]))
+                    related_phrase.is_target = True
+                    statements.append(Statement(related_phrase, action, [next_phrase]))
                 if first_word.dep_ == "nsubj":
                     if sentence[first_word.i + 1].pos_ in ["AUX", "VERB"]:
                         # E.g.: "Which is the noisiest and the most beautiful city?"
-                        conj_phrase.meta_prep = statements[len(statements) - 1].related_phrases[0].prep
-                        statements.append(Statement(phrase, action, [conj_phrase]))
+                        related_phrase.meta_prep = statements[len(statements) - 1].related_phrases[0].prep
+                        statements.append(Statement(phrase, action, [related_phrase]))
                     else:
                         # E.g.: "Which paintings, white swords or statues do not have more than three owners?"
-                        conj_phrase.is_target = True
-                        statements.append(Statement(conj_phrase, action, [next_phrase]))
+                        related_phrase.is_target = True
+                        statements.append(Statement(related_phrase, action, [next_phrase]))
             else:
+                # E.g.: "What museums are in Bacau or Bucharest?"
                 # E.g.: "Who is the most beautiful woman and the most generous person?"
-                conj_phrase.meta_prep = statements[len(statements) - 1].related_phrases[0].prep
-                statements.append(Statement(phrase, action, [conj_phrase]))
+                related_phrase.meta_prep = statements[len(statements) - 1].related_phrases[0].prep
+                statements.append(Statement(phrase, action, [related_phrase]))
 
     return statements
 
 
-def _get_next_phrase(sentence: Span, chunk_list: [Span], chunk_index: int, action_index: int):
-    chunk = chunk_list[chunk_index]
+def _get_next_phrase(sentence: Span, phrase: Phrase, phrase_index: int, action_index: int):
+    """
+    Get he phrase which is the object of the current iterated action
 
-    if is_nsubj_wh_word(sentence, chunk):
-        return get_related_wh_phrase(sentence, chunk_index, action_index)
-    return get_related_phrase(sentence, chunk_index, action_index)
+    :param sentence: The target sentence
+    :param phrase: The current iterated phrase
+    :param phrase_index: The index of the current iterated phrase
+    :param action_index: The index of the current iterated action
+    :return: The phrase which is the object of the current iterated action
+    """
+
+    if is_nsubj_wh_word(sentence, phrase.content):
+        return get_related_wh_phrase(sentence, phrase_index, action_index)
+    return get_related_phrase(sentence, phrase_index, action_index)
