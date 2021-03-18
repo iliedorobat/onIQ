@@ -169,17 +169,26 @@ def get_nouns(phrases: [Phrase]):
 # 'Which female actor played in Casablanca and has been married to a writer born in Rome and has three children?'
 # => 'what is the name of the largest museum which hosts more than 10 pictures and exposed one sword?'
 def consolidate_noun_chunks(sentence: Union[Doc, Span], chunk_list):
-    consolidated_list = []
+    consolidated_list = [chunk_list[0]] \
+        if len(chunk_list) > 0 \
+        else []
 
-    for index, chunk in enumerate(chunk_list):
+    for index in range(1, len(chunk_list)):
+        chunk = chunk_list[index]
         prev_word = sentence[chunk[0].i - 1]
 
         # E.g.: 'what is the name of the largest museum?'
         #   - chunks: "what", "the name", "the largest museum"
         #   - consolidated: "what", "the name of the largest museum"
-        if prev_word.pos_ == "ADP" and prev_word.dep_ == "prep":
+        is_preposition = prev_word.pos_ == "ADP" and prev_word.dep_ == "prep"
+
+        if is_preposition is True:
             prev_word = sentence[prev_word.i - 1]
-            if len(consolidated_list) > 0 and not checking(sentence, prev_word):
+            # 1. check if the "consolidated_list" has been populated
+            # 2. check if the previous word is a verb
+                # E.g.: "Which female actor played in Casablanca and has been married to a writer born in Rome and has three children?" [2]
+                # chunk_list = ["Which female actor", "Casablanca", "a writer", "Rome", "three children"]
+            if len(consolidated_list) > 0 and not _is_verb(sentence, prev_word):
                 prev_chunk = consolidated_list[len(consolidated_list) - 1]
                 start_index = prev_chunk[0].i
                 end_index = chunk[len(chunk) - 1].i + 1
@@ -192,7 +201,7 @@ def consolidate_noun_chunks(sentence: Union[Doc, Span], chunk_list):
     return consolidated_list
 
 
-def checking(sentence: Union[Doc, Span], word: Token):
+def _is_verb(sentence: Union[Doc, Span], word: Token):
     action_list = get_action_list(sentence)
 
     for action in action_list:
