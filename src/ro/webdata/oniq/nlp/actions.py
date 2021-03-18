@@ -2,7 +2,7 @@ from spacy.tokens import Span, Token
 from ro.webdata.oniq.model.sentence.Action import Action
 from ro.webdata.oniq.model.sentence.Adjective import Adjective
 from ro.webdata.oniq.model.sentence.Verb import Verb, get_main_verb, is_aux_preceded_by_aux
-from ro.webdata.oniq.nlp.nlp_utils import get_next_token
+from ro.webdata.oniq.nlp.nlp_utils import get_next_token, is_wh_word
 
 
 def get_action_list(sentence: Span):
@@ -10,15 +10,15 @@ def get_action_list(sentence: Span):
     aux_verbs = modal_verb = None
     verb_list = _get_verb_list(sentence)
 
-    for verb in verb_list:
-        if isinstance(verb, list):
-            aux_verbs = verb
+    for verb_item in verb_list:
+        if isinstance(verb_item, list):
+            aux_verbs = verb_item
             next_verb = get_main_verb(sentence, aux_verbs[len(aux_verbs) - 1])
             adj_list = _get_adj_list(sentence, aux_verbs[len(aux_verbs) - 1])
             acomp_list = [adjective for adjective in adj_list if adjective.adj.dep_ == "acomp"]
 
             if next_verb is None:
-                # Adding a neutral value ("None") in order to assure the loop iteration
+                # Add a neutral value ("None") in order to assure the loop iteration
                 if len(acomp_list) == 0:
                     acomp_list.append(None)
 
@@ -28,16 +28,45 @@ def get_action_list(sentence: Span):
                     action_list.append(action)
 
                 aux_verbs = modal_verb = None
-        elif isinstance(verb, Token):
-            if verb.tag_ == "MD":
-                modal_verb = verb
+        elif isinstance(verb_item, Token):
+            if verb_item.tag_ == "MD":
+                modal_verb = verb_item
             else:
-                verb = Verb(aux_verbs, verb, modal_verb, None)
+                # E.g.: "What is the federated state located in the Weimar Republic?" [1]
+                # "is" and "located" should be part of different Actions
+                if _is_prev_wh_word(sentence, aux_verbs):
+                    verb = Verb(aux_verbs, None, modal_verb, None)
+                    action = Action(sentence, verb)
+                    action_list.append(action)
+                    aux_verbs = None
+
+                verb = Verb(aux_verbs, verb_item, modal_verb, None)
                 action = Action(sentence, verb)
                 action_list.append(action)
+
                 aux_verbs = modal_verb = None
 
     return action_list
+
+
+def _is_prev_wh_word(sentence: Span, aux_verbs: list):
+    """
+    Check whether or not the word before the first auxiliary verb is a wh_word
+
+    :param sentence: The target sentence
+    :param aux_verbs: The list of auxiliary verbs
+    :return: True/False
+    """
+
+    if aux_verbs is None or len(aux_verbs) == 0:
+        return False
+
+    first_index = aux_verbs[0].i
+    if first_index == 0:
+        return False
+
+    prev_word = sentence[first_index - 1]
+    return is_wh_word(prev_word)
 
 
 def _get_verb_list(sentence: Span):
@@ -50,8 +79,8 @@ def _get_verb_list(sentence: Span):
         TODO: a better example
         sentence: "have not been displayed" => return [[has, been], displayed]
 
-    :param sentence:
-    :return:
+    :param sentence: The target sentence
+    :return: The list of verbs
     """
 
     verb_list = []
@@ -93,7 +122,7 @@ def _get_adj_list(sentence: Span, aux_verb: Token):
         # Example of question which has two adjectives => "Which is the noisiest and the largest city?"
         next_word = get_next_token(sentence, next_word, ["DET", "ADV", "NOUN", "PRON", "PROPN", "VERB"])
 
-        # # E.g.: "Who is the most beautiful woman and the most generous person?"
+        # E.g.: "Who is the most beautiful woman and the most generous person?"
         if next_word is not None and next_word.pos_ == "NOUN" and next_word.dep_ == "attr":
             next_word = get_next_token(sentence, next_word, ["DET", "ADV", "NOUN", "PRON", "PROPN", "VERB"])
 

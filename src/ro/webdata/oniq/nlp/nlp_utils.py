@@ -145,6 +145,26 @@ def is_wh_noun_phrase(phrase: Union[Doc, Span]):
     return first_word.tag_ in ["WDT", "WP"] and first_word.dep_ == "nsubj"
 
 
+def is_wh_word(token: Token):
+    """
+    Check if the token is one of the WH-words\n
+    - when, where, why\n
+    - whence, whereby, wherein, whereupon\n
+    - how\n
+    - what, which, whose\n
+    - who, whose, which, what\n
+
+    Resources:\n
+    - https://grammar.collinsdictionary.com/easy-learning/wh-words\n
+    - https://www.ling.upenn.edu/hist-corpora/annotation/pos-wh.htm
+
+    :param token: The target token
+    :return: True/False
+    """
+
+    return token.tag_ in ['WRB', 'WDT', 'WP', 'WP$']
+
+
 def retokenize(document: Union[Doc, Span], sentence: Span):
     """
     Integrate the named entities into the document and retokenize it

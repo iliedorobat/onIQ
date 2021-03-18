@@ -176,7 +176,7 @@ def get_main_verb(sentence: Span, aux_verb: Token):
             * the verb chain: "do arrive" => return "arrive"
         - question: "when were the panama papers published"
             * the verb chain: "were published" => return "published"
-        - question: "where does the holder of the position of Lech Kaczynski live?"
+        - question: "where does the holder of the position of Lech Kaczynski live?" [1]
             * the verb chain: "does live" => return "live"
 
     :param sentence: The target sentence
