@@ -176,13 +176,15 @@ def get_main_verb(sentence: Span, aux_verb: Token):
             * the verb chain: "do arrive" => return "arrive"
         - question: "when were the panama papers published"
             * the verb chain: "were published" => return "published"
+        - question: "where does the holder of the position of Lech Kaczynski live?"
+            * the verb chain: "does live" => return "live"
 
     :param sentence: The target sentence
     :param aux_verb: The auxiliary verb
     :return: The main verb or None
     """
 
-    next_word = get_next_token(sentence, aux_verb, ["DET", "ADV", "ADJ", "CCONJ", "NOUN", "PRON", "PROPN"])
+    next_word = get_next_token(sentence, aux_verb, ["DET", "ADV", "ADJ", "ADP", "CCONJ", "NOUN", "PRON", "PROPN"])
 
     if next_word is not None and next_word.pos_ == "VERB":
         # E.g.: "Who is the director who own 10 cars and sold a house or a panel?"
