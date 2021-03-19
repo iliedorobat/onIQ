@@ -86,7 +86,10 @@ def _prepare_preposition(sentence: Span, chunk: Span):
     first_index = chunk[0].i
     prev_word = sentence[first_index - 1] if first_index > 0 else None
 
-    if prev_word is not None and prev_word.dep_ == "prep":
+    # E.g.: "What museums are in Bacau or in Bucharest?"
+    # - dep_ == "prep" => "in Bacau"
+    # - dep_ == "conj" => "in Bucharest"
+    if prev_word is not None and prev_word.pos_ == "ADP" and prev_word.dep_ in ["conj", "prep"]:
         return prev_word
 
     return None

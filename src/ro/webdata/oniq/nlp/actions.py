@@ -2,7 +2,8 @@ from spacy.tokens import Span, Token
 from ro.webdata.oniq.model.sentence.Action import Action
 from ro.webdata.oniq.model.sentence.Adjective import Adjective
 from ro.webdata.oniq.model.sentence.Verb import Verb, get_main_verb, is_aux_preceded_by_aux
-from ro.webdata.oniq.nlp.nlp_utils import get_next_token, is_wh_word
+from ro.webdata.oniq.nlp.nlp_utils import get_next_token
+from ro.webdata.oniq.nlp.word_utils import is_wh_word
 
 
 def get_action_list(sentence: Span):
@@ -15,9 +16,14 @@ def get_action_list(sentence: Span):
             aux_verbs = verb_item
             next_verb = get_main_verb(sentence, aux_verbs[len(aux_verbs) - 1])
             adj_list = _get_adj_list(sentence, aux_verbs[len(aux_verbs) - 1])
-            acomp_list = [adjective for adjective in adj_list if adjective.adj.dep_ == "acomp"]
+            acomp_list = [
+                adjective for adjective in adj_list
+                if adjective.adj.dep_ in ["acomp", "ROOT"]
+            ]
 
-            if next_verb is None:
+            # E.g.: dep_ == "acomp" => "Which female actor played in Casablanca and is married to a writer born in Rome and has three children?"
+            # E.g.: dep_ == "ROOT" => "When was Bibi Andersson married to Per Ahlmark?" [1]
+            if next_verb is None or len(acomp_list) > 0:
                 # Add a neutral value ("None") in order to assure the loop iteration
                 if len(acomp_list) == 0:
                     acomp_list.append(None)

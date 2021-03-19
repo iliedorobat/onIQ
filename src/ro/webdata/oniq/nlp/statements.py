@@ -118,35 +118,35 @@ def _get_target_actions(sentence: Span, phrase_list: [Phrase], phrase_index: int
                     action.is_available = False
                     target_actions.append(action)
 
-                # TODO: documentation: 'what is the name of the largest museum which hosts more than 10 pictures and exposed one sword?"
-                # 1. Check if at least one statement has already been added
-                # 2. TODO: documentation
-                # 3. Check if the previous action has already been assigned to a phrase
-                # E.g.: "What is the name of the largest museum which hosts more than 10 pictures and exposed one sword?"
-                elif len(statements) > 0 and action.dep == "relcl" and is_prev_action_available is False:
-                    action.is_available = False
-                    target_actions.append(action)
-
                 # 1. Check if at least one statement has already been added
                 # 2. Check if the current phrase != the phrase of the last statement
-                # 3. Check if the current phrase is not preceded by a verb
-                # acl => "Which female actor played in Casablanca and has been married to a writer born in Rome and has three children?"
-                # acomp => "Which female actor played in Casablanca and is married to a writer born in Rome and has three children?"
-                elif len(statements) > 0 \
-                        and statements[len(statements) - 1].phrase.content != phrase.content \
-                        and sentence[first_word.i - 1].dep_ in ["acl", "acomp"]:
-                    action.is_available = False
-                    target_actions.append(action)
+                elif len(statements) > 0 and statements[len(statements) - 1].phrase.content != phrase.content:
+                    # 1. TODO: documentation
+                    # 2. Check if the previous action has already been assigned to a phrase
+                    # E.g.: "What is the name of the largest museum which hosts more than 10 pictures and exposed one sword?"
+                    if action.dep == "relcl" and is_prev_action_available is False:
+                        action.is_available = False
+                        target_actions.append(action)
 
-                # 1. Check if at least one statement has already been added
-                # 2. Check if the current phrase != the phrase of the last statement
-                # 3. Check if the current phrase is followed by a verb
-                # E.g.: "Which female actor played in Casablanca and has been married to a writer born in Rome and has three children?"
-                elif len(statements) > 0 \
-                        and statements[len(statements) - 1].phrase.content != phrase.content \
-                        and sentence[phrase.content[len(phrase.content) - 1].i + 1].dep_ in ["acl", "acomp"]:
-                    action.is_available = False
-                    target_actions.append(action)
+                    # Check if the current phrase is not preceded by a verb
+                    # acl => "Which female actor played in Casablanca and has been married to a writer born in Rome and has three children?"
+                    # acomp => "Which female actor played in Casablanca and is married to a writer born in Rome and has three children?"
+                    elif sentence[first_word.i - 1].dep_ in ["acl", "acomp"]:
+                        action.is_available = False
+                        target_actions.append(action)
+
+                    # 1. Check if the current phrase != the phrase of the last statement
+                    # 2. Check if the current phrase is followed by a verb
+                    # E.g.: "Which female actor played in Casablanca and has been married to a writer born in Rome and has three children?"
+                    elif sentence[phrase.content[len(phrase.content) - 1].i + 1].dep_ in ["acl", "acomp"]:
+                        action.is_available = False
+                        target_actions.append(action)
+
+                    # Check if the word before the first element of the action is a nominal subject or not
+                    # E.g.: "When did Lena Horne receive the Grammy Award for Best Jazz Vocal Album?" [1]
+                    elif sentence[action.i - 1].dep_ == "nsubj":
+                        action.is_available = False
+                        target_actions.append(action)
 
     return target_actions
 

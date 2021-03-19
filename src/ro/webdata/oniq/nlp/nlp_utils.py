@@ -4,14 +4,14 @@ from spacy.tokens import Doc, Span, Token
 from ro.webdata.oniq.common.constants import SYSTEM_MESSAGES
 
 
-def get_cardinals(chunk):
+def get_cardinals(sentence: Span):
     """
     Get the list of cardinals in a chunk
 
-    :param chunk: The target chunk
+    :param sentence: The target sentence
     :return: The list of cardinals
     """
-    return list([token for token in chunk if token.tag_ == "CD"])
+    return list([token for token in sentence if token.tag_ == "CD"])
 
 
 def get_next_token(sentence: Span, aux_verb: Token, pos_list: [str]):
@@ -120,7 +120,7 @@ def get_wh_words(document: Union[Doc, Span]):
     :param document: The parsed document
     :return: The list of WH-words
     """
-    return list([token for token in document if token.tag_ in ['WRB', 'WDT', 'WP', 'WP$']])
+    return list([token for token in document if token.tag_ in ['WDT', 'WP', 'WP$', 'WRB']])
 
 
 def is_wh_noun_phrase(phrase: Union[Doc, Span]):
@@ -143,26 +143,6 @@ def is_wh_noun_phrase(phrase: Union[Doc, Span]):
 
     first_word = phrase[0]
     return first_word.tag_ in ["WDT", "WP"] and first_word.dep_ == "nsubj"
-
-
-def is_wh_word(token: Token):
-    """
-    Check if the token is one of the WH-words\n
-    - when, where, why\n
-    - whence, whereby, wherein, whereupon\n
-    - how\n
-    - what, which, whose\n
-    - who, whose, which, what\n
-
-    Resources:\n
-    - https://grammar.collinsdictionary.com/easy-learning/wh-words\n
-    - https://www.ling.upenn.edu/hist-corpora/annotation/pos-wh.htm
-
-    :param token: The target token
-    :return: True/False
-    """
-
-    return token.tag_ in ['WRB', 'WDT', 'WP', 'WP$']
 
 
 def retokenize(document: Union[Doc, Span], sentence: Span):

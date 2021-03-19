@@ -4,6 +4,7 @@ from ro.webdata.oniq.model.sentence.Action import Action
 from ro.webdata.oniq.model.sentence.Phrase import Phrase
 from ro.webdata.oniq.nlp.actions import get_action_list
 from ro.webdata.oniq.nlp.nlp_utils import get_next_token, get_wh_words
+from ro.webdata.oniq.nlp.word_utils import is_conjunction, is_preposition, is_verb
 
 
 def get_related_phrases(sentence: Span, index: int, action: Action):
@@ -90,11 +91,19 @@ def get_conj_phrases(sentence: Span, index: int):
     :return: The list of linked phrases
     """
 
+    conj_phrases = []
     phrase_list = get_phrase_list(sentence, False)
-    return [
-        phrase for phrase in phrase_list
-        if phrase.content.root.dep_ == "conj" and phrase != phrase_list[index]
-    ]
+
+    for phrase in phrase_list:
+        if phrase != phrase_list[index]:
+            root = phrase.content.root
+            is_comma = sentence[root.i - 1].text == "," if root.i > 0 else False
+
+            # E.g.: "What museums are in Bacau, in Iasi or in Bucharest?"
+            if root.dep_ == "conj" or is_comma:
+                conj_phrases.append(phrase)
+
+    return conj_phrases
 
 
 def get_noun_chunks(sentence: Union[Doc, Span]):
@@ -177,18 +186,23 @@ def consolidate_noun_chunks(sentence: Union[Doc, Span], chunk_list):
         chunk = chunk_list[index]
         prev_word = sentence[chunk[0].i - 1]
 
-        # E.g.: 'what is the name of the largest museum?'
-        #   - chunks: "what", "the name", "the largest museum"
-        #   - consolidated: "what", "the name of the largest museum"
-        is_preposition = prev_word.pos_ == "ADP" and prev_word.dep_ == "prep"
-
-        if is_preposition is True:
+        if is_preposition(prev_word) is True:
             prev_word = sentence[prev_word.i - 1]
+            action_list = get_action_list(sentence)
+
             # 1. check if the "consolidated_list" has been populated
-            # 2. check if the previous word is a verb
-                # E.g.: "Which female actor played in Casablanca and has been married to a writer born in Rome and has three children?" [2]
-                # chunk_list = ["Which female actor", "Casablanca", "a writer", "Rome", "three children"]
-            if len(consolidated_list) > 0 and not _is_verb(sentence, prev_word):
+            # 2. check if the previous word has the role of conjunction or not
+                # E.g.: "What is the name of the largest museum which hosts more than 10 pictures and exposed one sword?"
+                # E.g.: "What museums are in Bacau, in Iasi or in Bucharest?"
+            # 3. check if the previous word is a verb or not
+            # E.g.: "Which female actor played in Casablanca and has been married to a writer born in Rome and has three children?" [2]
+            # chunk_list = ["Which female actor", "Casablanca", "a writer", "Rome", "three children"]
+            if len(consolidated_list) > 0 \
+                    and not is_conjunction(prev_word) \
+                    and not is_verb(prev_word, action_list):
+                # E.g.: "What is the name of the largest museum?"
+                #   - chunks: "what", "the name", "the largest museum"
+                #   - consolidated: "what", "the name of the largest museum"
                 prev_chunk = consolidated_list[len(consolidated_list) - 1]
                 start_index = prev_chunk[0].i
                 end_index = chunk[len(chunk) - 1].i + 1
@@ -199,17 +213,6 @@ def consolidate_noun_chunks(sentence: Union[Doc, Span], chunk_list):
             consolidated_list.append(chunk)
 
     return consolidated_list
-
-
-def _is_verb(sentence: Union[Doc, Span], word: Token):
-    action_list = get_action_list(sentence)
-
-    for action in action_list:
-        for token in action.verb.to_list():
-            if token.text == word.text:
-                return True
-
-    return False
 
 
 def get_related_phrase(sentence: Span, phrase_index: int = 0, action_index: int = 0, increment: int = 1):
@@ -325,6 +328,7 @@ def is_nsubj_wh_word(sentence: Span, chunk: [Span, Token]):
     """
 
     first_word = chunk if isinstance(chunk, Token) else chunk[0]
+    # TODO: is_wh_word(is_wh_word) => word_utils
     is_wh_word = first_word in get_wh_words(sentence)
     is_pron_chunk = first_word.pos_ == "PRON" and first_word.tag_ == "WP"
     # TODO: check the change: sentence[..] => sentence.doc[...]
