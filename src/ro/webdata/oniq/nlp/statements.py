@@ -96,7 +96,7 @@ def _get_target_actions(sentence: Span, phrase_list: [Phrase], phrase_index: int
         else None
 
     for index, action in enumerate(action_list):
-        target_phrases = get_target_phrases(sentence, phrase_list, phrase_index, action)
+        target_phrases = get_target_phrases(sentence, phrase_list, phrase_index)
         last_target_phrase = target_phrases[len(target_phrases) - 1] if len(target_phrases) > 1 else None
 
         if action.is_available is True and (last_target_phrase is None or action.i == last_target_phrase.end + 1):
@@ -164,57 +164,14 @@ def _get_target_statements(sentence: Span, phrase_list: [Phrase], phrase_index: 
     """
 
     statements = []
-    first_word = phrase_list[phrase_index].content[0]
 
     # Create a statement for each action
     for action_index, action in enumerate(target_actions):
         # TODO: cardinals = get_cardinals(chunk)
 
-        next_phrase = _get_next_phrase(sentence, phrase_list, phrase_index, action_index)
-        related_phrases = get_related_phrases(sentence, phrase_index, action)
-        # E.g.: "Which is the museum which hosts more than 10 pictures and exposed one sword?"
-        statement = Statement(phrase_list, phrase_index, action, next_phrase)
-        statements.append(statement)
-
+        related_phrases = get_related_phrases(sentence, phrase_list, phrase_index, action_index)
         for j, related_phrase in enumerate(related_phrases):
-            if first_word.pos_ == "DET" and first_word.tag_ == "WDT":
-                if first_word.dep_ == "det":
-                    # E.g.: "Which paintings, swords or statues do not have more than three owners?"
-                    statement = Statement(related_phrases, j, action, next_phrase)
-                    statements.append(statement)
-
-                elif first_word.dep_ == "nsubj":
-                    if sentence[first_word.i + 1].pos_ in ["AUX", "VERB"]:
-                        # E.g.: "Which is the noisiest and the most beautiful city?"
-                        related_phrase.meta_prep = statements[len(statements) - 1].related_phrase.prep
-                        statement = Statement(phrase_list, phrase_index, action, related_phrase)
-                        statements.append(statement)
-                    else:
-                        # E.g.: "Which paintings, white swords or statues do not have more than three owners?"
-                        statement = Statement(related_phrases, j, action, next_phrase)
-                        statements.append(statement)
-            else:
-                # E.g.: "What museums are in Bacau or Bucharest?"
-                # E.g.: "Who is the most beautiful woman and the most generous person?"
-                related_phrase.meta_prep = statements[len(statements) - 1].related_phrase.prep
-                statement = Statement(phrase_list, phrase_index, action, related_phrase)
-                statements.append(statement)
+            statement = Statement(phrase_list, phrase_index, action, related_phrase)
+            statements.append(statement)
 
     return statements
-
-
-def _get_next_phrase(sentence: Span, phrase_list: [Phrase], phrase_index: int, action_index: int):
-    """
-    Get he phrase which is the object of the current iterated action
-
-    :param sentence: The target sentence
-    :param phrase_list: The list of phrases
-    :param phrase_index: The index of the current iterated phrase
-    :param action_index: The index of the current iterated action
-    :return: The phrase which is the object of the current iterated action
-    """
-
-    phrase = phrase_list[phrase_index]
-    if is_nsubj_wh_word(sentence, phrase.content):
-        return get_related_wh_phrase(sentence, phrase_index, action_index)
-    return get_related_phrase(sentence, phrase_list, phrase_index, action_index)

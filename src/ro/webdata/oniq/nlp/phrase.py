@@ -1,13 +1,12 @@
 from typing import Union
 from spacy.tokens import Doc, Span, Token
-from ro.webdata.oniq.model.sentence.Action import Action
 from ro.webdata.oniq.model.sentence.Phrase import Phrase
 from ro.webdata.oniq.nlp.actions import get_action_list
 from ro.webdata.oniq.nlp.nlp_utils import get_next_token, get_wh_words
 from ro.webdata.oniq.nlp.word_utils import is_conjunction, is_preposition, is_verb
 
 
-def get_related_phrases(sentence: Span, index: int, action: Action):
+def get_related_phrases(sentence: Span, phrase_list: [Phrase], index: int, action_index: int):
     """
     Get the list of phrases after the event (Action) and which are
     linked to the current phrase
@@ -18,28 +17,45 @@ def get_related_phrases(sentence: Span, index: int, action: Action):
         - related phrases: "in Bacau", "Bucharest"
 
     :param sentence: The target sentence
+    :param phrase_list: The list of phrases
     :param index: The index of the current phrase
-    :param action: The event of the current phrase
+    :param action_index: The index of the current iterated action
     :return: The list of phrases that are linked to the current phrase
     """
 
-    conj_phrases = get_conj_phrases(sentence, index)
+    related_phrases = []
+    first_related_phrase = _get_first_related_phrase(sentence, phrase_list, index, action_index)
+    start_index = phrase_list.index(first_related_phrase)
 
-    aux_verb = action.verb.aux_vbs[0] \
-        if action.verb.aux_vbs is not None \
-        else None
-    verb = action.verb.main_vb \
-        if action.verb.main_vb is not None \
-        else aux_verb
+    for i in range(start_index, len(phrase_list)):
+        phrase = phrase_list[i]
+        # E.g.: "What museums are in Bacau, Iasi or Bucharest?"
+        if phrase == phrase_list[start_index] or phrase.conj.token is not None:
+            related_phrases.append(phrase)
+        else:
+            break
 
-    return list(
-        filter(
-            lambda item: verb.i < item.content.start, conj_phrases
-        )
-    )
+    return related_phrases
 
 
-def get_target_phrases(sentence: Span, phrase_list: [Phrase], index: int, action: Action):
+def _get_first_related_phrase(sentence: Span, phrase_list: [Phrase], phrase_index: int, action_index: int):
+    """
+    Get the first phrase which is the object of the current iterated action
+
+    :param sentence: The target sentence
+    :param phrase_list: The list of phrases
+    :param phrase_index: The index of the current iterated phrase
+    :param action_index: The index of the current iterated action
+    :return: The phrase which is the object of the current iterated action
+    """
+
+    phrase = phrase_list[phrase_index]
+    if is_nsubj_wh_word(sentence, phrase.content):
+        return get_related_wh_phrase(sentence, phrase_index, action_index)
+    return get_related_phrase(sentence, phrase_list, phrase_index, action_index)
+
+
+def get_target_phrases(sentence: Span, phrase_list: [Phrase], index: int):
     """
     Get the list of phrases before the event (Action)
 
@@ -51,59 +67,22 @@ def get_target_phrases(sentence: Span, phrase_list: [Phrase], index: int, action
     :param sentence: The target sentence
     :param phrase_list: The list of phrases
     :param index: The index of the current phrase
-    :param action: The event of the current phrase
     :return: The list of target phrases
     """
 
-    main_target_phrase = phrase_list[index]
-    conj_phrases = get_conj_phrases(sentence, index)
+    target_phrases = []
+    first_target_phrase = phrase_list[index]
+    start_index = phrase_list.index(first_target_phrase)
 
-    def is_last_phrase():
-        for conj_phrase in conj_phrases:
-            if conj_phrase.start > main_target_phrase.start:
-                return False
-        return True
+    for i in range(start_index, len(phrase_list)):
+        phrase = phrase_list[i]
+        # E.g.: "Which painting, swords or statues do not have more than three owners?"
+        if phrase == phrase_list[start_index] or phrase.conj.token is not None:
+            target_phrases.append(phrase)
+        else:
+            break
 
-    target_phrases = [main_target_phrase] + conj_phrases
-    if is_last_phrase() is True:
-        target_phrases = conj_phrases + [main_target_phrase]
-
-    aux_verb = action.verb.aux_vbs[0] \
-        if action.verb.aux_vbs is not None \
-        else None
-    verb = action.verb.main_vb \
-        if action.verb.main_vb is not None \
-        else aux_verb
-
-    return list(
-        filter(
-            lambda item: verb.i > item.content.start, target_phrases
-        )
-    )
-
-
-def get_conj_phrases(sentence: Span, index: int):
-    """
-    Get the phrases which are in the relation of conjunction to the current phrase (phrase_list[index])
-
-    :param sentence: The target sentence
-    :param index: The index of the current phrase
-    :return: The list of linked phrases
-    """
-
-    conj_phrases = []
-    phrase_list = prepare_phrase_list(sentence)
-
-    for phrase in phrase_list:
-        if phrase != phrase_list[index]:
-            root = phrase.content.root
-            is_comma = sentence[root.i - 1].text == "," if root.i > 0 else False
-
-            # E.g.: "What museums are in Bacau, in Iasi or in Bucharest?"
-            if root.dep_ == "conj" or is_comma:
-                conj_phrases.append(phrase)
-
-    return conj_phrases
+    return target_phrases
 
 
 def get_noun_chunks(sentence: Union[Doc, Span]):
