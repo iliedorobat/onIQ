@@ -3,7 +3,7 @@ from ro.webdata.oniq.model.sentence.Action import Action
 from ro.webdata.oniq.model.sentence.Adjective import Adjective
 from ro.webdata.oniq.model.sentence.Verb import Verb, get_main_verb, is_aux_preceded_by_aux
 from ro.webdata.oniq.nlp.nlp_utils import get_next_token
-from ro.webdata.oniq.nlp.word_utils import is_wh_word
+from ro.webdata.oniq.nlp.word_utils import is_verb, is_wh_word
 
 
 def get_action_list(sentence: Span):
@@ -92,7 +92,7 @@ def _get_verb_list(sentence: Span):
     verb_list = []
 
     for token in sentence:
-        verb = token if token.pos_ in ["AUX", "VERB"] else None
+        verb = token if is_verb(token) else None
 
         if verb is not None:
             if is_aux_preceded_by_aux(sentence, verb):

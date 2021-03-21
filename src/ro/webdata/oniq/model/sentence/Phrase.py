@@ -1,7 +1,7 @@
 from typing import Union
 from spacy.tokens import Doc, Span, Token
 from ro.webdata.oniq.model.sentence.Conjunction import Conjunction
-from ro.webdata.oniq.nlp.word_utils import is_conjunction, is_wh_word
+from ro.webdata.oniq.nlp.word_utils import get_preposition, get_word_before_prep, is_conjunction, is_wh_word
 
 
 class PHRASES_TYPES:
@@ -77,8 +77,15 @@ def _prepare_conjunction(sentence: Union[Doc, Span], chunk: Span):
     :return: Conjunction object
     """
 
-    if chunk.root.dep_ == "conj":
-        last_index = chunk.root.i
+    main_word = chunk.root
+    # TODO: remove
+    # # E.g.: "Which female actor played in Casablanca and has been married to a writer?"
+    # # conj(played, married)
+    # if main_word.dep_ == "pobj":
+    #     main_word = get_word_before_prep(sentence, chunk.root) \
+
+    if main_word.dep_ == "conj":
+        last_index = main_word.i
 
         for i in reversed(range(0, last_index + 1)):
             prev_index = i - 1
@@ -86,10 +93,8 @@ def _prepare_conjunction(sentence: Union[Doc, Span], chunk: Span):
                 return Conjunction()
 
             prev_word = sentence[prev_index]
-            # FIXME: determine if the conjunction is "and" or "or"
-            #  E.g.: "Which paintings, swords and statues..."
-            #  E.g.: "Which paintings, swords or statues..."
-            # FIXME: "Which is the noisiest and the largest city?"
+            # E.g.: "Which paintings, swords and statues have not been deposited in Bacau?"
+            # E.g.: "Which is the noisiest and the largest city?"
             # E.g.: "What museums are in Bacau, Iasi or Bucharest?"
             if is_conjunction(prev_word):
                 return Conjunction(prev_word)

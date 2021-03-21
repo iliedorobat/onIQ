@@ -1,6 +1,3 @@
-import numpy
-from typing import Union
-from spacy.tokens import Doc, Span
 from ro.webdata.oniq.common.print_const import COLORS
 from ro.webdata.oniq.common.constants import LOGICAL_OPERATIONS
 from ro.webdata.oniq.model.sentence.Action import Action
@@ -27,6 +24,7 @@ class Statement:
         self.action = action
         self.phrase = phrase_list[index]
         self.related_phrase = related_phrase
+        self.conj = _prepare_conjunction(self.phrase, self.related_phrase)
         # self.cardinality = cardinality
 
     def __eq__(self, other):
@@ -63,10 +61,30 @@ class Statement:
             f'{COLORS.RESET_ALL}'
 
             f'{COLORS.LIGHT_YELLOW}'
-            f'{indentation}\tconjunction: {Conjunction.get_str(self.related_phrase.conj)},\n'
+            f'{indentation}\tconjunction: {Conjunction.get_str(self.conj)},\n'
             f'{COLORS.RESET_ALL}'
 
             f'{COLORS.LIGHT_CYAN}'
             f'{indentation}\trelated_phrases: {self.related_phrase.text}\n'
             f'{COLORS.RESET_ALL}'
         )
+
+
+def _prepare_conjunction(phrase: Phrase, related_phrase: Phrase):
+    """
+    Extract the conjunction of the statement.
+
+    E.g.: "Which painting, large swords or statues do not have more than three owners?"
+        - phrase.conj is not None
+        - related_phrase.conj is None
+
+    E.g.: "What museums are in Bacau, Iasi or Bucharest?"
+        - phrase.conj is None
+        - related_phrase.conj is not None
+
+    :param phrase: The statement's target phrase
+    :param related_phrase: The statement's related phrase
+    :return: The statement's conjunction
+    """
+
+    return related_phrase.conj if related_phrase.conj.token is not None else phrase.conj

@@ -1,5 +1,7 @@
+from inspect import currentframe, getframeinfo
 from typing import Union
 from spacy.tokens import Doc, Span, Token
+from ro.webdata.oniq.common.print_const import COLORS
 from ro.webdata.oniq.model.sentence.Phrase import Phrase
 from ro.webdata.oniq.nlp.actions import get_action_list
 from ro.webdata.oniq.nlp.nlp_utils import get_next_token, get_wh_words
@@ -25,15 +27,26 @@ def get_related_phrases(sentence: Span, phrase_list: [Phrase], index: int, actio
 
     related_phrases = []
     first_related_phrase = _get_first_related_phrase(sentence, phrase_list, index, action_index)
-    start_index = phrase_list.index(first_related_phrase)
 
-    for i in range(start_index, len(phrase_list)):
-        phrase = phrase_list[i]
-        # E.g.: "What museums are in Bacau, Iasi or Bucharest?"
-        if phrase == phrase_list[start_index] or phrase.conj.token is not None:
-            related_phrases.append(phrase)
-        else:
-            break
+    try:
+        start_index = phrase_list.index(first_related_phrase)
+
+        for i in range(start_index, len(phrase_list)):
+            phrase = phrase_list[i]
+            # E.g.: "What museums are in Bacau, Iasi or Bucharest?"
+            if phrase == phrase_list[start_index] or phrase.conj.token is not None:
+                related_phrases.append(phrase)
+            else:
+                break
+    except ValueError:
+        # E.g.: "What is the inventory number of the painting Liberty Leading the People that is located in the Louvre?" [1]
+        frame_info = getframeinfo(currentframe())
+        print(f'{COLORS.RED}'
+              f'The item is not in the list!\n'
+              f'filename: {frame_info.filename}\n'
+              f'function: {frame_info.function}\n'
+              f'line: {frame_info.lineno}'
+              f'{COLORS.RESET_ALL}')
 
     return related_phrases
 
@@ -178,7 +191,7 @@ def consolidate_noun_chunks(sentence: Union[Doc, Span], chunk_list):
             # chunk_list = ["Which female actor", "Casablanca", "a writer", "Rome", "three children"]
             if len(consolidated_list) > 0 \
                     and not is_conjunction(prev_word) \
-                    and not is_verb(prev_word, action_list):
+                    and not is_verb(prev_word):
                 # E.g.: "What is the name of the largest museum?"
                 #   - chunks: "what", "the name", "the largest museum"
                 #   - consolidated: "what", "the name of the largest museum"
