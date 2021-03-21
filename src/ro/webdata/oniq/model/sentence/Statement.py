@@ -20,13 +20,13 @@ class Statement:
     :attr phrase_list: The list of phrases generated against the statement
     :attr index: The index of the main phrase for which the statement is built
     :attr action: The event in which the "phrase" is involved
-    :attr related_phrase: The phrases which are linked by the "main phrase" through the "action"
+    :attr related_phrase: The phrase which is linked by the "main phrase" through the "action"
     """
 
-    def __init__(self, phrase_list: [Phrase], index: int, action: Action, related_phrases: [Phrase]):
+    def __init__(self, phrase_list: [Phrase], index: int, action: Action, related_phrase: Phrase):
         self.action = action
         self.phrase = phrase_list[index]
-        self.related_phrases = related_phrases
+        self.related_phrase = related_phrase
         # self.cardinality = cardinality
 
     def __eq__(self, other):
@@ -35,7 +35,7 @@ class Statement:
         return other is not None and \
             self.action.__eq__(other.action) and \
             self.phrase == other.phrase and \
-            numpy.array_equal(self.related_phrases, other.related_phrases)
+            self.related_phrase, other.related_phrase
 
     def __str__(self):
         return self.get_str()
@@ -48,7 +48,6 @@ class Statement:
 
     def get_str(self, indentation=''):
         action_indentation = '\t'
-        related_phrases = _get_related_phrases(self.related_phrases)
 
         return (
             f'{COLORS.CYAN}'
@@ -64,22 +63,10 @@ class Statement:
             f'{COLORS.RESET_ALL}'
 
             f'{COLORS.LIGHT_YELLOW}'
-            f'{indentation}\tconjunction: {Conjunction.get_str(self.phrase.conj)},\n'
+            f'{indentation}\tconjunction: {Conjunction.get_str(self.related_phrase.conj)},\n'
             f'{COLORS.RESET_ALL}'
 
             f'{COLORS.LIGHT_CYAN}'
-            f'{indentation}\trelated_phrases: {related_phrases}\n'
+            f'{indentation}\trelated_phrases: {self.related_phrase.text}\n'
             f'{COLORS.RESET_ALL}'
         )
-
-
-def _get_related_phrases(related_phrases):
-    text = ''
-
-    for index, related_phrase in enumerate(related_phrases):
-        text += related_phrase.text
-
-        if index < len(related_phrases) - 1:
-            text += ', '
-
-    return text if text != '' else None

@@ -90,9 +90,9 @@ def _prepare_conjunction(sentence: Union[Doc, Span], chunk: Span):
             #  E.g.: "Which paintings, swords and statues..."
             #  E.g.: "Which paintings, swords or statues..."
             # FIXME: "Which is the noisiest and the largest city?"
-            # FIXME: "What museums are in Bacau, in Iasi or in Bucharest?"
+            # E.g.: "What museums are in Bacau, Iasi or Bucharest?"
             if is_conjunction(prev_word):
-                return Conjunction(prev_word, None)
+                return Conjunction(prev_word)
 
     return Conjunction()
 
@@ -168,14 +168,14 @@ def _prepare_text(sentence: Span, content, prep, meta_prep, phrase_type):
     return f'{text}'
 
 
-def _prepare_type(sentence: Span, chunk_list: [Span], index: int, conjunction):
+def _prepare_type(sentence: Span, chunk_list: [Span], index: int, conj):
     """
     Extract the type of the phrase
 
     :param sentence: The target sentence
     :param chunk_list: The list of chunks
     :param index: The index of the current iterated chunk
-    :param conjunction: The conjunction
+    :param conj: The conjunction
     :return: One of PHRASES_TYPES values
     """
 
@@ -184,7 +184,7 @@ def _prepare_type(sentence: Span, chunk_list: [Span], index: int, conjunction):
     if first_word in PHRASES_TYPES.__dict__.values():
         return first_word
 
-    if conjunction.conj is not None:
+    if conj.token is not None:
         prev_phrase = chunk_list[index - 1]
         prev_conj = _prepare_conjunction(sentence, prev_phrase)
         return _prepare_type(sentence, chunk_list, index - 1, prev_conj)

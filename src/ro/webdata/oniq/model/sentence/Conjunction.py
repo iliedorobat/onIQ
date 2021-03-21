@@ -3,8 +3,9 @@ from spacy.tokens import Token
 
 
 class CONJUNCTION_TYPE:
-    AND = 'and'
-    OR = 'or'
+    AND = "and"
+    COMMA = ","
+    OR = "or"
 
 
 class Conjunction:
@@ -15,16 +16,16 @@ class Conjunction:
     :attr default: A default value that will be used if the conjunction == ","
     """
 
-    # TODO: default: Union[CONJUNCTION_TYPE.AND, CONJUNCTION_TYPE.OR]
-    def __init__(self, conj: Token = None, default=None):
-        self.conj = conj
-        self.text = _prepare_text(conj, default)
+    def __init__(self, conj: Token = None):
+        self.token = conj
+        self._meta_token = None
+        self.text = _prepare_text(conj)
 
     def __eq__(self, other):
         if not isinstance(other, Conjunction):
             return NotImplemented
         return other is not None \
-            and self.conj == other.conj \
+            and self.token == other.token \
             and self.text == other.text
 
     def __str__(self):
@@ -35,13 +36,21 @@ class Conjunction:
             f'{indentation}{self.text}'
         )
 
+    @property
+    def meta_token(self):
+        return self._meta_token
 
-def _prepare_text(conj: Token, default: Token):
+    @meta_token.setter
+    def meta_token(self, value):
+        self._meta_token = value
+        self.text = _prepare_text(self._meta_token)
+
+
+def _prepare_text(conj: Token):
     """
     Prepare the text which will be displayed
 
     :param conj: The target token
-    :param default: CONJUNCTION_TYPE.AND or CONJUNCTION_TYPE.OR
     :return: The text
     """
 
@@ -49,9 +58,7 @@ def _prepare_text(conj: Token, default: Token):
         return None
 
     if conj.pos_ == "PUNCT" and conj.text == ",":
-        if default is not None:
-            return default
-        return CONJUNCTION_TYPE.AND
+        return CONJUNCTION_TYPE.COMMA
     elif conj.lower_ == CONJUNCTION_TYPE.AND:
         return CONJUNCTION_TYPE.AND
     elif conj.lower_ == CONJUNCTION_TYPE.OR:

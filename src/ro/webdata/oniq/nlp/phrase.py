@@ -92,7 +92,7 @@ def get_conj_phrases(sentence: Span, index: int):
     """
 
     conj_phrases = []
-    phrase_list = get_phrase_list(sentence)
+    phrase_list = prepare_phrase_list(sentence)
 
     for phrase in phrase_list:
         if phrase != phrase_list[index]:
@@ -215,7 +215,7 @@ def consolidate_noun_chunks(sentence: Union[Doc, Span], chunk_list):
     return consolidated_list
 
 
-def get_related_phrase(sentence: Span, phrase_index: int = 0, action_index: int = 0, increment: int = 1):
+def get_related_phrase(sentence: Span, phrase_list: [Phrase], phrase_index: int = 0, action_index: int = 0, increment: int = 1):
     """
     Get the phrase which is the object of the current iterated action
 
@@ -227,6 +227,7 @@ def get_related_phrase(sentence: Span, phrase_index: int = 0, action_index: int 
             * "statues" [ACTION] "more than three owners"
 
     :param sentence: The target sentence
+    :param phrase_list: The list of phrases
     :param phrase_index: The index of the current iterated phrase
     :param action_index: The index of the current iterated action
     :param increment: The increment value. If the next phrase is in the relation of conjunction
@@ -234,17 +235,16 @@ def get_related_phrase(sentence: Span, phrase_index: int = 0, action_index: int 
     :return: The phrase which is the object of the current iterated action
     """
 
-    chunk_list = get_noun_chunks(sentence)
     index = phrase_index + action_index + increment
-    if index >= len(chunk_list):
+    if index >= len(phrase_list):
         return None
 
-    next_chunk = chunk_list[index]
-    if next_chunk.root.dep_ == "conj":
+    next_phrase = phrase_list[index]
+    if next_phrase.chunk.root.dep_ == "conj":
         # E.g.: "Which painting, swords or statues do not have more than three owners?"
-        return get_related_phrase(sentence, phrase_index, action_index, increment + 1)
+        return get_related_phrase(sentence, phrase_list, phrase_index, action_index, increment + 1)
     else:
-        return Phrase(sentence, chunk_list, index)
+        return phrase_list[index]
 
 
 def get_related_wh_phrase(sentence: Span, chunk_index: int = 0, action_index: int = 0, increment: int = 1):
@@ -352,7 +352,45 @@ def is_preceded_by_nsubj_wh_word(sentence: Span, chunk_list: [Span], index: int)
     return prev_token in get_wh_words(sentence) and sentence[prev_token.i + 1].pos_ == "AUX"
 
 
-def get_phrase_list(sentence: Union[Doc, Span]):
+def prepare_phrase_list(sentence: Union[Doc, Span]):
+    """
+    Generate the list of phrases
+
+    :param sentence: The target sentence
+    :return: The list of phrases
+    """
+
+    phrase_list = _init_phrase_list(sentence)
+    _prepare_meta_conj(phrase_list)
+
+    return phrase_list
+
+
+def _prepare_meta_conj(phrase_list: [Phrase]):
+    """
+    Set "meta_token" for the phrase with conjunction ","
+
+    E.g.: "What museums are in Bacau, Iasi or Bucharest?"
+        - phrase_list: ["What museums", "in Bacau", "Iasi", "Bucharest"]
+        - conjunction:      None           None      ","        "or"
+        - prepared conj:    None           None      "or"       "or"
+
+    :param phrase_list: The list of phrases
+    :return: None
+    """
+
+    token = None
+    for index, phrase in reversed(list(enumerate(phrase_list))):
+        if phrase.conj.token is not None:
+            if phrase.conj.token.pos_ == "CCONJ":
+                token = phrase.conj.token
+            elif phrase.conj.token.pos_ == "PUNCT" and phrase.conj.text == ",":
+                phrase.conj.meta_token = token
+        else:
+            token = None
+
+
+def _init_phrase_list(sentence: Union[Doc, Span]):
     """
     Generate the list of phrases by including the preposition for each chunk
 
@@ -360,8 +398,11 @@ def get_phrase_list(sentence: Union[Doc, Span]):
     :return: The list of phrases
     """
 
+    phrase_list = []
     chunk_list = get_noun_chunks(sentence)
-    return [
-        Phrase(sentence, chunk_list, index)
-        for index, chunk in enumerate(chunk_list)
-    ]
+
+    for index, chunk in enumerate(chunk_list):
+        phrase = Phrase(sentence, chunk_list, index)
+        phrase_list.append(phrase)
+
+    return phrase_list

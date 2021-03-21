@@ -8,12 +8,13 @@ from ro.webdata.oniq.model.sentence.Phrase import Phrase
 from ro.webdata.oniq.model.sentence.Statement import Statement
 from ro.webdata.oniq.nlp.actions import get_action_list
 from ro.webdata.oniq.nlp.nlp_utils import get_cardinals, retokenize
-from ro.webdata.oniq.nlp.phrase import get_phrase_list, get_related_phrase, get_related_phrases, \
+from ro.webdata.oniq.nlp.phrase import prepare_phrase_list, get_related_phrase, get_related_phrases, \
     get_related_wh_phrase, get_target_phrases, is_nsubj_wh_word
 
 
 def consolidate_statement_list(document: Doc):
     """
+    FIXME
     Consolidate the list of statements by grouping the statements which
     have the same action and target_phrase into a new statement
 
@@ -21,33 +22,35 @@ def consolidate_statement_list(document: Doc):
     :return: The consolidated list of statements
     """
 
-    statements = _get_statement_list(document)
-    prepared_list = [statements[0]] if len(statements) > 0 else []
+    # statements = get_statement_list(document)
+    # prepared_list = [statements[0]] if len(statements) > 0 else []
+    #
+    # if len(statements) > 1:
+    #     aux_stmt = statements[0] if len(statements) > 0 else None
+    #
+    #     for i in range(1, len(statements)):
+    #         crr_stmt = statements[i]
+    #         prev_stmt = statements[i - 1]
+    #         is_similar_stmt = Statement.is_similar_statement(crr_stmt, prev_stmt)
+    #
+    #         if is_similar_stmt is True:
+    #             related_phrases = aux_stmt.related_phrases + crr_stmt.related_phrases
+    #             aux_stmt.related_phrases = list(unique_everseen(related_phrases))
+    #
+    #             if i == len(statements) - 1:
+    #                 prepared_list.append(aux_stmt)
+    #         elif is_similar_stmt is False:
+    #             prepared_list.append(crr_stmt)
+    #             aux_stmt = crr_stmt
+    #
+    # echo.statement_list(prepared_list, PRINT_MODE.PRINT_CONSOLIDATED_STATEMENT)
+    #
+    # return prepared_list
 
-    if len(statements) > 1:
-        aux_stmt = statements[0] if len(statements) > 0 else None
-
-        for i in range(1, len(statements)):
-            crr_stmt = statements[i]
-            prev_stmt = statements[i - 1]
-            is_similar_stmt = Statement.is_similar_statement(crr_stmt, prev_stmt)
-
-            if is_similar_stmt is True:
-                related_phrases = aux_stmt.related_phrases + crr_stmt.related_phrases
-                aux_stmt.related_phrases = list(unique_everseen(related_phrases))
-
-                if i == len(statements) - 1:
-                    prepared_list.append(aux_stmt)
-            elif is_similar_stmt is False:
-                prepared_list.append(crr_stmt)
-                aux_stmt = crr_stmt
-
-    echo.statement_list(prepared_list, PRINT_MODE.PRINT_CONSOLIDATED_STATEMENT)
-
-    return prepared_list
+    return []
 
 
-def _get_statement_list(document: Doc):
+def get_statement_list(document: Doc):
     """
     Get the list of statements generated around the target phrases
 
@@ -59,7 +62,7 @@ def _get_statement_list(document: Doc):
     for sentence in document.sents:
         retokenize(document, sentence)
         action_list = get_action_list(sentence)
-        phrase_list = get_phrase_list(sentence)
+        phrase_list = prepare_phrase_list(sentence)
 
         for index, phrase in enumerate(phrase_list):
             target_actions = _get_target_actions(sentence, phrase_list, index, action_list, statements)
@@ -170,31 +173,31 @@ def _get_target_statements(sentence: Span, phrase_list: [Phrase], phrase_index: 
         next_phrase = _get_next_phrase(sentence, phrase_list, phrase_index, action_index)
         related_phrases = get_related_phrases(sentence, phrase_index, action)
         # E.g.: "Which is the museum which hosts more than 10 pictures and exposed one sword?"
-        statement = Statement(phrase_list, phrase_index, action, [next_phrase])
+        statement = Statement(phrase_list, phrase_index, action, next_phrase)
         statements.append(statement)
 
         for j, related_phrase in enumerate(related_phrases):
             if first_word.pos_ == "DET" and first_word.tag_ == "WDT":
                 if first_word.dep_ == "det":
                     # E.g.: "Which paintings, swords or statues do not have more than three owners?"
-                    statement = Statement(related_phrases, j, action, [next_phrase])
+                    statement = Statement(related_phrases, j, action, next_phrase)
                     statements.append(statement)
 
                 elif first_word.dep_ == "nsubj":
                     if sentence[first_word.i + 1].pos_ in ["AUX", "VERB"]:
                         # E.g.: "Which is the noisiest and the most beautiful city?"
-                        related_phrase.meta_prep = statements[len(statements) - 1].related_phrases[0].prep
-                        statement = Statement(phrase_list, phrase_index, action, [related_phrase])
+                        related_phrase.meta_prep = statements[len(statements) - 1].related_phrase.prep
+                        statement = Statement(phrase_list, phrase_index, action, related_phrase)
                         statements.append(statement)
                     else:
                         # E.g.: "Which paintings, white swords or statues do not have more than three owners?"
-                        statement = Statement(related_phrases, j, action, [next_phrase])
+                        statement = Statement(related_phrases, j, action, next_phrase)
                         statements.append(statement)
             else:
                 # E.g.: "What museums are in Bacau or Bucharest?"
                 # E.g.: "Who is the most beautiful woman and the most generous person?"
-                related_phrase.meta_prep = statements[len(statements) - 1].related_phrases[0].prep
-                statement = Statement(phrase_list, phrase_index, action, [related_phrase])
+                related_phrase.meta_prep = statements[len(statements) - 1].related_phrase.prep
+                statement = Statement(phrase_list, phrase_index, action, related_phrase)
                 statements.append(statement)
 
     return statements
@@ -214,4 +217,4 @@ def _get_next_phrase(sentence: Span, phrase_list: [Phrase], phrase_index: int, a
     phrase = phrase_list[phrase_index]
     if is_nsubj_wh_word(sentence, phrase.content):
         return get_related_wh_phrase(sentence, phrase_index, action_index)
-    return get_related_phrase(sentence, phrase_index, action_index)
+    return get_related_phrase(sentence, phrase_list, phrase_index, action_index)
