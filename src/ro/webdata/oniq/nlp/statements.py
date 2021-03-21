@@ -6,7 +6,6 @@ from ro.webdata.oniq.common.print_utils import echo
 from ro.webdata.oniq.model.sentence.Action import Action
 from ro.webdata.oniq.model.sentence.Phrase import Phrase
 from ro.webdata.oniq.model.sentence.Statement import Statement
-from ro.webdata.oniq.model.sentence.LogicalOperation import LogicalOperation
 from ro.webdata.oniq.nlp.actions import get_action_list
 from ro.webdata.oniq.nlp.nlp_utils import get_cardinals, retokenize
 from ro.webdata.oniq.nlp.phrase import get_phrase_list, get_related_phrase, get_related_phrases, \
@@ -97,7 +96,7 @@ def _get_target_actions(sentence: Span, phrase_list: [Phrase], phrase_index: int
         target_phrases = get_target_phrases(sentence, phrase_list, phrase_index, action)
         last_target_phrase = target_phrases[len(target_phrases) - 1] if len(target_phrases) > 1 else None
 
-        if action.is_available is True and (last_target_phrase is None or action.i == last_target_phrase.last_i + 1):
+        if action.is_available is True and (last_target_phrase is None or action.i == last_target_phrase.end + 1):
             is_first_action = index == 0
             is_prev_action_available = action_list[index - 1].is_available
 
@@ -107,7 +106,7 @@ def _get_target_actions(sentence: Span, phrase_list: [Phrase], phrase_index: int
                 # 2. check if the next phrase is not a "target phrase" (the index
                 # of the first item is greater than the index of the action)
                 # E.g.: "Which is the noisiest and the largest city?"
-                if next_phrase is None or next_phrase.content[0].i > action.i:
+                if next_phrase is None or next_phrase.content.start > action.i:
                     action.is_available = False
                 target_actions.append(action)
             # Add the rest of actions to the action list
@@ -135,10 +134,9 @@ def _get_target_actions(sentence: Span, phrase_list: [Phrase], phrase_index: int
                         action.is_available = False
                         target_actions.append(action)
 
-                    # 1. Check if the current phrase != the phrase of the last statement
-                    # 2. Check if the current phrase is followed by a verb
+                    # Check if the current phrase is followed by an adjectival clause/complement
                     # E.g.: "Which female actor played in Casablanca and has been married to a writer born in Rome and has three children?"
-                    elif sentence[phrase.content[len(phrase.content) - 1].i + 1].dep_ in ["acl", "acomp"]:
+                    elif sentence[phrase.end + 1].dep_ in ["acl", "acomp"]:
                         action.is_available = False
                         target_actions.append(action)
 
@@ -163,54 +161,59 @@ def _get_target_statements(sentence: Span, phrase_list: [Phrase], phrase_index: 
     """
 
     statements = []
-    phrase = phrase_list[phrase_index]
-    first_word = phrase.content[0]
+    first_word = phrase_list[phrase_index].content[0]
 
     # Create a statement for each action
-    for index, action in enumerate(target_actions):
+    for action_index, action in enumerate(target_actions):
         # TODO: cardinals = get_cardinals(chunk)
-        # TODO: logical_operation = LogicalOperation(sentence, chunk)
 
-        next_phrase = _get_next_phrase(sentence, phrase, phrase_index, index)
+        next_phrase = _get_next_phrase(sentence, phrase_list, phrase_index, action_index)
         related_phrases = get_related_phrases(sentence, phrase_index, action)
         # E.g.: "Which is the museum which hosts more than 10 pictures and exposed one sword?"
-        statements.append(Statement(phrase, action, [next_phrase]))
+        statement = Statement(phrase_list, phrase_index, action, [next_phrase])
+        statements.append(statement)
 
-        for related_phrase in related_phrases:
+        for j, related_phrase in enumerate(related_phrases):
             if first_word.pos_ == "DET" and first_word.tag_ == "WDT":
                 if first_word.dep_ == "det":
                     # E.g.: "Which paintings, swords or statues do not have more than three owners?"
                     related_phrase.is_target = True
-                    statements.append(Statement(related_phrase, action, [next_phrase]))
-                if first_word.dep_ == "nsubj":
+                    statement = Statement(related_phrases, j, action, [next_phrase])
+                    statements.append(statement)
+
+                elif first_word.dep_ == "nsubj":
                     if sentence[first_word.i + 1].pos_ in ["AUX", "VERB"]:
                         # E.g.: "Which is the noisiest and the most beautiful city?"
                         related_phrase.meta_prep = statements[len(statements) - 1].related_phrases[0].prep
-                        statements.append(Statement(phrase, action, [related_phrase]))
+                        statement = Statement(phrase_list, phrase_index, action, [related_phrase])
+                        statements.append(statement)
                     else:
                         # E.g.: "Which paintings, white swords or statues do not have more than three owners?"
                         related_phrase.is_target = True
-                        statements.append(Statement(related_phrase, action, [next_phrase]))
+                        statement = Statement(related_phrases, j, action, [next_phrase])
+                        statements.append(statement)
             else:
                 # E.g.: "What museums are in Bacau or Bucharest?"
                 # E.g.: "Who is the most beautiful woman and the most generous person?"
                 related_phrase.meta_prep = statements[len(statements) - 1].related_phrases[0].prep
-                statements.append(Statement(phrase, action, [related_phrase]))
+                statement = Statement(phrase_list, phrase_index, action, [related_phrase])
+                statements.append(statement)
 
     return statements
 
 
-def _get_next_phrase(sentence: Span, phrase: Phrase, phrase_index: int, action_index: int):
+def _get_next_phrase(sentence: Span, phrase_list: [Phrase], phrase_index: int, action_index: int):
     """
     Get he phrase which is the object of the current iterated action
 
     :param sentence: The target sentence
-    :param phrase: The current iterated phrase
+    :param phrase_list: The list of phrases
     :param phrase_index: The index of the current iterated phrase
     :param action_index: The index of the current iterated action
     :return: The phrase which is the object of the current iterated action
     """
 
+    phrase = phrase_list[phrase_index]
     if is_nsubj_wh_word(sentence, phrase.content):
         return get_related_wh_phrase(sentence, phrase_index, action_index)
     return get_related_phrase(sentence, phrase_index, action_index)

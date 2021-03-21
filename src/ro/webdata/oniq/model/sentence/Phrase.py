@@ -1,29 +1,47 @@
-from spacy.tokens import Span, Token
+from typing import Union
+from spacy.tokens import Doc, Span, Token
+from ro.webdata.oniq.model.sentence.Conjunction import Conjunction
+from ro.webdata.oniq.nlp.word_utils import is_conjunction, is_wh_word
+
+
+class PHRASES_TYPES:
+    HOW = "how"
+    WHAT = "what"
+    WHEN = "when"
+    WHERE = "where"
+    WHICH = "which"
+    WHO = "who"
+    WHOM = "whom"
+    WHOSE = "whose"
+    WHY = "why"
 
 
 class Phrase:
     """
     A sentence that also contains the preposition of the target chunk
 
-    :attr chunk: The target chunk
+    :attr chunk: The target chunk TODO
     :attr prep: The preposition of the phrase
     :attr meta_prep: The preposition of the previous related phrase
     :attr content: The content of the phrase
     :attr is_target: Specify whether or not a is target phrase
     :attr text: The text
-    :attr i: The index of the first token that composes the phrase
-    :attr last_i: The index of the last token that composes the phrase
+    :attr start: The index of the first token that composes the phrase
+    :attr end: The index of the last token that composes the phrase
     """
 
-    def __init__(self, sentence: Span, chunk: Span, is_target: bool = False):
-        self.chunk = chunk
-        self.prep = _prepare_preposition(sentence, chunk)
+    def __init__(self, sentence: Span, chunk_list: [Span], index: int, is_target: bool = False):
+        self._sentence = sentence
+        self.chunk = chunk_list[index]
+        self.conj = _prepare_conjunction(sentence, self.chunk)
+        self.prep = _prepare_preposition(sentence, self.chunk)
         self._meta_prep = None
         self.content = _prepare_content(sentence, self.chunk, self.prep)
         self._is_target = is_target
-        self.text = _prepare_text(self.chunk, self.prep, self._meta_prep, self._is_target)
-        self.i = self.content[0].i if self.content is not None else -1
-        self.last_i = chunk[len(self.content) - 1].i if self.content is not None else -1
+        self.type = _prepare_type(sentence, chunk_list, index, self.conj)
+        self.text = _prepare_text(sentence, self.chunk, self.prep, self._meta_prep, self.type)
+        self.start = self.content.start if self.content is not None else -1
+        self.end = self.content[len(self.content) - 1].i if self.content is not None else -1
 
     def __eq__(self, other):
         if not isinstance(other, Phrase):
@@ -51,12 +69,41 @@ class Phrase:
     @is_target.setter
     def is_target(self, value):
         self._is_target = value
-        self.text = _prepare_text(self.chunk, self.prep, self._meta_prep, self._is_target)
+        self.text = _prepare_text(self._sentence, self.chunk, self.prep, self._meta_prep, self._is_target)
 
     @meta_prep.setter
     def meta_prep(self, value):
         self._meta_prep = value
-        self.text = _prepare_text(self.chunk, self.prep, self._meta_prep, self._is_target)
+        self.text = _prepare_text(self._sentence, self.chunk, self.prep, self._meta_prep, self._is_target)
+
+
+def _prepare_conjunction(sentence: Union[Doc, Span], chunk: Span):
+    """
+    Prepare the conjunction
+
+    :param sentence: The target sentence
+    :param chunk: The current iterated chunk
+    :return: Conjunction object
+    """
+
+    if chunk.root.dep_ == "conj":
+        last_index = chunk.root.i
+
+        for i in reversed(range(0, last_index + 1)):
+            prev_index = i - 1
+            if prev_index < 0:
+                return Conjunction()
+
+            prev_word = sentence[prev_index]
+            # FIXME: determine if the conjunction is "and" or "or"
+            #  E.g.: "Which paintings, swords and statues..."
+            #  E.g.: "Which paintings, swords or statues..."
+            # FIXME: "Which is the noisiest and the largest city?"
+            # FIXME: "What museums are in Bacau, in Iasi or in Bucharest?"
+            if is_conjunction(prev_word):
+                return Conjunction(prev_word, None)
+
+    return Conjunction()
 
 
 def _prepare_content(sentence: Span, chunk: Span, prep: Token):
@@ -95,21 +142,60 @@ def _prepare_preposition(sentence: Span, chunk: Span):
     return None
 
 
-def _prepare_text(content, prep, meta_prep, is_target):
+def _prepare_text(sentence: Span, content, prep, meta_prep, phrase_type):
     """
     Prepare the text which will be displayed
 
+    :param sentence: The target sentence
     :param content: The content of the phrase
     :param prep: The preposition of the phrase
     :param meta_prep: The preposition of the previous related phrase
-    :param is_target: Specify whether or not a is target phrase
+    :param phrase_type: The type of the phrase
     :return: The text
     """
 
-    if is_target is True:
-        return f'{content}'
     if prep is not None:
         return f'{prep} {content}'
     if meta_prep is not None:
         return f'{meta_prep} {content}'
-    return f'{content}'
+
+    first_index = content.start
+    text = sentence[first_index: content.end]
+
+    if is_wh_word(content[0]):
+        # E.g.: "What is the name of the largest museum?"
+        if len(content) == 1:
+            return phrase_type
+        # Exclude the WH-word from the displayed text
+        elif len(content) > 1:
+            first_index = first_index + 1
+            text = sentence[first_index: content.end]
+
+    if phrase_type is not None:
+        return f'{phrase_type} {text}'
+
+    return f'{text}'
+
+
+def _prepare_type(sentence: Span, chunk_list: [Span], index: int, conjunction):
+    """
+    Extract the type of the phrase
+
+    :param sentence: The target sentence
+    :param chunk_list: The list of chunks
+    :param index: The index of the current iterated chunk
+    :param conjunction: The conjunction
+    :return: One of the PHRASES_TYPES values
+    """
+
+    chunk = chunk_list[index]
+    first_word = chunk[0].lower_
+    if first_word in PHRASES_TYPES.__dict__.values():
+        return first_word
+
+    if conjunction.conj is not None:
+        prev_phrase = chunk_list[index - 1]
+        prev_conj = _prepare_conjunction(sentence, prev_phrase)
+        return _prepare_type(sentence, chunk_list, index - 1, prev_conj)
+
+    return None

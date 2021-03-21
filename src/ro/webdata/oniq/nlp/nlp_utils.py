@@ -14,18 +14,18 @@ def get_cardinals(sentence: Span):
     return list([token for token in sentence if token.tag_ == "CD"])
 
 
-def get_next_token(sentence: Span, aux_verb: Token, pos_list: [str]):
+def get_next_token(sentence: Span, word: Token, pos_list: [str]):
     """
     Get the next token which POS is not in pos_list
 
     :param sentence: The target sentence
-    :param aux_verb: The auxiliary verb
+    :param word: The target token
     :param pos_list: The list of POS for which the iteration is allowed
-    :return: The token after the auxiliary verb which POS not in pos_list
+    :return: The token after the target token which POS not in pos_list
     """
 
     last_index = len(sentence) - 1
-    next_index = aux_verb.i + 1
+    next_index = word.i + 1
 
     if next_index > last_index:
         return None

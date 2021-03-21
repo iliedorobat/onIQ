@@ -1,9 +1,11 @@
 import numpy
+from typing import Union
+from spacy.tokens import Doc, Span
 from ro.webdata.oniq.common.print_const import COLORS
 from ro.webdata.oniq.common.constants import LOGICAL_OPERATIONS
 from ro.webdata.oniq.model.sentence.Action import Action
-from ro.webdata.oniq.model.sentence.LogicalOperation import LogicalOperation
-from ro.webdata.oniq.nlp.nlp_utils import get_wh_words
+from ro.webdata.oniq.model.sentence.Conjunction import Conjunction
+from ro.webdata.oniq.model.sentence.Phrase import Phrase
 
 
 class Statement:
@@ -15,19 +17,17 @@ class Statement:
         - action: "are not located"
         - related phrase: "in Bacau"
 
-    :attr phrase: The main phrase for which the statement is built
+    :attr phrase_list: The list of phrases generated against the statement
+    :attr index: The index of the main phrase for which the statement is built
     :attr action: The event in which the "phrase" is involved
     :attr related_phrase: The phrases which are linked by the "main phrase" through the "action"
     """
 
-    def __init__(self, phrase, action, related_phrases):
+    def __init__(self, phrase_list: [Phrase], index: int, action: Action, related_phrases: [Phrase]):
         self.action = action
-        self.phrase = phrase
+        self.phrase = phrase_list[index]
         self.related_phrases = related_phrases
-
         # self.cardinality = cardinality
-        # self.logical_operation = logical_operation
-        # self.wh_word = _prepare_wh_word(phrase, logical_operation, statements)
 
     def __eq__(self, other):
         if not isinstance(other, Statement):
@@ -63,14 +63,12 @@ class Statement:
             f'{indentation}{Action.get_str(self.action, action_indentation)},\n'
             f'{COLORS.RESET_ALL}'
 
-            f'{COLORS.LIGHT_CYAN}'
-            f'{indentation}\trelated_phrases: {related_phrases}\n'
+            f'{COLORS.LIGHT_YELLOW}'
+            f'{indentation}\tconjunction: {Conjunction.get_str(self.phrase.conj)},\n'
             f'{COLORS.RESET_ALL}'
 
-            f'{COLORS.CYAN}'
-            # f'{indentation}\tcardinality: {self.cardinality},\n'
-            # f'{indentation}\t{LogicalOperation.get_str(self.logical_operation)},\n'
-            f'{indentation}}}'
+            f'{COLORS.LIGHT_CYAN}'
+            f'{indentation}\trelated_phrases: {related_phrases}\n'
             f'{COLORS.RESET_ALL}'
         )
 

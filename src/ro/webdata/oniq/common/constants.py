@@ -5,8 +5,8 @@ class APP_MODE:
 
 class PRINT_MODE:
     PRINT_ACTION = False
-    PRINT_CONSOLIDATED_STATEMENT = True
-    PRINT_STATEMENT = False
+    PRINT_CONSOLIDATED_STATEMENT = False
+    PRINT_STATEMENT = True
     PRINT_TOKEN = True
 
 
@@ -22,6 +22,7 @@ class COMPARISON_OPERATORS:
     LTE = '<='
 
 
+# TODO: remove
 class LOGICAL_OPERATIONS:
     AND = 'conjunction'
     OR = 'disjunction'

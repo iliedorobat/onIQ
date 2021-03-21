@@ -47,7 +47,7 @@ def is_verb(word: Token, action_list: [Action]):
     return False
 
 
-def is_wh_word(token: Token):
+def is_wh_word(word: Token):
     """
     Check if the token is one of the WH-words\n
     - when, where, why\n
@@ -60,8 +60,8 @@ def is_wh_word(token: Token):
     - https://grammar.collinsdictionary.com/easy-learning/wh-words\n
     - https://www.ling.upenn.edu/hist-corpora/annotation/pos-wh.htm
 
-    :param token: The target token
+    :param word: The target token
     :return: True/False
     """
 
-    return token.tag_ in ['WDT', 'WP', 'WP$', 'WRB']
+    return word.tag_ in ['WDT', 'WP', 'WP$', 'WRB']

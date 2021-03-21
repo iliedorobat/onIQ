@@ -34,7 +34,7 @@ def get_related_phrases(sentence: Span, index: int, action: Action):
 
     return list(
         filter(
-            lambda item: verb.i < item.content[0].i, conj_phrases
+            lambda item: verb.i < item.content.start, conj_phrases
         )
     )
 
@@ -60,7 +60,7 @@ def get_target_phrases(sentence: Span, phrase_list: [Phrase], index: int, action
 
     def is_last_phrase():
         for conj_phrase in conj_phrases:
-            if conj_phrase.i > main_target_phrase.i:
+            if conj_phrase.start > main_target_phrase.start:
                 return False
         return True
 
@@ -77,7 +77,7 @@ def get_target_phrases(sentence: Span, phrase_list: [Phrase], index: int, action
 
     return list(
         filter(
-            lambda item: verb.i > item.content[0].i, target_phrases
+            lambda item: verb.i > item.content.start, target_phrases
         )
     )
 
@@ -240,14 +240,11 @@ def get_related_phrase(sentence: Span, phrase_index: int = 0, action_index: int 
         return None
 
     next_chunk = chunk_list[index]
-
-    if index >= len(chunk_list):
-        return None
     if next_chunk.root.dep_ == "conj":
         # E.g.: "Which painting, swords or statues do not have more than three owners?"
         return get_related_phrase(sentence, phrase_index, action_index, increment + 1)
     else:
-        return Phrase(sentence, next_chunk, False)
+        return Phrase(sentence, chunk_list, index, False)
 
 
 def get_related_wh_phrase(sentence: Span, chunk_index: int = 0, action_index: int = 0, increment: int = 1):
@@ -277,7 +274,7 @@ def get_related_wh_phrase(sentence: Span, chunk_index: int = 0, action_index: in
         return None
     if len(chunk) == 1 and chunk[0] in get_wh_words(sentence):
         if index == 1 or chunk_list[index].root.dep_ == "conj":
-            return Phrase(sentence, chunk_list[index], False)
+            return Phrase(sentence, chunk_list, index, False)
 
 
 def _get_token_before_aux(sentence: Span, chunk_list: [Span], index: int):
@@ -366,6 +363,6 @@ def get_phrase_list(sentence: Union[Doc, Span], is_target: bool = False):
 
     chunk_list = get_noun_chunks(sentence)
     return [
-        Phrase(sentence, chunk, is_target)
-        for chunk in chunk_list
+        Phrase(sentence, chunk_list, index, is_target)
+        for index, chunk in enumerate(chunk_list)
     ]
