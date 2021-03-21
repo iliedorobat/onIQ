@@ -20,24 +20,24 @@ class Phrase:
     """
     A sentence that also contains the preposition of the target chunk
 
-    :attr chunk: The target chunk TODO
+    :attr chunk: The target chunk
+    :attr conj: The conjunction
     :attr prep: The preposition of the phrase
     :attr meta_prep: The preposition of the previous related phrase
     :attr content: The content of the phrase
-    :attr is_target: Specify whether or not a is target phrase
     :attr text: The text
+    :attr type: The type of the phrase (one of PHRASES_TYPES values)
     :attr start: The index of the first token that composes the phrase
     :attr end: The index of the last token that composes the phrase
     """
 
-    def __init__(self, sentence: Span, chunk_list: [Span], index: int, is_target: bool = False):
+    def __init__(self, sentence: Span, chunk_list: [Span], index: int):
         self._sentence = sentence
         self.chunk = chunk_list[index]
         self.conj = _prepare_conjunction(sentence, self.chunk)
         self.prep = _prepare_preposition(sentence, self.chunk)
         self._meta_prep = None
         self.content = _prepare_content(sentence, self.chunk, self.prep)
-        self._is_target = is_target
         self.type = _prepare_type(sentence, chunk_list, index, self.conj)
         self.text = _prepare_text(sentence, self.chunk, self.prep, self._meta_prep, self.type)
         self.start = self.content.start if self.content is not None else -1
@@ -59,22 +59,13 @@ class Phrase:
         )
 
     @property
-    def is_target(self):
-        return self._is_target
-
-    @property
     def meta_prep(self):
         return self._meta_prep
-
-    @is_target.setter
-    def is_target(self, value):
-        self._is_target = value
-        self.text = _prepare_text(self._sentence, self.chunk, self.prep, self._meta_prep, self._is_target)
 
     @meta_prep.setter
     def meta_prep(self, value):
         self._meta_prep = value
-        self.text = _prepare_text(self._sentence, self.chunk, self.prep, self._meta_prep, self._is_target)
+        self.text = _prepare_text(self._sentence, self.chunk, self.prep, self._meta_prep, self.type)
 
 
 def _prepare_conjunction(sentence: Union[Doc, Span], chunk: Span):
@@ -185,7 +176,7 @@ def _prepare_type(sentence: Span, chunk_list: [Span], index: int, conjunction):
     :param chunk_list: The list of chunks
     :param index: The index of the current iterated chunk
     :param conjunction: The conjunction
-    :return: One of the PHRASES_TYPES values
+    :return: One of PHRASES_TYPES values
     """
 
     chunk = chunk_list[index]

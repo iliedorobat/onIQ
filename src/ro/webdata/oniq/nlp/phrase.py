@@ -92,7 +92,7 @@ def get_conj_phrases(sentence: Span, index: int):
     """
 
     conj_phrases = []
-    phrase_list = get_phrase_list(sentence, False)
+    phrase_list = get_phrase_list(sentence)
 
     for phrase in phrase_list:
         if phrase != phrase_list[index]:
@@ -244,7 +244,7 @@ def get_related_phrase(sentence: Span, phrase_index: int = 0, action_index: int 
         # E.g.: "Which painting, swords or statues do not have more than three owners?"
         return get_related_phrase(sentence, phrase_index, action_index, increment + 1)
     else:
-        return Phrase(sentence, chunk_list, index, False)
+        return Phrase(sentence, chunk_list, index)
 
 
 def get_related_wh_phrase(sentence: Span, chunk_index: int = 0, action_index: int = 0, increment: int = 1):
@@ -274,7 +274,7 @@ def get_related_wh_phrase(sentence: Span, chunk_index: int = 0, action_index: in
         return None
     if len(chunk) == 1 and chunk[0] in get_wh_words(sentence):
         if index == 1 or chunk_list[index].root.dep_ == "conj":
-            return Phrase(sentence, chunk_list, index, False)
+            return Phrase(sentence, chunk_list, index)
 
 
 def _get_token_before_aux(sentence: Span, chunk_list: [Span], index: int):
@@ -352,17 +352,16 @@ def is_preceded_by_nsubj_wh_word(sentence: Span, chunk_list: [Span], index: int)
     return prev_token in get_wh_words(sentence) and sentence[prev_token.i + 1].pos_ == "AUX"
 
 
-def get_phrase_list(sentence: Union[Doc, Span], is_target: bool = False):
+def get_phrase_list(sentence: Union[Doc, Span]):
     """
     Generate the list of phrases by including the preposition for each chunk
 
     :param sentence: The target sentence
-    :param is_target: Specify whether or not a is target phrase
     :return: The list of phrases
     """
 
     chunk_list = get_noun_chunks(sentence)
     return [
-        Phrase(sentence, chunk_list, index, is_target)
+        Phrase(sentence, chunk_list, index)
         for index, chunk in enumerate(chunk_list)
     ]

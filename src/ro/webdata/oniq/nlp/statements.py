@@ -59,7 +59,7 @@ def _get_statement_list(document: Doc):
     for sentence in document.sents:
         retokenize(document, sentence)
         action_list = get_action_list(sentence)
-        phrase_list = get_phrase_list(sentence, True)
+        phrase_list = get_phrase_list(sentence)
 
         for index, phrase in enumerate(phrase_list):
             target_actions = _get_target_actions(sentence, phrase_list, index, action_list, statements)
@@ -177,7 +177,6 @@ def _get_target_statements(sentence: Span, phrase_list: [Phrase], phrase_index: 
             if first_word.pos_ == "DET" and first_word.tag_ == "WDT":
                 if first_word.dep_ == "det":
                     # E.g.: "Which paintings, swords or statues do not have more than three owners?"
-                    related_phrase.is_target = True
                     statement = Statement(related_phrases, j, action, [next_phrase])
                     statements.append(statement)
 
@@ -189,7 +188,6 @@ def _get_target_statements(sentence: Span, phrase_list: [Phrase], phrase_index: 
                         statements.append(statement)
                     else:
                         # E.g.: "Which paintings, white swords or statues do not have more than three owners?"
-                        related_phrase.is_target = True
                         statement = Statement(related_phrases, j, action, [next_phrase])
                         statements.append(statement)
             else:
