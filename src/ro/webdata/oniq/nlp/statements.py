@@ -164,6 +164,7 @@ def _get_target_statements(sentence: Span, phrase_list: [Phrase], phrase_index: 
     """
 
     statements = []
+    first_word = phrase_list[phrase_index].content[0]
 
     # Create a statement for each action
     for action_index, action in enumerate(target_actions):
@@ -171,6 +172,9 @@ def _get_target_statements(sentence: Span, phrase_list: [Phrase], phrase_index: 
 
         related_phrases = get_related_phrases(sentence, phrase_list, phrase_index, action_index)
         for j, related_phrase in enumerate(related_phrases):
+            if j > 0 and related_phrase.conj.token is not None:
+                related_phrase.meta_prep = statements[len(statements) - 1].related_phrase.prep or \
+                    statements[len(statements) - 1].related_phrase.meta_prep
             statement = Statement(phrase_list, phrase_index, action, related_phrase)
             statements.append(statement)
 
