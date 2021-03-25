@@ -72,7 +72,6 @@ class echo:
             print()
             for statement in statements:
                 print(Statement.get_str(statement))
-                print()
 
     @staticmethod
     def token_list(document):

@@ -4,5 +4,6 @@ class COLORS:
     CYAN = "\033[36m"
     LIGHT_CYAN = "\033[96m"
     LIGHT_YELLOW = "\033[93m"
+    LIGHT_RED = "\033[91m"
     RED = "\033[31m"
     RESET_ALL = '\033[0m'

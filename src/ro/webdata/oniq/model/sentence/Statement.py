@@ -44,6 +44,17 @@ class Statement:
         has_same_target = stmt_1.phrase == stmt_2.phrase
         return has_same_action and has_same_target
 
+    def get_basic_str(self, indentation=''):
+        action_indentation = '\t'
+
+        return (
+            f'{indentation}statement: {{\n'
+            f'{indentation}\ttarget_phrase: {self.phrase},\n'
+            f'{indentation}{Action.get_str(self.action, action_indentation)},\n'
+            f'{indentation}\tconjunction: {Conjunction.get_str(self.conj)},\n'
+            f'{indentation}\trelated_phrases: {self.related_phrase.text}'
+        )
+
     def get_str(self, indentation=''):
         action_indentation = '\t'
 
