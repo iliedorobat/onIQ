@@ -5,7 +5,8 @@ from ro.webdata.oniq.common.print_const import COLORS
 from ro.webdata.oniq.model.sentence.Phrase import Phrase
 from ro.webdata.oniq.nlp.actions import get_action_list
 from ro.webdata.oniq.nlp.nlp_utils import get_next_token, get_wh_words
-from ro.webdata.oniq.nlp.word_utils import is_conjunction, is_preposition, is_verb
+from ro.webdata.oniq.nlp.verb import is_enclosed_by_verb
+from ro.webdata.oniq.nlp.word_utils import is_conjunction, is_preposition
 
 
 def get_related_phrases(sentence: Span, phrase_list: [Phrase], index: int, action_index: int):
@@ -182,16 +183,13 @@ def consolidate_noun_chunks(sentence: Union[Doc, Span], chunk_list):
             prev_word = sentence[prev_word.i - 1]
             action_list = get_action_list(sentence)
 
-            # 1. check if the "consolidated_list" has been populated
-            # 2. check if the previous word has the role of conjunction or not
+            # 1. check if the previous word has the role of conjunction or not
                 # E.g.: "What is the name of the largest museum which hosts more than 10 pictures and exposed one sword?"
                 # E.g.: "What museums are in Bacau, in Iasi or in Bucharest?"
-            # 3. check if the previous word is a verb or not
+            # 2. check if the previous word is a verb or not
             # E.g.: "Which female actor played in Casablanca and has been married to a writer born in Rome and has three children?" [2]
             # chunk_list = ["Which female actor", "Casablanca", "a writer", "Rome", "three children"]
-            if len(consolidated_list) > 0 \
-                    and not is_conjunction(prev_word) \
-                    and not is_verb(prev_word):
+            if not is_conjunction(prev_word) and not is_enclosed_by_verb(prev_word):
                 # E.g.: "What is the name of the largest museum?"
                 #   - chunks: "what", "the name", "the largest museum"
                 #   - consolidated: "what", "the name of the largest museum"

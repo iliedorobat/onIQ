@@ -38,13 +38,15 @@ def get_action_list(sentence: Span):
             if verb_item.tag_ == "MD":
                 modal_verb = verb_item
             else:
-                # E.g.: "What is the federated state located in the Weimar Republic?" [1]
-                # "is" and "located" should be part of different Actions
-                if _is_prev_wh_word(sentence, aux_verbs):
-                    verb = Verb(aux_verbs, None, modal_verb, None)
-                    action = Action(sentence, verb)
-                    action_list.append(action)
-                    aux_verbs = None
+                # FIXME
+                # # E.g.: "What is the federated state located in the Weimar Republic?" [1]
+                # # E.g.: "When did Lena Horne receive the Grammy Award for Best Jazz Vocal Album?" [1]
+                # # "is" and "located" should be part of different Actions
+                # if _is_prev_wh_word(sentence, aux_verbs):
+                #     verb = Verb(aux_verbs, None, modal_verb, None)
+                #     action = Action(sentence, verb)
+                #     action_list.append(action)
+                #     aux_verbs = None
 
                 verb = Verb(aux_verbs, verb_item, modal_verb, None)
                 action = Action(sentence, verb)

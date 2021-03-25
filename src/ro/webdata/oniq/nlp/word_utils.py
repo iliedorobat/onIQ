@@ -94,6 +94,17 @@ def is_verb(word: Token):
     return word.pos_ in ["AUX", "VERB"]
 
 
+def is_acomp(word: Token):
+    """
+    Determine if the input word is an adjectival complement
+
+    :param word: The target token
+    :return: True/False
+    """
+
+    return word.pos_ == "ADJ" and word.dep_ == "acomp"
+
+
 def is_wh_word(word: Token):
     """
     Check if the token is one of the WH-words\n
