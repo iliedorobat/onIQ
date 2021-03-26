@@ -184,12 +184,22 @@ def get_main_verb(sentence: Span, aux_verb: Token):
     :return: The main verb or None
     """
 
+    # E.g.: "What is the federated state located in the Weimar Republic?" [1]
+    if aux_verb.head == aux_verb:
+        prev_index = aux_verb.i - 1
+        prev_word = sentence[prev_index] if prev_index > -1 else None
+
+        # E.g.: "Where are the coins and swords located?"
+        # E.g.: "When was anıtkabir built?" [3]
+        if prev_word is not None and prev_word.lower_ not in ["when", "where"]:
+            return None
+
     next_word = get_next_token(sentence, aux_verb, ["DET", "ADV", "ADJ", "ADP", "CCONJ", "NOUN", "PRON", "PROPN"])
 
+    # E.g.: "Who is the director who own 2 cars and sold a house or a panel?"
     if next_word is not None and next_word.pos_ == "VERB":
-        # E.g.: "Who is the director who own 10 cars and sold a house or a panel?"
-        if sentence[next_word.i - 1] not in get_wh_words(sentence):
-            return next_word
+        # TODO: check the old rule: if sentence[next_word.i - 1] not in get_wh_words(sentence):
+        return next_word
 
     return None
 

@@ -957,5 +957,73 @@ statement: {
 	conjunction: or,
 	related_phrases: in Bacau
 """
+    },
+    {
+        "query": "Who is the director who own 2 cars and sold a house or a panel?",
+        "result": """
+statement: {
+	target_phrase: who,
+	action: {
+		dep: ROOT,
+		is_available: False,
+		neg: None,
+		verb: {
+			aux_vbs: [is],
+			acomp: None,
+			main_vb: None,
+			modal_vb: None
+		}
+	},
+	conjunction: None,
+	related_phrases: the director
+
+statement: {
+	target_phrase: the director,
+	action: {
+		dep: relcl,
+		is_available: False,
+		neg: None,
+		verb: {
+			aux_vbs: None,
+			acomp: None,
+			main_vb: own,
+			modal_vb: None
+		}
+	},
+	conjunction: None,
+	related_phrases: 2 cars
+
+statement: {
+	target_phrase: the director,
+	action: {
+		dep: conj,
+		is_available: False,
+		neg: None,
+		verb: {
+			aux_vbs: None,
+			acomp: None,
+			main_vb: sold,
+			modal_vb: None
+		}
+	},
+	conjunction: None,
+	related_phrases: a house
+
+statement: {
+	target_phrase: the director,
+	action: {
+		dep: conj,
+		is_available: False,
+		neg: None,
+		verb: {
+			aux_vbs: None,
+			acomp: None,
+			main_vb: sold,
+			modal_vb: None
+		}
+	},
+	conjunction: or,
+	related_phrases: a panel
+"""
     }
 ]

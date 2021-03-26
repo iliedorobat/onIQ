@@ -125,7 +125,35 @@ def get_noun_chunks(sentence: Union[Doc, Span]):
     if last_adj_chunk is not None:
         chunk_list.append(last_adj_chunk)
 
-    return consolidate_noun_chunks(sentence, chunk_list)
+    filtered_list = _filter_chunk_list(sentence, chunk_list)
+
+    return consolidate_noun_chunks(sentence, filtered_list)
+
+
+def _filter_chunk_list(sentence: Union[Doc, Span], chunk_list: [Span]):
+    """
+    Exclude the WH-words chunks-like from the list of chunks, excepting for the first entry
+
+    E.g.: "Who is the director who own 2 cars and sold a house or a panel?"
+        - chunk_list = ["Who", "the director", "who", "10 cars", "a house", "a panel"]
+        - WH-words chunks-like: [chunk_list[2]]
+        - filtered_list = ["Who", "the director", "10 cars", "a house", "a panel"]
+
+    :param sentence: The target sentence
+    :param chunk_list: The target list of chunks
+    :return: The filtered list of chunks
+    """
+
+    filtered_list = []
+
+    for index, chunk in enumerate(chunk_list):
+        if len(chunk) == 1:
+            if index == 0 or chunk[0] not in get_wh_words(sentence):
+                filtered_list.append(chunk)
+        else:
+            filtered_list.append(chunk)
+
+    return filtered_list
 
 
 def get_last_adj_chunk(sentence: Union[Doc, Span], chunk_list: [Span]):
@@ -181,7 +209,6 @@ def consolidate_noun_chunks(sentence: Union[Doc, Span], chunk_list):
 
         if is_preposition(prev_word) is True:
             prev_word = sentence[prev_word.i - 1]
-            action_list = get_action_list(sentence)
 
             # 1. check if the previous word has the role of conjunction or not
                 # E.g.: "What is the name of the largest museum which hosts more than 10 pictures and exposed one sword?"
