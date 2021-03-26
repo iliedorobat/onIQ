@@ -10,7 +10,6 @@ from ro.webdata.oniq.nlp.actions import get_action_list
 from ro.webdata.oniq.nlp.nlp_utils import get_cardinals, retokenize
 from ro.webdata.oniq.nlp.phrase import prepare_phrase_list, get_related_phrase, get_related_phrases, \
     get_related_wh_phrase, get_target_phrases, is_nsubj_wh_word
-from ro.webdata.oniq.test.tests import question_statements_test
 
 
 def consolidate_statement_list(document: Doc):
@@ -73,8 +72,6 @@ def get_statement_list(document: Doc):
         echo.token_list(sentence)
         echo.action_list(action_list)
         echo.statement_list(statements)
-
-    question_statements_test(document.text, statements)
 
     return statements
 

@@ -19,9 +19,9 @@ _QUERY_SKELETON = "{prefixes}" \
 
 class MetaQuery:
     # nl_query: The query provided by the user in natural language
-    def __init__(self, endpoint, nl_query):
+    def __init__(self, endpoint, question):
         # TODO: nlp("document", disable=["parser"])
-        document = nlp(nl_query)
+        document = nlp(question)
         statements = get_statement_list(document)
         query = Query(endpoint, statements)
         #
