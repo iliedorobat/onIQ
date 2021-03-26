@@ -1,12 +1,14 @@
 class APP_MODE:
     IS_DEBUG = True
     IS_DEBUG_EXTRA = False
+    IS_TEST_MODE = False
 
 
 class PRINT_MODE:
     PRINT_ACTION = False
     PRINT_CONSOLIDATED_STATEMENT = False
     PRINT_STATEMENT = True
+    PRINT_TARGET = True
     PRINT_TOKEN = True
 
 
