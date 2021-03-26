@@ -1,18 +1,31 @@
+from functools import reduce
+
+from spacy.tokens import Span
+
 from ro.webdata.oniq.model.rdf.Match import Match
+from ro.webdata.oniq.model.rdf.Property import Property
+from ro.webdata.oniq.model.sentence.Statement import Statement
+from ro.webdata.oniq.model.sentence.Verb import Verb
 from ro.webdata.oniq.model.sparql.MetaTriple import MetaTriple
 from ro.webdata.oniq.model.sparql.Pill import Pill, Pills
 from ro.webdata.oniq.model.sparql.Target import Target
 from ro.webdata.oniq.model.sparql.Triple import Triple
 
-from ro.webdata.oniq.common.constants import COMPARISON_OPERATORS, SENTENCE_TYPE, SEPARATOR
+from ro.webdata.oniq.common.constants import COMPARISON_OPERATORS, SEPARATOR, PRINT_MODE
 from ro.webdata.oniq.common import rdf_utils
+from ro.webdata.oniq.nlp.meta_triple import prepare_where_meta_triple
+from ro.webdata.oniq.nlp.phrase import get_nouns
 
 
-# TODO: check if the sentence start with WHEN and WHERE
 class Query:
-    def __init__(self, endpoint, statements):
-        self.targets = _prepare_targets(endpoint, statements)
-        self.meta_triples = _consolidate_meta_triples(endpoint, statements)
+    def __init__(self, endpoint: str, statements: [Statement]):
+        self.target_list = _prepare_target_list(statements)
+        # self.meta_triple_list = _prepare_meta_triple_list(endpoint, statements)
+
+        for target in self.target_list:
+            if PRINT_MODE.PRINT_TARGET is True:
+                print(target)
+
 
     @staticmethod
     def get_prefixes(endpoint):
