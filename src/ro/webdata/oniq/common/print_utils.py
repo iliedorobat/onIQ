@@ -1,7 +1,7 @@
 import logging
 
 from langdetect import detect
-from ro.webdata.oniq.common.constants import APP_MODE, PRINT_MODE
+from ro.webdata.oniq.common.constants import GLOBAL_ENV, PRINT_MODE
 from ro.webdata.oniq.common.print_const import COLORS
 from ro.webdata.oniq.model.sentence.Action import Action
 from ro.webdata.oniq.model.sentence.Statement import Statement
@@ -11,12 +11,12 @@ from ro.webdata.oniq.model.sentence.Statement import Statement
 class console:
     @staticmethod
     def debug(message, location=None):
-        if APP_MODE.IS_DEBUG:
+        if GLOBAL_ENV.IS_DEBUG:
             print(f'{COLORS.CYAN}{_prepare_message(message, location)}{COLORS.RESET_ALL}')
 
     @staticmethod
     def extra_debug(message, location=None):
-        if APP_MODE.IS_DEBUG_EXTRA:
+        if GLOBAL_ENV.IS_DEBUG_EXTRA:
             print(f'{COLORS.CYAN}{_prepare_message(message, location)}{COLORS.RESET_ALL}')
 
     @staticmethod
@@ -46,7 +46,7 @@ def _prepare_message(message, location=None):
 class echo:
     @staticmethod
     def action_list(actions):
-        if APP_MODE.IS_DEBUG and PRINT_MODE.PRINT_ACTION:
+        if GLOBAL_ENV.IS_DEBUG and PRINT_MODE.PRINT_ACTION:
             print(f'\nlen(action_list) = {len(actions)}\n')
             for action in actions:
                 print(Action.get_str(action))
@@ -62,13 +62,13 @@ class echo:
 
     @staticmethod
     def properties(properties):
-        if APP_MODE.IS_DEBUG:
+        if GLOBAL_ENV.IS_DEBUG:
             for prop in properties:
                 print(f'property:    {prop.prop_name_extended}   {prop.ns_name}')
 
     @staticmethod
     def statement_list(statements, print_mode=PRINT_MODE.PRINT_STATEMENT):
-        if APP_MODE.IS_DEBUG and print_mode:
+        if GLOBAL_ENV.IS_DEBUG and print_mode:
             print()
             for statement in statements:
                 print(Statement.get_str(statement))

@@ -1,4 +1,4 @@
-pairs = [
+pairs_00 = [
     {
         "query": "Which is the noisiest and the largest city?",
         "result": """
@@ -33,6 +33,42 @@ statement: {
 	},
 	conjunction: and,
 	related_phrases: the largest city
+"""
+    },
+    {
+        "query": "Which is the noisiest and the most beautiful city?",
+        "result": """
+statement: {
+	target_phrase: which,
+	action: {
+		dep: ROOT,
+		is_available: False,
+		neg: None,
+		verb: {
+			aux_vbs: [is],
+			acomp: None,
+			main_vb: None,
+			modal_vb: None
+		}
+	},
+	conjunction: None,
+	related_phrases: the noisiest
+
+statement: {
+	target_phrase: which,
+	action: {
+		dep: ROOT,
+		is_available: False,
+		neg: None,
+		verb: {
+			aux_vbs: [is],
+			acomp: None,
+			main_vb: None,
+			modal_vb: None
+		}
+	},
+	conjunction: and,
+	related_phrases: the most beautiful city
 """
     },
     {
@@ -124,6 +160,42 @@ statement: {
 """
     },
     {
+        "query": "Which museum hosts more than 10 pictures and exposed one sword?",
+        "result": """
+statement: {
+	target_phrase: which museum,
+	action: {
+		dep: ROOT,
+		is_available: False,
+		neg: None,
+		verb: {
+			aux_vbs: None,
+			acomp: None,
+			main_vb: hosts,
+			modal_vb: None
+		}
+	},
+	conjunction: None,
+	related_phrases: more than 10 pictures
+
+statement: {
+	target_phrase: which museum,
+	action: {
+		dep: conj,
+		is_available: False,
+		neg: None,
+		verb: {
+			aux_vbs: None,
+			acomp: None,
+			main_vb: exposed,
+			modal_vb: None
+		}
+	},
+	conjunction: None,
+	related_phrases: one sword
+"""
+    },
+    {
         "query": "What is the name of the largest museum which hosts more than 10 pictures and exposed one sword?",
         "result": """
 statement: {
@@ -176,178 +248,55 @@ statement: {
 """
     },
     {
-        # [2]
-        "query": "Which female actor played in Casablanca and has been married to a writer born in Rome and has three children?",
+        "query": "Which is the museum which hosts more than 10 pictures and exposed one sword?",
         "result": """
 statement: {
-	target_phrase: which female actor,
+	target_phrase: which,
 	action: {
 		dep: ROOT,
-		is_available: False,
-		neg: None,
-		verb: {
-			aux_vbs: None,
-			acomp: None,
-			main_vb: played,
-			modal_vb: None
-		}
-	},
-	conjunction: None,
-	related_phrases: in Casablanca
-
-statement: {
-	target_phrase: which female actor,
-	action: {
-		dep: conj,
-		is_available: False,
-		neg: None,
-		verb: {
-			aux_vbs: [has, been],
-			acomp: None,
-			main_vb: married,
-			modal_vb: None
-		}
-	},
-	conjunction: None,
-	related_phrases: to a writer
-
-statement: {
-	target_phrase: to a writer,
-	action: {
-		dep: acl,
-		is_available: False,
-		neg: None,
-		verb: {
-			aux_vbs: None,
-			acomp: None,
-			main_vb: born,
-			modal_vb: None
-		}
-	},
-	conjunction: None,
-	related_phrases: in Rome
-
-statement: {
-	target_phrase: to a writer,
-	action: {
-		dep: conj,
-		is_available: False,
-		neg: None,
-		verb: {
-			aux_vbs: [has],
-			acomp: None,
-			main_vb: None,
-			modal_vb: None
-		}
-	},
-	conjunction: None,
-	related_phrases: three children
-"""
-    },
-    {
-        # [2]
-        "query": "Which female actor played in Casablanca and is married to a writer born in Rome and has three children?",
-        "result": """
-statement: {
-	target_phrase: which female actor,
-	action: {
-		dep: ROOT,
-		is_available: False,
-		neg: None,
-		verb: {
-			aux_vbs: None,
-			acomp: None,
-			main_vb: played,
-			modal_vb: None
-		}
-	},
-	conjunction: None,
-	related_phrases: in Casablanca
-
-statement: {
-	target_phrase: which female actor,
-	action: {
-		dep: conj,
 		is_available: False,
 		neg: None,
 		verb: {
 			aux_vbs: [is],
-			acomp: married,
+			acomp: None,
 			main_vb: None,
 			modal_vb: None
 		}
 	},
 	conjunction: None,
-	related_phrases: to a writer
+	related_phrases: the museum
 
 statement: {
-	target_phrase: to a writer,
+	target_phrase: the museum,
 	action: {
-		dep: acl,
+		dep: relcl,
 		is_available: False,
 		neg: None,
 		verb: {
 			aux_vbs: None,
 			acomp: None,
-			main_vb: born,
+			main_vb: hosts,
 			modal_vb: None
 		}
 	},
 	conjunction: None,
-	related_phrases: in Rome
+	related_phrases: more than 10 pictures
 
 statement: {
-	target_phrase: to a writer,
+	target_phrase: the museum,
 	action: {
 		dep: conj,
-		is_available: False,
-		neg: None,
-		verb: {
-			aux_vbs: [has],
-			acomp: None,
-			main_vb: None,
-			modal_vb: None
-		}
-	},
-	conjunction: None,
-	related_phrases: three children
-"""
-    },
-    {
-        # [2]
-        "query": "Which female actor played in Casablanca and is married to a writer?",
-        "result": """
-statement: {
-	target_phrase: which female actor,
-	action: {
-		dep: ROOT,
 		is_available: False,
 		neg: None,
 		verb: {
 			aux_vbs: None,
 			acomp: None,
-			main_vb: played,
+			main_vb: exposed,
 			modal_vb: None
 		}
 	},
 	conjunction: None,
-	related_phrases: in Casablanca
-
-statement: {
-	target_phrase: which female actor,
-	action: {
-		dep: conj,
-		is_available: False,
-		neg: None,
-		verb: {
-			aux_vbs: [is],
-			acomp: married,
-			main_vb: None,
-			modal_vb: None
-		}
-	},
-	conjunction: None,
-	related_phrases: to a writer
+	related_phrases: one sword
 """
     },
     {
@@ -368,6 +317,27 @@ statement: {
 	},
 	conjunction: None,
 	related_phrases: the museum
+"""
+    },
+    {
+        "query": "Which painting has not been deposited in Bacau?",
+        "result": """
+statement: {
+	target_phrase: which painting,
+	action: {
+		dep: ROOT,
+		is_available: False,
+		neg: not,
+		verb: {
+			aux_vbs: [has, been],
+			acomp: None,
+			main_vb: deposited,
+			modal_vb: None
+		}
+	},
+	conjunction: None,
+	related_phrases: in Bacau
+
 """
     },
     {
@@ -624,6 +594,26 @@ statement: {
 """
     },
     {
+        "query": "What is the most beautiful museum?",
+        "result": """"
+statement: {
+	target_phrase: what,
+	action: {
+		dep: ROOT,
+		is_available: False,
+		neg: None,
+		verb: {
+			aux_vbs: [is],
+			acomp: None,
+			main_vb: None,
+			modal_vb: None
+		}
+	},
+	conjunction: None,
+	related_phrases: the most beautiful museum
+"""
+    },
+    {
         "query": "What is the name of the most beautiful museum?",
         "result": """
 statement: {
@@ -661,6 +651,42 @@ statement: {
 	},
 	conjunction: None,
 	related_phrases: the name of the largest museum
+"""
+    },
+    {
+        "query": "What is the most beautiful place and the largest cave?",
+        "result": """"
+statement: {
+	target_phrase: what,
+	action: {
+		dep: ROOT,
+		is_available: False,
+		neg: None,
+		verb: {
+			aux_vbs: [is],
+			acomp: None,
+			main_vb: None,
+			modal_vb: None
+		}
+	},
+	conjunction: None,
+	related_phrases: the most beautiful place
+
+statement: {
+	target_phrase: what,
+	action: {
+		dep: ROOT,
+		is_available: False,
+		neg: None,
+		verb: {
+			aux_vbs: [is],
+			acomp: None,
+			main_vb: None,
+			modal_vb: None
+		}
+	},
+	conjunction: and,
+	related_phrases: the largest cave
 """
     },
     {
@@ -703,43 +729,6 @@ statement: {
 	},
 	conjunction: None,
 	related_phrases: to Bacau
-"""
-    },
-    {
-        # [1]
-        "query": "Which is the state and country of the Watergate scandal?",
-        "result": """
-statement: {
-	target_phrase: which,
-	action: {
-		dep: ROOT,
-		is_available: False,
-		neg: None,
-		verb: {
-			aux_vbs: [is],
-			acomp: None,
-			main_vb: None,
-			modal_vb: None
-		}
-	},
-	conjunction: None,
-	related_phrases: the state
-
-statement: {
-	target_phrase: which,
-	action: {
-		dep: ROOT,
-		is_available: False,
-		neg: None,
-		verb: {
-			aux_vbs: [is],
-			acomp: None,
-			main_vb: None,
-			modal_vb: None
-		}
-	},
-	conjunction: and,
-	related_phrases: country of the Watergate scandal
 """
     },
     {
@@ -819,6 +808,26 @@ statement: {
 """
     },
     {
+        "query": "Which paintings do not have more than three owners?",
+        "result": """
+statement: {
+	target_phrase: which paintings,
+	action: {
+		dep: ROOT,
+		is_available: False,
+		neg: not,
+		verb: {
+			aux_vbs: [do, have],
+			acomp: None,
+			main_vb: None,
+			modal_vb: None
+		}
+	},
+	conjunction: None,
+	related_phrases: more than three owners
+"""
+    },
+    {
         "query": "Which painting, sharp swords or statues do not have more than three owners?",
         "result": """
 statement: {
@@ -868,42 +877,6 @@ statement: {
 	},
 	conjunction: or,
 	related_phrases: more than three owners
-"""
-    },
-    {
-        "query": "Which female actor played in Casablanca and has been married to a writer?",
-        "result": """
-statement: {
-	target_phrase: which female actor,
-	action: {
-		dep: ROOT,
-		is_available: False,
-		neg: None,
-		verb: {
-			aux_vbs: None,
-			acomp: None,
-			main_vb: played,
-			modal_vb: None
-		}
-	},
-	conjunction: None,
-	related_phrases: in Casablanca
-
-statement: {
-	target_phrase: which female actor,
-	action: {
-		dep: conj,
-		is_available: False,
-		neg: None,
-		verb: {
-			aux_vbs: [has, been],
-			acomp: None,
-			main_vb: married,
-			modal_vb: None
-		}
-	},
-	conjunction: None,
-	related_phrases: to a writer
 """
     },
     {
@@ -1027,64 +1000,6 @@ statement: {
 """
     },
     {
-        # [3]
-        "query": "When was anıtkabir built?",
-        "result": """
-statement: {
-	target_phrase: when,
-	action: {
-		dep: ROOT,
-		is_available: False,
-		neg: None,
-		verb: {
-			aux_vbs: [was],
-			acomp: None,
-			main_vb: built,
-			modal_vb: None
-		}
-	},
-	conjunction: None,
-	related_phrases: anıtkabir
-"""
-    },
-    {
-        # [1]
-        "query": "What is the federated state located in the Weimar Republic?",
-        "result": """
-statement: {
-	target_phrase: what,
-	action: {
-		dep: ROOT,
-		is_available: False,
-		neg: None,
-		verb: {
-			aux_vbs: [is],
-			acomp: None,
-			main_vb: None,
-			modal_vb: None
-		}
-	},
-	conjunction: None,
-	related_phrases: the federated state
-
-statement: {
-	target_phrase: the federated state,
-	action: {
-		dep: acl,
-		is_available: False,
-		neg: None,
-		verb: {
-			aux_vbs: None,
-			acomp: None,
-			main_vb: located,
-			modal_vb: None
-		}
-	},
-	conjunction: None,
-	related_phrases: in the Weimar Republic
-"""
-    },
-    {
         "query": "Where is the museum located?",
         "result": """
 statement: {
@@ -1105,11 +1020,50 @@ statement: {
 """
     },
     {
-        # [1]
-        "query": "Which is the state and country of the Watergate scandal?",
+        "query": "Where does the holder of the position of Lech Kaczynski live?",
         "result": """
 statement: {
-	target_phrase: which,
+	target_phrase: where,
+	action: {
+		dep: ROOT,
+		is_available: False,
+		neg: None,
+		verb: {
+			aux_vbs: [does],
+			acomp: None,
+			main_vb: live,
+			modal_vb: None
+		}
+	},
+	conjunction: None,
+	related_phrases: the holder of the position of Lech Kaczynski
+"""
+    },
+    {
+        "query": "Who is very beautiful?",
+        "result": """
+statement: {
+	target_phrase: who,
+	action: {
+		dep: ROOT,
+		is_available: False,
+		neg: None,
+		verb: {
+			aux_vbs: [is],
+			acomp: beautiful,
+			main_vb: None,
+			modal_vb: None
+		}
+	},
+	conjunction: None,
+	related_phrases: very beautiful
+"""
+    },
+    {
+        "query": "Who is the most beautiful?",
+        "result": """
+statement: {
+	target_phrase: who,
 	action: {
 		dep: ROOT,
 		is_available: False,
@@ -1122,10 +1076,30 @@ statement: {
 		}
 	},
 	conjunction: None,
-	related_phrases: the state
+	related_phrases: the most beautiful
+"""
+    },
+    {
+        "query": "Who is the most beautiful woman and the most generous person?",
+        "result": """
+statement: {
+	target_phrase: who,
+	action: {
+		dep: ROOT,
+		is_available: False,
+		neg: None,
+		verb: {
+			aux_vbs: [is],
+			acomp: None,
+			main_vb: None,
+			modal_vb: None
+		}
+	},
+	conjunction: None,
+	related_phrases: the most beautiful woman
 
 statement: {
-	target_phrase: which,
+	target_phrase: who,
 	action: {
 		dep: ROOT,
 		is_available: False,
@@ -1138,7 +1112,47 @@ statement: {
 		}
 	},
 	conjunction: and,
-	related_phrases: country of the Watergate scandal
+	related_phrases: the most generous person
+"""
+    },
+    {
+        "query": "Which smart kid is famous?",
+        "result": """
+statement: {
+	target_phrase: smart kid,
+	action: {
+		dep: ROOT,
+		is_available: False,
+		neg: None,
+		verb: {
+			aux_vbs: [is],
+			acomp: famous,
+			main_vb: None,
+			modal_vb: None
+		}
+	},
+	conjunction: None,
+	related_phrases: famous
+"""
+    },
+    {
+        "query": "Which of the smart kids are famous?",
+        "result": """
+statement: {
+	target_phrase: of the smart kids,
+	action: {
+		dep: ROOT,
+		is_available: False,
+		neg: None,
+		verb: {
+			aux_vbs: [are],
+			acomp: famous,
+			main_vb: None,
+			modal_vb: None
+		}
+	},
+	conjunction: None,
+	related_phrases: famous
 """
     }
 ]

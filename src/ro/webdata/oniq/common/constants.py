@@ -1,14 +1,20 @@
-class APP_MODE:
+class TEST_MODES:
+    DEFAULT = None
+    LOCAL_TEST = "local_test"
+    GLOBAL_TEST = "global_test"
+
+
+class GLOBAL_ENV:
     IS_DEBUG = True
     IS_DEBUG_EXTRA = False
-    IS_TEST_MODE = False
+    TEST_MODE = TEST_MODES.DEFAULT
 
 
 class PRINT_MODE:
     PRINT_ACTION = False
     PRINT_CONSOLIDATED_STATEMENT = False
     PRINT_STATEMENT = True
-    PRINT_TARGET = True
+    PRINT_TARGET = False
     PRINT_TOKEN = True
 
 
