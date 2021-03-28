@@ -595,7 +595,7 @@ statement: {
     },
     {
         "query": "What is the most beautiful museum?",
-        "result": """"
+        "result": """
 statement: {
 	target_phrase: what,
 	action: {
@@ -655,7 +655,7 @@ statement: {
     },
     {
         "query": "What is the most beautiful place and the largest cave?",
-        "result": """"
+        "result": """
 statement: {
 	target_phrase: what,
 	action: {
