@@ -6,7 +6,7 @@ class Adjective:
     Data structure for representing an adjective
 
     :attr sentence: The target sentence
-    :attr adj: The main adjective
+    :attr token: The token which represents the adjectival complement
     :attr prefix: The prefix of the superlative/comparative adjective
 
     E.g.:
@@ -17,15 +17,15 @@ class Adjective:
     """
 
     def __init__(self, sentence: Span, word: Token = None):
-        self.adj = _get_adj(word)
-        self.det = _get_determiner(sentence, self.adj)
-        self.prefix = _get_prefix(sentence, self.adj)
+        self.token = _get_acomp_token(word)
+        self.det = _get_determiner(sentence, self.token)
+        self.prefix = _get_prefix(sentence, self.token)
 
     def __eq__(self, other):
         if not isinstance(other, Adjective):
             return NotImplemented
         return other is not None and \
-            self.adj == other.adj and \
+            self.token == other.token and \
             self.det == other.det and \
             self.prefix == other.prefix
 
@@ -33,10 +33,10 @@ class Adjective:
         return self.get_str()
 
     def get_str(self, indentation=''):
-        adj = self.adj if self else None
+        token = self.token if self else None
         det = self.det if self else None
         prefix = self.prefix if self else None
-        full_adj = f'{prefix} {adj}' if prefix is not None else adj
+        full_adj = f'{prefix} {token}' if prefix is not None else token
         full_adj = f'{det} {full_adj}' if det is not None else full_adj
 
         return (
@@ -44,7 +44,7 @@ class Adjective:
         )
 
     def to_list(self):
-        adj_list = [self.adj, self.det, self.prefix]
+        adj_list = [self.token, self.det, self.prefix]
         return [token for token in adj_list if token is not None]
 
     @staticmethod
@@ -54,7 +54,7 @@ class Adjective:
         elif adjective.prefix is not None:
             return adjective.prefix
         else:
-            return adjective.adj
+            return adjective.token
 
     @staticmethod
     def get_first_index(adjective):
@@ -65,7 +65,7 @@ class Adjective:
             return -1
 
 
-def _get_adj(word: Token = None):
+def _get_acomp_token(word: Token = None):
     """
     Get the adjective or get the noun if the latter
     has syntactic dependency of attribute (attr)

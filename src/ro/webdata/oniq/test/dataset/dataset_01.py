@@ -4,36 +4,31 @@ pairs_01 = [
         "query": "Which is the state and country of the Watergate scandal?",
         "result": """
 statement: {
-	target_phrase: which,
+	target_chunks: [Which],
 	action: {
-		dep: ROOT,
-		is_available: False,
 		neg: None,
 		verb: {
 			aux_vbs: [is],
-			acomp: None,
 			main_vb: None,
 			modal_vb: None
-		}
+		},
+		acomp_list: []
 	},
-	conjunction: None,
-	related_phrases: the state
-
+	related_chunk: the state
+}
 statement: {
-	target_phrase: which,
+	target_chunks: [Which],
 	action: {
-		dep: ROOT,
-		is_available: False,
 		neg: None,
 		verb: {
 			aux_vbs: [is],
-			acomp: None,
 			main_vb: None,
 			modal_vb: None
-		}
+		},
+		acomp_list: []
 	},
-	conjunction: and,
-	related_phrases: country of the Watergate scandal
+	related_chunk: country of the Watergate scandal
+}
 """
     },
     {
@@ -41,36 +36,31 @@ statement: {
         "query": "What is the federated state located in the Weimar Republic?",
         "result": """
 statement: {
-	target_phrase: what,
+	target_chunks: [What],
 	action: {
-		dep: ROOT,
-		is_available: False,
 		neg: None,
 		verb: {
 			aux_vbs: [is],
-			acomp: None,
 			main_vb: None,
 			modal_vb: None
-		}
+		},
+		acomp_list: []
 	},
-	conjunction: None,
-	related_phrases: the federated state
-
+	related_chunk: the federated state
+}
 statement: {
-	target_phrase: the federated state,
+	target_chunks: [the federated state],
 	action: {
-		dep: acl,
-		is_available: False,
 		neg: None,
 		verb: {
 			aux_vbs: None,
-			acomp: None,
 			main_vb: located,
 			modal_vb: None
-		}
+		},
+		acomp_list: []
 	},
-	conjunction: None,
-	related_phrases: in the Weimar Republic
+	related_chunk: the Weimar Republic
+}
 """
     }
 ]

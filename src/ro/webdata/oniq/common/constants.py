@@ -7,12 +7,11 @@ class TEST_MODES:
 class GLOBAL_ENV:
     IS_DEBUG = True
     IS_DEBUG_EXTRA = False
-    TEST_MODE = TEST_MODES.DEFAULT
+    TEST_MODE = TEST_MODES.LOCAL_TEST
 
 
 class PRINT_MODE:
     PRINT_ACTION = False
-    PRINT_CONSOLIDATED_STATEMENT = False
     PRINT_STATEMENT = True
     PRINT_TARGET = False
     PRINT_TOKEN = True
@@ -73,6 +72,7 @@ class SEPARATOR:
 
 
 class SYSTEM_MESSAGES:
+    METHOD_IS_OBSOLETE = "The method is obsolete and should be updated!"
     METHOD_NOT_USED = "The method is not used anymore!"
 
 

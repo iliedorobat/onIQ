@@ -64,8 +64,13 @@ def is_part_of_action(word: Token, action_list: [Action]):
     """
 
     for action in action_list:
-        for token in action.verb.to_list():
-            if token.text == word.text:
+        words = action.verb.to_list()
+        if action.acomp_list is not None:
+            for acomp in action.acomp_list:
+                words.append(acomp.token)
+
+        for token in words:
+            if token == word:
                 return True
 
     return False
@@ -105,9 +110,27 @@ def is_acomp(word: Token):
     return word.pos_ == "ADJ" and word.dep_ == "acomp"
 
 
+def is_wh_adverb(word: Token):
+    """
+    Check if the input word is an adverb (tag = 'WRB'):\n
+    - when, where, why\n
+    - whence, whereby, wherein, whereupon\n
+    - how\n
+
+    Resources:\n
+    - https://grammar.collinsdictionary.com/easy-learning/wh-words\n
+    - https://www.ling.upenn.edu/hist-corpora/annotation/pos-wh.htm
+
+    :param word: The target token
+    :return: True/False
+    """
+
+    return word.tag_ == 'WRB'
+
+
 def is_wh_word(word: Token):
     """
-    Check if the token is one of the WH-words\n
+    Check if the input word is one of the WH-words\n
     - when, where, why\n
     - whence, whereby, wherein, whereupon\n
     - how\n

@@ -4,243 +4,44 @@ pairs_02 = [
         "query": "Which female actor played in Casablanca and has been married to a writer born in Rome?",
         "result": """
 statement: {
-	target_phrase: which female actor,
+	target_chunks: [Which female actor],
 	action: {
-		dep: ROOT,
-		is_available: False,
 		neg: None,
 		verb: {
 			aux_vbs: None,
-			acomp: None,
 			main_vb: played,
 			modal_vb: None
-		}
+		},
+		acomp_list: []
 	},
-	conjunction: None,
-	related_phrases: in Casablanca
-
+	related_chunk: Casablanca
+}
 statement: {
-	target_phrase: which female actor,
+	target_chunks: [Which female actor],
 	action: {
-		dep: conj,
-		is_available: False,
 		neg: None,
 		verb: {
 			aux_vbs: [has, been],
-			acomp: None,
 			main_vb: married,
 			modal_vb: None
-		}
+		},
+		acomp_list: []
 	},
-	conjunction: None,
-	related_phrases: to a writer
-
+	related_chunk: a writer
+}
 statement: {
-	target_phrase: to a writer,
+	target_chunks: [a writer],
 	action: {
-		dep: acl,
-		is_available: False,
 		neg: None,
 		verb: {
 			aux_vbs: None,
-			acomp: None,
 			main_vb: born,
 			modal_vb: None
-		}
+		},
+		acomp_list: []
 	},
-	conjunction: None,
-	related_phrases: in Rome
-"""
-    },
-    {
-        # derived from [2]
-        "query": "Which female actor played in Casablanca and is married to a writer born in Rome?",
-        "result": """
-statement: {
-	target_phrase: which female actor,
-	action: {
-		dep: ROOT,
-		is_available: False,
-		neg: None,
-		verb: {
-			aux_vbs: None,
-			acomp: None,
-			main_vb: played,
-			modal_vb: None
-		}
-	},
-	conjunction: None,
-	related_phrases: in Casablanca
-
-statement: {
-	target_phrase: which female actor,
-	action: {
-		dep: conj,
-		is_available: False,
-		neg: None,
-		verb: {
-			aux_vbs: [is],
-			acomp: married,
-			main_vb: None,
-			modal_vb: None
-		}
-	},
-	conjunction: None,
-	related_phrases: to a writer
-
-statement: {
-	target_phrase: to a writer,
-	action: {
-		dep: acl,
-		is_available: False,
-		neg: None,
-		verb: {
-			aux_vbs: None,
-			acomp: None,
-			main_vb: born,
-			modal_vb: None
-		}
-	},
-	conjunction: None,
-	related_phrases: in Rome
-"""
-    },
-    {
-        # derived from [2]
-        "query": "Which female actor played in Casablanca and has been married to a writer born in Rome and has three children?",
-        "result": """
-statement: {
-	target_phrase: which female actor,
-	action: {
-		dep: ROOT,
-		is_available: False,
-		neg: None,
-		verb: {
-			aux_vbs: None,
-			acomp: None,
-			main_vb: played,
-			modal_vb: None
-		}
-	},
-	conjunction: None,
-	related_phrases: in Casablanca
-
-statement: {
-	target_phrase: which female actor,
-	action: {
-		dep: conj,
-		is_available: False,
-		neg: None,
-		verb: {
-			aux_vbs: [has, been],
-			acomp: None,
-			main_vb: married,
-			modal_vb: None
-		}
-	},
-	conjunction: None,
-	related_phrases: to a writer
-
-statement: {
-	target_phrase: to a writer,
-	action: {
-		dep: acl,
-		is_available: False,
-		neg: None,
-		verb: {
-			aux_vbs: None,
-			acomp: None,
-			main_vb: born,
-			modal_vb: None
-		}
-	},
-	conjunction: None,
-	related_phrases: in Rome
-
-statement: {
-	target_phrase: to a writer,
-	action: {
-		dep: conj,
-		is_available: False,
-		neg: None,
-		verb: {
-			aux_vbs: [has],
-			acomp: None,
-			main_vb: None,
-			modal_vb: None
-		}
-	},
-	conjunction: None,
-	related_phrases: three children
-"""
-    },
-    {
-        # derived from [2]
-        "query": "Which female actor played in Casablanca and is married to a writer born in Rome and has three children?",
-        "result": """
-statement: {
-	target_phrase: which female actor,
-	action: {
-		dep: ROOT,
-		is_available: False,
-		neg: None,
-		verb: {
-			aux_vbs: None,
-			acomp: None,
-			main_vb: played,
-			modal_vb: None
-		}
-	},
-	conjunction: None,
-	related_phrases: in Casablanca
-
-statement: {
-	target_phrase: which female actor,
-	action: {
-		dep: conj,
-		is_available: False,
-		neg: None,
-		verb: {
-			aux_vbs: [is],
-			acomp: married,
-			main_vb: None,
-			modal_vb: None
-		}
-	},
-	conjunction: None,
-	related_phrases: to a writer
-
-statement: {
-	target_phrase: to a writer,
-	action: {
-		dep: acl,
-		is_available: False,
-		neg: None,
-		verb: {
-			aux_vbs: None,
-			acomp: None,
-			main_vb: born,
-			modal_vb: None
-		}
-	},
-	conjunction: None,
-	related_phrases: in Rome
-
-statement: {
-	target_phrase: to a writer,
-	action: {
-		dep: conj,
-		is_available: False,
-		neg: None,
-		verb: {
-			aux_vbs: [has],
-			acomp: None,
-			main_vb: None,
-			modal_vb: None
-		}
-	},
-	conjunction: None,
-	related_phrases: three children
+	related_chunk: Rome
+}
 """
     },
     {
@@ -248,36 +49,31 @@ statement: {
         "query": "Which female actor played in Casablanca and is married to a writer?",
         "result": """
 statement: {
-	target_phrase: which female actor,
+	target_chunks: [Which female actor],
 	action: {
-		dep: ROOT,
-		is_available: False,
 		neg: None,
 		verb: {
 			aux_vbs: None,
-			acomp: None,
 			main_vb: played,
 			modal_vb: None
-		}
+		},
+		acomp_list: []
 	},
-	conjunction: None,
-	related_phrases: in Casablanca
-
+	related_chunk: Casablanca
+}
 statement: {
-	target_phrase: which female actor,
+	target_chunks: [Which female actor],
 	action: {
-		dep: conj,
-		is_available: False,
 		neg: None,
 		verb: {
 			aux_vbs: [is],
-			acomp: married,
 			main_vb: None,
 			modal_vb: None
-		}
+		},
+		acomp_list: [married]
 	},
-	conjunction: None,
-	related_phrases: to a writer
+	related_chunk: a writer
+}
 """
     },
     {
@@ -285,36 +81,192 @@ statement: {
         "query": "Which female actor played in Casablanca and has been married to a writer?",
         "result": """
 statement: {
-	target_phrase: which female actor,
+	target_chunks: [Which female actor],
 	action: {
-		dep: ROOT,
-		is_available: False,
 		neg: None,
 		verb: {
 			aux_vbs: None,
-			acomp: None,
 			main_vb: played,
 			modal_vb: None
-		}
+		},
+		acomp_list: []
 	},
-	conjunction: None,
-	related_phrases: in Casablanca
-
+	related_chunk: Casablanca
+}
 statement: {
-	target_phrase: which female actor,
+	target_chunks: [Which female actor],
 	action: {
-		dep: conj,
-		is_available: False,
 		neg: None,
 		verb: {
 			aux_vbs: [has, been],
-			acomp: None,
 			main_vb: married,
 			modal_vb: None
-		}
+		},
+		acomp_list: []
 	},
-	conjunction: None,
-	related_phrases: to a writer
+	related_chunk: a writer
+}
+"""
+    },
+    {
+        # derived from [2]
+        "query": "Which female actor played in Casablanca and is married to a writer born in Rome?",
+        "result": """
+statement: {
+	target_chunks: [Which female actor],
+	action: {
+		neg: None,
+		verb: {
+			aux_vbs: None,
+			main_vb: played,
+			modal_vb: None
+		},
+		acomp_list: []
+	},
+	related_chunk: Casablanca
+}
+statement: {
+	target_chunks: [Which female actor],
+	action: {
+		neg: None,
+		verb: {
+			aux_vbs: [is],
+			main_vb: None,
+			modal_vb: None
+		},
+		acomp_list: [married]
+	},
+	related_chunk: a writer
+}
+statement: {
+	target_chunks: [a writer],
+	action: {
+		neg: None,
+		verb: {
+			aux_vbs: None,
+			main_vb: born,
+			modal_vb: None
+		},
+		acomp_list: []
+	},
+	related_chunk: Rome
+}
+"""
+    },
+    {
+        # derived from [2]
+        "query": "Which female actor played in Casablanca and has been married to a writer born in Rome and has three children?",
+        "result": """
+statement: {
+	target_chunks: [Which female actor],
+	action: {
+		neg: None,
+		verb: {
+			aux_vbs: None,
+			main_vb: played,
+			modal_vb: None
+		},
+		acomp_list: []
+	},
+	related_chunk: Casablanca
+}
+statement: {
+	target_chunks: [Which female actor],
+	action: {
+		neg: None,
+		verb: {
+			aux_vbs: [has, been],
+			main_vb: married,
+			modal_vb: None
+		},
+		acomp_list: []
+	},
+	related_chunk: a writer
+}
+statement: {
+	target_chunks: [a writer],
+	action: {
+		neg: None,
+		verb: {
+			aux_vbs: None,
+			main_vb: born,
+			modal_vb: None
+		},
+		acomp_list: []
+	},
+	related_chunk: Rome
+}
+statement: {
+	target_chunks: [Which female actor],
+	action: {
+		neg: None,
+		verb: {
+			aux_vbs: [has],
+			main_vb: None,
+			modal_vb: None
+		},
+		acomp_list: []
+	},
+	related_chunk: three children
+}
+"""
+    },
+    {
+        # derived from [2]
+        "query": "Which female actor played in Casablanca and is married to a writer born in Rome and has three children?",
+        "result": """
+statement: {
+	target_chunks: [Which female actor],
+	action: {
+		neg: None,
+		verb: {
+			aux_vbs: None,
+			main_vb: played,
+			modal_vb: None
+		},
+		acomp_list: []
+	},
+	related_chunk: Casablanca
+}
+statement: {
+	target_chunks: [Which female actor],
+	action: {
+		neg: None,
+		verb: {
+			aux_vbs: [is],
+			main_vb: None,
+			modal_vb: None
+		},
+		acomp_list: [married]
+	},
+	related_chunk: a writer
+}
+statement: {
+	target_chunks: [a writer],
+	action: {
+		neg: None,
+		verb: {
+			aux_vbs: None,
+			main_vb: born,
+			modal_vb: None
+		},
+		acomp_list: []
+	},
+	related_chunk: Rome
+}
+statement: {
+	target_chunks: [Which female actor],
+	action: {
+		neg: None,
+		verb: {
+			aux_vbs: [has],
+			main_vb: None,
+			modal_vb: None
+		},
+		acomp_list: []
+	},
+	related_chunk: three children
+}
 """
     },
     {
@@ -322,52 +274,44 @@ statement: {
         "query": "Which beautiful female is married to a writer born in Rome and has three children?",
         "result": """
 statement: {
-	target_phrase: beautiful female,
+	target_chunks: [Which beautiful female],
 	action: {
-		dep: ROOT,
-		is_available: False,
 		neg: None,
 		verb: {
 			aux_vbs: [is],
-			acomp: married,
 			main_vb: None,
 			modal_vb: None
-		}
+		},
+		acomp_list: [married]
 	},
-	conjunction: None,
-	related_phrases: to a writer
-
+	related_chunk: a writer
+}
 statement: {
-	target_phrase: to a writer,
+	target_chunks: [a writer],
 	action: {
-		dep: acl,
-		is_available: False,
 		neg: None,
 		verb: {
 			aux_vbs: None,
-			acomp: None,
 			main_vb: born,
 			modal_vb: None
-		}
+		},
+		acomp_list: []
 	},
-	conjunction: None,
-	related_phrases: in Rome
-
+	related_chunk: Rome
+}
 statement: {
-	target_phrase: to a writer,
+	target_chunks: [Which beautiful female],
 	action: {
-		dep: conj,
-		is_available: False,
 		neg: None,
 		verb: {
 			aux_vbs: [has],
-			acomp: None,
 			main_vb: None,
 			modal_vb: None
-		}
+		},
+		acomp_list: []
 	},
-	conjunction: None,
-	related_phrases: three children
+	related_chunk: three children
+}
 """
     },
     {
@@ -375,36 +319,31 @@ statement: {
         "query": "Which is the longest and shortest river that traverses Mississippi?",
         "result": """
 statement: {
-	target_phrase: which,
+	target_chunks: [Which],
 	action: {
-		dep: ROOT,
-		is_available: False,
 		neg: None,
 		verb: {
 			aux_vbs: [is],
-			acomp: None,
 			main_vb: None,
 			modal_vb: None
-		}
+		},
+		acomp_list: []
 	},
-	conjunction: None,
-	related_phrases: the longest and shortest river
-
+	related_chunk: the longest and shortest river
+}
 statement: {
-	target_phrase: the longest and shortest river,
+	target_chunks: [the longest and shortest river],
 	action: {
-		dep: relcl,
-		is_available: False,
 		neg: None,
 		verb: {
 			aux_vbs: None,
-			acomp: None,
 			main_vb: traverses,
 			modal_vb: None
-		}
+		},
+		acomp_list: []
 	},
-	conjunction: None,
-	related_phrases: Mississippi
+	related_chunk: Mississippi
+}
 """
     },
     {
@@ -412,36 +351,31 @@ statement: {
         "query": "What is the population and area of the most populated state?",
         "result": """
 statement: {
-	target_phrase: what,
+	target_chunks: [What],
 	action: {
-		dep: ROOT,
-		is_available: False,
 		neg: None,
 		verb: {
 			aux_vbs: [is],
-			acomp: None,
 			main_vb: None,
 			modal_vb: None
-		}
+		},
+		acomp_list: []
 	},
-	conjunction: None,
-	related_phrases: the population
-
+	related_chunk: the population
+}
 statement: {
-	target_phrase: what,
+	target_chunks: [What],
 	action: {
-		dep: ROOT,
-		is_available: False,
 		neg: None,
 		verb: {
 			aux_vbs: [is],
-			acomp: None,
 			main_vb: None,
 			modal_vb: None
-		}
+		},
+		acomp_list: []
 	},
-	conjunction: and,
-	related_phrases: area of the most populated state
+	related_chunk: area of the most populated state
+}
 """
     }
 ]

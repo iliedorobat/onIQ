@@ -1,4 +1,6 @@
+import numpy
 from spacy.tokens import Span, Token
+from ro.webdata.oniq.model.sentence.Adjective import Adjective
 from ro.webdata.oniq.model.sentence.Verb import Verb
 
 
@@ -6,30 +8,25 @@ class Action:
     """
     An event that links two chunks/phrases
 
-    :attr dep: The syntactic dependence
-    :attr is_available: Specifies if the event (Action) was assigned to a chunk/phrase
     :attr neg: The negation of the event
     :attr verb: An object that contains the main verb, the auxiliary verb(s) and the modal verb
-    :attr: i: The index of the first token which composes the event (Action)
+    :attr acomp: The adjectival complement
 
     E.g.:
         - query: "Which paintings do not have more than three owners?"
         - event: "do not have"
     """
 
-    def __init__(self, sentence: Span, verb: Verb = None):
-        self.dep = _get_dependency(verb)
-        self.is_available = True
+    def __init__(self, sentence: Span, verb: Verb, acomp_list: [Adjective]):
+        self.acomp_list = acomp_list
         self.neg = _get_negation(sentence, verb.aux_vbs)
         self.verb = verb
-        self.i = _get_verb_index(self.verb)
 
     def __eq__(self, other):
         if not isinstance(other, Action):
             return NotImplemented
         return other is not None and \
-            self.dep == other.dep and \
-            self.is_available == other.is_available and \
+            numpy.array_equal(self.acomp_list, other.acomp_list) and \
             self.neg == other.neg and \
             self.verb.__eq__(other.verb)
 
@@ -37,37 +34,21 @@ class Action:
         return self.get_str()
 
     def get_str(self, indentation=''):
-        dep = self.dep if self else None
-        is_available = self.is_available if self else None
+        acomp_list = []
+        if self.acomp_list is not None:
+            for adj in self.acomp_list:
+                acomp_list.append(adj.token)
         neg = self.neg if self else None
         verb = self.verb if self else None
         verb_indentation = "\t\t"
 
         return (
             f'{indentation}action: {{\n'
-            f'{indentation}\tdep: {dep},\n'
-            f'{indentation}\tis_available: {is_available},\n'
             f'{indentation}\tneg: {neg},\n'
-            f'{indentation}\tverb: {Verb.get_str(verb, verb_indentation)}\n'
+            f'{indentation}\tverb: {Verb.get_str(verb, verb_indentation)},\n'
+            f'{indentation}\tacomp_list: {acomp_list}\n'
             f'{indentation}}}'
         )
-
-
-def _get_dependency(verb):
-    """
-    Get the syntactic dependence of the main verb if it exists,
-    otherwise of the auxiliary verb
-
-    :param verb: The verb statement
-    :return: The syntactic dependency for the action
-    """
-
-    if verb.main_vb is not None:
-        return verb.main_vb.dep_
-    elif verb.aux_vbs is not None:
-        last_index = len(verb.aux_vbs) - 1
-        return verb.aux_vbs[last_index].dep_
-    return None
 
 
 def _get_negation(sentence: Span, aux_verbs: [Token]):
@@ -91,23 +72,3 @@ def _get_negation(sentence: Span, aux_verbs: [Token]):
         return next_word
 
     return None
-
-
-def _get_verb_index(verb: Verb):
-    """
-    Get the index of the first token which composes the verb
-    (which is also the first token which composes the event)
-
-    :param verb: The verb related to the event (Action)
-    :return: The index of the first token
-    """
-
-    action_verb = verb.main_vb
-
-    # E.g.: Which paintings and statues have not been deposited in Bacau?
-    if verb.aux_vbs is not None and len(verb.aux_vbs) > 0:
-        action_verb = verb.aux_vbs[0]
-    elif verb.modal_vb is not None:
-        action_verb = verb.modal_vb
-
-    return action_verb.i if action_verb is not None else -1

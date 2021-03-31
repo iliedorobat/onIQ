@@ -4,20 +4,18 @@ pairs_03 = [
         "query": "When was anıtkabir built?",
         "result": """
 statement: {
-	target_phrase: when,
+	target_chunks: [When],
 	action: {
-		dep: ROOT,
-		is_available: False,
 		neg: None,
 		verb: {
 			aux_vbs: [was],
-			acomp: None,
 			main_vb: built,
 			modal_vb: None
-		}
+		},
+		acomp_list: []
 	},
-	conjunction: None,
-	related_phrases: anıtkabir
+	related_chunk: anıtkabir
+}
 """
     },
     {
@@ -25,20 +23,18 @@ statement: {
         "query": "What is villa la reine jeanne all about?",
         "result": """
 statement: {
-	target_phrase: what,
+	target_chunks: [What],
 	action: {
-		dep: ROOT,
-		is_available: False,
 		neg: None,
 		verb: {
 			aux_vbs: [is],
-			acomp: None,
 			main_vb: None,
 			modal_vb: None
-		}
+		},
+		acomp_list: []
 	},
-	conjunction: None,
-	related_phrases: villa la reine jeanne
+	related_chunk: villa la reine jeanne
+}
 """
     }
 ]

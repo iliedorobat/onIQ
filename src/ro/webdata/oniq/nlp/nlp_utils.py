@@ -14,6 +14,22 @@ def get_cardinals(sentence: Span):
     return list([token for token in sentence if token.tag_ == "CD"])
 
 
+def get_chunk(chunk_list: [Span], word: Token):
+    """
+    Retrieve the chunk which contains the input token
+
+    :param word: The token to be searched for
+    :param chunk_list: The list of chunks (use case: "noun_chunks")
+    :return: The identified chunk which contains the input token
+    """
+
+    for chunk in chunk_list:
+        for token in chunk:
+            if word == token:
+                return chunk
+    return None
+
+
 def get_next_token(sentence: Span, word: Token, pos_list: [str]):
     """
     Get the next token which POS is not in pos_list

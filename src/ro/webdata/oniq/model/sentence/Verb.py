@@ -13,11 +13,9 @@ class Verb:
     :attr aux_vbs: The list of auxiliary verbs
     :attr main_vb: The main verb
     :attr modal_vb: The modal verb
-    :attr acomp: The adjectival complement
     """
 
-    def __init__(self, aux_vbs: [Token] = None, main_vb: Token = None, modal_vb: Token = None, acomp: Adjective = None):
-        self.acomp = acomp
+    def __init__(self, aux_vbs: [Token] = None, main_vb: Token = None, modal_vb: Token = None):
         self.aux_vbs = aux_vbs
         self.main_vb = main_vb
         self.modal_vb = modal_vb
@@ -26,7 +24,6 @@ class Verb:
         if not isinstance(other, Verb):
             return NotImplemented
         return other is not None and \
-            self.acomp == other.acomp and \
             numpy.array_equal(self.aux_vbs, other.aux_vbs) and \
             self.main_vb == other.main_vb and \
             self.modal_vb == other.modal_vb
@@ -35,7 +32,6 @@ class Verb:
         return self.get_str()
 
     def get_str(self, indentation=''):
-        acomp = self.acomp if self else None
         aux_vbs = self.aux_vbs if self else None
         main_vb = self.main_vb if self else None
         modal_vb = self.modal_vb if self else None
@@ -43,7 +39,6 @@ class Verb:
         return (
             f'{{'
             f'\n{indentation}\taux_vbs: {aux_vbs},'
-            f'\n{indentation}\tacomp: {acomp},'
             f'\n{indentation}\tmain_vb: {main_vb},'
             f'\n{indentation}\tmodal_vb: {modal_vb}'
             f'\n{indentation}}}'
@@ -61,14 +56,19 @@ class Verb:
         return False
 
     def to_list(self):
-        adj_list = self.acomp.to_list() if self.acomp is not None else [None]
-        verb_list = [self.main_vb, self.modal_vb]
+        verb_list = []
+
+        if self.main_vb is not None:
+            verb_list.append(self.main_vb)
+
+        if self.modal_vb is not None:
+            verb_list.append(self.modal_vb)
 
         if self.aux_vbs is not None:
             for aux_verb in self.aux_vbs:
                 verb_list.append(aux_verb)
 
-        return [token for token in adj_list + verb_list if token is not None]
+        return [token for token in verb_list if token is not None]
 
 
 def _get_acomp(sentence: Span, aux_verbs: [Token]):
@@ -217,13 +217,19 @@ def is_aux_preceded_by_aux(sentence: Span, verb: Token):
     :return: True/False
     """
 
-    if verb.pos_ != "AUX" or verb.i == 0:
+    if verb.pos_ not in ["AUX", "PART"] or verb.i == 0:
         return False
 
     prev_word = sentence[verb.i - 1]
 
-    if prev_word.dep_ == "neg" and verb.i > 1:
-        prev_word = sentence[verb.i - 2]
+    if verb.i > 1:
+        # 1. E.g.: "Which painting has not been deposited in Bacau?"
+        # 2. E.g.: "How many days do I have to wait?"
+        # 3. E.g.: "How many days do I have to wait?"
+        if (prev_word.pos_ == "PART" and prev_word.dep_ == "neg") or \
+                (prev_word.pos_ == "PART" and prev_word.tag_ == "TO") or \
+                (prev_word.pos_ == "PRON" and prev_word.dep_ == "nsubj"):
+            prev_word = sentence[verb.i - 2]
 
     if prev_word.pos_ == "AUX":
         return True

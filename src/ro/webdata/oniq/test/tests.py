@@ -78,5 +78,5 @@ def question_statement_test(question: str, statements: [Statement], pairs):
 def _prepare_statements_str(statements: [Statement]):
     statements_str = "\n"
     for statement in statements:
-        statements_str += statement.get_basic_str() + "\n\n"
+        statements_str += statement.get_basic_str() + "\n"
     return statements_str

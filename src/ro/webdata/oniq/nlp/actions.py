@@ -16,22 +16,14 @@ def get_action_list(sentence: Span):
             aux_verbs = verb_item
             next_verb = get_main_verb(sentence, aux_verbs[len(aux_verbs) - 1])
             adj_list = _get_adj_list(sentence, aux_verbs[len(aux_verbs) - 1])
-            acomp_list = [
-                adjective for adjective in adj_list
-                if adjective.adj.dep_ in ["acomp", "ROOT"]
-            ]
+            acomp_list = _generate_acomp_list(adj_list)
 
             # E.g.: dep_ == "acomp" => "Which female actor played in Casablanca and is married to a writer born in Rome and has three children?"
             # E.g.: dep_ == "ROOT" => "When was Bibi Andersson married to Per Ahlmark?" [1]
             if next_verb is None or len(acomp_list) > 0:
-                # Add a neutral value ("None") in order to assure the loop iteration
-                if len(acomp_list) == 0:
-                    acomp_list.append(None)
-
-                for acomp in acomp_list:
-                    verb = Verb(aux_verbs, None, modal_verb, acomp)
-                    action = Action(sentence, verb)
-                    action_list.append(action)
+                verb = Verb(aux_verbs, None, modal_verb)
+                action = Action(sentence, verb, acomp_list)
+                action_list.append(action)
 
                 aux_verbs = modal_verb = None
         elif isinstance(verb_item, Token):
@@ -39,22 +31,47 @@ def get_action_list(sentence: Span):
                 modal_verb = verb_item
             else:
                 # FIXME
-                # # E.g.: "What is the federated state located in the Weimar Republic?" [1]
                 # # E.g.: "When did Lena Horne receive the Grammy Award for Best Jazz Vocal Album?" [1]
                 # # "is" and "located" should be part of different Actions
                 # if _is_prev_wh_word(sentence, aux_verbs):
-                #     verb = Verb(aux_verbs, None, modal_verb, None)
-                #     action = Action(sentence, verb)
+                #     verb = Verb(aux_verbs, None, modal_verb)
+                #     action = Action(sentence, verb, None)
                 #     action_list.append(action)
                 #     aux_verbs = None
 
-                verb = Verb(aux_verbs, verb_item, modal_verb, None)
-                action = Action(sentence, verb)
+                # E.g.: "How long does the museum remain closed?"
+                adj_list = _get_adj_list(sentence, verb_item)
+                acomp_list = _generate_acomp_list(adj_list)
+
+                verb = Verb(aux_verbs, verb_item, modal_verb)
+                action = Action(sentence, verb, acomp_list)
                 action_list.append(action)
 
                 aux_verbs = modal_verb = None
 
     return action_list
+
+
+def _generate_acomp_list(adj_list: [Adjective]):
+    acomp_list = [
+        adjective for adjective in adj_list
+        if adjective.token.dep_ in ["acomp", "ROOT"]
+    ]
+
+    for acomp in acomp_list:
+        for conj_token in acomp.token.conjuncts:
+            adj = _get_adj(adj_list, conj_token)
+            if adj is not None and _get_adj(acomp_list, adj.token) is None:
+                acomp_list.append(adj)
+
+    return acomp_list
+
+
+def _get_adj(adj_list: [Adjective], word: Token):
+    for adj in adj_list:
+        if adj.token == word:
+            return adj
+    return None
 
 
 def _is_prev_wh_word(sentence: Span, aux_verbs: list):

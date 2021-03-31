@@ -1,53 +1,14 @@
-from spacy.tokens import Doc, Span
+from spacy.tokens import Doc, Span, Token
 from iteration_utilities import unique_everseen
 
-from ro.webdata.oniq.common.constants import PRINT_MODE
 from ro.webdata.oniq.common.print_utils import echo
 from ro.webdata.oniq.model.sentence.Action import Action
 from ro.webdata.oniq.model.sentence.Phrase import Phrase
 from ro.webdata.oniq.model.sentence.Statement import Statement
 from ro.webdata.oniq.nlp.actions import get_action_list
-from ro.webdata.oniq.nlp.nlp_utils import get_cardinals, retokenize
-from ro.webdata.oniq.nlp.phrase import prepare_phrase_list, get_related_phrase, get_related_phrases, \
-    get_related_wh_phrase, get_target_phrases, is_nsubj_wh_word
-
-
-def consolidate_statement_list(document: Doc):
-    """
-    FIXME
-    Consolidate the list of statements by grouping the statements which
-    have the same action and target_phrase into a new statement
-
-    :param document: The parsed document
-    :return: The consolidated list of statements
-    """
-
-    # statements = get_statement_list(document)
-    # prepared_list = [statements[0]] if len(statements) > 0 else []
-    #
-    # if len(statements) > 1:
-    #     aux_stmt = statements[0] if len(statements) > 0 else None
-    #
-    #     for i in range(1, len(statements)):
-    #         crr_stmt = statements[i]
-    #         prev_stmt = statements[i - 1]
-    #         is_similar_stmt = Statement.is_similar_statement(crr_stmt, prev_stmt)
-    #
-    #         if is_similar_stmt is True:
-    #             related_phrases = aux_stmt.related_phrases + crr_stmt.related_phrases
-    #             aux_stmt.related_phrases = list(unique_everseen(related_phrases))
-    #
-    #             if i == len(statements) - 1:
-    #                 prepared_list.append(aux_stmt)
-    #         elif is_similar_stmt is False:
-    #             prepared_list.append(crr_stmt)
-    #             aux_stmt = crr_stmt
-    #
-    # echo.statement_list(prepared_list, PRINT_MODE.PRINT_CONSOLIDATED_STATEMENT)
-    #
-    # return prepared_list
-
-    return []
+from ro.webdata.oniq.nlp.nlp_utils import get_cardinals, get_chunk, retokenize
+from ro.webdata.oniq.nlp.phrase import prepare_phrase_list, get_related_phrase, is_nsubj_wh_word, get_noun_chunks
+from ro.webdata.oniq.nlp.word_utils import is_verb, is_part_of_action, is_wh_adverb, is_wh_word
 
 
 def get_statement_list(document: Doc):
@@ -62,12 +23,7 @@ def get_statement_list(document: Doc):
     for sentence in document.sents:
         retokenize(document, sentence)
         action_list = get_action_list(sentence)
-        phrase_list = prepare_phrase_list(sentence)
-
-        for index, phrase in enumerate(phrase_list):
-            target_actions = _get_target_actions(sentence, phrase_list, index, action_list, statements)
-            target_statements = _get_target_statements(sentence, phrase_list, index, target_actions)
-            statements = statements + target_statements
+        statements = _generate_statement_list(sentence, action_list)
 
         echo.token_list(sentence)
         echo.action_list(action_list)
@@ -76,106 +32,137 @@ def get_statement_list(document: Doc):
     return statements
 
 
-def _get_target_actions(sentence: Span, phrase_list: [Phrase], phrase_index: int, action_list: [Action], statements: [Statement]):
-    """
-    Get the list of events (Actions) in which the target phrase is involved
-
-    :param sentence: The target sentence
-    :param phrase_list: The list of phrases
-    :param phrase_index: The index of the current phrase
-    :param action_list: The list of events (actions)
-    :param statements: The list of generated statements
-    :return: The list of target events (Actions)
-    """
-
-    target_actions = []
-    phrase = phrase_list[phrase_index]
-    first_word = phrase.content[0]
-    next_phrase = phrase_list[phrase_index + 1] \
-        if len(phrase_list) - 1 > phrase_index \
-        else None
-
-    for index, action in enumerate(action_list):
-        target_phrases = get_target_phrases(sentence, phrase_list, phrase_index)
-        last_target_phrase = target_phrases[len(target_phrases) - 1] if len(target_phrases) > 1 else None
-
-        if action.is_available is True and (last_target_phrase is None or action.i == last_target_phrase.end + 1):
-            is_first_action = index == 0
-            is_prev_action_available = action_list[index - 1].is_available
-
-            # Add the first action to the action list
-            if is_first_action is True:
-                # 1. check if the phrase is not the last
-                # 2. check if the next phrase is not a "target phrase" (the index
-                # of the first item is greater than the index of the action)
-                # E.g.: "Which is the noisiest and the largest city?"
-                if next_phrase is None or next_phrase.content.start > action.i:
-                    action.is_available = False
-                target_actions.append(action)
-            # Add the rest of actions to the action list
-            else:
-                # 1. Check if the next action is in the relation of 'conj'
-                # 2. Check if the previous action has already been assigned to a phrase
-                if action.dep == 'conj' and is_prev_action_available is False:
-                    action.is_available = False
-                    target_actions.append(action)
-
-                # 1. Check if at least one statement has already been added
-                # 2. Check if the current phrase != the phrase of the last statement
-                elif len(statements) > 0 and statements[len(statements) - 1].phrase.content != phrase.content:
-                    # 1. TODO: documentation
-                    # 2. Check if the previous action has already been assigned to a phrase
-                    # E.g.: "What is the name of the largest museum which hosts more than 10 pictures and exposed one sword?"
-                    if action.dep == "relcl" and is_prev_action_available is False:
-                        action.is_available = False
-                        target_actions.append(action)
-
-                    # Check if the current phrase is not preceded by a verb
-                    # acl => "Which female actor played in Casablanca and has been married to a writer born in Rome and has three children?"
-                    # acomp => "Which female actor played in Casablanca and is married to a writer born in Rome and has three children?"
-                    elif sentence[first_word.i - 1].dep_ in ["acl", "acomp"]:
-                        action.is_available = False
-                        target_actions.append(action)
-
-                    # Check if the current phrase is followed by an adjectival clause/complement
-                    # E.g.: "Which female actor played in Casablanca and has been married to a writer born in Rome and has three children?"
-                    elif sentence[phrase.end + 1].dep_ in ["acl", "acomp"]:
-                        action.is_available = False
-                        target_actions.append(action)
-
-                    # Check if the word before the first element of the action is a nominal subject or not
-                    # E.g.: "When did Lena Horne receive the Grammy Award for Best Jazz Vocal Album?" [1]
-                    elif sentence[action.i - 1].dep_ == "nsubj":
-                        action.is_available = False
-                        target_actions.append(action)
-
-    return target_actions
+class ss:
+    def __init__(self, text=None):
+        self.text = text
 
 
-def _get_target_statements(sentence: Span, phrase_list: [Phrase], phrase_index: int, target_actions: [Action]):
-    """
-    Get the list of statements generated around the target phrase
-
-    :param sentence: The target sentence
-    :param phrase_list: The list of phrases
-    :param phrase_index: The index of the current phrase
-    :param target_actions: The list of events in which the target phrase is involved
-    :return: The list of target statements
-    """
-
+def _generate_statement_list(sentence, action_list):
     statements = []
-    first_word = phrase_list[phrase_index].content[0]
 
-    # Create a statement for each action
-    for action_index, action in enumerate(target_actions):
-        # TODO: cardinals = get_cardinals(chunk)
+    # TODO: phrase_list = prepare_phrase_list(sentence) => instead of get_noun_chunks???
+    noun_chunks = get_noun_chunks(sentence)
 
-        related_phrases = get_related_phrases(sentence, phrase_list, phrase_index, action_index)
-        for j, related_phrase in enumerate(related_phrases):
-            if j > 0 and related_phrase.conj.token is not None:
-                related_phrase.meta_prep = statements[len(statements) - 1].related_phrase.prep or \
-                    statements[len(statements) - 1].related_phrase.meta_prep
-            statement = Statement(phrase_list, phrase_index, action, related_phrase)
+    for i, chunk in enumerate(noun_chunks):
+        action_head = _get_action_head(chunk.root)
+        action = _get_action(action_head, action_list)
+        target_chunks = _generate_target_chunks(action_head, noun_chunks)
+
+        if not _is_chunk_in_list(target_chunks, chunk):
+            statement = Statement(target_chunks, action, chunk)
             statements.append(statement)
 
+        # E.g.: "Who is very beautiful and very smart?"
+        # E.g.: "When does the museum open?"
+        # E.g.: "Which of the smart kids are famous?"
+        elif len(noun_chunks) == 1:
+            first_word = noun_chunks[0][0]
+            if not is_nsubj_wh_word(sentence, first_word) and action.acomp_list is not None:
+                for acomp in action.acomp_list:
+                    new_action = Action(sentence, action.verb, [acomp])
+                    statement = Statement(target_chunks, new_action, acomp.token)
+                    statements.append(statement)
+
     return statements
+
+
+def _get_action(action_head: Token, action_list: [Span]):
+    """
+    Retrieve the event (Action) to which the action_head belongs
+
+    :param action_head: The prepared head of the chunk (see "_get_action_head")
+    :param action_list: The list of events (Actions)
+    :return: The event (Action)
+    """
+
+    for action in action_list:
+        words = action.verb.to_list()
+        if action.acomp_list is not None:
+            for acomp in action.acomp_list:
+                words.append(acomp.token)
+
+        for word in words:
+            if action_head == word:
+                return action
+
+    return None
+
+
+def _is_chunk_in_list(chunk_list, input_chunk):
+    """
+    Determine if the input chunk exists in the provided list of chunks
+
+    :param chunk_list: The list of chunks (use case: "target_chunks")
+    :param input_chunk: The chunk to be searched for
+    :return: True/False
+    """
+
+    for chunk in chunk_list:
+        if chunk == input_chunk:
+            return True
+    return False
+
+
+def _get_left_edge(action_head):
+    left_edge = action_head.left_edge
+
+    # 1. "How many days do I have to wait until the opening?"
+    #   => action_head = "wait"
+    #   => action_head.left_edge = "to"
+    #   => action_head.left_edge.head.head = "have"
+    # 2. "How many days do I have to wait until the opening?"
+    if (left_edge.pos_ == "PART" and left_edge.tag_ == "TO" and left_edge.dep_ == "aux") or \
+            (left_edge.pos_ == "ADP" and left_edge.tag_ == "IN" and left_edge.dep_ == "mark"):
+        left_edge = left_edge.head.head
+
+    if not is_verb(left_edge):
+        return left_edge
+    else:
+        return _get_left_edge(action_head.head)
+
+
+def _generate_target_chunks(action_head: Token, chunk_list: [Span]):
+    """
+    Generate the list of target chunks
+
+    :param action_head: The prepared head of the chunk (see "_get_action_head")
+    :param chunk_list: The list of chunks (use case: "noun_chunks")
+    :return: The list of target chunks
+    """
+
+    target_chunks = []
+    left_edge = _get_left_edge(action_head)
+
+    # "What is the name of the largest museum which hosts more than 10 pictures and exposed one sword?"
+    # => "[...] which hosts [...]"
+    # => left_edge = "which"
+    # => new left_edge = "museum"
+    if is_wh_word(left_edge) and left_edge.i > 0:
+        left_edge = action_head.sent[left_edge.i - 1]
+    left_edge_chunk = get_chunk(chunk_list, left_edge)
+
+    if left_edge_chunk is not None:
+        target_chunks.append(left_edge_chunk)
+
+        for conj in left_edge_chunk.conjuncts:
+            conj_chunk = get_chunk(chunk_list, conj)
+            target_chunks.append(conj_chunk)
+
+    return target_chunks
+
+
+def _get_action_head(root: Token):
+    """
+    Retrieve the head of the root
+
+    :param root: The chunk.root
+    :return: The head of the root
+    """
+
+    head = root.head
+
+    # 2. "When does the museum open?" => "open"
+    if is_verb(head) or (head.pos_ == "ADJ" and head.dep_ == "ROOT"):
+        return head
+    else:
+        return _get_action_head(head)
