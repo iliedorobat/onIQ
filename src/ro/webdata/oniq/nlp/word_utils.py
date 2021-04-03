@@ -1,5 +1,4 @@
 from spacy.tokens import Span, Token
-from ro.webdata.oniq.model.sentence.Action import Action
 
 
 def get_preposition(sentence: Span, word: Token):
@@ -54,26 +53,36 @@ def is_conjunction(word: Token):
     return False
 
 
-def is_part_of_action(word: Token, action_list: [Action]):
+def is_noun(word: Token):
     """
-    Determine if the input word is part of an entry in the action_list
+    Determine if the input word is a noun or not
 
     :param word: The target token
-    :param action_list: The list of events (Actions)
     :return: True/False
     """
 
-    for action in action_list:
-        words = action.verb.to_list()
-        if action.acomp_list is not None:
-            for acomp in action.acomp_list:
-                words.append(acomp.token)
+    return word.pos_ in ["NOUN", "PROPN"]
 
-        for token in words:
-            if token == word:
-                return True
 
-    return False
+def is_nsubj_wh_word(sentence: Span, word: Token):
+    """
+    Check if the current word is part of a chunk which is composed by
+    only a WH-word in relation of "nsubj"
+
+    E.g.:
+        - question: "Which is the noisiest and the largest city?"
+        - chunks "Which", "the noisiest", "the largest city"
+            * the chunk "Which" is WH-word in relation of "nsubj"
+
+    :param sentence: The target sentence
+    :param word: The target token
+    :return: True/False
+    """
+
+    is_pron_chunk = word.pos_ == "PRON" and word.tag_ == "WP"
+    is_preceded_by_aux = sentence[word.i + 1].pos_ == "AUX"
+
+    return is_wh_word(word) and is_preceded_by_aux and not is_pron_chunk
 
 
 def is_preposition(word: Token):
@@ -92,8 +101,8 @@ def is_verb(word: Token):
     """
     Determine if the input word is a verb or not
 
-    :param word:
-    :return:
+    :param word: The target token
+    :return: True/False
     """
 
     return word.pos_ in ["AUX", "VERB"]

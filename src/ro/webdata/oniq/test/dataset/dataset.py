@@ -1,10 +1,10 @@
-from ro.webdata.oniq.test.dataset.dataset_00 import pairs_00
-from ro.webdata.oniq.test.dataset.dataset_01 import pairs_01
-from ro.webdata.oniq.test.dataset.dataset_02 import pairs_02
-from ro.webdata.oniq.test.dataset.dataset_03 import pairs_03
-from ro.webdata.oniq.test.dataset.dataset_04 import pairs_04
+from ro.webdata.oniq.test.dataset.dataset_00 import PAIRS_00
+from ro.webdata.oniq.test.dataset.dataset_01 import PAIRS_01
+from ro.webdata.oniq.test.dataset.dataset_02 import PAIRS_02
+from ro.webdata.oniq.test.dataset.dataset_03 import PAIRS_03
+from ro.webdata.oniq.test.dataset.dataset_04 import PAIRS_04
 
-pairs = pairs_00 + pairs_01 + pairs_02 + pairs_03 + pairs_04
+PAIRS = PAIRS_00 + PAIRS_01 + PAIRS_02 + PAIRS_03 + PAIRS_04
 
 # [1] https://raw.githubusercontent.com/smart-task/smart-dataset/master/datasets/DBpedia/smarttask_dbpedia_train.json
 #   * ISWC 2020 SMART challenge: https://smart-task.github.io/

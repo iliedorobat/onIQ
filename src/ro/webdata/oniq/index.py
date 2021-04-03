@@ -1,9 +1,11 @@
 import spacy
+from spacy import displacy
 
 from ro.webdata.oniq.common.constants import GLOBAL_ENV, TEST_MODES
 from ro.webdata.oniq.model.sparql.MetaQuery import MetaQuery
 from ro.webdata.oniq.nlp.statements import get_statement_list
-from ro.webdata.oniq.test.dataset import pairs
+from ro.webdata.oniq.test.dataset.dataset import PAIRS
+from ro.webdata.oniq.test.dataset import dataset
 from ro.webdata.oniq.test.tests import question_statement_test, question_statements_test
 
 ENDPOINT = "http://localhost:7200/repositories/TESTING_BCU_CLUJ"
@@ -19,9 +21,12 @@ if GLOBAL_ENV.TEST_MODE == TEST_MODES.DEFAULT:
 elif GLOBAL_ENV.TEST_MODE == TEST_MODES.LOCAL_TEST:
     document = nlp(QUERY)
     statements = get_statement_list(document)
-    question_statement_test(document.text, statements, pairs)
+    question_statement_test(document.text, statements, PAIRS)
+
+    # nlp_query = nlp(QUERY)
+    # displacy.serve(nlp_query, style="dep")
 else:
-    question_statements_test(nlp, pairs)
+    question_statements_test(nlp, PAIRS)
 
 
 # # https://blog.einstein.ai/how-to-talk-to-your-database/

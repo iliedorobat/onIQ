@@ -3,7 +3,7 @@ from ro.webdata.oniq.model.sentence.Action import Action
 from ro.webdata.oniq.model.sentence.Adjective import Adjective
 from ro.webdata.oniq.model.sentence.Verb import Verb, get_main_verb, is_aux_preceded_by_aux
 from ro.webdata.oniq.nlp.nlp_utils import get_next_token
-from ro.webdata.oniq.nlp.word_utils import is_verb, is_wh_word
+from ro.webdata.oniq.nlp.word_utils import is_conjunction, is_verb, is_wh_word
 
 
 def get_action_list(sentence: Span):
@@ -15,7 +15,7 @@ def get_action_list(sentence: Span):
         if isinstance(verb_item, list):
             aux_verbs = verb_item
             next_verb = get_main_verb(sentence, aux_verbs[len(aux_verbs) - 1])
-            adj_list = _get_adj_list(sentence, aux_verbs[len(aux_verbs) - 1])
+            adj_list = _get_adj_list(sentence, aux_verbs[len(aux_verbs) - 1], [])
             acomp_list = _generate_acomp_list(adj_list)
 
             # E.g.: dep_ == "acomp" => "Which female actor played in Casablanca and is married to a writer born in Rome and has three children?"
@@ -40,7 +40,7 @@ def get_action_list(sentence: Span):
                 #     aux_verbs = None
 
                 # E.g.: "How long does the museum remain closed?"
-                adj_list = _get_adj_list(sentence, verb_item)
+                adj_list = _get_adj_list(sentence, verb_item, [])
                 acomp_list = _generate_acomp_list(adj_list)
 
                 verb = Verb(aux_verbs, verb_item, modal_verb)
@@ -52,10 +52,35 @@ def get_action_list(sentence: Span):
     return action_list
 
 
+def is_part_of_action(action_list: [Action], word: Token):
+    """
+    Determine if the input word is part of an entry in the action_list
+
+    :param action_list: The list of events (Actions)
+    :param word: The target token
+    :return: True/False
+    """
+
+    for action in action_list:
+        token_list = action.verb.to_list()
+        if action.acomp_list is not None:
+            for acomp in action.acomp_list:
+                token_list.append(acomp.token)
+
+        for token in token_list:
+            if token == word:
+                return True
+
+    return False
+
+
 def _generate_acomp_list(adj_list: [Adjective]):
+    # TODO: amod: "Which woman is beautiful, generous, tall and pretty?"
+    # TODO: remove filter?
     acomp_list = [
         adjective for adjective in adj_list
-        if adjective.token.dep_ in ["acomp", "ROOT"]
+        # E.g.: "Which woman is beautiful, generous, tall and sweet?"
+        if adjective.token.dep_ in ["acomp", "conj", "intj", "ROOT"]
     ]
 
     for acomp in acomp_list:
@@ -126,7 +151,7 @@ def _get_verb_list(sentence: Span):
     return verb_list
 
 
-def _get_adj_list(sentence: Span, aux_verb: Token):
+def _get_adj_list(sentence: Span, aux_verb: Token, adj_list: [Adjective]):
     """
     Get the list of adjectives
 
@@ -136,7 +161,6 @@ def _get_adj_list(sentence: Span, aux_verb: Token):
     """
 
     next_word = get_next_token(sentence, aux_verb, ["DET", "ADV", "CCONJ", "NOUN", "PRON", "PROPN", "VERB"])
-    adj_list = []
 
     if next_word is not None:
         #                              E.g.: "is married"
@@ -151,7 +175,7 @@ def _get_adj_list(sentence: Span, aux_verb: Token):
         if next_word is not None and next_word.pos_ == "NOUN" and next_word.dep_ == "attr":
             next_word = get_next_token(sentence, next_word, ["DET", "ADV", "NOUN", "PRON", "PROPN", "VERB"])
 
-        if next_word is not None and next_word.pos_ == "CCONJ":
-            adj_list = adj_list + _get_adj_list(sentence, next_word)
+        if next_word is not None and is_conjunction(next_word):
+            return _get_adj_list(sentence, next_word, adj_list)
 
     return adj_list

@@ -5,10 +5,11 @@ from ro.webdata.oniq.common.print_utils import echo
 from ro.webdata.oniq.model.sentence.Action import Action
 from ro.webdata.oniq.model.sentence.Phrase import Phrase
 from ro.webdata.oniq.model.sentence.Statement import Statement
-from ro.webdata.oniq.nlp.actions import get_action_list
-from ro.webdata.oniq.nlp.nlp_utils import get_cardinals, get_chunk, retokenize
-from ro.webdata.oniq.nlp.phrase import prepare_phrase_list, get_related_phrase, is_nsubj_wh_word, get_noun_chunks
-from ro.webdata.oniq.nlp.word_utils import is_verb, is_part_of_action, is_wh_adverb, is_wh_word
+from ro.webdata.oniq.nlp.actions import get_action_list, is_part_of_action
+from ro.webdata.oniq.nlp.nlp_utils import get_cardinals, get_chunk, get_noun_ancestor, get_noun_chunks, \
+    get_verb_ancestor, is_wh_noun_phrase, retokenize
+from ro.webdata.oniq.nlp.phrase import prepare_phrase_list
+from ro.webdata.oniq.nlp.word_utils import is_nsubj_wh_word, is_verb
 
 
 def get_statement_list(document: Doc):
@@ -32,75 +33,107 @@ def get_statement_list(document: Doc):
     return statements
 
 
-class ss:
-    def __init__(self, text=None):
-        self.text = text
-
-
 def _generate_statement_list(sentence, action_list):
     statements = []
 
-    # TODO: phrase_list = prepare_phrase_list(sentence) => instead of get_noun_chunks???
-    noun_chunks = get_noun_chunks(sentence)
+    # TODO: phrase_list = prepare_phrase_list(sentence) => instead of get_noun_chunks ???
+    chunk_list = get_noun_chunks(sentence)
+    # Filter the chunks which are not in dependence of conjunction because they will be added
+    # to target_chunks or related_chunks through the _get_associated_chunks method
+    filtered_chunks = list(filter(lambda item: item.root.dep_ != "conj", chunk_list))
 
-    for i, chunk in enumerate(noun_chunks):
-        action_head = _get_action_head(chunk.root)
-        action = _get_action(action_head, action_list)
-        target_chunks = _generate_target_chunks(action_head, noun_chunks)
+    for chunk in filtered_chunks:
+        main_ancestor = _get_main_ancestor(chunk)
+        main_chunk = get_chunk(filtered_chunks, main_ancestor)
 
-        if not _is_chunk_in_list(target_chunks, chunk):
-            statement = Statement(target_chunks, action, chunk)
-            statements.append(statement)
+        # E.g.: "Which paintings and statues have not been deposited in Bacau?"
+        if main_chunk != chunk:
+            target_chunks = _get_associated_chunks(chunk_list, main_chunk)
+            related_chunks = _get_associated_chunks(chunk_list, chunk)
 
-        # E.g.: "Who is very beautiful and very smart?"
-        # E.g.: "When does the museum open?"
-        # E.g.: "Which of the smart kids are famous?"
-        elif len(noun_chunks) == 1:
-            first_word = noun_chunks[0][0]
+            for target_chunk in target_chunks:
+                for related_chunk in related_chunks:
+                    if target_chunk != related_chunk:
+                        verb = get_verb_ancestor(related_chunk)
+                        action = _get_action(action_list, verb)
+
+                        if action.acomp_list is not None:
+                            # FIXME: "Which is the noisiest, the most beautiful and the largest city?"
+                            print('test 1')
+                        else:
+                            print('test 2')
+
+                        statement = Statement(sentence, target_chunk, action, related_chunk)
+                        statements.append(statement)
+
+        elif len(filtered_chunks) == 1:
+            target_chunk = filtered_chunks[0]
+            verb = get_verb_ancestor(target_chunk)
+            action = _get_action(action_list, verb)
+            first_word = target_chunk[0]
+
+            # E.g.: "Which of the smart kids are famous?"
+            # E.g.: "Who is very beautiful and very smart?"
             if not is_nsubj_wh_word(sentence, first_word) and action.acomp_list is not None:
+                print('test 3')
                 for acomp in action.acomp_list:
-                    new_action = Action(sentence, action.verb, [acomp])
-                    statement = Statement(target_chunks, new_action, acomp.token)
+                    related_chunk = sentence[acomp.token.i: acomp.token.i + 1]
+                    statement = Statement(sentence, target_chunk, action, related_chunk)
                     statements.append(statement)
 
     return statements
 
 
-def _get_action(action_head: Token, action_list: [Span]):
-    """
-    Retrieve the event (Action) to which the action_head belongs
+def _get_main_ancestor(chunk: Span):
+    main_ancestor = get_noun_ancestor(chunk)
 
-    :param action_head: The prepared head of the chunk (see "_get_action_head")
+    if main_ancestor is None:
+        main_ancestor = get_verb_ancestor(chunk)
+
+        # E.g.: "When does the museum open?"
+        if main_ancestor is None:
+            main_ancestor = chunk.root.head
+        main_ancestor = _get_left_edge(main_ancestor)
+
+    return main_ancestor
+
+
+# TODO: pass the chunk => verb = get_verb_ancestor(related_chunk)
+def _get_action(action_list: [Span], word: Token):
+    """
+    Retrieve the event (Action) to which the word belongs
+
     :param action_list: The list of events (Actions)
+    :param word: The input verb
     :return: The event (Action)
     """
 
     for action in action_list:
-        words = action.verb.to_list()
-        if action.acomp_list is not None:
-            for acomp in action.acomp_list:
-                words.append(acomp.token)
-
-        for word in words:
-            if action_head == word:
+        verbs = action.verb.to_list()
+        for verb in verbs:
+            if verb == word:
                 return action
-
     return None
 
 
-def _is_chunk_in_list(chunk_list, input_chunk):
-    """
-    Determine if the input chunk exists in the provided list of chunks
+def _get_associated_chunks(chunk_list, main_chunk):
+    if main_chunk is None:
+        return []
 
-    :param chunk_list: The list of chunks (use case: "target_chunks")
-    :param input_chunk: The chunk to be searched for
-    :return: True/False
-    """
+    # TODO: "Which is the noisiest, the most beautiful and the largest city?" => the most beautiful
+    # E.g.: "Which is the noisiest and the largest city?"
+    if len(main_chunk) == 1 and is_wh_noun_phrase(main_chunk):
+        return [main_chunk]
 
-    for chunk in chunk_list:
-        if chunk == input_chunk:
-            return True
-    return False
+    target_chunk_list = []
+    conjuncts = [main_chunk.root] + list(main_chunk.conjuncts)
+
+    for token in conjuncts:
+        chunk = get_chunk(chunk_list, token)
+        if chunk is not None:
+            target_chunk_list.append(chunk)
+
+    return target_chunk_list
 
 
 def _get_left_edge(action_head):
@@ -119,50 +152,3 @@ def _get_left_edge(action_head):
         return left_edge
     else:
         return _get_left_edge(action_head.head)
-
-
-def _generate_target_chunks(action_head: Token, chunk_list: [Span]):
-    """
-    Generate the list of target chunks
-
-    :param action_head: The prepared head of the chunk (see "_get_action_head")
-    :param chunk_list: The list of chunks (use case: "noun_chunks")
-    :return: The list of target chunks
-    """
-
-    target_chunks = []
-    left_edge = _get_left_edge(action_head)
-
-    # "What is the name of the largest museum which hosts more than 10 pictures and exposed one sword?"
-    # => "[...] which hosts [...]"
-    # => left_edge = "which"
-    # => new left_edge = "museum"
-    if is_wh_word(left_edge) and left_edge.i > 0:
-        left_edge = action_head.sent[left_edge.i - 1]
-    left_edge_chunk = get_chunk(chunk_list, left_edge)
-
-    if left_edge_chunk is not None:
-        target_chunks.append(left_edge_chunk)
-
-        for conj in left_edge_chunk.conjuncts:
-            conj_chunk = get_chunk(chunk_list, conj)
-            target_chunks.append(conj_chunk)
-
-    return target_chunks
-
-
-def _get_action_head(root: Token):
-    """
-    Retrieve the head of the root
-
-    :param root: The chunk.root
-    :return: The head of the root
-    """
-
-    head = root.head
-
-    # 2. "When does the museum open?" => "open"
-    if is_verb(head) or (head.pos_ == "ADJ" and head.dep_ == "ROOT"):
-        return head
-    else:
-        return _get_action_head(head)

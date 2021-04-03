@@ -18,8 +18,8 @@ class Conjunction:
 
     def __init__(self, conj: Token = None):
         self.token = conj
-        self._meta_token = None
-        self.text = _prepare_text(conj)
+        self._meta_token = _get_meta_token(self.token)
+        self.text = _prepare_text(self.token, self.meta_token)
 
     def __eq__(self, other):
         if not isinstance(other, Conjunction):
@@ -46,21 +46,38 @@ class Conjunction:
         self.text = _prepare_text(self._meta_token)
 
 
-def _prepare_text(conj: Token):
+def _prepare_text(token: Token, meta_token: Token):
     """
     Prepare the text which will be displayed
 
-    :param conj: The target token
+    :param token: The target token
+    :param meta_token: The related conjunction
     :return: The text
     """
+
+    conj = meta_token if meta_token is not None else token
 
     if conj is None:
         return None
 
-    if conj.pos_ == "PUNCT" and conj.text == ",":
-        return CONJUNCTION_TYPE.COMMA
-    elif conj.lower_ == CONJUNCTION_TYPE.AND:
+    if conj.lower_ == CONJUNCTION_TYPE.AND:
         return CONJUNCTION_TYPE.AND
     elif conj.lower_ == CONJUNCTION_TYPE.OR:
         return CONJUNCTION_TYPE.OR
+    return None
+
+
+# TODO: documentation
+# E.g.: "Which woman is beautiful, generous, tall and sweet?"
+def _get_meta_token(word: Token):
+    if word is None or word.pos_ == "CCONJ":
+        return None
+
+    sentence = word.sent
+
+    for index in range(word.i, len(sentence)):
+        token = sentence[index]
+        if token.pos_ == "CCONJ":
+            return token
+
     return None
