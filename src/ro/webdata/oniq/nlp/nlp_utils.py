@@ -105,8 +105,14 @@ def get_chunk_index(chunk_list: [Span], chunk: Span):
     return -1
 
 
-# extract the first NOUN / PROPN from the list of ancestors
 def get_noun_ancestor(chunk: Span):
+    """
+    Extract the first NOUN / PROPN from the list of ancestors
+
+    :param chunk: The current iterated chunk
+    :return: The noun ancestor
+    """
+
     ancestors = chunk.root.ancestors
     for token in ancestors:
         if is_noun(token):
@@ -114,8 +120,14 @@ def get_noun_ancestor(chunk: Span):
     return None
 
 
-# extract the first verb from the list of ancestors
 def get_verb_ancestor(chunk: Span):
+    """
+    Extract the first verb from the list of ancestors
+
+    :param chunk: The current iterated chunk
+    :return: The verb ancestor
+    """
+
     ancestors = chunk.root.ancestors
     for token in ancestors:
         if is_verb(token):

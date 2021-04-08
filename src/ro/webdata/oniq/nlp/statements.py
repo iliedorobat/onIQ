@@ -57,11 +57,11 @@ def _generate_statement_list(sentence, action_list):
                         verb = get_verb_ancestor(related_chunk)
                         action = _get_action(action_list, verb)
 
-                        if action.acomp_list is not None:
-                            # FIXME: "Which is the noisiest, the most beautiful and the largest city?"
-                            print('test 1')
-                        else:
-                            print('test 2')
+                        # if action is not None and action.acomp_list is not None:
+                        #     # FIXME: "Which is the noisiest, the most beautiful and the largest city?"
+                        #     print('test 1')
+                        # else:
+                        #     print('test 2')
 
                         statement = Statement(sentence, target_chunk, action, related_chunk)
                         statements.append(statement)
@@ -85,6 +85,13 @@ def _generate_statement_list(sentence, action_list):
 
 
 def _get_main_ancestor(chunk: Span):
+    """
+    Extract the noun ancestor if exists, otherwise the left edge item
+
+    :param chunk: The current iterated chunk
+    :return: The main ancestor
+    """
+
     main_ancestor = get_noun_ancestor(chunk)
 
     if main_ancestor is None:
@@ -98,9 +105,9 @@ def _get_main_ancestor(chunk: Span):
     return main_ancestor
 
 
-# TODO: pass the chunk => verb = get_verb_ancestor(related_chunk)
 def _get_action(action_list: [Span], word: Token):
     """
+    TODO: pass the chunk => verb = get_verb_ancestor(related_chunk)
     Retrieve the event (Action) to which the word belongs
 
     :param action_list: The list of events (Actions)
@@ -117,6 +124,14 @@ def _get_action(action_list: [Span], word: Token):
 
 
 def _get_associated_chunks(chunk_list, main_chunk):
+    """
+    Get the list of chunks which are in relation of conjunction with the main chunk
+
+    :param chunk_list: The list of chunks in the sentence (see "get_noun_chunks")
+    :param main_chunk: The current iterated chunk
+    :return: The list of chunks which are in relation of conjunction with the main chunk
+    """
+
     if main_chunk is None:
         return []
 
@@ -137,6 +152,13 @@ def _get_associated_chunks(chunk_list, main_chunk):
 
 
 def _get_left_edge(action_head):
+    """
+    Extract the left edge item which is not a verb
+
+    :param action_head: The target head
+    :return: The left edge item which is not a verb
+    """
+
     left_edge = action_head.left_edge
 
     # 1. "How many days do I have to wait until the opening?"
