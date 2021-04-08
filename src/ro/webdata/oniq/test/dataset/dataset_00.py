@@ -937,13 +937,13 @@ statement: {
 ]
 
 WHEN_PAIRS = [
-    {
-        # FIXME:
-        "query": "When does the museum open?",
-        "result": """
-
-"""
-    }
+#     {
+#         # FIXME:
+#         "query": "When does the museum open?",
+#         "result": """
+#
+# """
+#     }
 ]
 
 WHERE_PAIRS = [
