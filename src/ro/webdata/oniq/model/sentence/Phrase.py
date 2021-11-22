@@ -1,22 +1,13 @@
 from typing import Union
 from spacy.tokens import Doc, Span, Token
 
+from ro.webdata.oniq.common.constants import QUESTION_TYPES
 from ro.webdata.oniq.model.sentence.Conjunction import Conjunction
-from ro.webdata.oniq.nlp.nlp_utils import get_chunk, get_noun_chunks
-from ro.webdata.oniq.nlp.word_utils import get_preposition, get_word_before_prep, is_conjunction, is_wh_word
-
-
-# TODO: complete the question types
-class QUESTION_TYPES:
-    HOW = "how"
-    WHAT = "what"
-    WHEN = "when"
-    WHERE = "where"
-    WHICH = "which"
-    WHO = "who"
-    WHOM = "whom"
-    WHOSE = "whose"
-    WHY = "why"
+from ro.webdata.oniq.nlp.chunk_utils import extract_comparison_adv, extract_determiner
+from ro.webdata.oniq.nlp.nlp_utils import get_noun_chunks, get_chunk_index
+from ro.webdata.oniq.nlp.utils import is_empty_list
+from ro.webdata.oniq.nlp.word_utils import get_preposition, is_adj, is_conjunction, \
+    is_followed_by_conjunction, is_preceded_by_conjunction, is_verb, is_wh_word
 
 
 class PHRASE_TYPES:
@@ -40,11 +31,15 @@ class Phrase:
     def __init__(self, sentence: Span, chunk: Span, phrase_type: str):
         self.chunk = chunk
         self.conj = _prepare_conjunction(sentence, self.chunk)
-        self.prep = get_preposition(sentence, self.chunk.root)
-        self.meta_prep = _prepare_meta_prep(sentence, self.chunk, self.prep)
+
+        self.comparison_adv = extract_comparison_adv(chunk)
+        self.det = extract_determiner(self.chunk)
+        self.prep = get_preposition(self.chunk.root)
+        self.meta_prep = _prepare_meta_prep(self.chunk, self.prep)
+
         self.phrase_type = phrase_type
         self.question_type = _prepare_question_type(sentence, self.chunk)
-        self.text = _prepare_text(self.chunk, self.prep, self.meta_prep, self.question_type)
+        self.text = _prepare_text(self.chunk,  self.comparison_adv, self.det, self.prep, self.meta_prep, self.question_type)
 
     def __eq__(self, other):
         if not isinstance(other, Phrase):
@@ -61,7 +56,10 @@ class Phrase:
         text = f'##{self.conj}## {self.text}' if self.conj else self.text
 
         return (
-            f'{indentation}{phrase_type} phrase: {text}'
+            f'{indentation}{phrase_type}: {{\n'
+            f'{indentation}\tphrase: {text}\n'
+            f'{indentation}\tquestion type: {self.question_type}\n'
+            f'{indentation}}}'
         )
 
 
@@ -74,45 +72,51 @@ def _prepare_conjunction(sentence: Union[Doc, Span], chunk: Span):
     :return: Conjunction object
     """
 
-    main_word = chunk.root
-    # TODO: remove
-    # # E.g.: "Which female actor played in Casablanca and has been married to a writer?"
-    # # conj(played, married)
-    # if main_word.dep_ == "pobj":
-    #     main_word = get_word_before_prep(sentence, chunk.root) \
+    if sentence is None or len(sentence) == 0:
+        return None
 
-    # E.g.: "Which woman is beautiful, generous, tall and sweet?"   => generous.dep_ == "intj"
-    if main_word.dep_ in ["conj", "intj"]:
-        last_index = main_word.i
+    first_word = sentence[0]
+    chunk_list = get_noun_chunks(sentence)
 
-        for i in reversed(range(0, last_index + 1)):
-            prev_index = i - 1
-            if prev_index < 0:
-                return None
+    if is_wh_word(first_word):
+        main_word = chunk.root
+        # E.g.: "Which is the noisiest and the largest city?"
+        # E.g.: "Which is the noisiest town and the largest city?"
+        if len(chunk_list) == 0:
+            if is_followed_by_conjunction(main_word):
+                for index in range(main_word.i + 1, len(sentence)):
+                    next_token = sentence[index]
+                    if is_conjunction(next_token):
+                        return Conjunction(next_token)
 
-            prev_word = sentence[prev_index]
-            # E.g.: "Which paintings, swords and statues have not been deposited in Bacau?"
-            # E.g.: "Which is the noisiest and the largest city?"
-            # E.g.: "What museums are in Bacau, Iasi or Bucharest?"
-            if is_conjunction(prev_word):
-                return Conjunction(prev_word)
+        # E.g.: "Which paintings, swords and statues have not been deposited in Bacau?"
+        # E.g.: "Which paintings, swords or statues are in Bacau?"
+        # E.g.: "What museums are in Bacau, Iasi or Bucharest?"
+        else:
+            main_word = chunk[0]
+            if is_preceded_by_conjunction(main_word):
+                for index in reversed(range(0, main_word.i)):
+                    prev_token = sentence[index]
+                    if is_verb(prev_token):
+                        return None
+                    elif is_conjunction(prev_token):
+                        return Conjunction(prev_token)
 
     return None
 
 
-def _prepare_meta_prep(sentence: Span, chunk: Span, prep: Token):
+def _prepare_meta_prep(chunk: Span, prep: Token):
     """
     Get the meta preposition for the chunk
 
-    E.g.: "What museums and swords are in Bacau or Bucharest?"
-        - phrase_list: ["what museums", "what swords", "in Bacau", "in Bucharest"]
+    E.g.: "What museums and libraries are in Bacau or Bucharest?"
+        - phrase_list: ["what museums", "what libraries", "in Bacau", "in Bucharest"]
             - statement 1: "what museums", "are", "in Bacau"
                 - "in Bacau" has its own preposition
-            - statement 2: "what swords", "are", "in Bucharest"
+            - statement 2: "what libraries", "are", "in Bucharest"
                 - "in Bucharest" doesn't have its own preposition but it
-                 has a meta preposition (the preposition of "in Bacau")
+                 takes a meta preposition (the preposition of "in Bacau")
 
-    :param sentence: The target sentence
     :param chunk: The current iterated chunk
     :param prep: The phrase's preposition (or None if not exists)
     :return: The meta preposition (or None if not exists or the phrase has its own preposition)
@@ -123,14 +127,14 @@ def _prepare_meta_prep(sentence: Span, chunk: Span, prep: Token):
         return None
 
     for token in chunk.conjuncts:
-        meta_prep = get_preposition(sentence, token)
+        meta_prep = get_preposition(token)
         if meta_prep is not None:
             return meta_prep
 
     return None
 
 
-def _prepare_text(chunk: Span, prep: Token, meta_prep: Token, question_type: QUESTION_TYPES):
+def _prepare_text(chunk: Span, comparison_adv: Token, det: Token, prep: Token, meta_prep: Token, question_type: QUESTION_TYPES):
     """
     Prepare the text which will be displayed
 
@@ -141,18 +145,34 @@ def _prepare_text(chunk: Span, prep: Token, meta_prep: Token, question_type: QUE
     :return: The text
     """
 
+    if not isinstance(chunk, Span):
+        return None
+
     text = chunk.text
 
-    if prep is not None:
-        return f'{prep} {text}'
-    if meta_prep is not None:
-        return f'{meta_prep} {text}'
+    if isinstance(comparison_adv, Token):
+        if comparison_adv.text.lower() not in text.lower():
+            text = f'{comparison_adv} {text}'
+
+    if isinstance(det, Token):
+        if det.text.lower() not in text.lower():
+            text = f'{det} {text}'
+
+    if isinstance(prep, Token):
+        if prep.text.lower() not in text.lower():
+            return f'{prep} {text}'
+
+    if isinstance(meta_prep, Token):
+        if meta_prep.text.lower() not in text.lower():
+            return f'{meta_prep} {text}'
 
     # Exclude the WH-word
     if is_wh_word(chunk[0]):
         text = chunk[chunk.start + 1: chunk.end].text
 
-    if question_type is not None:
+    if isinstance(question_type, str):
+        if question_type == QUESTION_TYPES.COUNT:
+            return f'{QUESTION_TYPES.HOW} {text}'.strip()
         return f'{question_type} {text}'.strip()
 
     return f'{text}'
@@ -166,14 +186,33 @@ def _prepare_question_type(sentence: Span, chunk: Span):
     :return: One of QUESTION_TYPES values
     """
 
+    if not isinstance(sentence, Span) or not isinstance(chunk, Span):
+        return None
+
     chunk_list = get_noun_chunks(sentence)
-    conjuncts = [chunk.root] + list(chunk.conjuncts)
+    first_word = _get_first_word(chunk_list, chunk)
 
-    for token in conjuncts:
-        chunk = get_chunk(chunk_list, token)
-        first_word = chunk[0].lower_ if chunk is not None else None
-
-        if first_word in QUESTION_TYPES.__dict__.values():
-            return first_word
+    if first_word is not None and first_word in QUESTION_TYPES.__dict__.values():
+        if first_word == QUESTION_TYPES.HOW:
+            sec_word = chunk[1] if len(chunk) > 1 else None
+            # TODO: how long, how far
+            if sec_word is not None and is_adj(sec_word):  # sec_word.dep_ == "amod"???
+                return QUESTION_TYPES.COUNT
+        return QUESTION_TYPES.__dict__[first_word.upper()]
 
     return None
+
+
+# TODO: ilie.doroabt: add the documentation
+def _get_first_word(chunk_list: [Span], chunk: Span):
+    if is_empty_list(chunk_list) or not isinstance(chunk, Span):
+        return None
+
+    if is_preceded_by_conjunction(chunk.root):
+        chunk_index = get_chunk_index(chunk_list, chunk)
+        # E.g.: "Who is very beautiful and very smart?"
+        if chunk_index == -1 or is_verb(chunk.sent[chunk_index]):
+            return None
+        return _get_first_word(chunk_list, chunk_list[chunk_index - 1])
+
+    return chunk[0].lower_

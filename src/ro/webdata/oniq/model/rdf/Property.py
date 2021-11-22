@@ -3,7 +3,7 @@ import spacy
 from ro.webdata.oniq.common.text_utils import split_camel_case_string
 from ro.webdata.oniq.common.rdf_ns_utils import NS_DC, NS_DC_TERMS, get_ns_label, get_ns_name
 
-nlp = spacy.load('../../../../lib/en_core_web_sm/en_core_web_sm-2.2.5', disable=['parser', 'ner'])
+nlp = spacy.load('en_core_web_sm', disable=['parser', 'ner'])
 
 
 PROPERTIES_TYPE = {

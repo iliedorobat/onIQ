@@ -5,8 +5,8 @@ from ro.webdata.oniq.model.sparql.Query import Query
 from ro.webdata.oniq.nlp.statements import get_statement_list
 
 
-nlp = spacy.load('../../../../lib/en_core_web_sm/en_core_web_sm-2.2.5')
-# nlp = spacy.load('../../../../lib/en_core_web_md/en_core_web_md-2.2.5')
+nlp = spacy.load('en_core_web_sm')
+# nlp = spacy.load('en_core_web_md')
 
 
 _QUERY_SKELETON = "{prefixes}" \
@@ -33,5 +33,5 @@ class MetaQuery:
         #     filter_statement=query.get_filter_block()
         # )
 
-        # nlp_query = nlp(nl_query)
+        # nlp_query = nlp(question)
         # displacy.serve(nlp_query, style="dep")

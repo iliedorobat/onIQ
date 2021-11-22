@@ -1,3 +1,4 @@
+from ro.webdata.oniq.common.constants import GLOBAL_ENV
 from ro.webdata.oniq.common.print_const import COLORS
 from ro.webdata.oniq.model.sentence.Statement import Statement
 from ro.webdata.oniq.nlp.statements import get_statement_list
@@ -52,26 +53,29 @@ def question_statement_test(question: str, statements: [Statement], pairs):
     is_equal = False
 
     for pair in pairs:
-        if question == pair["query"]:
+        if question.lower() == pair["query"].lower():
             exists = True
-            is_equal = statements_str.strip() == pair["result"].strip()
+            is_equal = statements_str.strip().lower() == pair["result"].strip().lower()
             break
 
     if exists:
         if is_equal:
-            print(f'{COLORS.LIGHT_CYAN}TEST PASSED\n'
-                  f'\tmessage: The statements have not been modified!\n'
-                  f'\tquestion: "{question}"{COLORS.RESET_ALL}')
+            if GLOBAL_ENV.IS_DEBUG:
+                print(f'{COLORS.LIGHT_CYAN}TEST PASSED\n'
+                      f'\tmessage: The statements have not been modified!\n'
+                      f'\tquestion: "{question}"{COLORS.RESET_ALL}')
             return RESULT_TYPES.PASSED
         else:
-            print(f'{COLORS.LIGHT_RED}TEST FAILED:\n'
-                  f'\tmessage: The statements have been MODIFIED!\n'
-                  f'\tquestion: "{question}"{COLORS.RESET_ALL}')
+            if GLOBAL_ENV.IS_DEBUG:
+                print(f'{COLORS.LIGHT_RED}TEST FAILED:\n'
+                      f'\tmessage: The statements have been MODIFIED!\n'
+                      f'\tquestion: "{question}"{COLORS.RESET_ALL}')
             return RESULT_TYPES.FAILED
     else:
-        print(f'{COLORS.LIGHT_YELLOW}TEST NOT COMPLETED:\n'
-              f'\tmessage: The question is not part of the current test dataset!\n'
-              f'\tquestion: "{question}"{COLORS.RESET_ALL}')
+        if GLOBAL_ENV.IS_DEBUG:
+            print(f'{COLORS.LIGHT_YELLOW}TEST NOT COMPLETED:\n'
+                  f'\tmessage: The question is not part of the current test dataset!\n'
+                  f'\tquestion: "{question}"{COLORS.RESET_ALL}')
         return RESULT_TYPES.NO_COMPLETED
 
 

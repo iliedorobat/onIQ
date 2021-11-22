@@ -1,3 +1,17 @@
+# TODO: complete the types of questions
+class QUESTION_TYPES:
+    COUNT = "count"  # how many, how much, how often
+    HOW = "how"
+    WHAT = "what"
+    WHEN = "when"
+    WHERE = "where"
+    WHICH = "which"
+    WHO = "who"
+    WHOM = "whom"
+    WHOSE = "whose"
+    WHY = "why"
+
+
 class TEST_MODES:
     DEFAULT = None
     LOCAL_TEST = "local_test"
@@ -7,13 +21,13 @@ class TEST_MODES:
 class GLOBAL_ENV:
     IS_DEBUG = True
     IS_DEBUG_EXTRA = False
-    TEST_MODE = TEST_MODES.LOCAL_TEST
+    TEST_MODE = TEST_MODES.GLOBAL_TEST
 
 
 class PRINT_MODE:
     PRINT_ACTION = False
     PRINT_STATEMENT = True
-    PRINT_TARGET = False
+    PRINT_TARGET = True
     PRINT_TOKEN = True
 
 
@@ -73,7 +87,9 @@ class SEPARATOR:
 
 class SYSTEM_MESSAGES:
     METHOD_IS_OBSOLETE = "The method is obsolete and should be updated!"
+    METHOD_NOT_TESTED = "The method has not been tested!"
     METHOD_NOT_USED = "The method is not used anymore!"
+    METHOD_USED_WITH_SPACY_2 = "The method is intended to be used with Spacy v2"
 
 
 # TODO: complete the map

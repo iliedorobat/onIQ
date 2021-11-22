@@ -4,6 +4,8 @@ from spacy.tokens import Span, Token
 from ro.webdata.oniq.common.constants import SYSTEM_MESSAGES
 from ro.webdata.oniq.model.sentence.Adjective import Adjective
 from ro.webdata.oniq.nlp.nlp_utils import get_next_token, get_wh_words
+from ro.webdata.oniq.nlp.utils import is_empty_list
+from ro.webdata.oniq.nlp.word_utils import get_prev_word
 
 
 class Verb:
@@ -71,101 +73,7 @@ class Verb:
         return [token for token in verb_list if token is not None]
 
 
-def _get_acomp(sentence: Span, aux_verbs: [Token]):
-    """
-    Get the adjective if has syntactic dependency of adjectival complement (acomp)
-
-    E.g.:
-        - question: "[...] the most beautiful [...]" =>
-        - adj: "beautiful"
-
-    :param sentence: The target sentence
-    :param aux_verbs: The list of auxiliary verbs
-    :return: The adjectival complement
-    """
-
-    warnings.warn(SYSTEM_MESSAGES.METHOD_NOT_USED, DeprecationWarning)
-
-    if aux_verbs is None:
-        return None
-
-    verb = aux_verbs[len(aux_verbs) - 1]
-    next_index = verb.i + 1
-
-    adj_determiner = _get_adj_determiner(sentence, verb)
-    if adj_determiner is not None:
-        next_index = next_index + 1
-
-    adj_prefix = _get_adj_prefix(sentence, verb)
-    if adj_prefix is not None:
-        next_index = next_index + 1
-
-    if next_index >= len(sentence):
-        return None
-
-    return Adjective(sentence, sentence[next_index])
-
-
-def _get_adj_determiner(sentence: Span, verb: Token):
-    """
-    Get the determiner placed before the adjective
-
-    E.g.:
-        - question: "[...] the most beautiful [...]" =>
-        - determiner: "the"
-
-    :param sentence: The target sentence
-    :param verb: The last auxiliary verb
-    :return: The determiner (E.g.: "the")
-    """
-
-    warnings.warn(SYSTEM_MESSAGES.METHOD_NOT_USED, DeprecationWarning)
-
-    if verb is None:
-        return None
-
-    next_index = verb.i + 1
-    if next_index >= len(sentence):
-        return None
-
-    next_word = sentence[next_index]
-    if next_word.pos_ == "DET" and next_word.tag_ == "DT":
-        return next_word
-
-    return None
-
-
-def _get_adj_prefix(sentence: Span, verb: Token):
-    """
-    Get the superlative/comparative adjective prefix
-
-    E.g.:
-        - question: "[...] the most beautiful [...]" =>
-        - prefix: "most"
-
-    :param sentence: The target sentence
-    :param verb: The last auxiliary verb
-    :return: The superlative/comparative adjective prefix (E.g.: "most")
-    """
-
-    warnings.warn(SYSTEM_MESSAGES.METHOD_NOT_USED, DeprecationWarning)
-
-    if verb is None:
-        return None
-
-    determiner = _get_adj_determiner(sentence, verb)
-    next_index = verb.i + 1 if determiner is None else verb.i + 2
-    if next_index >= len(sentence):
-        return None
-
-    next_word = sentence[next_index]
-    if next_word.pos_ == "ADV" and next_word.tag_ in ["RBR", "RBS"]:
-        return next_word
-
-    return None
-
-
-def get_main_verb(sentence: Span, aux_verb: Token):
+def get_main_verb(aux_verb: Token):
     """
     Get the main verb
 
@@ -179,22 +87,20 @@ def get_main_verb(sentence: Span, aux_verb: Token):
         - question: "where does the holder of the position of Lech Kaczynski live?" [1]
             * the verb chain: "does live" => return "live"
 
-    :param sentence: The target sentence
     :param aux_verb: The auxiliary verb
     :return: The main verb or None
     """
 
     # E.g.: "What is the federated state located in the Weimar Republic?" [1]
     if aux_verb.head == aux_verb:
-        prev_index = aux_verb.i - 1
-        prev_word = sentence[prev_index] if prev_index > -1 else None
+        prev_word = get_prev_word(aux_verb)
 
         # E.g.: "Where are the coins and swords located?"
         # E.g.: "When was anıtkabir built?" [3]
         if prev_word is not None and prev_word.lower_ not in ["when", "where"]:
             return None
 
-    next_word = get_next_token(sentence, aux_verb, ["DET", "ADV", "ADJ", "ADP", "CCONJ", "NOUN", "PRON", "PROPN"])
+    next_word = get_next_token(aux_verb, ["DET", "ADV", "ADJ", "ADP", "CCONJ", "NOUN", "PRON", "PROPN"])
 
     # E.g.: "Who is the director who own 2 cars and sold a house or a panel?"
     if next_word is not None and next_word.pos_ == "VERB":
@@ -217,7 +123,10 @@ def is_aux_preceded_by_aux(sentence: Span, verb: Token):
     :return: True/False
     """
 
-    if verb.pos_ not in ["AUX", "PART"] or verb.i == 0:
+    if not isinstance(sentence, Span) \
+            or not isinstance(verb, Token) \
+            or verb.pos_ not in ["AUX", "PART"] \
+            or verb.i == 0:
         return False
 
     prev_word = sentence[verb.i - 1]

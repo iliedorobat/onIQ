@@ -1,40 +1,66 @@
 from spacy.tokens import Span, Token
+import warnings
 
 
-def get_preposition(sentence: Span, word: Token):
+def get_preposition(word: Token):
     """
     Extract the preposition of a word
 
-    :param sentence: The target sentence
     :param word: The target token
-    :return: The preposition
+    :return: The preposition that precedes the token
     """
 
-    last_index = word.i
+    if not isinstance(word, Token):
+        return None
 
-    for i in reversed(range(0, last_index)):
-        crr_word = sentence[i]
-        if is_preposition(crr_word):
-            return crr_word
-        elif is_verb(crr_word):
-            return None
+    for index, token in list(reversed(list(enumerate(word.sent)))):
+        if index < word.i:
+            if is_preposition(token):
+                return token
+            elif is_verb(token):
+                return None
 
     return None
 
 
-def get_word_before_prep(sentence: Span, word: Token):
+# TODO: ilie.dorobat: to be used in other places as well (next_word)
+def get_next_word(word: Token):
     """
-    Extract the token before the preposition of a word
+    Get the token after the input word
 
-    :param sentence: The target sentence
-    :param word: The target token
-    :return: The token before the preposition of a word
+    :param word: The target word
+    :return: The token after the input word
     """
 
-    prep = get_preposition(sentence, word)
-    if prep.i == 0:
+    if not isinstance(word, Token):
         return None
-    return sentence[prep.i - 1]
+
+    next_index = word.i + 1
+
+    if next_index == len(word.sent):
+        return None
+
+    return word.sent[next_index]
+
+
+# TODO: ilie.dorobat: to be used in other places as well (prev_word)
+def get_prev_word(word: Token):
+    """
+    Get the token before the input word
+
+    :param word: The target word
+    :return: The token before the input word
+    """
+
+    if not isinstance(word, Token):
+        return None
+
+    prev_index = word.i - 1
+
+    if prev_index < 0:
+        return None
+
+    return word.sent[prev_index]
 
 
 def is_conjunction(word: Token):
@@ -45,6 +71,9 @@ def is_conjunction(word: Token):
     :param word: The target token
     :return: True/False
     """
+
+    if not isinstance(word, Token):
+        return False
 
     if word.pos_ == "CCONJ":
         return True
@@ -61,7 +90,76 @@ def is_noun(word: Token):
     :return: True/False
     """
 
+    if not isinstance(word, Token):
+        return False
+
     return word.pos_ in ["NOUN", "PROPN"]
+
+
+def is_linked_by_conjunction(word: Token):
+    """
+    Determine if the input word is preceded or followed by a conjunction
+
+    :param word: The target word
+    :return: True/False
+    """
+
+    if not isinstance(word, Token):
+        return False
+
+    if is_conjunction(word):
+        return True
+
+    prev_word = get_prev_word(word)
+    next_word = get_next_word(word)
+
+    return is_preceded_by_conjunction(prev_word) or is_followed_by_conjunction(next_word)
+
+
+def is_preceded_by_conjunction(word: Token):
+    """
+    Determine if the input word is preceded by a conjunction
+
+    :param word: The target word
+    :return: True/False
+    """
+
+    if not isinstance(word, Token):
+        return False
+
+    # 1. if the iterator has reached to the beginning of the phrase
+    # 2. if the iterator has reached the previous phrase
+    if is_verb(word):
+        return False
+
+    if is_conjunction(word):
+        return True
+
+    prev_word = get_prev_word(word)
+    return is_preceded_by_conjunction(prev_word)
+
+
+def is_followed_by_conjunction(word: Token):
+    """
+    Determine if the input word is followed by a conjunction
+
+    :param word: The target word
+    :return: True/False
+    """
+
+    if not isinstance(word, Token):
+        return False
+
+    # 1. if the iterator has reached to the end of the phrase
+    # 2. if the iterator has reached the next phrase
+    if is_verb(word):
+        return False
+
+    if is_conjunction(word):
+        return True
+
+    next_word = get_next_word(word)
+    return is_followed_by_conjunction(next_word)
 
 
 def is_nsubj_wh_word(sentence: Span, word: Token):
@@ -79,6 +177,11 @@ def is_nsubj_wh_word(sentence: Span, word: Token):
     :return: True/False
     """
 
+    if not isinstance(word, Token) or not isinstance(sentence, Span):
+        return False
+
+    warnings.warn("deprecated in favour of is_wh_noun_chunk", DeprecationWarning)
+
     is_pron_chunk = word.pos_ == "PRON" and word.tag_ == "WP"
     is_preceded_by_aux = sentence[word.i + 1].pos_ == "AUX"
 
@@ -93,6 +196,9 @@ def is_preposition(word: Token):
     :return: True/False
     """
 
+    if not isinstance(word, Token):
+        return False
+
     # old: and word.dep_ in ["conj", "prep"]
     return word.pos_ == "ADP" and word.tag_ == "IN"
 
@@ -105,10 +211,41 @@ def is_verb(word: Token):
     :return: True/False
     """
 
+    if not isinstance(word, Token):
+        return False
+
     return word.pos_ in ["AUX", "VERB"]
 
 
-def is_acomp(word: Token):
+def is_adj(word: Token):
+    """
+    Determine if the input word is an adjective
+
+    :param word: The target token
+    :return: True/False
+    """
+
+    if not isinstance(word, Token):
+        return False
+
+    return word.pos_ == "ADJ"
+
+
+def is_adj_comparative(word: Token):
+    """
+    Determine if the input word is a comparative adjective
+
+    :param word: The target token
+    :return: True/False
+    """
+
+    if not isinstance(word, Token):
+        return False
+
+    return is_adj(word) and word.tag_ == "JJR"
+
+
+def is_adj_complement(word: Token):
     """
     Determine if the input word is an adjectival complement
 
@@ -116,7 +253,54 @@ def is_acomp(word: Token):
     :return: True/False
     """
 
-    return word.pos_ == "ADJ" and word.dep_ == "acomp"
+    if not isinstance(word, Token):
+        return False
+
+    return is_adj(word) and word.dep_ == "acomp"
+
+
+def is_adj_modifier(word: Token):
+    """
+    Determine if the input word is an adjectival modifier
+
+    :param word: The target token
+    :return: True/False
+    """
+
+    if not isinstance(word, Token):
+        return False
+
+    return is_adj(word) and word.dep_ == "amod"
+
+
+def is_adv(word: Token):
+    """
+    Determine if the input word is an adverb
+
+    :param word: The target token
+    :return: True/False
+    """
+
+    if not isinstance(word, Token):
+        return False
+
+    return word.pos_ == "ADV"
+
+
+def is_common_det(word: Token):
+    """
+    Determine if the input word is a common determiner ("a", "the")
+
+    :param word: The target token
+    :return: True/False
+    """
+
+    if not isinstance(word, Token):
+        return False
+
+    return word.pos_ == "DET" \
+        and word.tag_ == "DT" \
+        and word.dep_ == "det"
 
 
 def is_wh_adverb(word: Token):
@@ -133,6 +317,9 @@ def is_wh_adverb(word: Token):
     :param word: The target token
     :return: True/False
     """
+
+    if not isinstance(word, Token):
+        return False
 
     return word.tag_ == 'WRB'
 
@@ -153,5 +340,8 @@ def is_wh_word(word: Token):
     :param word: The target token
     :return: True/False
     """
+
+    if not isinstance(word, Token):
+        return False
 
     return word.tag_ in ['WDT', 'WP', 'WP$', 'WRB']

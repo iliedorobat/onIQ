@@ -64,3 +64,10 @@ class Statement:
             f'{indentation}}}'
             f'{COLORS.RESET_ALL}'
         )
+
+
+class ConsolidatedStatement:
+    def __init__(self, stmt: Statement):
+        self.action = stmt.action
+        self.phrase = stmt.phrase
+        self.related_phrases = [stmt.related_phrase]

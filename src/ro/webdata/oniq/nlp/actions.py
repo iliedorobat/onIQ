@@ -3,18 +3,25 @@ from ro.webdata.oniq.model.sentence.Action import Action
 from ro.webdata.oniq.model.sentence.Adjective import Adjective
 from ro.webdata.oniq.model.sentence.Verb import Verb, get_main_verb, is_aux_preceded_by_aux
 from ro.webdata.oniq.nlp.nlp_utils import get_next_token
-from ro.webdata.oniq.nlp.word_utils import is_conjunction, is_verb, is_wh_word
+from ro.webdata.oniq.nlp.utils import is_empty_list
+from ro.webdata.oniq.nlp.word_utils import is_adj, is_conjunction, is_verb, is_wh_word
 
 
+# TODO: ilie.dorobat: "Where can one find farhad and shirin monument?" => check the action list
+# TODO: ilie.dorobat: add the documentation
 def get_action_list(sentence: Span):
     action_list = []
+
+    if not isinstance(sentence, Span):
+        return action_list
+
     aux_verbs = modal_verb = None
     verb_list = _get_verb_list(sentence)
 
     for verb_item in verb_list:
         if isinstance(verb_item, list):
             aux_verbs = verb_item
-            next_verb = get_main_verb(sentence, aux_verbs[len(aux_verbs) - 1])
+            next_verb = get_main_verb(aux_verbs[len(aux_verbs) - 1])
             adj_list = _get_adj_list(sentence, aux_verbs[len(aux_verbs) - 1], [])
             acomp_list = _generate_acomp_list(adj_list)
 
@@ -61,6 +68,9 @@ def is_part_of_action(action_list: [Action], word: Token):
     :return: True/False
     """
 
+    if is_empty_list(action_list) or not isinstance(word, Token):
+        return False
+
     for action in action_list:
         token_list = action.verb.to_list()
         if action.acomp_list is not None:
@@ -74,7 +84,11 @@ def is_part_of_action(action_list: [Action], word: Token):
     return False
 
 
+# TODO: ilie.dorobat: add the documentation
 def _generate_acomp_list(adj_list: [Adjective]):
+    if is_empty_list(adj_list):
+        return []
+
     # TODO: amod: "Which woman is beautiful, generous, tall and pretty?"
     # TODO: remove filter?
     acomp_list = [
@@ -92,10 +106,15 @@ def _generate_acomp_list(adj_list: [Adjective]):
     return acomp_list
 
 
+# TODO: ilie.dorobat: add the documentation
 def _get_adj(adj_list: [Adjective], word: Token):
+    if is_empty_list(adj_list) or not isinstance(word, Token):
+        return None
+
     for adj in adj_list:
         if adj.token == word:
             return adj
+
     return None
 
 
@@ -108,7 +127,7 @@ def _is_prev_wh_word(sentence: Span, aux_verbs: list):
     :return: True/False
     """
 
-    if aux_verbs is None or len(aux_verbs) == 0:
+    if is_empty_list(aux_verbs) or not isinstance(sentence, Span):
         return False
 
     first_index = aux_verbs[0].i
@@ -135,6 +154,9 @@ def _get_verb_list(sentence: Span):
 
     verb_list = []
 
+    if not isinstance(sentence, Span):
+        return verb_list
+
     for token in sentence:
         verb = token if is_verb(token) else None
 
@@ -160,20 +182,24 @@ def _get_adj_list(sentence: Span, aux_verb: Token, adj_list: [Adjective]):
     :return: The list of adjectives
     """
 
-    next_word = get_next_token(sentence, aux_verb, ["DET", "ADV", "CCONJ", "NOUN", "PRON", "PROPN", "VERB"])
+    if not isinstance(adj_list, list) \
+            or not isinstance(sentence, Span) \
+            or not isinstance(aux_verb, Token):
+        return []
+
+    next_word = get_next_token(aux_verb, ["DET", "ADV", "CCONJ", "NOUN", "PRON", "PROPN", "VERB"])
 
     if next_word is not None:
-        #                              E.g.: "is married"
-        if next_word.pos_ == "ADJ" or (next_word.pos_ == "NOUN" and next_word.dep_ == "attr"):
-            adj = Adjective(sentence, next_word)
+        if is_adj(next_word):
+            adj = Adjective(next_word)
             adj_list.append(adj)
 
         # Example of question which has two adjectives => "Which is the noisiest and the largest city?"
-        next_word = get_next_token(sentence, next_word, ["DET", "ADV", "NOUN", "PRON", "PROPN", "VERB"])
+        next_word = get_next_token(next_word, ["DET", "ADV", "NOUN", "PRON", "PROPN", "VERB"])
 
         # E.g.: "Who is the most beautiful woman and the most generous person?"
         if next_word is not None and next_word.pos_ == "NOUN" and next_word.dep_ == "attr":
-            next_word = get_next_token(sentence, next_word, ["DET", "ADV", "NOUN", "PRON", "PROPN", "VERB"])
+            next_word = get_next_token(next_word, ["DET", "ADV", "NOUN", "PRON", "PROPN", "VERB"])
 
         if next_word is not None and is_conjunction(next_word):
             return _get_adj_list(sentence, next_word, adj_list)

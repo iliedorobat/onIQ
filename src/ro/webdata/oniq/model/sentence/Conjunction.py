@@ -1,4 +1,3 @@
-from typing import Union
 from spacy.tokens import Token
 
 
@@ -12,8 +11,7 @@ class Conjunction:
     """
     The conjunction ("and", "or", ",")
 
-    :attr conj: The target token
-    :attr default: A default value that will be used if the conjunction == ","
+    :attr token: The target token
     """
 
     def __init__(self, conj: Token = None):
@@ -43,7 +41,7 @@ class Conjunction:
     @meta_token.setter
     def meta_token(self, value):
         self._meta_token = value
-        self.text = _prepare_text(self._meta_token)
+        self.text = _prepare_text(self.token, self._meta_token)
 
 
 def _prepare_text(token: Token, meta_token: Token):
@@ -57,20 +55,21 @@ def _prepare_text(token: Token, meta_token: Token):
 
     conj = meta_token if meta_token is not None else token
 
-    if conj is None:
+    if not isinstance(conj, Token):
         return None
 
     if conj.lower_ == CONJUNCTION_TYPE.AND:
         return CONJUNCTION_TYPE.AND
     elif conj.lower_ == CONJUNCTION_TYPE.OR:
         return CONJUNCTION_TYPE.OR
+
     return None
 
 
-# TODO: documentation
-# E.g.: "Which woman is beautiful, generous, tall and sweet?"
+# TODO: ilie.doroabt: add the documentation
+# E.g.: "Which woman is beautiful, generous, tall and rich?"
 def _get_meta_token(word: Token):
-    if word is None or word.pos_ == "CCONJ":
+    if not isinstance(word, Token) or word.pos_ == "CCONJ":
         return None
 
     sentence = word.sent

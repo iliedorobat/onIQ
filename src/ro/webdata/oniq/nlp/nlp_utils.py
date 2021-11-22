@@ -1,21 +1,15 @@
 import warnings
 from typing import Union
 from spacy.tokens import Doc, Span, Token
+
 from ro.webdata.oniq.common.constants import SYSTEM_MESSAGES
-from ro.webdata.oniq.nlp.word_utils import is_noun, is_nsubj_wh_word, is_verb, is_wh_word
+from ro.webdata.oniq.common.print_const import COLORS
+from ro.webdata.oniq.common.text_utils import MONTHS, array_exists_in_text, remove_determiner
+from ro.webdata.oniq.nlp.utils import is_doc_or_span, is_empty_list
+from ro.webdata.oniq.nlp.word_utils import get_prev_word, is_nsubj_wh_word, is_wh_word
 
 
-def get_cardinals(sentence: Span):
-    """
-    Get the list of cardinals in a chunk
-
-    :param sentence: The target sentence
-    :return: The list of cardinals
-    """
-    return list([token for token in sentence if token.tag_ == "CD"])
-
-
-def get_chunk(chunk_list: [Span], word: Token):
+def extract_chunk(chunk_list: [Span], word: Token):
     """
     Retrieve the chunk which contains the input token
 
@@ -23,6 +17,9 @@ def get_chunk(chunk_list: [Span], word: Token):
     :param chunk_list: The list of chunks (use case: "noun_chunks")
     :return: The identified chunk which contains the input token
     """
+
+    if is_empty_list(chunk_list) or not isinstance(word, Token):
+        return None
 
     # E.g.: "Where was the last place the picture was exposed?"
     if word.i == 0:
@@ -32,7 +29,24 @@ def get_chunk(chunk_list: [Span], word: Token):
         for token in chunk:
             if word == token:
                 return chunk
+
     return None
+
+
+def get_cardinals(sentence: Span):
+    """
+    Get the list of cardinals in a chunk
+
+    :param sentence: The target sentence
+    :return: The list of cardinals
+    """
+
+    warnings.warn(SYSTEM_MESSAGES.METHOD_NOT_USED, DeprecationWarning)
+
+    if not isinstance(sentence, Span):
+        return []
+
+    return list([token for token in sentence if token.tag_ == "CD"])
 
 
 def get_noun_chunks(sentence: Union[Doc, Span]):
@@ -47,9 +61,31 @@ def get_noun_chunks(sentence: Union[Doc, Span]):
     :return: The list of chunks
     """
 
-    chunk_list = list(sentence.noun_chunks)
+    if not is_doc_or_span(sentence):
+        return []
+
+    old_chunk_list = list(sentence.noun_chunks)
     first_chunk = sentence[0:1] if len(sentence) > 0 else None
     first_word = first_chunk[0] if len(first_chunk) > 0 else None
+
+    ############################ TODO: move to a function && test the changes
+    chunk_list = [old_chunk_list[0]] if len(old_chunk_list) == 1 else []
+    for index, chunk in enumerate(old_chunk_list):
+        if chunk.end < len(chunk.sent):
+            next_char = sentence[chunk.end]
+
+            if index < len(old_chunk_list) - 1:
+                if index == 0:
+                    chunk_list.append(chunk)
+                next_chunk = old_chunk_list[index + 1]
+
+                if next_char.lower_ == "of":
+                    crr_chunk = chunk_list[len(chunk_list) - 1]
+                    chunk_list[len(chunk_list) - 1] = sentence[crr_chunk.start: next_chunk.end]
+                    continue
+                else:
+                    chunk_list.append(next_chunk)
+    ############################
 
     # include the "which" chunk to the noun chunks list
     # E.g.: "Which is the noisiest and the largest city?"
@@ -80,6 +116,9 @@ def _filter_chunk_list(sentence: Union[Doc, Span], chunk_list: [Span]):
 
     filtered_list = []
 
+    if not is_doc_or_span(sentence) or is_empty_list(chunk_list):
+        return filtered_list
+
     for index, chunk in enumerate(chunk_list):
         if len(chunk) == 1:
             if index == 0 or chunk[0] not in get_wh_words(sentence):
@@ -92,59 +131,36 @@ def _filter_chunk_list(sentence: Union[Doc, Span], chunk_list: [Span]):
 
 def get_chunk_index(chunk_list: [Span], chunk: Span):
     """
-    Retrieve the chunk's index from chunk_list
+    Retrieve the chunk's position in chunk_list
 
     :param chunk_list: The list of chunks (use case: "noun_chunks")
     :param chunk: The target chunk
     :return: The index of the target chunk
     """
 
+    if is_empty_list(chunk_list) or not isinstance(chunk, Span):
+        return -1
+
     for index, item in enumerate(chunk_list):
         if item == chunk:
             return index
+
     return -1
 
 
-def get_noun_ancestor(chunk: Span):
-    """
-    Extract the first NOUN / PROPN from the list of ancestors
-
-    :param chunk: The current iterated chunk
-    :return: The noun ancestor
-    """
-
-    ancestors = chunk.root.ancestors
-    for token in ancestors:
-        if is_noun(token):
-            return token
-    return None
-
-
-def get_verb_ancestor(chunk: Span):
-    """
-    Extract the first verb from the list of ancestors
-
-    :param chunk: The current iterated chunk
-    :return: The verb ancestor
-    """
-
-    ancestors = chunk.root.ancestors
-    for token in ancestors:
-        if is_verb(token):
-            return token
-    return None
-
-
-def get_next_token(sentence: Span, word: Token, pos_list: [str]):
+def get_next_token(word: Token, pos_list: [str]):
     """
     Get the next token which POS is not in pos_list
 
-    :param sentence: The target sentence
     :param word: The target token
     :param pos_list: The list of POS for which the iteration is allowed
     :return: The token after the target token which POS not in pos_list
     """
 
+    if not isinstance(word, Token) or not isinstance(pos_list, list):
+        return None
+
+    sentence = word.sent
     last_index = len(sentence) - 1
     next_index = word.i + 1
 
@@ -172,9 +188,13 @@ def get_next_token(sentence: Span, word: Token, pos_list: [str]):
 def get_prev_chunk(chunks: [Span], chunk: Span):
     warnings.warn(SYSTEM_MESSAGES.METHOD_NOT_USED, DeprecationWarning)
 
+    if is_empty_list(chunks) or not isinstance(chunk, Span):
+        return None
+
     chunk_index = chunks.index(chunk)
     if chunk_index > 0:
         return chunks[chunk_index - 1]
+
     return None
 
 
@@ -192,6 +212,10 @@ def get_wh_adverbs(document: Union[Doc, Span]):
     :param document: The parsed document
     :return: The list of WH-adverbs
     """
+
+    if not is_doc_or_span(document):
+        return []
+
     return list([token for token in document if token.tag_ == 'WRB'])
 
 
@@ -207,6 +231,10 @@ def get_wh_determiner(document: Union[Doc, Span]):
     :param document: The parsed document
     :return: The list of WH-determiners
     """
+
+    if not is_doc_or_span(document):
+        return []
+
     return list([token for token in document if token.tag_ == 'WDT'])
 
 
@@ -222,6 +250,10 @@ def get_wh_pronouns(document: Union[Doc, Span]):
     :param document: The parsed document
     :return: The list of WH-pronouns
     """
+
+    if not is_doc_or_span(document):
+        return []
+
     return list([token for token in document if token.tag_ in ['WP', 'WP$']])
 
 
@@ -241,7 +273,19 @@ def get_wh_words(document: Union[Doc, Span]):
     :param document: The parsed document
     :return: The list of WH-words
     """
+
+    if not is_doc_or_span(document):
+        return []
+
     return list([token for token in document if token.tag_ in ['WDT', 'WP', 'WP$', 'WRB']])
+
+
+# TODO: ilie.dorobat: add the documentation
+def is_wh_noun_chunk(chunk: Span):
+    if not isinstance(chunk, Span) or len(chunk) > 1:
+        return False
+
+    return is_wh_word(chunk[0])
 
 
 def is_wh_noun_phrase(phrase: Union[Doc, Span]):
@@ -262,6 +306,9 @@ def is_wh_noun_phrase(phrase: Union[Doc, Span]):
 
     warnings.warn(SYSTEM_MESSAGES.METHOD_NOT_USED, DeprecationWarning)
 
+    if not is_doc_or_span(phrase):
+        return []
+
     first_word = phrase[0]
     return first_word.tag_ in ["WDT", "WP"] and first_word.dep_ == "nsubj"
 
@@ -275,6 +322,60 @@ def retokenize(document: Union[Doc, Span], sentence: Span):
     :return: Nothing
     """
 
+    warnings.warn(SYSTEM_MESSAGES.METHOD_USED_WITH_SPACY_2, DeprecationWarning)
+    print(f'{COLORS.LIGHT_RED} Do not use retokenizer with Spacy v3!')
+
     for named_entity in sentence.ents:
+        raw_entity = _prepare_compound_entity(named_entity)
+        entity = remove_determiner(raw_entity)
         with document.retokenize() as retokenizer:
-            retokenizer.merge(named_entity)
+            # E.g.: "Was the statue created during the day of April 10 Tiananmen Square protests?"
+            if not array_exists_in_text(MONTHS, entity.text.lower()):
+                retokenizer.merge(entity)
+
+
+def _prepare_compound_entity(named_entity: Span):
+    """
+    Join two or more words which have a "compound" dependency
+
+    E.g.:
+        - "Where is adam mickiewicz monument?"
+        - named_entity: "adam mickiewicz monument"
+        - compound_entity: "adam mickiewicz"
+
+    :param named_entity: The initial named entity
+    :return: The compound named_entity
+    """
+
+    if not isinstance(named_entity, Span):
+        return None
+
+    start_i = -1
+    end_i = -1
+
+    for word in named_entity:
+        if word.dep_ == "compound":
+            if start_i == -1:
+                start_i = _get_start_i(word)
+            end_i = word.i
+
+    if start_i > -1:
+        return named_entity.sent[start_i: end_i + 1]
+
+    return named_entity
+
+
+def _get_start_i(word: Token):
+    if not isinstance(word, Token):
+        return -1
+
+    prev_word = get_prev_word(word)
+    if not isinstance(prev_word, Token):
+        return -1
+
+    # E.g.: "Where can one find farhad and shirin monument?" (spacy v2)
+    if prev_word.pos_ == "CCONJ":
+        prev_word = get_prev_word(prev_word)
+        return _get_start_i(prev_word)
+
+    return word.i

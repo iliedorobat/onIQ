@@ -1,11 +1,14 @@
 WHICH_IS_PAIRS = [
     {
         # [1]
-        # TODO: improve the statement structure
+        # TODO: the state => the state of the Watergate scandal
         "query": "Which is the state and country of the Watergate scandal?",
         "result": """
 statement: {
-	target phrase: which,
+	target: {
+		phrase: which
+		question type: which
+	},
 	action: {
 		neg: None,
 		verb: {
@@ -15,10 +18,16 @@ statement: {
 		},
 		acomp_list: []
 	},
-	related phrase: the state
+	related: {
+		phrase: the state
+		question type: None
+	}
 }
 statement: {
-	target phrase: which,
+	target: {
+		phrase: which
+		question type: which
+	},
 	action: {
 		neg: None,
 		verb: {
@@ -28,33 +37,10 @@ statement: {
 		},
 		acomp_list: []
 	},
-	related phrase: ##and## country
-}
-statement: {
-	target phrase: the state,
-	action: {
-		neg: None,
-		verb: {
-			aux_vbs: [is],
-			main_vb: None,
-			modal_vb: None
-		},
-		acomp_list: []
-	},
-	related phrase: of the Watergate scandal
-}
-statement: {
-	target phrase: ##and## country,
-	action: {
-		neg: None,
-		verb: {
-			aux_vbs: [is],
-			main_vb: None,
-			modal_vb: None
-		},
-		acomp_list: []
-	},
-	related phrase: of the Watergate scandal
+	related: {
+		phrase: ##and## country of the Watergate scandal
+		question type: None
+	}
 }
 """
     },
@@ -63,7 +49,10 @@ statement: {
         "query": "What is the federated state located in the Weimar Republic?",
         "result": """
 statement: {
-	target phrase: what,
+	target: {
+		phrase: what
+		question type: what
+	},
 	action: {
 		neg: None,
 		verb: {
@@ -73,10 +62,16 @@ statement: {
 		},
 		acomp_list: []
 	},
-	related phrase: the federated state
+	related: {
+		phrase: the federated state
+		question type: None
+	}
 }
 statement: {
-	target phrase: the federated state,
+	target: {
+		phrase: the federated state
+		question type: None
+	},
 	action: {
 		neg: None,
 		verb: {
@@ -86,7 +81,10 @@ statement: {
 		},
 		acomp_list: []
 	},
-	related phrase: in the Weimar Republic
+	related: {
+		phrase: in the Weimar Republic
+		question type: None
+	}
 }
 """
     }

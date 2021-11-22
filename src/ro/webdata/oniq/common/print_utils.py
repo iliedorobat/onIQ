@@ -5,6 +5,7 @@ from ro.webdata.oniq.common.constants import GLOBAL_ENV, PRINT_MODE
 from ro.webdata.oniq.common.print_const import COLORS
 from ro.webdata.oniq.model.sentence.Action import Action
 from ro.webdata.oniq.model.sentence.Statement import Statement
+from ro.webdata.oniq.model.sparql.Target import Target
 
 
 # https://stackoverflow.com/questions/287871/how-to-print-colored-text-in-python#answer-287944
@@ -67,15 +68,22 @@ class echo:
                 print(f'property:    {prop.prop_name_extended}   {prop.ns_name}')
 
     @staticmethod
-    def statement_list(statements, print_mode=PRINT_MODE.PRINT_STATEMENT):
-        if GLOBAL_ENV.IS_DEBUG and print_mode:
+    def statement_list(statements):
+        if GLOBAL_ENV.IS_DEBUG and PRINT_MODE.PRINT_STATEMENT is True:
             print()
             for statement in statements:
                 print(Statement.get_str(statement))
 
     @staticmethod
+    def target_list(targets: [Target]):
+        if GLOBAL_ENV.IS_DEBUG and PRINT_MODE.PRINT_TARGET is True:
+            print()
+            for target in targets:
+                print(target)
+
+    @staticmethod
     def token_list(document):
-        if PRINT_MODE.PRINT_TOKEN:
+        if GLOBAL_ENV.IS_DEBUG and PRINT_MODE.PRINT_TOKEN:
             console.info(
                 f'-------------------------------------------------------------------------------------------------------'
                 f'\n{"text":{15}}|{"lemma_":{15}}|{"pos_":{10}}|{"tag_":{10}}|'

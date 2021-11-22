@@ -11,3 +11,4 @@ PAIRS = PAIRS_00 + PAIRS_01 + PAIRS_02 + PAIRS_03 + PAIRS_04
 # [2] https://sci-hub.tw/10.1007/978-3-540-72667-8_34 (PANTO pp. 6)
 # [3] https://github.com/LiberAI/NSpM/blob/master/data/monument_300.zip
 # [4] https://github.com/SmartDataAnalytics/ARCANA/blob/master/ARCANA%20Questions/Test_Data_Set/TestNow.txt
+# [5] https://github.com/BaiBlanc/neural-qa/blob/master/data/monument_300.zip
