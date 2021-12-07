@@ -1,10 +1,6 @@
 import numpy
-import warnings
 from spacy.tokens import Span, Token
-from ro.webdata.oniq.common.constants import SYSTEM_MESSAGES
-from ro.webdata.oniq.model.sentence.Adjective import Adjective
 from ro.webdata.oniq.nlp.nlp_utils import get_next_token, get_wh_words
-from ro.webdata.oniq.nlp.utils import is_empty_list
 from ro.webdata.oniq.nlp.word_utils import get_prev_word
 
 

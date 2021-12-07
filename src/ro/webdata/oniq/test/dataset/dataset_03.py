@@ -14,8 +14,7 @@ statement: {
 			aux_vbs: [is],
 			main_vb: None,
 			modal_vb: None
-		},
-		acomp_list: []
+		}
 	},
 	related: {
 		phrase: villa la reine jeanne
@@ -42,8 +41,7 @@ statement: {
 			aux_vbs: [was],
 			main_vb: built,
 			modal_vb: None
-		},
-		acomp_list: []
+		}
 	},
 	related: {
 		phrase: anıtkabir
@@ -66,8 +64,7 @@ statement: {
 			aux_vbs: [were],
 			main_vb: made,
 			modal_vb: None
-		},
-		acomp_list: []
+		}
 	},
 	related: {
 		phrase: swords
@@ -85,8 +82,7 @@ statement: {
 			aux_vbs: [were],
 			main_vb: made,
 			modal_vb: None
-		},
-		acomp_list: []
+		}
 	},
 	related: {
 		phrase: ##and## shields

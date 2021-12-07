@@ -1,10 +1,12 @@
+import warnings
 from spacy.tokens import Span, Token
+from ro.webdata.oniq.common.constants import SYSTEM_MESSAGES
 from ro.webdata.oniq.model.sentence.Action import Action
 from ro.webdata.oniq.model.sentence.Adjective import Adjective
 from ro.webdata.oniq.model.sentence.Verb import Verb, get_main_verb, is_aux_preceded_by_aux
 from ro.webdata.oniq.nlp.nlp_utils import get_next_token
 from ro.webdata.oniq.nlp.utils import is_empty_list
-from ro.webdata.oniq.nlp.word_utils import is_adj, is_conjunction, is_verb, is_wh_word
+from ro.webdata.oniq.nlp.word_utils import get_next_word, is_adj, is_conjunction, is_verb, is_wh_word
 
 
 # TODO: ilie.dorobat: "Where can one find farhad and shirin monument?" => check the action list
@@ -22,14 +24,13 @@ def get_action_list(sentence: Span):
         if isinstance(verb_item, list):
             aux_verbs = verb_item
             next_verb = get_main_verb(aux_verbs[len(aux_verbs) - 1])
-            adj_list = _get_adj_list(sentence, aux_verbs[len(aux_verbs) - 1], [])
-            acomp_list = _generate_acomp_list(adj_list)
+            is_followed_by_adj = _is_followed_by_adj(aux_verbs)
 
-            # E.g.: dep_ == "acomp" => "Which female actor played in Casablanca and is married to a writer born in Rome and has three children?"
-            # E.g.: dep_ == "ROOT" => "When was Bibi Andersson married to Per Ahlmark?" [1]
-            if next_verb is None or len(acomp_list) > 0:
+            # E.g.: "Which female actor played in Casablanca and is married to a writer born in Rome and has three children?"
+            # E.g.: "When was Bibi Andersson married to Per Ahlmark?" [1]
+            if is_followed_by_adj or next_verb is None:
                 verb = Verb(aux_verbs, None, modal_verb)
-                action = Action(sentence, verb, acomp_list)
+                action = Action(sentence, verb)
                 action_list.append(action)
 
                 aux_verbs = modal_verb = None
@@ -37,26 +38,48 @@ def get_action_list(sentence: Span):
             if verb_item.tag_ == "MD":
                 modal_verb = verb_item
             else:
-                # FIXME
-                # # E.g.: "When did Lena Horne receive the Grammy Award for Best Jazz Vocal Album?" [1]
-                # # "is" and "located" should be part of different Actions
-                # if _is_prev_wh_word(sentence, aux_verbs):
-                #     verb = Verb(aux_verbs, None, modal_verb)
-                #     action = Action(sentence, verb, None)
-                #     action_list.append(action)
-                #     aux_verbs = None
-
-                # E.g.: "How long does the museum remain closed?"
-                adj_list = _get_adj_list(sentence, verb_item, [])
-                acomp_list = _generate_acomp_list(adj_list)
+                # FIXME: "When did Lena Horne receive the Grammy Award for Best Jazz Vocal Album?" [1]
 
                 verb = Verb(aux_verbs, verb_item, modal_verb)
-                action = Action(sentence, verb, acomp_list)
+                action = Action(sentence, verb)
                 action_list.append(action)
 
                 aux_verbs = modal_verb = None
 
     return action_list
+
+
+def _is_followed_by_adj(aux_verbs: [Verb]):
+    """
+    Check if the aux verbs are followed by an adjective
+
+    E.g.:
+        - query: "Which female actor played in Casablanca and is married to a writer born in Rome and has three children?"
+            - verb: "is"
+            - adj: "married"
+        - query: "When was Bibi Andersson married to Per Ahlmark?" [1]
+            - verb: "was"
+            - adj: "married"
+
+    :param aux_verbs: The list of aux verbs
+    :return: True/False
+    """
+
+    if not isinstance(aux_verbs, list) or len(aux_verbs) == 0:
+        return False
+
+    last_aux = aux_verbs[len(aux_verbs) - 1]
+    next_word = get_next_word(last_aux)
+
+    if not isinstance(next_word, Token):
+        return False
+
+    # E.g.: "When was Bibi Andersson married to Per Ahlmark?"
+    while next_word.pos_ == "PROPN":
+        next_word = get_next_word(next_word)
+
+    if is_adj(next_word):
+        return True
 
 
 def is_part_of_action(action_list: [Action], word: Token):
@@ -84,60 +107,6 @@ def is_part_of_action(action_list: [Action], word: Token):
     return False
 
 
-# TODO: ilie.dorobat: add the documentation
-def _generate_acomp_list(adj_list: [Adjective]):
-    if is_empty_list(adj_list):
-        return []
-
-    # TODO: amod: "Which woman is beautiful, generous, tall and pretty?"
-    # TODO: remove filter?
-    acomp_list = [
-        adjective for adjective in adj_list
-        # E.g.: "Which woman is beautiful, generous, tall and sweet?"
-        if adjective.token.dep_ in ["acomp", "conj", "intj", "ROOT"]
-    ]
-
-    for acomp in acomp_list:
-        for conj_token in acomp.token.conjuncts:
-            adj = _get_adj(adj_list, conj_token)
-            if adj is not None and _get_adj(acomp_list, adj.token) is None:
-                acomp_list.append(adj)
-
-    return acomp_list
-
-
-# TODO: ilie.dorobat: add the documentation
-def _get_adj(adj_list: [Adjective], word: Token):
-    if is_empty_list(adj_list) or not isinstance(word, Token):
-        return None
-
-    for adj in adj_list:
-        if adj.token == word:
-            return adj
-
-    return None
-
-
-def _is_prev_wh_word(sentence: Span, aux_verbs: list):
-    """
-    Check whether or not the word before the first auxiliary verb is a wh_word
-
-    :param sentence: The target sentence
-    :param aux_verbs: The list of auxiliary verbs
-    :return: True/False
-    """
-
-    if is_empty_list(aux_verbs) or not isinstance(sentence, Span):
-        return False
-
-    first_index = aux_verbs[0].i
-    if first_index == 0:
-        return False
-
-    prev_word = sentence[first_index - 1]
-    return is_wh_word(prev_word)
-
-
 def _get_verb_list(sentence: Span):
     """
     Prepare the list of verbs as follows:
@@ -145,8 +114,8 @@ def _get_verb_list(sentence: Span):
         - the main verb is stored as a single token
 
     E.g.:
-        TODO: a better example
-        sentence: "have not been displayed" => return [[has, been], displayed]
+        - query: "Which paintings and statues have not been deposited in Bacau"
+            - returned value: [[have, been], deposited]
 
     :param sentence: The target sentence
     :return: The list of verbs
@@ -181,6 +150,8 @@ def _get_adj_list(sentence: Span, aux_verb: Token, adj_list: [Adjective]):
     :param aux_verb: The auxiliary verb
     :return: The list of adjectives
     """
+
+    warnings.warn(SYSTEM_MESSAGES.METHOD_NOT_USED, DeprecationWarning)
 
     if not isinstance(adj_list, list) \
             or not isinstance(sentence, Span) \

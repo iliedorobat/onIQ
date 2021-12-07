@@ -15,8 +15,7 @@ statement: {
 			aux_vbs: [is],
 			main_vb: None,
 			modal_vb: None
-		},
-		acomp_list: []
+		}
 	},
 	related: {
 		phrase: the state
@@ -34,8 +33,7 @@ statement: {
 			aux_vbs: [is],
 			main_vb: None,
 			modal_vb: None
-		},
-		acomp_list: []
+		}
 	},
 	related: {
 		phrase: ##and## country of the Watergate scandal
@@ -59,8 +57,7 @@ statement: {
 			aux_vbs: [is],
 			main_vb: None,
 			modal_vb: None
-		},
-		acomp_list: []
+		}
 	},
 	related: {
 		phrase: the federated state
@@ -78,8 +75,7 @@ statement: {
 			aux_vbs: None,
 			main_vb: located,
 			modal_vb: None
-		},
-		acomp_list: []
+		}
 	},
 	related: {
 		phrase: in the Weimar Republic

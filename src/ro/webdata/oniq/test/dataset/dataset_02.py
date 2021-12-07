@@ -15,8 +15,7 @@ statement: {
 			aux_vbs: [is],
 			main_vb: None,
 			modal_vb: None
-		},
-		acomp_list: []
+		}
 	},
 	related: {
 		phrase: the population
@@ -34,8 +33,7 @@ statement: {
 			aux_vbs: [is],
 			main_vb: None,
 			modal_vb: None
-		},
-		acomp_list: []
+		}
 	},
 	related: {
 		phrase: ##and## area of the most populated state
@@ -62,8 +60,7 @@ statement: {
 			aux_vbs: None,
 			main_vb: played,
 			modal_vb: None
-		},
-		acomp_list: []
+		}
 	},
 	related: {
 		phrase: in Casablanca
@@ -81,8 +78,7 @@ statement: {
 			aux_vbs: [has, been],
 			main_vb: married,
 			modal_vb: None
-		},
-		acomp_list: []
+		}
 	},
 	related: {
 		phrase: to a writer
@@ -100,8 +96,7 @@ statement: {
 			aux_vbs: None,
 			main_vb: born,
 			modal_vb: None
-		},
-		acomp_list: []
+		}
 	},
 	related: {
 		phrase: in Rome
@@ -125,8 +120,7 @@ statement: {
 			aux_vbs: None,
 			main_vb: played,
 			modal_vb: None
-		},
-		acomp_list: []
+		}
 	},
 	related: {
 		phrase: in Casablanca
@@ -144,8 +138,7 @@ statement: {
 			aux_vbs: [is],
 			main_vb: None,
 			modal_vb: None
-		},
-		acomp_list: [married]
+		}
 	},
 	related: {
 		phrase: to a writer
@@ -169,8 +162,7 @@ statement: {
 			aux_vbs: None,
 			main_vb: played,
 			modal_vb: None
-		},
-		acomp_list: []
+		}
 	},
 	related: {
 		phrase: in Casablanca
@@ -188,8 +180,7 @@ statement: {
 			aux_vbs: [has, been],
 			main_vb: married,
 			modal_vb: None
-		},
-		acomp_list: []
+		}
 	},
 	related: {
 		phrase: to a writer
@@ -213,8 +204,7 @@ statement: {
 			aux_vbs: None,
 			main_vb: played,
 			modal_vb: None
-		},
-		acomp_list: []
+		}
 	},
 	related: {
 		phrase: in Casablanca
@@ -232,8 +222,7 @@ statement: {
 			aux_vbs: [is],
 			main_vb: None,
 			modal_vb: None
-		},
-		acomp_list: [married]
+		}
 	},
 	related: {
 		phrase: to a writer
@@ -251,8 +240,7 @@ statement: {
 			aux_vbs: None,
 			main_vb: born,
 			modal_vb: None
-		},
-		acomp_list: []
+		}
 	},
 	related: {
 		phrase: in Rome
@@ -276,8 +264,7 @@ statement: {
 			aux_vbs: None,
 			main_vb: played,
 			modal_vb: None
-		},
-		acomp_list: []
+		}
 	},
 	related: {
 		phrase: in Casablanca
@@ -295,8 +282,7 @@ statement: {
 			aux_vbs: [has, been],
 			main_vb: married,
 			modal_vb: None
-		},
-		acomp_list: []
+		}
 	},
 	related: {
 		phrase: to a writer
@@ -314,8 +300,7 @@ statement: {
 			aux_vbs: None,
 			main_vb: born,
 			modal_vb: None
-		},
-		acomp_list: []
+		}
 	},
 	related: {
 		phrase: in Rome
@@ -333,8 +318,7 @@ statement: {
 			aux_vbs: None,
 			main_vb: has,
 			modal_vb: None
-		},
-		acomp_list: []
+		}
 	},
 	related: {
 		phrase: three children
@@ -358,8 +342,7 @@ statement: {
 			aux_vbs: None,
 			main_vb: played,
 			modal_vb: None
-		},
-		acomp_list: []
+		}
 	},
 	related: {
 		phrase: in Casablanca
@@ -377,8 +360,7 @@ statement: {
 			aux_vbs: [is],
 			main_vb: None,
 			modal_vb: None
-		},
-		acomp_list: [married]
+		}
 	},
 	related: {
 		phrase: to a writer
@@ -396,8 +378,7 @@ statement: {
 			aux_vbs: None,
 			main_vb: born,
 			modal_vb: None
-		},
-		acomp_list: []
+		}
 	},
 	related: {
 		phrase: in Rome
@@ -415,8 +396,7 @@ statement: {
 			aux_vbs: None,
 			main_vb: has,
 			modal_vb: None
-		},
-		acomp_list: []
+		}
 	},
 	related: {
 		phrase: three children
@@ -440,8 +420,7 @@ statement: {
 			aux_vbs: [is],
 			main_vb: None,
 			modal_vb: None
-		},
-		acomp_list: [married]
+		}
 	},
 	related: {
 		phrase: to a writer
@@ -459,8 +438,7 @@ statement: {
 			aux_vbs: None,
 			main_vb: born,
 			modal_vb: None
-		},
-		acomp_list: []
+		}
 	},
 	related: {
 		phrase: in Rome
@@ -478,8 +456,7 @@ statement: {
 			aux_vbs: None,
 			main_vb: has,
 			modal_vb: None
-		},
-		acomp_list: []
+		}
 	},
 	related: {
 		phrase: three children
@@ -502,8 +479,7 @@ statement: {
 			aux_vbs: [is],
 			main_vb: None,
 			modal_vb: None
-		},
-		acomp_list: [generous, tall, rich]
+		}
 	},
 	related: {
 		phrase: beautiful
@@ -521,8 +497,7 @@ statement: {
 			aux_vbs: [is],
 			main_vb: None,
 			modal_vb: None
-		},
-		acomp_list: [generous, tall, rich]
+		}
 	},
 	related: {
 		phrase: ##and## generous
@@ -540,8 +515,7 @@ statement: {
 			aux_vbs: [is],
 			main_vb: None,
 			modal_vb: None
-		},
-		acomp_list: [generous, tall, rich]
+		}
 	},
 	related: {
 		phrase: ##and## tall
@@ -559,8 +533,7 @@ statement: {
 			aux_vbs: [is],
 			main_vb: None,
 			modal_vb: None
-		},
-		acomp_list: [generous, tall, rich]
+		}
 	},
 	related: {
 		phrase: ##and## rich
@@ -583,8 +556,7 @@ statement: {
 			aux_vbs: [is],
 			main_vb: None,
 			modal_vb: None
-		},
-		acomp_list: [generous, tall, rich]
+		}
 	},
 	related: {
 		phrase: beautiful
@@ -602,8 +574,7 @@ statement: {
 			aux_vbs: [is],
 			main_vb: None,
 			modal_vb: None
-		},
-		acomp_list: [generous, tall, rich]
+		}
 	},
 	related: {
 		phrase: ##and## generous
@@ -621,8 +592,7 @@ statement: {
 			aux_vbs: [is],
 			main_vb: None,
 			modal_vb: None
-		},
-		acomp_list: [generous, tall, rich]
+		}
 	},
 	related: {
 		phrase: ##and## tall
@@ -640,8 +610,7 @@ statement: {
 			aux_vbs: [is],
 			main_vb: None,
 			modal_vb: None
-		},
-		acomp_list: [generous, tall, rich]
+		}
 	},
 	related: {
 		phrase: ##and## rich
@@ -668,8 +637,7 @@ statement: {
 			aux_vbs: [is],
 			main_vb: None,
 			modal_vb: None
-		},
-		acomp_list: [shortest, longest]
+		}
 	},
 	related: {
 		phrase: the longest and shortest river
@@ -693,8 +661,7 @@ statement: {
 			aux_vbs: [is],
 			main_vb: None,
 			modal_vb: None
-		},
-		acomp_list: [shortest, longest]
+		}
 	},
 	related: {
 		phrase: the longest and shortest river
@@ -712,8 +679,7 @@ statement: {
 			aux_vbs: None,
 			main_vb: traverses,
 			modal_vb: None
-		},
-		acomp_list: []
+		}
 	},
 	related: {
 		phrase: Mississippi

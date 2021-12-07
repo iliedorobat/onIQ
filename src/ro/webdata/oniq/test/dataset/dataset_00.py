@@ -13,8 +13,7 @@ statement: {
 			aux_vbs: [are],
 			main_vb: None,
 			modal_vb: None
-		},
-		acomp_list: []
+		}
 	},
 	related: {
 		phrase: in Bacau
@@ -32,8 +31,7 @@ statement: {
 			aux_vbs: [are],
 			main_vb: None,
 			modal_vb: None
-		},
-		acomp_list: []
+		}
 	},
 	related: {
 		phrase: in Bacau
@@ -56,8 +54,7 @@ statement: {
 			aux_vbs: [are],
 			main_vb: None,
 			modal_vb: None
-		},
-		acomp_list: []
+		}
 	},
 	related: {
 		phrase: in Bacau
@@ -75,8 +72,7 @@ statement: {
 			aux_vbs: [are],
 			main_vb: None,
 			modal_vb: None
-		},
-		acomp_list: []
+		}
 	},
 	related: {
 		phrase: ##or## in Bucharest
@@ -94,8 +90,7 @@ statement: {
 			aux_vbs: [are],
 			main_vb: None,
 			modal_vb: None
-		},
-		acomp_list: []
+		}
 	},
 	related: {
 		phrase: in Bacau
@@ -113,8 +108,7 @@ statement: {
 			aux_vbs: [are],
 			main_vb: None,
 			modal_vb: None
-		},
-		acomp_list: []
+		}
 	},
 	related: {
 		phrase: ##or## in Bucharest
@@ -137,8 +131,7 @@ statement: {
 			aux_vbs: [are],
 			main_vb: None,
 			modal_vb: None
-		},
-		acomp_list: []
+		}
 	},
 	related: {
 		phrase: in Bacau
@@ -156,8 +149,7 @@ statement: {
 			aux_vbs: [are],
 			main_vb: None,
 			modal_vb: None
-		},
-		acomp_list: []
+		}
 	},
 	related: {
 		phrase: ##or## in Bucharest
@@ -180,8 +172,7 @@ statement: {
 			aux_vbs: [are],
 			main_vb: None,
 			modal_vb: None
-		},
-		acomp_list: []
+		}
 	},
 	related: {
 		phrase: in Bacau
@@ -199,8 +190,7 @@ statement: {
 			aux_vbs: [are],
 			main_vb: None,
 			modal_vb: None
-		},
-		acomp_list: []
+		}
 	},
 	related: {
 		phrase: ##or## in Iasi
@@ -218,8 +208,7 @@ statement: {
 			aux_vbs: [are],
 			main_vb: None,
 			modal_vb: None
-		},
-		acomp_list: []
+		}
 	},
 	related: {
 		phrase: ##or## in Bucharest
@@ -245,8 +234,7 @@ statement: {
 			aux_vbs: [is],
 			main_vb: None,
 			modal_vb: None
-		},
-		acomp_list: []
+		}
 	},
 	related: {
 		phrase: the most beautiful museum
@@ -269,8 +257,7 @@ statement: {
 			aux_vbs: [is],
 			main_vb: None,
 			modal_vb: None
-		},
-		acomp_list: []
+		}
 	},
 	related: {
 		phrase: the name of the largest museum
@@ -293,8 +280,7 @@ statement: {
 			aux_vbs: [is],
 			main_vb: None,
 			modal_vb: None
-		},
-		acomp_list: []
+		}
 	},
 	related: {
 		phrase: the name of the most beautiful museum
@@ -317,8 +303,7 @@ statement: {
 			aux_vbs: [is],
 			main_vb: None,
 			modal_vb: None
-		},
-		acomp_list: []
+		}
 	},
 	related: {
 		phrase: the name of the largest museum
@@ -336,8 +321,7 @@ statement: {
 			aux_vbs: None,
 			main_vb: hosts,
 			modal_vb: None
-		},
-		acomp_list: []
+		}
 	},
 	related: {
 		phrase: more than 10 pictures
@@ -355,8 +339,7 @@ statement: {
 			aux_vbs: None,
 			main_vb: exposed,
 			modal_vb: None
-		},
-		acomp_list: []
+		}
 	},
 	related: {
 		phrase: one sword
@@ -379,8 +362,7 @@ statement: {
 			aux_vbs: [is],
 			main_vb: None,
 			modal_vb: None
-		},
-		acomp_list: []
+		}
 	},
 	related: {
 		phrase: the most beautiful place
@@ -398,8 +380,7 @@ statement: {
 			aux_vbs: [is],
 			main_vb: None,
 			modal_vb: None
-		},
-		acomp_list: []
+		}
 	},
 	related: {
 		phrase: ##and## the largest cave
@@ -426,8 +407,7 @@ statement: {
 			aux_vbs: [is],
 			main_vb: None,
 			modal_vb: None
-		},
-		acomp_list: [famous]
+		}
 	},
 	related: {
 		phrase: famous
@@ -450,8 +430,7 @@ statement: {
 			aux_vbs: [are],
 			main_vb: None,
 			modal_vb: None
-		},
-		acomp_list: [famous]
+		}
 	},
 	related: {
 		phrase: famous
@@ -474,8 +453,7 @@ statement: {
 			aux_vbs: None,
 			main_vb: located,
 			modal_vb: None
-		},
-		acomp_list: []
+		}
 	},
 	related: {
 		phrase: in Bacau
@@ -493,8 +471,7 @@ statement: {
 			aux_vbs: [are],
 			main_vb: None,
 			modal_vb: None
-		},
-		acomp_list: []
+		}
 	},
 	related: {
 		phrase: in good shape
@@ -517,8 +494,7 @@ statement: {
 			aux_vbs: [are],
 			main_vb: None,
 			modal_vb: None
-		},
-		acomp_list: []
+		}
 	},
 	related: {
 		phrase: in Bacau
@@ -536,8 +512,7 @@ statement: {
 			aux_vbs: [are],
 			main_vb: None,
 			modal_vb: None
-		},
-		acomp_list: []
+		}
 	},
 	related: {
 		phrase: in Bacau
@@ -555,8 +530,7 @@ statement: {
 			aux_vbs: [are],
 			main_vb: None,
 			modal_vb: None
-		},
-		acomp_list: []
+		}
 	},
 	related: {
 		phrase: in Bacau
@@ -579,8 +553,7 @@ statement: {
 			aux_vbs: [are],
 			main_vb: None,
 			modal_vb: None
-		},
-		acomp_list: []
+		}
 	},
 	related: {
 		phrase: in Bacau
@@ -598,8 +571,7 @@ statement: {
 			aux_vbs: [are],
 			main_vb: None,
 			modal_vb: None
-		},
-		acomp_list: []
+		}
 	},
 	related: {
 		phrase: in Bacau
@@ -617,8 +589,7 @@ statement: {
 			aux_vbs: [are],
 			main_vb: None,
 			modal_vb: None
-		},
-		acomp_list: []
+		}
 	},
 	related: {
 		phrase: in Bacau
@@ -636,8 +607,7 @@ statement: {
 			aux_vbs: [are],
 			main_vb: None,
 			modal_vb: None
-		},
-		acomp_list: []
+		}
 	},
 	related: {
 		phrase: in Bacau
@@ -660,8 +630,7 @@ statement: {
 			aux_vbs: [are],
 			main_vb: None,
 			modal_vb: None
-		},
-		acomp_list: []
+		}
 	},
 	related: {
 		phrase: in Bacau
@@ -679,8 +648,7 @@ statement: {
 			aux_vbs: [are],
 			main_vb: None,
 			modal_vb: None
-		},
-		acomp_list: []
+		}
 	},
 	related: {
 		phrase: in Bacau
@@ -698,8 +666,7 @@ statement: {
 			aux_vbs: [are],
 			main_vb: None,
 			modal_vb: None
-		},
-		acomp_list: []
+		}
 	},
 	related: {
 		phrase: in Bacau
@@ -722,8 +689,7 @@ statement: {
 			aux_vbs: [are],
 			main_vb: None,
 			modal_vb: None
-		},
-		acomp_list: []
+		}
 	},
 	related: {
 		phrase: in Bacau
@@ -741,8 +707,7 @@ statement: {
 			aux_vbs: [are],
 			main_vb: None,
 			modal_vb: None
-		},
-		acomp_list: []
+		}
 	},
 	related: {
 		phrase: ##or## in Bucharest
@@ -760,8 +725,7 @@ statement: {
 			aux_vbs: [are],
 			main_vb: None,
 			modal_vb: None
-		},
-		acomp_list: []
+		}
 	},
 	related: {
 		phrase: in Bacau
@@ -779,8 +743,7 @@ statement: {
 			aux_vbs: [are],
 			main_vb: None,
 			modal_vb: None
-		},
-		acomp_list: []
+		}
 	},
 	related: {
 		phrase: ##or## in Bucharest
@@ -798,8 +761,7 @@ statement: {
 			aux_vbs: [are],
 			main_vb: None,
 			modal_vb: None
-		},
-		acomp_list: []
+		}
 	},
 	related: {
 		phrase: in Bacau
@@ -817,8 +779,7 @@ statement: {
 			aux_vbs: [are],
 			main_vb: None,
 			modal_vb: None
-		},
-		acomp_list: []
+		}
 	},
 	related: {
 		phrase: ##or## in Bucharest
@@ -836,8 +797,7 @@ statement: {
 			aux_vbs: [are],
 			main_vb: None,
 			modal_vb: None
-		},
-		acomp_list: []
+		}
 	},
 	related: {
 		phrase: in Bacau
@@ -855,8 +815,7 @@ statement: {
 			aux_vbs: [are],
 			main_vb: None,
 			modal_vb: None
-		},
-		acomp_list: []
+		}
 	},
 	related: {
 		phrase: ##or## in Bucharest
@@ -879,8 +838,7 @@ statement: {
 			aux_vbs: None,
 			main_vb: hosts,
 			modal_vb: None
-		},
-		acomp_list: []
+		}
 	},
 	related: {
 		phrase: more than 10 pictures
@@ -898,8 +856,7 @@ statement: {
 			aux_vbs: None,
 			main_vb: exposed,
 			modal_vb: None
-		},
-		acomp_list: []
+		}
 	},
 	related: {
 		phrase: one sword
@@ -922,8 +879,7 @@ statement: {
 			aux_vbs: [has, been],
 			main_vb: deposited,
 			modal_vb: None
-		},
-		acomp_list: []
+		}
 	},
 	related: {
 		phrase: in Bacau
@@ -946,8 +902,7 @@ statement: {
 			aux_vbs: [have, been],
 			main_vb: deposited,
 			modal_vb: None
-		},
-		acomp_list: []
+		}
 	},
 	related: {
 		phrase: in Bacau
@@ -965,8 +920,7 @@ statement: {
 			aux_vbs: [have, been],
 			main_vb: deposited,
 			modal_vb: None
-		},
-		acomp_list: []
+		}
 	},
 	related: {
 		phrase: in Bacau
@@ -989,8 +943,7 @@ statement: {
 			aux_vbs: [have, been],
 			main_vb: deposited,
 			modal_vb: None
-		},
-		acomp_list: []
+		}
 	},
 	related: {
 		phrase: in Bacau
@@ -1008,8 +961,7 @@ statement: {
 			aux_vbs: [have, been],
 			main_vb: deposited,
 			modal_vb: None
-		},
-		acomp_list: []
+		}
 	},
 	related: {
 		phrase: in Bacau
@@ -1027,8 +979,7 @@ statement: {
 			aux_vbs: [have, been],
 			main_vb: deposited,
 			modal_vb: None
-		},
-		acomp_list: []
+		}
 	},
 	related: {
 		phrase: in Bacau
@@ -1051,8 +1002,7 @@ statement: {
 			aux_vbs: [have, been],
 			main_vb: deposited,
 			modal_vb: None
-		},
-		acomp_list: []
+		}
 	},
 	related: {
 		phrase: in Bacau
@@ -1070,8 +1020,7 @@ statement: {
 			aux_vbs: [have, been],
 			main_vb: deposited,
 			modal_vb: None
-		},
-		acomp_list: []
+		}
 	},
 	related: {
 		phrase: in Bacau
@@ -1089,8 +1038,7 @@ statement: {
 			aux_vbs: [have, been],
 			main_vb: deposited,
 			modal_vb: None
-		},
-		acomp_list: []
+		}
 	},
 	related: {
 		phrase: in Bacau
@@ -1113,8 +1061,7 @@ statement: {
 			aux_vbs: [has, been],
 			main_vb: moved,
 			modal_vb: None
-		},
-		acomp_list: []
+		}
 	},
 	related: {
 		phrase: to Bacau
@@ -1137,8 +1084,7 @@ statement: {
 			aux_vbs: [has, been],
 			main_vb: moved,
 			modal_vb: None
-		},
-		acomp_list: []
+		}
 	},
 	related: {
 		phrase: to Bacau
@@ -1161,8 +1107,7 @@ statement: {
 			aux_vbs: [do],
 			main_vb: have,
 			modal_vb: None
-		},
-		acomp_list: []
+		}
 	},
 	related: {
 		phrase: more than three owners
@@ -1185,8 +1130,7 @@ statement: {
 			aux_vbs: [do],
 			main_vb: have,
 			modal_vb: None
-		},
-		acomp_list: []
+		}
 	},
 	related: {
 		phrase: more than three owners
@@ -1204,8 +1148,7 @@ statement: {
 			aux_vbs: [do],
 			main_vb: have,
 			modal_vb: None
-		},
-		acomp_list: []
+		}
 	},
 	related: {
 		phrase: more than three owners
@@ -1223,8 +1166,7 @@ statement: {
 			aux_vbs: [do],
 			main_vb: have,
 			modal_vb: None
-		},
-		acomp_list: []
+		}
 	},
 	related: {
 		phrase: more than three owners
@@ -1250,8 +1192,7 @@ statement: {
 			aux_vbs: [is],
 			main_vb: None,
 			modal_vb: None
-		},
-		acomp_list: []
+		}
 	},
 	related: {
 		phrase: the most visited museum
@@ -1274,8 +1215,7 @@ statement: {
 			aux_vbs: [is],
 			main_vb: None,
 			modal_vb: None
-		},
-		acomp_list: []
+		}
 	},
 	related: {
 		phrase: the noisiest
@@ -1293,8 +1233,7 @@ statement: {
 			aux_vbs: [is],
 			main_vb: None,
 			modal_vb: None
-		},
-		acomp_list: []
+		}
 	},
 	related: {
 		phrase: ##and## the largest city
@@ -1317,8 +1256,7 @@ statement: {
 			aux_vbs: [is],
 			main_vb: None,
 			modal_vb: None
-		},
-		acomp_list: []
+		}
 	},
 	related: {
 		phrase: the noisiest town
@@ -1336,8 +1274,7 @@ statement: {
 			aux_vbs: [is],
 			main_vb: None,
 			modal_vb: None
-		},
-		acomp_list: []
+		}
 	},
 	related: {
 		phrase: ##and## the largest city
@@ -1360,8 +1297,7 @@ statement: {
 			aux_vbs: [is],
 			main_vb: None,
 			modal_vb: None
-		},
-		acomp_list: []
+		}
 	},
 	related: {
 		phrase: the noisiest
@@ -1379,8 +1315,7 @@ statement: {
 			aux_vbs: [is],
 			main_vb: None,
 			modal_vb: None
-		},
-		acomp_list: []
+		}
 	},
 	related: {
 		phrase: ##and## the most beautiful city
@@ -1403,8 +1338,7 @@ statement: {
 			aux_vbs: [is],
 			main_vb: None,
 			modal_vb: None
-		},
-		acomp_list: [beautiful, noisiest]
+		}
 	},
 	related: {
 		phrase: the noisiest
@@ -1422,8 +1356,7 @@ statement: {
 			aux_vbs: [is],
 			main_vb: None,
 			modal_vb: None
-		},
-		acomp_list: [beautiful, noisiest]
+		}
 	},
 	related: {
 		phrase: ##and## the most beautiful
@@ -1441,8 +1374,7 @@ statement: {
 			aux_vbs: [is],
 			main_vb: None,
 			modal_vb: None
-		},
-		acomp_list: [beautiful, noisiest]
+		}
 	},
 	related: {
 		phrase: ##and## the largest city
@@ -1465,8 +1397,7 @@ statement: {
 			aux_vbs: [is],
 			main_vb: None,
 			modal_vb: None
-		},
-		acomp_list: [largest, noisiest]
+		}
 	},
 	related: {
 		phrase: the noisiest
@@ -1484,8 +1415,7 @@ statement: {
 			aux_vbs: [is],
 			main_vb: None,
 			modal_vb: None
-		},
-		acomp_list: [largest, noisiest]
+		}
 	},
 	related: {
 		phrase: ##and## the largest
@@ -1503,8 +1433,7 @@ statement: {
 			aux_vbs: [is],
 			main_vb: None,
 			modal_vb: None
-		},
-		acomp_list: [largest, noisiest]
+		}
 	},
 	related: {
 		phrase: ##and## the most crowded city
@@ -1527,8 +1456,7 @@ statement: {
 			aux_vbs: [is],
 			main_vb: None,
 			modal_vb: None
-		},
-		acomp_list: [largest, newest]
+		}
 	},
 	related: {
 		phrase: the noisiest
@@ -1546,8 +1474,7 @@ statement: {
 			aux_vbs: [is],
 			main_vb: None,
 			modal_vb: None
-		},
-		acomp_list: [largest, newest]
+		}
 	},
 	related: {
 		phrase: ##and## the newest
@@ -1565,8 +1492,7 @@ statement: {
 			aux_vbs: [is],
 			main_vb: None,
 			modal_vb: None
-		},
-		acomp_list: [largest, newest]
+		}
 	},
 	related: {
 		phrase: ##and## the largest
@@ -1584,8 +1510,7 @@ statement: {
 			aux_vbs: [is],
 			main_vb: None,
 			modal_vb: None
-		},
-		acomp_list: [largest, newest]
+		}
 	},
 	related: {
 		phrase: ##and## the most crowded city
@@ -1608,8 +1533,7 @@ statement: {
 			aux_vbs: [is],
 			main_vb: None,
 			modal_vb: None
-		},
-		acomp_list: []
+		}
 	},
 	related: {
 		phrase: the museum
@@ -1627,8 +1551,7 @@ statement: {
 			aux_vbs: None,
 			main_vb: hosts,
 			modal_vb: None
-		},
-		acomp_list: []
+		}
 	},
 	related: {
 		phrase: more than 10 pictures
@@ -1646,8 +1569,7 @@ statement: {
 			aux_vbs: None,
 			main_vb: exposed,
 			modal_vb: None
-		},
-		acomp_list: []
+		}
 	},
 	related: {
 		phrase: one sword
@@ -1673,8 +1595,7 @@ statement: {
 			aux_vbs: [is],
 			main_vb: married,
 			modal_vb: None
-		},
-		acomp_list: []
+		}
 	},
 	related: {
 		phrase: with Jane
@@ -1697,8 +1618,7 @@ statement: {
 			aux_vbs: [is],
 			main_vb: None,
 			modal_vb: None
-		},
-		acomp_list: [beautiful]
+		}
 	},
 	related: {
 		phrase: beautiful
@@ -1721,8 +1641,7 @@ statement: {
 			aux_vbs: [is],
 			main_vb: None,
 			modal_vb: None
-		},
-		acomp_list: [beautiful, smart]
+		}
 	},
 	related: {
 		phrase: beautiful
@@ -1740,8 +1659,7 @@ statement: {
 			aux_vbs: [is],
 			main_vb: None,
 			modal_vb: None
-		},
-		acomp_list: [beautiful, smart]
+		}
 	},
 	related: {
 		phrase: ##and## smart
@@ -1764,8 +1682,7 @@ statement: {
 			aux_vbs: [is],
 			main_vb: None,
 			modal_vb: None
-		},
-		acomp_list: []
+		}
 	},
 	related: {
 		phrase: the most beautiful woman
@@ -1783,8 +1700,7 @@ statement: {
 			aux_vbs: [is],
 			main_vb: None,
 			modal_vb: None
-		},
-		acomp_list: []
+		}
 	},
 	related: {
 		phrase: ##and## the most generous person
@@ -1807,8 +1723,7 @@ statement: {
 			aux_vbs: [is],
 			main_vb: None,
 			modal_vb: None
-		},
-		acomp_list: []
+		}
 	},
 	related: {
 		phrase: the director
@@ -1826,8 +1741,7 @@ statement: {
 			aux_vbs: None,
 			main_vb: own,
 			modal_vb: None
-		},
-		acomp_list: []
+		}
 	},
 	related: {
 		phrase: 2 cars
@@ -1845,8 +1759,7 @@ statement: {
 			aux_vbs: None,
 			main_vb: sold,
 			modal_vb: None
-		},
-		acomp_list: []
+		}
 	},
 	related: {
 		phrase: a house
@@ -1864,8 +1777,7 @@ statement: {
 			aux_vbs: None,
 			main_vb: sold,
 			modal_vb: None
-		},
-		acomp_list: []
+		}
 	},
 	related: {
 		phrase: ##or## a panel
@@ -1891,8 +1803,7 @@ statement: {
 			aux_vbs: [is],
 			main_vb: None,
 			modal_vb: None
-		},
-		acomp_list: []
+		}
 	},
 	related: {
 		phrase: it
@@ -1928,8 +1839,7 @@ statement: {
 			aux_vbs: [is],
 			main_vb: None,
 			modal_vb: None
-		},
-		acomp_list: []
+		}
 	},
 	related: {
 		phrase: the museum
@@ -1952,8 +1862,7 @@ statement: {
 			aux_vbs: [is],
 			main_vb: located,
 			modal_vb: None
-		},
-		acomp_list: []
+		}
 	},
 	related: {
 		phrase: the museum
@@ -1976,8 +1885,7 @@ statement: {
 			aux_vbs: [is],
 			main_vb: None,
 			modal_vb: None
-		},
-		acomp_list: []
+		}
 	},
 	related: {
 		phrase: the black picture
@@ -2000,8 +1908,7 @@ statement: {
 			aux_vbs: [does],
 			main_vb: go,
 			modal_vb: None
-		},
-		acomp_list: []
+		}
 	},
 	related: {
 		phrase: the engineer
@@ -2024,8 +1931,7 @@ statement: {
 			aux_vbs: [are],
 			main_vb: located,
 			modal_vb: None
-		},
-		acomp_list: []
+		}
 	},
 	related: {
 		phrase: the coins
@@ -2043,8 +1949,7 @@ statement: {
 			aux_vbs: [are],
 			main_vb: located,
 			modal_vb: None
-		},
-		acomp_list: []
+		}
 	},
 	related: {
 		phrase: ##and## swords
@@ -2067,8 +1972,7 @@ statement: {
 			aux_vbs: [was],
 			main_vb: None,
 			modal_vb: None
-		},
-		acomp_list: []
+		}
 	},
 	related: {
 		phrase: the last place
@@ -2086,8 +1990,7 @@ statement: {
 			aux_vbs: [was],
 			main_vb: exposed,
 			modal_vb: None
-		},
-		acomp_list: []
+		}
 	},
 	related: {
 		phrase: the picture
@@ -2110,8 +2013,7 @@ statement: {
 			aux_vbs: [does],
 			main_vb: live,
 			modal_vb: None
-		},
-		acomp_list: []
+		}
 	},
 	related: {
 		phrase: the holder of the position of Lech Kaczynski
@@ -2136,8 +2038,7 @@ statement: {
 			aux_vbs: [is],
 			main_vb: None,
 			modal_vb: None
-		},
-		acomp_list: []
+		}
 	},
 	related: {
 		phrase: adam mickiewicz monument
@@ -2161,8 +2062,7 @@ statement: {
 			aux_vbs: None,
 			main_vb: find,
 			modal_vb: None
-		},
-		acomp_list: []
+		}
 	},
 	related: {
 		phrase: farhad and shirin monument
@@ -2185,8 +2085,7 @@ statement: {
 			aux_vbs: [is],
 			main_vb: None,
 			modal_vb: None
-		},
-		acomp_list: []
+		}
 	},
 	related: {
 		phrase: the Museum of Amsterdam
@@ -2209,8 +2108,7 @@ statement: {
 			aux_vbs: [are],
 			main_vb: made,
 			modal_vb: None
-		},
-		acomp_list: []
+		}
 	},
 	related: {
 		phrase: the swords
@@ -2228,8 +2126,7 @@ statement: {
 			aux_vbs: [are],
 			main_vb: made,
 			modal_vb: None
-		},
-		acomp_list: []
+		}
 	},
 	related: {
 		phrase: ##and## axes
@@ -2252,11 +2149,10 @@ statement: {
 	action: {
 		neg: None,
 		verb: {
-			aux_vbs: None,
+			aux_vbs: [does],
 			main_vb: remain,
 			modal_vb: None
-		},
-		acomp_list: [closed]
+		}
 	},
 	related: {
 		phrase: closed
@@ -2279,8 +2175,7 @@ statement: {
 			aux_vbs: [does],
 			main_vb: remain,
 			modal_vb: None
-		},
-		acomp_list: [closed]
+		}
 	},
 	related: {
 		phrase: closed
@@ -2303,8 +2198,7 @@ statement: {
 			aux_vbs: None,
 			main_vb: visit,
 			modal_vb: None
-		},
-		acomp_list: []
+		}
 	},
 	related: {
 		phrase: the Amsterdam Museum
@@ -2327,8 +2221,7 @@ statement: {
 			aux_vbs: None,
 			main_vb: wait,
 			modal_vb: None
-		},
-		acomp_list: []
+		}
 	},
 	related: {
 		phrase: for him
