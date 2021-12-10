@@ -1,13 +1,11 @@
-WHAT_IS_PAIRS = [
+WHICH_IS_PAIRS_01 = [
     {
-        # [2]
-        # TODO: the population => the population of the most populated state
-        "query": "What is the population and area of the most populated state?",
+        "query": "Which is the most visited museum?",
         "result": """
 statement: {
 	target: {
-		phrase: what
-		question type: what
+		phrase: which
+		question type: which
 	},
 	action: {
 		neg: None,
@@ -18,14 +16,37 @@ statement: {
 		}
 	},
 	related: {
-		phrase: the population
+		phrase: the most visited museum
+		question type: None
+	}
+}
+"""
+    },
+    {
+        "query": "Which is the noisiest and the largest city?",
+        "result": """
+statement: {
+	target: {
+		phrase: which
+		question type: which
+	},
+	action: {
+		neg: None,
+		verb: {
+			aux_vbs: [is],
+			main_vb: None,
+			modal_vb: None
+		}
+	},
+	related: {
+		phrase: the noisiest
 		question type: None
 	}
 }
 statement: {
 	target: {
-		phrase: what
-		question type: what
+		phrase: which
+		question type: which
 	},
 	action: {
 		neg: None,
@@ -36,7 +57,402 @@ statement: {
 		}
 	},
 	related: {
-		phrase: ##and## area of the most populated state
+		phrase: ##and## the largest city
+		question type: None
+	}
+}
+"""
+    },
+    {
+        "query": "Which is the noisiest town and the largest city?",
+        "result": """
+statement: {
+	target: {
+		phrase: which
+		question type: which
+	},
+	action: {
+		neg: None,
+		verb: {
+			aux_vbs: [is],
+			main_vb: None,
+			modal_vb: None
+		}
+	},
+	related: {
+		phrase: the noisiest town
+		question type: None
+	}
+}
+statement: {
+	target: {
+		phrase: which
+		question type: which
+	},
+	action: {
+		neg: None,
+		verb: {
+			aux_vbs: [is],
+			main_vb: None,
+			modal_vb: None
+		}
+	},
+	related: {
+		phrase: ##and## the largest city
+		question type: None
+	}
+}
+"""
+    },
+    {
+        "query": "Which is the noisiest and the most beautiful city?",
+        "result": """
+statement: {
+	target: {
+		phrase: which
+		question type: which
+	},
+	action: {
+		neg: None,
+		verb: {
+			aux_vbs: [is],
+			main_vb: None,
+			modal_vb: None
+		}
+	},
+	related: {
+		phrase: the noisiest
+		question type: None
+	}
+}
+statement: {
+	target: {
+		phrase: which
+		question type: which
+	},
+	action: {
+		neg: None,
+		verb: {
+			aux_vbs: [is],
+			main_vb: None,
+			modal_vb: None
+		}
+	},
+	related: {
+		phrase: ##and## the most beautiful city
+		question type: None
+	}
+}
+"""
+    },
+    {
+        "query": "Which is the noisiest, the most beautiful and the largest city?",
+        "result": """
+statement: {
+	target: {
+		phrase: which
+		question type: which
+	},
+	action: {
+		neg: None,
+		verb: {
+			aux_vbs: [is],
+			main_vb: None,
+			modal_vb: None
+		}
+	},
+	related: {
+		phrase: the noisiest
+		question type: None
+	}
+}
+statement: {
+	target: {
+		phrase: which
+		question type: which
+	},
+	action: {
+		neg: None,
+		verb: {
+			aux_vbs: [is],
+			main_vb: None,
+			modal_vb: None
+		}
+	},
+	related: {
+		phrase: ##and## the most beautiful
+		question type: None
+	}
+}
+statement: {
+	target: {
+		phrase: which
+		question type: which
+	},
+	action: {
+		neg: None,
+		verb: {
+			aux_vbs: [is],
+			main_vb: None,
+			modal_vb: None
+		}
+	},
+	related: {
+		phrase: ##and## the largest city
+		question type: None
+	}
+}
+"""
+    },
+    {
+        "query": "Which is the noisiest, the largest and the most crowded city?",
+        "result": """
+statement: {
+	target: {
+		phrase: which
+		question type: which
+	},
+	action: {
+		neg: None,
+		verb: {
+			aux_vbs: [is],
+			main_vb: None,
+			modal_vb: None
+		}
+	},
+	related: {
+		phrase: the noisiest
+		question type: None
+	}
+}
+statement: {
+	target: {
+		phrase: which
+		question type: which
+	},
+	action: {
+		neg: None,
+		verb: {
+			aux_vbs: [is],
+			main_vb: None,
+			modal_vb: None
+		}
+	},
+	related: {
+		phrase: ##and## the largest
+		question type: None
+	}
+}
+statement: {
+	target: {
+		phrase: which
+		question type: which
+	},
+	action: {
+		neg: None,
+		verb: {
+			aux_vbs: [is],
+			main_vb: None,
+			modal_vb: None
+		}
+	},
+	related: {
+		phrase: ##and## the most crowded city
+		question type: None
+	}
+}
+"""
+    },
+    {
+        "query": "Which is the noisiest and the largest and the most crowded city?",
+        "result": """
+statement: {
+	target: {
+		phrase: which
+		question type: which
+	},
+	action: {
+		neg: None,
+		verb: {
+			aux_vbs: [is],
+			main_vb: None,
+			modal_vb: None
+		}
+	},
+	related: {
+		phrase: the noisiest
+		question type: None
+	}
+}
+statement: {
+	target: {
+		phrase: which
+		question type: which
+	},
+	action: {
+		neg: None,
+		verb: {
+			aux_vbs: [is],
+			main_vb: None,
+			modal_vb: None
+		}
+	},
+	related: {
+		phrase: ##and## the largest
+		question type: None
+	}
+}
+statement: {
+	target: {
+		phrase: which
+		question type: which
+	},
+	action: {
+		neg: None,
+		verb: {
+			aux_vbs: [is],
+			main_vb: None,
+			modal_vb: None
+		}
+	},
+	related: {
+		phrase: ##and## the most crowded city
+		question type: None
+	}
+}
+"""
+    },
+    {
+        "query": "Which is the noisiest, the newest, the largest and the most crowded city?",
+        "result": """
+statement: {
+	target: {
+		phrase: which
+		question type: which
+	},
+	action: {
+		neg: None,
+		verb: {
+			aux_vbs: [is],
+			main_vb: None,
+			modal_vb: None
+		}
+	},
+	related: {
+		phrase: the noisiest
+		question type: None
+	}
+}
+statement: {
+	target: {
+		phrase: which
+		question type: which
+	},
+	action: {
+		neg: None,
+		verb: {
+			aux_vbs: [is],
+			main_vb: None,
+			modal_vb: None
+		}
+	},
+	related: {
+		phrase: ##and## the newest
+		question type: None
+	}
+}
+statement: {
+	target: {
+		phrase: which
+		question type: which
+	},
+	action: {
+		neg: None,
+		verb: {
+			aux_vbs: [is],
+			main_vb: None,
+			modal_vb: None
+		}
+	},
+	related: {
+		phrase: ##and## the largest
+		question type: None
+	}
+}
+statement: {
+	target: {
+		phrase: which
+		question type: which
+	},
+	action: {
+		neg: None,
+		verb: {
+			aux_vbs: [is],
+			main_vb: None,
+			modal_vb: None
+		}
+	},
+	related: {
+		phrase: ##and## the most crowded city
+		question type: None
+	}
+}
+"""
+    },
+    {
+        "query": "Which is the museum which hosts more than 10 pictures and exposed one sword?",
+        "result": """
+statement: {
+	target: {
+		phrase: which
+		question type: which
+	},
+	action: {
+		neg: None,
+		verb: {
+			aux_vbs: [is],
+			main_vb: None,
+			modal_vb: None
+		}
+	},
+	related: {
+		phrase: the museum
+		question type: None
+	}
+}
+statement: {
+	target: {
+		phrase: the museum
+		question type: None
+	},
+	action: {
+		neg: None,
+		verb: {
+			aux_vbs: None,
+			main_vb: hosts,
+			modal_vb: None
+		}
+	},
+	related: {
+		phrase: more than 10 pictures
+		question type: None
+	}
+}
+statement: {
+	target: {
+		phrase: the museum
+		question type: None
+	},
+	action: {
+		neg: None,
+		verb: {
+			aux_vbs: None,
+			main_vb: exposed,
+			modal_vb: None
+		}
+	},
+	related: {
+		phrase: one sword
 		question type: None
 	}
 }
@@ -44,92 +460,15 @@ statement: {
     }
 ]
 
-WHICH_PAIRS = [
+WHICH_IS_PAIRS_02 = [
     {
-        # [2]
-        "query": "Which female actor played in Casablanca and has been married to a writer born in Rome?",
+        # [1]
+        # TODO: the state => the state of the Watergate scandal
+        "query": "Which is the state and country of the Watergate scandal?",
         "result": """
 statement: {
 	target: {
-		phrase: which female actor
-		question type: which
-	},
-	action: {
-		neg: None,
-		verb: {
-			aux_vbs: None,
-			main_vb: played,
-			modal_vb: None
-		}
-	},
-	related: {
-		phrase: in Casablanca
-		question type: None
-	}
-}
-statement: {
-	target: {
-		phrase: which female actor
-		question type: which
-	},
-	action: {
-		neg: None,
-		verb: {
-			aux_vbs: [has, been],
-			main_vb: married,
-			modal_vb: None
-		}
-	},
-	related: {
-		phrase: to a writer
-		question type: None
-	}
-}
-statement: {
-	target: {
-		phrase: to a writer
-		question type: None
-	},
-	action: {
-		neg: None,
-		verb: {
-			aux_vbs: None,
-			main_vb: born,
-			modal_vb: None
-		}
-	},
-	related: {
-		phrase: in Rome
-		question type: None
-	}
-}
-"""
-    },
-    {
-        # derived from [2]
-        "query": "Which female actor played in Casablanca and is married to a writer?",
-        "result": """
-statement: {
-	target: {
-		phrase: which female actor
-		question type: which
-	},
-	action: {
-		neg: None,
-		verb: {
-			aux_vbs: None,
-			main_vb: played,
-			modal_vb: None
-		}
-	},
-	related: {
-		phrase: in Casablanca
-		question type: None
-	}
-}
-statement: {
-	target: {
-		phrase: which female actor
+		phrase: which
 		question type: which
 	},
 	action: {
@@ -141,79 +480,13 @@ statement: {
 		}
 	},
 	related: {
-		phrase: to a writer
-		question type: None
-	}
-}
-"""
-    },
-    {
-        # derived from [2]
-        "query": "Which female actor played in Casablanca and has been married to a writer?",
-        "result": """
-statement: {
-	target: {
-		phrase: which female actor
-		question type: which
-	},
-	action: {
-		neg: None,
-		verb: {
-			aux_vbs: None,
-			main_vb: played,
-			modal_vb: None
-		}
-	},
-	related: {
-		phrase: in Casablanca
+		phrase: the state
 		question type: None
 	}
 }
 statement: {
 	target: {
-		phrase: which female actor
-		question type: which
-	},
-	action: {
-		neg: None,
-		verb: {
-			aux_vbs: [has, been],
-			main_vb: married,
-			modal_vb: None
-		}
-	},
-	related: {
-		phrase: to a writer
-		question type: None
-	}
-}
-"""
-    },
-    {
-        # derived from [2]
-        "query": "Which female actor played in Casablanca and is married to a writer born in Rome?",
-        "result": """
-statement: {
-	target: {
-		phrase: which female actor
-		question type: which
-	},
-	action: {
-		neg: None,
-		verb: {
-			aux_vbs: None,
-			main_vb: played,
-			modal_vb: None
-		}
-	},
-	related: {
-		phrase: in Casablanca
-		question type: None
-	}
-}
-statement: {
-	target: {
-		phrase: which female actor
+		phrase: which
 		question type: which
 	},
 	action: {
@@ -225,395 +498,7 @@ statement: {
 		}
 	},
 	related: {
-		phrase: to a writer
-		question type: None
-	}
-}
-statement: {
-	target: {
-		phrase: to a writer
-		question type: None
-	},
-	action: {
-		neg: None,
-		verb: {
-			aux_vbs: None,
-			main_vb: born,
-			modal_vb: None
-		}
-	},
-	related: {
-		phrase: in Rome
-		question type: None
-	}
-}
-"""
-    },
-    {
-        # derived from [2]
-        "query": "Which female actor played in Casablanca and has been married to a writer born in Rome and has three children?",
-        "result": """
-statement: {
-	target: {
-		phrase: which female actor
-		question type: which
-	},
-	action: {
-		neg: None,
-		verb: {
-			aux_vbs: None,
-			main_vb: played,
-			modal_vb: None
-		}
-	},
-	related: {
-		phrase: in Casablanca
-		question type: None
-	}
-}
-statement: {
-	target: {
-		phrase: which female actor
-		question type: which
-	},
-	action: {
-		neg: None,
-		verb: {
-			aux_vbs: [has, been],
-			main_vb: married,
-			modal_vb: None
-		}
-	},
-	related: {
-		phrase: to a writer
-		question type: None
-	}
-}
-statement: {
-	target: {
-		phrase: to a writer
-		question type: None
-	},
-	action: {
-		neg: None,
-		verb: {
-			aux_vbs: None,
-			main_vb: born,
-			modal_vb: None
-		}
-	},
-	related: {
-		phrase: in Rome
-		question type: None
-	}
-}
-statement: {
-	target: {
-		phrase: which female actor
-		question type: which
-	},
-	action: {
-		neg: None,
-		verb: {
-			aux_vbs: None,
-			main_vb: has,
-			modal_vb: None
-		}
-	},
-	related: {
-		phrase: three children
-		question type: None
-	}
-}
-"""
-    },
-    {
-        # derived from [2]
-        "query": "Which female actor played in Casablanca and is married to a writer born in Rome and has three children?",
-        "result": """
-statement: {
-	target: {
-		phrase: which female actor
-		question type: which
-	},
-	action: {
-		neg: None,
-		verb: {
-			aux_vbs: None,
-			main_vb: played,
-			modal_vb: None
-		}
-	},
-	related: {
-		phrase: in Casablanca
-		question type: None
-	}
-}
-statement: {
-	target: {
-		phrase: which female actor
-		question type: which
-	},
-	action: {
-		neg: None,
-		verb: {
-			aux_vbs: [is],
-			main_vb: None,
-			modal_vb: None
-		}
-	},
-	related: {
-		phrase: to a writer
-		question type: None
-	}
-}
-statement: {
-	target: {
-		phrase: to a writer
-		question type: None
-	},
-	action: {
-		neg: None,
-		verb: {
-			aux_vbs: None,
-			main_vb: born,
-			modal_vb: None
-		}
-	},
-	related: {
-		phrase: in Rome
-		question type: None
-	}
-}
-statement: {
-	target: {
-		phrase: which female actor
-		question type: which
-	},
-	action: {
-		neg: None,
-		verb: {
-			aux_vbs: None,
-			main_vb: has,
-			modal_vb: None
-		}
-	},
-	related: {
-		phrase: three children
-		question type: None
-	}
-}
-"""
-    },
-    {
-        # derived from [2]
-        "query": "Which beautiful female is married to a writer born in Rome and has three children?",
-        "result": """
-statement: {
-	target: {
-		phrase: which beautiful female
-		question type: which
-	},
-	action: {
-		neg: None,
-		verb: {
-			aux_vbs: [is],
-			main_vb: None,
-			modal_vb: None
-		}
-	},
-	related: {
-		phrase: to a writer
-		question type: None
-	}
-}
-statement: {
-	target: {
-		phrase: to a writer
-		question type: None
-	},
-	action: {
-		neg: None,
-		verb: {
-			aux_vbs: None,
-			main_vb: born,
-			modal_vb: None
-		}
-	},
-	related: {
-		phrase: in Rome
-		question type: None
-	}
-}
-statement: {
-	target: {
-		phrase: which beautiful female
-		question type: which
-	},
-	action: {
-		neg: None,
-		verb: {
-			aux_vbs: None,
-			main_vb: has,
-			modal_vb: None
-		}
-	},
-	related: {
-		phrase: three children
-		question type: None
-	}
-}
-"""
-    },
-    {
-        "query": "Which woman is beautiful, generous, tall and rich?",
-        "result": """
-statement: {
-	target: {
-		phrase: which woman
-		question type: which
-	},
-	action: {
-		neg: None,
-		verb: {
-			aux_vbs: [is],
-			main_vb: None,
-			modal_vb: None
-		}
-	},
-	related: {
-		phrase: beautiful
-		question type: None
-	}
-}
-statement: {
-	target: {
-		phrase: which woman
-		question type: which
-	},
-	action: {
-		neg: None,
-		verb: {
-			aux_vbs: [is],
-			main_vb: None,
-			modal_vb: None
-		}
-	},
-	related: {
-		phrase: ##and## generous
-		question type: None
-	}
-}
-statement: {
-	target: {
-		phrase: which woman
-		question type: which
-	},
-	action: {
-		neg: None,
-		verb: {
-			aux_vbs: [is],
-			main_vb: None,
-			modal_vb: None
-		}
-	},
-	related: {
-		phrase: ##and## tall
-		question type: None
-	}
-}
-statement: {
-	target: {
-		phrase: which woman
-		question type: which
-	},
-	action: {
-		neg: None,
-		verb: {
-			aux_vbs: [is],
-			main_vb: None,
-			modal_vb: None
-		}
-	},
-	related: {
-		phrase: ##and## rich
-		question type: None
-	}
-}
-"""
-    },
-    {
-        "query": "Which smart woman is beautiful, generous, tall and rich?",
-        "result": """
-statement: {
-	target: {
-		phrase: which smart woman
-		question type: which
-	},
-	action: {
-		neg: None,
-		verb: {
-			aux_vbs: [is],
-			main_vb: None,
-			modal_vb: None
-		}
-	},
-	related: {
-		phrase: beautiful
-		question type: None
-	}
-}
-statement: {
-	target: {
-		phrase: which smart woman
-		question type: which
-	},
-	action: {
-		neg: None,
-		verb: {
-			aux_vbs: [is],
-			main_vb: None,
-			modal_vb: None
-		}
-	},
-	related: {
-		phrase: ##and## generous
-		question type: None
-	}
-}
-statement: {
-	target: {
-		phrase: which smart woman
-		question type: which
-	},
-	action: {
-		neg: None,
-		verb: {
-			aux_vbs: [is],
-			main_vb: None,
-			modal_vb: None
-		}
-	},
-	related: {
-		phrase: ##and## tall
-		question type: None
-	}
-}
-statement: {
-	target: {
-		phrase: which smart woman
-		question type: which
-	},
-	action: {
-		neg: None,
-		verb: {
-			aux_vbs: [is],
-			main_vb: None,
-			modal_vb: None
-		}
-	},
-	related: {
-		phrase: ##and## rich
+		phrase: ##and## country of the Watergate scandal
 		question type: None
 	}
 }
@@ -621,7 +506,7 @@ statement: {
     }
 ]
 
-WHICH_IS_PAIRS = [
+WHICH_IS_PAIRS_03 = [
     {
         # derived from [2]
         "query": "Which is the longest and shortest river?",
@@ -690,6 +575,6 @@ statement: {
     }
 ]
 
-PAIRS_02 = WHAT_IS_PAIRS + \
-           WHICH_PAIRS + \
-           WHICH_IS_PAIRS
+WHICH_IS_PAIRS = WHICH_IS_PAIRS_01 + \
+                 WHICH_IS_PAIRS_02 + \
+                 WHICH_IS_PAIRS_03
