@@ -183,9 +183,9 @@ def is_nsubj_wh_word(sentence: Span, word: Token):
     warnings.warn("deprecated in favour of is_wh_noun_chunk", DeprecationWarning)
 
     is_pron_chunk = word.pos_ == "PRON" and word.tag_ == "WP"
-    is_preceded_by_aux = sentence[word.i + 1].pos_ == "AUX"
+    is_followed_by_aux = sentence[word.i + 1].pos_ == "AUX"
 
-    return is_wh_word(word) and is_preceded_by_aux and not is_pron_chunk
+    return is_wh_word(word) and is_followed_by_aux and not is_pron_chunk
 
 
 def is_preposition(word: Token):

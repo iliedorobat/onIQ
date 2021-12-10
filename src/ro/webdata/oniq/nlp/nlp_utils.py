@@ -6,7 +6,8 @@ from ro.webdata.oniq.common.constants import SYSTEM_MESSAGES
 from ro.webdata.oniq.common.print_const import COLORS
 from ro.webdata.oniq.common.text_utils import MONTHS, array_exists_in_text, remove_determiner
 from ro.webdata.oniq.nlp.utils import is_doc_or_span, is_empty_list
-from ro.webdata.oniq.nlp.word_utils import get_prev_word, is_nsubj_wh_word, is_wh_word
+from ro.webdata.oniq.nlp.chunk_utils import get_first_word
+from ro.webdata.oniq.nlp.word_utils import get_next_word, get_prev_word, is_adj, is_adv, is_verb, is_wh_word
 
 
 def extract_chunk(chunk_list: [Span], word: Token):
@@ -64,40 +65,87 @@ def get_noun_chunks(sentence: Union[Doc, Span]):
     if not is_doc_or_span(sentence):
         return []
 
-    old_chunk_list = list(sentence.noun_chunks)
-    first_chunk = sentence[0:1] if len(sentence) > 0 else None
-    first_word = first_chunk[0] if len(first_chunk) > 0 else None
+    chunk_list = _get_merged_noun_chunks(sentence)
+    start_chunk = _get_start_chunk(sentence)
+    first_word = get_first_word(start_chunk)
 
-    ############################ TODO: move to a function && test the changes
-    chunk_list = [old_chunk_list[0]] if len(old_chunk_list) == 1 else []
-    for index, chunk in enumerate(old_chunk_list):
-        if chunk.end < len(chunk.sent):
-            next_char = sentence[chunk.end]
+    # include the "which/how" chunk to the noun chunks list
+    if is_wh_word(first_word):
+        next_word = get_next_word(start_chunk[len(start_chunk) - 1])
 
-            if index < len(old_chunk_list) - 1:
-                if index == 0:
-                    chunk_list.append(chunk)
-                next_chunk = old_chunk_list[index + 1]
+        if is_verb(next_word):
+            # E.g.: "How long does the museum remain closed?"
+            if first_word.lower_ == "how" and next_word.dep_ != "ROOT":
+                start_chunk = chunk_list[0]
+                last_word = start_chunk[len(start_chunk) - 1]
+                chunk_list[0] = sentence[0: last_word.i + 1]
 
-                if next_char.lower_ == "of":
-                    crr_chunk = chunk_list[len(chunk_list) - 1]
-                    chunk_list[len(chunk_list) - 1] = sentence[crr_chunk.start: next_chunk.end]
-                    continue
-                else:
-                    chunk_list.append(next_chunk)
-    ############################
+            # E.g.: "How long is the journey?"
+            else:
+                chunk_list = [start_chunk] + chunk_list
 
-    # include the "which" chunk to the noun chunks list
-    # E.g.: "Which is the noisiest and the largest city?"
-    if is_nsubj_wh_word(sentence, first_word):
-        chunk_list = [first_chunk] + chunk_list
-    # E.g.: "Which beautiful female is married to a writer born in Rome and has three children?"
-    elif is_wh_word(first_word):
-        first_chunk = chunk_list[0]
-        last_word = first_chunk[len(first_chunk) - 1]
-        chunk_list[0] = sentence[0: last_word.i + 1]
+        # E.g.: "Which is the noisiest and the largest city?"
+        else:
+            start_chunk = chunk_list[0]
+            last_word = start_chunk[len(start_chunk) - 1]
+            chunk_list[0] = sentence[0: last_word.i + 1]
 
     return _filter_chunk_list(sentence, chunk_list)
+
+
+def _get_start_chunk(sentence: Union[Doc, Span]):
+    if not is_doc_or_span(sentence) or len(sentence) == 0:
+        return None
+
+    # E.g.: "how old" / "how long"
+    if sentence[0].lower_ == "how" and (is_adj(sentence[1]) or is_adv(sentence[1])):
+        return sentence[0:2]
+
+    return sentence[0:1]
+
+
+def _get_merged_noun_chunks(sentence: Union[Doc, Span]):
+    """
+    Merge te chunks that are linked through a preposition and get the prepared list
+
+    E.g.:
+        - question: "Who is the director of Amsterdam museum?"
+        - chunks: ["who", "the director", "Amsterdam museum"]
+        - merged chunks: ["who", "the director of Amsterdam museum"]
+
+    :param sentence: The target sentence
+    :return: The list of chunks
+    """
+
+    # FIXME
+    # E.g.: "The Goddess of Democracy, also known as the Goddess of Democracy and Freedom, the Spirit of Democracy,
+    # and the Goddess of Liberty (自由女神; zìyóu nǚshén), was a 10-metre-tall (33 ft) statue created during the day
+    # of April 10 Tiananmen Square protests"
+
+    chunk_list = []
+    original_chunk_list = list(sentence.noun_chunks)
+
+    for index, chunk in enumerate(original_chunk_list):
+        if index == 0:
+            chunk_list.append(chunk)
+        if index == len(original_chunk_list) - 1:
+            break
+
+        last_word = chunk[len(chunk) - 1]
+        next_word = get_next_word(last_word)
+        next_chunk = original_chunk_list[index + 1]
+
+        # Merge two chunks that are linked through a preposition
+        # E.g.: "Who is the director of Amsterdam museum?"
+        # E.g.: "How many paintings are on display at the Amsterdam Museum?"
+        # E.g.: "Where does the holder of the position of Lech Kaczynski live? [1]
+        if next_word.dep_ == "prep":
+            crr_chunk = chunk_list[len(chunk_list) - 1]
+            chunk_list[len(chunk_list) - 1] = sentence[crr_chunk.start: next_chunk.end]
+        else:
+            chunk_list.append(next_chunk)
+
+    return chunk_list
 
 
 def _filter_chunk_list(sentence: Union[Doc, Span], chunk_list: [Span]):

@@ -40,6 +40,20 @@ def extract_determiner(chunk: Span):
     return prev_word
 
 
+def get_first_word(chunk: Span):
+    """
+    Get the first word from a chunk
+
+    :param chunk: The target noun chunk
+    :return: The determiner
+    """
+
+    if not isinstance(chunk, Span) or len(chunk) == 0:
+        return None
+
+    return chunk[0]
+
+
 def is_linked_chunk(chunk: Span):
     """
     Determine if the input chunk is preceded or followed by a conjunction
