@@ -62,10 +62,10 @@ def extract_determiner(chunk: Span):
         return None
 
     prev_word = get_prev_word(chunk[0])
-    while prev_word is not None and is_adv(prev_word):
+    while is_adv(prev_word):
         prev_word = get_prev_word(prev_word)
 
-    if prev_word is None or not is_common_det(prev_word):
+    if not is_common_det(prev_word):
         return None
 
     return prev_word
@@ -94,25 +94,25 @@ def get_chunk_index(chunk_list: [Span], chunk: Span):
     :return: The index of the target chunk
     """
 
-    if is_empty_list(chunk_list) or not isinstance(chunk, Span):
+    if not isinstance(chunk, Span) or is_empty_list(chunk_list):
         return -1
 
-    for index, item in enumerate(chunk_list):
-        if item == chunk:
+    for index, crr_chunk in enumerate(chunk_list):
+        if crr_chunk == chunk:
             return index
 
     return -1
 
 
-def get_prev_chunk(chunks: [Span], chunk: Span):
+def get_prev_chunk(chunk_list: [Span], chunk: Span):
     warnings.warn(SYSTEM_MESSAGES.METHOD_NOT_USED, DeprecationWarning)
 
-    if is_empty_list(chunks) or not isinstance(chunk, Span):
+    if not isinstance(chunk, Span) or is_empty_list(chunk_list):
         return None
 
-    chunk_index = chunks.index(chunk)
+    chunk_index = chunk_list.index(chunk)
     if chunk_index > 0:
-        return chunks[chunk_index - 1]
+        return chunk_list[chunk_index - 1]
 
     return None
 
