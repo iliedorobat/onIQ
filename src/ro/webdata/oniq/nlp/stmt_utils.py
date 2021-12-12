@@ -74,7 +74,6 @@ def _generate_statement_list(sentence: Span, action_list: [Action]):
         return statements
 
     # TODO: phrase_list = prepare_phrase_list(sentence) => instead of get_noun_chunks ???
-    # FIXME: "How long is the journey?"
     chunk_list = get_noun_chunks(sentence)
     # Filter the chunks which are not in dependence of conjunction because they will be added
     # to target_chunks or related_chunks through the _get_associated_chunks method
