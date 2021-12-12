@@ -147,25 +147,25 @@ def get_noun_chunks(sentence: Union[Doc, Span]):
         return []
 
     chunk_list = _get_extended_noun_chunks(sentence)
-    start_chunk = _get_start_chunk(sentence)
-    first_word = get_first_word(start_chunk)
+    wh_span = _get_wh_span(sentence)
+    first_word = get_first_word(wh_span)
 
     # include the "which/how" chunk to the noun chunks list
     # TODO: move to _get_extended_noun_chunks
     if is_wh_word(first_word):
-        next_word = get_next_word(start_chunk[len(start_chunk) - 1])
+        next_word = get_next_word(wh_span[len(wh_span) - 1])
 
         if is_verb(next_word):
             # E.g.: "How long does the museum remain closed?"
             if first_word.lower_ == "how" and next_word.dep_ != "ROOT":
-                start_chunk = chunk_list[0]
-                last_word = start_chunk[len(start_chunk) - 1]
+                first_chunk = chunk_list[0]
+                last_word = first_chunk[len(first_chunk) - 1]
                 chunk_list[0] = sentence[0: last_word.i + 1]
 
             # E.g.: "How long is the journey?"
             # E.g.: "When was anıtkabir built?" [3]
             else:
-                chunk_list = [start_chunk] + chunk_list
+                chunk_list = [wh_span] + chunk_list
 
     # TODO: remove (see _get_extended_noun_chunks)
     # E.g.: "What did James Cagney win in the 15th Academy Awards?" [1]
@@ -215,27 +215,37 @@ def _get_extended_noun_chunks(sentence: Union[Doc, Span]):
     # and the Goddess of Liberty (自由女神; zìyóu nǚshén), was a 10-metre-tall (33 ft) statue created during the day
     # of April 10 Tiananmen Square protests"
 
-    chunk_list = _merge_prep_chunks(sentence, list(sentence.noun_chunks))
-    new_chunk_list = []
-    for chunk in chunk_list:
-        new_chunk_list.append(
-            _prepare_chunk(chunk)
+    chunk_list = []
+
+    if not is_doc_or_span(sentence):
+        return chunk_list
+
+    initial_chunks = _get_merged_prep_chunks(sentence)
+    for index, initial_chunk in enumerate(initial_chunks):
+        chunk_list.append(
+            _prepare_chunk(initial_chunk)
         )
 
     # TODO: documentation
     # E.g.: "What did James Cagney win in the 15th Academy Awards?" [1]
-    if is_wh_word(new_chunk_list[0][0]) and len(chunk_list) > 1:
-        first_word = new_chunk_list[0][0]
-        second_chunk = new_chunk_list[1]
+    if is_wh_word(chunk_list[0][0]) and len(chunk_list) > 1:
+        first_word = chunk_list[0][0]
+        second_chunk = chunk_list[1]
         if first_word in second_chunk:
-            new_chunk_list.remove(new_chunk_list[0])
+            chunk_list.remove(chunk_list[0])
 
-    return new_chunk_list
+    return chunk_list
 
 
-# TODO: ilie.dorobat: documentation
-def _get_start_chunk(sentence: Union[Doc, Span]):
-    if not is_doc_or_span(sentence) or len(sentence) == 0:
+def _get_wh_span(sentence: Union[Doc, Span]):
+    """
+    Retrieve the tokens that form the starting wh-span ("which", "what", "how", "how long", etc.)
+
+    :param sentence: The target sentence
+    :return: The wh-span
+    """
+
+    if not is_doc_or_span(sentence):
         return None
 
     first_word = get_first_word(sentence)
@@ -252,7 +262,7 @@ def _get_start_chunk(sentence: Union[Doc, Span]):
     return None
 
 
-def _merge_prep_chunks(sentence, original_chunk_list: [Span]):
+def _get_merged_prep_chunks(sentence: Union[Doc, Span]):
     """
     Merge te chunks that are linked through a preposition and get the prepared list
 
@@ -262,20 +272,24 @@ def _merge_prep_chunks(sentence, original_chunk_list: [Span]):
         - merged chunks: ["who", "the director of Amsterdam museum"]
 
     :param sentence: The target sentence
-    :return: The list of chunks
+    :return: The list of prepared chunks
     """
 
-    chunk_list = []
+    if not is_doc_or_span(sentence):
+        return None
 
-    for index, chunk in enumerate(original_chunk_list):
+    chunk_list = []
+    noun_chunk_list = list(sentence.noun_chunks)
+
+    for index, chunk in enumerate(noun_chunk_list):
         if index == 0:
             chunk_list.append(chunk)
-        if index == len(original_chunk_list) - 1:
+        if index == len(noun_chunk_list) - 1:
             break
 
         last_word = chunk[len(chunk) - 1]
         next_word = get_next_word(last_word)
-        next_chunk = original_chunk_list[index + 1]
+        next_chunk = noun_chunk_list[index + 1]
 
         # Merge two chunks that are linked through a preposition
         # E.g.: "Who is the director of Amsterdam museum?"
