@@ -7,8 +7,9 @@ from ro.webdata.oniq.model.rdf.SimilarityMap import SimilarityMap
 
 from ro.webdata.oniq.common.constants import GLOBAL_ENV, TEST_MODES
 from ro.webdata.oniq.model.sparql.MetaQuery import MetaQuery
-from ro.webdata.oniq.nlp.statements import get_statement_list
+from ro.webdata.oniq.nlp.stmt_utils import get_statement_list
 from ro.webdata.oniq.validation.dataset.dataset import PAIRS
+from ro.webdata.oniq.validation.dataset import dataset
 from ro.webdata.oniq.validation.tests import question_statement_test, question_statements_test
 from ro.webdata.oniq.nlp.word_utils import is_wh_word
 

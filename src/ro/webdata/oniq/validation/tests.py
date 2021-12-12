@@ -1,7 +1,7 @@
 from ro.webdata.oniq.common.constants import GLOBAL_ENV
 from ro.webdata.oniq.common.print_const import COLORS
 from ro.webdata.oniq.model.sentence.Statement import Statement
-from ro.webdata.oniq.nlp.statements import get_statement_list
+from ro.webdata.oniq.nlp.stmt_utils import get_statement_list
 
 
 class RESULT_TYPES:

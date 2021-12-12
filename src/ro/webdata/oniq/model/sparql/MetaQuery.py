@@ -2,7 +2,7 @@ import spacy
 from spacy import displacy
 
 from ro.webdata.oniq.model.sparql.Query import Query
-from ro.webdata.oniq.nlp.statements import get_statement_list
+from ro.webdata.oniq.nlp.stmt_utils import get_statement_list
 
 
 nlp = spacy.load('en_core_web_sm')

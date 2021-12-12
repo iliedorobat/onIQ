@@ -8,10 +8,10 @@ from ro.webdata.oniq.model.sentence.Statement import ConsolidatedStatement, Stat
 
 from ro.webdata.oniq.nlp.actions import get_action_list, is_part_of_action
 from ro.webdata.oniq.nlp.adj_utils import get_next_linked_adj_list, get_prev_linked_adj_list
-from ro.webdata.oniq.nlp.chunk_utils import get_chunk_index, is_linked_chunk, get_noun_chunks
+from ro.webdata.oniq.nlp.chunk_utils import extract_chunk, get_chunk_index, is_linked_chunk, get_noun_chunks
 from ro.webdata.oniq.nlp.noun_utils import get_noun_ancestor, is_linked_noun
-from ro.webdata.oniq.nlp.nlp_utils import extract_chunk, is_wh_noun_chunk, is_wh_noun_phrase, retokenize
-from ro.webdata.oniq.nlp.phrase import prepare_phrase_list
+from ro.webdata.oniq.nlp.nlp_utils import is_wh_noun_chunk, is_wh_noun_phrase, retokenize
+from ro.webdata.oniq.nlp.phrase_utils import prepare_phrase_list
 from ro.webdata.oniq.nlp.utils import is_empty_list
 from ro.webdata.oniq.nlp.verb_utils import get_verb_ancestor
 from ro.webdata.oniq.nlp.word_utils import is_conjunction, is_preceded_by_conjunction, is_verb

@@ -3,8 +3,7 @@ from spacy.tokens import Doc, Span, Token
 
 from ro.webdata.oniq.common.constants import QUESTION_TYPES
 from ro.webdata.oniq.model.sentence.Conjunction import Conjunction
-from ro.webdata.oniq.nlp.chunk_utils import extract_comparison_adv, extract_determiner
-from ro.webdata.oniq.nlp.nlp_utils import get_noun_chunks, get_chunk_index
+from ro.webdata.oniq.nlp.chunk_utils import extract_comparison_adv, extract_determiner, get_chunk_index, get_noun_chunks
 from ro.webdata.oniq.nlp.utils import is_empty_list
 from ro.webdata.oniq.nlp.word_utils import get_preposition, is_adj, is_conjunction, \
     is_followed_by_conjunction, is_preceded_by_conjunction, is_verb, is_wh_word

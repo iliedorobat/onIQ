@@ -63,6 +63,20 @@ def get_prev_word(word: Token):
     return word.sent[prev_index]
 
 
+def is_cardinal(word: Token):
+    """
+    Determine if the input word is a cardinal number
+
+    :param word: The target token
+    :return: True/False
+    """
+
+    if not isinstance(word, Token):
+        return False
+
+    return word.pos_ == "NUM" and word.tag_ == "CD"
+
+
 def is_conjunction(word: Token):
     """
     Determine if the input word has the role of conjunction or not
@@ -199,7 +213,6 @@ def is_preposition(word: Token):
     if not isinstance(word, Token):
         return False
 
-    # old: and word.dep_ in ["conj", "prep"]
     return word.pos_ == "ADP" and word.tag_ == "IN"
 
 
@@ -215,6 +228,20 @@ def is_verb(word: Token):
         return False
 
     return word.pos_ in ["AUX", "VERB"]
+
+
+def is_aux_verb(word: Token):
+    """
+    Determine if the input word is an auxiliary verb or not
+
+    :param word: The target token
+    :return: True/False
+    """
+
+    if not isinstance(word, Token):
+        return False
+
+    return word.pos_ == "AUX"
 
 
 def is_adj(word: Token):
@@ -322,6 +349,22 @@ def is_wh_adverb(word: Token):
         return False
 
     return word.tag_ == 'WRB'
+
+
+def is_wh_det(word: Token):
+    """
+    Determine if the input word is wh-determiner ("which", etc.)
+
+    :param word: The target token
+    :return: True/False
+    """
+
+    if not isinstance(word, Token):
+        return False
+
+    return word.pos_ == "DET" \
+           and word.tag_ == "WDT" \
+           and word.dep_ == "det"
 
 
 def is_wh_word(word: Token):
