@@ -5,33 +5,8 @@ from spacy.tokens import Doc, Span, Token
 from ro.webdata.oniq.common.constants import SYSTEM_MESSAGES
 from ro.webdata.oniq.common.print_const import COLORS
 from ro.webdata.oniq.common.text_utils import MONTHS, array_exists_in_text, remove_determiner
-from ro.webdata.oniq.nlp.utils import is_doc_or_span, is_empty_list
-from ro.webdata.oniq.nlp.chunk_utils import get_first_word
-from ro.webdata.oniq.nlp.word_utils import get_next_word, get_prev_word, is_adj, is_adv, is_verb, is_wh_word
-
-
-def extract_chunk(chunk_list: [Span], word: Token):
-    """
-    Retrieve the chunk which contains the input token
-
-    :param word: The token to be searched for
-    :param chunk_list: The list of chunks (use case: "noun_chunks")
-    :return: The identified chunk which contains the input token
-    """
-
-    if is_empty_list(chunk_list) or not isinstance(word, Token):
-        return None
-
-    # E.g.: "Where was the last place the picture was exposed?"
-    if word.i == 0:
-        return chunk_list[0]
-
-    for chunk in chunk_list:
-        for token in chunk:
-            if word == token:
-                return chunk
-
-    return None
+from ro.webdata.oniq.nlp.utils import is_doc_or_span
+from ro.webdata.oniq.nlp.word_utils import get_prev_word, is_wh_word
 
 
 def get_cardinals(sentence: Span):
@@ -48,152 +23,6 @@ def get_cardinals(sentence: Span):
         return []
 
     return list([token for token in sentence if token.tag_ == "CD"])
-
-
-def get_noun_chunks(sentence: Union[Doc, Span]):
-    """
-    Get the list of noun chunks
-
-    E.g.:
-        - question: "Which is the noisiest and the largest city?"
-        - chunks "Which", "the noisiest", "the largest city"
-
-    :param sentence: The target sentence
-    :return: The list of chunks
-    """
-
-    if not is_doc_or_span(sentence):
-        return []
-
-    chunk_list = _get_merged_noun_chunks(sentence)
-    start_chunk = _get_start_chunk(sentence)
-    first_word = get_first_word(start_chunk)
-
-    # include the "which/how" chunk to the noun chunks list
-    if is_wh_word(first_word):
-        next_word = get_next_word(start_chunk[len(start_chunk) - 1])
-
-        if is_verb(next_word):
-            # E.g.: "How long does the museum remain closed?"
-            if first_word.lower_ == "how" and next_word.dep_ != "ROOT":
-                start_chunk = chunk_list[0]
-                last_word = start_chunk[len(start_chunk) - 1]
-                chunk_list[0] = sentence[0: last_word.i + 1]
-
-            # E.g.: "How long is the journey?"
-            else:
-                chunk_list = [start_chunk] + chunk_list
-
-        # E.g.: "Which is the noisiest and the largest city?"
-        else:
-            start_chunk = chunk_list[0]
-            last_word = start_chunk[len(start_chunk) - 1]
-            chunk_list[0] = sentence[0: last_word.i + 1]
-
-    return _filter_chunk_list(sentence, chunk_list)
-
-
-def _get_start_chunk(sentence: Union[Doc, Span]):
-    if not is_doc_or_span(sentence) or len(sentence) == 0:
-        return None
-
-    # E.g.: "how old" / "how long"
-    if sentence[0].lower_ == "how" and (is_adj(sentence[1]) or is_adv(sentence[1])):
-        return sentence[0:2]
-
-    return sentence[0:1]
-
-
-def _get_merged_noun_chunks(sentence: Union[Doc, Span]):
-    """
-    Merge te chunks that are linked through a preposition and get the prepared list
-
-    E.g.:
-        - question: "Who is the director of Amsterdam museum?"
-        - chunks: ["who", "the director", "Amsterdam museum"]
-        - merged chunks: ["who", "the director of Amsterdam museum"]
-
-    :param sentence: The target sentence
-    :return: The list of chunks
-    """
-
-    # FIXME
-    # E.g.: "The Goddess of Democracy, also known as the Goddess of Democracy and Freedom, the Spirit of Democracy,
-    # and the Goddess of Liberty (自由女神; zìyóu nǚshén), was a 10-metre-tall (33 ft) statue created during the day
-    # of April 10 Tiananmen Square protests"
-
-    chunk_list = []
-    original_chunk_list = list(sentence.noun_chunks)
-
-    for index, chunk in enumerate(original_chunk_list):
-        if index == 0:
-            chunk_list.append(chunk)
-        if index == len(original_chunk_list) - 1:
-            break
-
-        last_word = chunk[len(chunk) - 1]
-        next_word = get_next_word(last_word)
-        next_chunk = original_chunk_list[index + 1]
-
-        # Merge two chunks that are linked through a preposition
-        # E.g.: "Who is the director of Amsterdam museum?"
-        # E.g.: "How many paintings are on display at the Amsterdam Museum?"
-        # E.g.: "Where does the holder of the position of Lech Kaczynski live? [1]
-        if next_word.dep_ == "prep":
-            crr_chunk = chunk_list[len(chunk_list) - 1]
-            chunk_list[len(chunk_list) - 1] = sentence[crr_chunk.start: next_chunk.end]
-        else:
-            chunk_list.append(next_chunk)
-
-    return chunk_list
-
-
-def _filter_chunk_list(sentence: Union[Doc, Span], chunk_list: [Span]):
-    """
-    Exclude the WH-words chunks-like from the list of chunks, excepting for the first entry
-
-    E.g.: "Who is the director who own 2 cars and sold a house or a panel?"
-        - chunk_list = ["Who", "the director", "who", "10 cars", "a house", "a panel"]
-        - WH-words chunks-like: [chunk_list[2]]
-        - filtered_list = ["Who", "the director", "10 cars", "a house", "a panel"]
-
-    :param sentence: The target sentence
-    :param chunk_list: The target list of chunks
-    :return: The filtered list of chunks
-    """
-
-    filtered_list = []
-
-    if not is_doc_or_span(sentence) or is_empty_list(chunk_list):
-        return filtered_list
-
-    for index, chunk in enumerate(chunk_list):
-        if len(chunk) == 1:
-            if index == 0 or chunk[0] not in get_wh_words(sentence):
-                filtered_list.append(chunk)
-        else:
-            filtered_list.append(chunk)
-
-    return filtered_list
-
-
-def get_chunk_index(chunk_list: [Span], chunk: Span):
-    """
-    Retrieve the chunk's position in chunk_list
-
-    :param chunk_list: The list of chunks (use case: "noun_chunks")
-    :param chunk: The target chunk
-    :return: The index of the target chunk
-    """
-
-    if is_empty_list(chunk_list) or not isinstance(chunk, Span):
-        return -1
-
-    for index, item in enumerate(chunk_list):
-        if item == chunk:
-            return index
-
-    return -1
 
 
 def get_next_token(word: Token, pos_list: [str]):
@@ -233,19 +62,6 @@ def get_next_token(word: Token, pos_list: [str]):
     return next_word
 
 
-def get_prev_chunk(chunks: [Span], chunk: Span):
-    warnings.warn(SYSTEM_MESSAGES.METHOD_NOT_USED, DeprecationWarning)
-
-    if is_empty_list(chunks) or not isinstance(chunk, Span):
-        return None
-
-    chunk_index = chunks.index(chunk)
-    if chunk_index > 0:
-        return chunks[chunk_index - 1]
-
-    return None
-
-
 def get_wh_adverbs(document: Union[Doc, Span]):
     """
     Get the list of WH-adverbs (tag = 'WRB'):\n
@@ -267,7 +83,7 @@ def get_wh_adverbs(document: Union[Doc, Span]):
     return list([token for token in document if token.tag_ == 'WRB'])
 
 
-def get_wh_determiner(document: Union[Doc, Span]):
+def get_wh_determiners(document: Union[Doc, Span]):
     """
     Get the list of WH-determiners (tag = 'WDT'):\n
     - what, which, whose\n
@@ -371,7 +187,6 @@ def retokenize(document: Union[Doc, Span], sentence: Span):
     """
 
     warnings.warn(SYSTEM_MESSAGES.METHOD_USED_WITH_SPACY_2, DeprecationWarning)
-    print(f'{COLORS.LIGHT_RED} Do not use retokenizer with Spacy v3!')
 
     for named_entity in sentence.ents:
         raw_entity = _prepare_compound_entity(named_entity)
