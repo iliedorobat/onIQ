@@ -58,7 +58,7 @@ statement: {
 	action: {
 		neg: None,
 		verb: {
-			aux_vbs: None,
+			aux_vbs: [can],
 			main_vb: find,
 			modal_vb: None
 		}

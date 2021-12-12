@@ -96,7 +96,7 @@ def get_main_verb(aux_verb: Token):
         if prev_word is not None and prev_word.lower_ not in ["when", "where"]:
             return None
 
-    next_word = get_next_token(aux_verb, ["DET", "ADV", "ADJ", "ADP", "CCONJ", "NOUN", "PRON", "PROPN"])
+    next_word = get_next_token(aux_verb, ["DET", "ADV", "ADJ", "ADP", "CCONJ", "NUM", "NOUN", "PRON", "PROPN"])
 
     # E.g.: "Who is the director who own 2 cars and sold a house or a panel?"
     if next_word is not None and next_word.pos_ == "VERB":
