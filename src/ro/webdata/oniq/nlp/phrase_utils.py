@@ -2,6 +2,7 @@ from typing import Union
 from spacy.tokens import Doc, Span
 
 from ro.webdata.oniq.model.sentence.Phrase import Phrase
+from ro.webdata.oniq.nlp.chunk_utils import get_noun_chunks
 
 
 def prepare_phrase_list(sentence: Union[Doc, Span]):

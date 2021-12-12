@@ -3,6 +3,7 @@ from ro.webdata.oniq.validation.dataset.direct_questions.who_pairs import WHO_PA
 from ro.webdata.oniq.validation.dataset.direct_questions.whom_pairs import WHOM_PAIRS
 from ro.webdata.oniq.validation.dataset.direct_questions.whose_pairs import WHOSE_PAIRS
 from ro.webdata.oniq.validation.dataset.what.what_pairs import WHAT_PAIRS
+from ro.webdata.oniq.validation.dataset.what.what_do_pairs import WHAT_DO_PAIRS
 from ro.webdata.oniq.validation.dataset.what.what_is_pairs import WHAT_IS_PAIRS
 from ro.webdata.oniq.validation.dataset.which.which_pairs import WHICH_PAIRS
 from ro.webdata.oniq.validation.dataset.which.which_is_pairs import WHICH_IS_PAIRS
@@ -15,7 +16,7 @@ from ro.webdata.oniq.validation.dataset.why.why_pairs import WHY_PAIRS
 
 PAIRS = DO_PAIRS + DID_PAIRS + \
         HOW_PAIRS + HOW_IS_PAIRS + \
-        WHAT_PAIRS + WHAT_IS_PAIRS + \
+        WHAT_PAIRS + WHAT_DO_PAIRS + WHAT_IS_PAIRS + \
         WHEN_PAIRS + WHEN_IS_PAIRS + \
         WHERE_PAIRS + WHERE_IS_PAIRS + \
         WHICH_PAIRS + WHICH_IS_PAIRS + \
