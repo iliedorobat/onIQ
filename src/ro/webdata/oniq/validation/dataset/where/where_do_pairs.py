@@ -6,7 +6,7 @@ WHERE_DO_PAIRS_01 = [
 statement: {
 	target: {
 		phrase: where did Lena Horne
-		question type: when
+		question type: where
 	},
 	action: {
 		neg: None,
