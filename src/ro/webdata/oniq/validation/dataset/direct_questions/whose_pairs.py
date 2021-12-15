@@ -27,30 +27,6 @@ statement: {
 WHOSE_PAIRS_02 = [
     {
         # [6]
-        "query": "Whose are these keys?",
-        "result": """
-statement: {
-	target: {
-		phrase: whose
-		question type: whose
-	},
-	action: {
-		neg: None,
-		verb: {
-			aux_vbs: [are],
-			main_vb: None,
-			modal_vb: None
-		}
-	},
-	related: {
-		phrase: these keys
-		question type: None
-	}
-}
-"""
-    },
-    {
-        # [6]
         "query": "Whose turn is it?",
         "result": """
 statement: {

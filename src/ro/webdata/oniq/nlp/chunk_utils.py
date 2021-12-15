@@ -4,7 +4,7 @@ from spacy.tokens import Doc, Span, Token
 
 from ro.webdata.oniq.common.constants import SYSTEM_MESSAGES
 from ro.webdata.oniq.nlp.adv_utils import get_comparison_adv
-from ro.webdata.oniq.nlp.nlp_utils import get_wh_words
+from ro.webdata.oniq.nlp.nlp_utils import is_wh_noun_chunk, get_wh_words
 from ro.webdata.oniq.nlp.utils import is_doc_or_span, is_empty_list
 from ro.webdata.oniq.nlp.word_utils import get_next_word, get_prev_word, is_adj, is_adv, is_aux_verb, is_cardinal, \
     is_common_det, is_linked_by_conjunction, is_noun, is_preposition, is_verb, is_wh_det, is_wh_word
@@ -156,8 +156,9 @@ def get_noun_chunks(sentence: Union[Doc, Span]):
         next_word = get_next_word(wh_span[len(wh_span) - 1])
 
         if is_verb(next_word):
-            # E.g.: "How long does the museum remain closed?"
-            if first_word.lower_ == "how" and next_word.dep_ != "ROOT":
+            # 1. & 2. E.g.: "How long does the museum remain closed?"
+            # 1. & 3. E.g.: "How long will it take?"
+            if first_word.lower_ == "how" and next_word.dep_ != "ROOT" and next_word.tag_ != "MD":
                 first_chunk = chunk_list[0]
                 last_word = first_chunk[len(first_chunk) - 1]
                 chunk_list[0] = sentence[0: last_word.i + 1]
@@ -304,21 +305,33 @@ def _get_merged_prep_chunks(sentence: Union[Doc, Span]):
     return chunk_list
 
 
-# TODO: ilie.dorobat: documentation
+# TODO: ilie.dorobat: add the documentation
 def _prepare_chunk(chunk: Span):
-    chunk_list = list(chunk.sent.noun_chunks)
+    initial_chunks = _get_merged_prep_chunks(chunk.sent)
+    filtered_initial_chunks = [
+        init_chunk
+        for init_chunk in initial_chunks
+        # E.g.: "Whom did you see?"
+        if not is_wh_noun_chunk(init_chunk) or (
+            is_wh_noun_chunk(init_chunk) and len(init_chunk) > 1
+        )
+    ]
     prev_word = get_prev_word(chunk[0])
     aux_verb = None
+    preposition = None
 
-    # E.g.: "What did James Cagney win in the 15th Academy Awards?" [1]
-    # E.g.: "When did Lena Horne receive the Grammy Award for Best Jazz Vocal Album?" [1]
-    # E.g.: "Where did Lena Horne receive the Grammy Award for Best Jazz Vocal Album?" ## derived from [1]
-    if is_aux_verb(prev_word):
-        aux_verb = prev_word
-        prev_word = get_prev_word(prev_word)
-
-    # E.g.: "Which one of the most beautiful paintings has not been moved to Bacau?"
-    while is_preposition(prev_word) or is_cardinal(prev_word):
+    while is_aux_verb(prev_word) or \
+            is_preposition(prev_word) or \
+            is_cardinal(prev_word) or \
+            (isinstance(prev_word, Token) and prev_word.dep_ == "neg"):
+        # E.g.: "What did James Cagney win in the 15th Academy Awards?" [1]
+        # E.g.: "When did Lena Horne receive the Grammy Award for Best Jazz Vocal Album?" [1]
+        # E.g.: "Where did Lena Horne receive the Grammy Award for Best Jazz Vocal Album?" ## derived from [1]
+        if is_aux_verb(prev_word):
+            aux_verb = prev_word
+        # E.g.: "Which one of the most beautiful paintings has not been moved to Bacau?"
+        if is_preposition(prev_word):
+            preposition = prev_word
         prev_word = get_prev_word(prev_word)
 
     # E.g.: "How many beautiful days do I have to wait until the opening?"
@@ -326,16 +339,19 @@ def _prepare_chunk(chunk: Span):
         prev_word = get_prev_word(prev_word)
 
     if is_wh_word(prev_word):
-        # TODO: ilie.dorobat: simplify by checking if verb.dep_ == "aux"?
-        if (prev_word.lower_ == "what" and prev_word.dep_ in ["dobj", "pobj"]) or \
-                (prev_word.lower_ == "which" and is_wh_det(prev_word)) or \
-                (prev_word.lower_ == "how" and aux_verb is not None and aux_verb.dep_ == "aux"):
-            # E.g.: "When was anıtkabir built?" [3]
-            prev_chunk = chunk.sent[prev_word.i: prev_word.i + 1]
-            prev_chunk_index = get_chunk_index(chunk_list, prev_chunk)
+        # OLD:
+        # if (prev_word.lower_ == "what" and prev_word.dep_ in ["dobj", "pobj"]) or \
+        #         (prev_word.lower_ == "which" and is_wh_det(prev_word)) or \
+        #         (prev_word.lower_ == "how" and aux_verb is not None and aux_verb.dep_ == "aux"):
+        if len(filtered_initial_chunks) > 1:
+            if (aux_verb is not None and aux_verb.dep_ == "aux") or preposition is not None:
+                # E.g.: "When was anıtkabir built?" [3]
+                chunk_list = list(chunk.sent.noun_chunks)
+                prev_chunk = chunk.sent[prev_word.i: prev_word.i + 1]
+                prev_chunk_index = get_chunk_index(chunk_list, prev_chunk)
 
-            # Return a custom chunk only if prev_word is not already part of a chunk
-            if prev_chunk_index == -1:
-                return chunk.sent[prev_word.i: chunk.end]
+                # Return a custom chunk only if prev_word is not already part of a chunk
+                if prev_chunk_index == -1:
+                    return chunk.sent[prev_word.i: chunk.end]
 
     return chunk

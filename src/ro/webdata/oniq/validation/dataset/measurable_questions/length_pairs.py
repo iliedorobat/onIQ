@@ -1,3 +1,5 @@
+# Length of time or space
+
 HOW_LONG_PAIRS_01 = [
     {
         "query": "How long is the journey?",
@@ -70,4 +72,32 @@ statement: {
     }
 ]
 
-TIME_SPACE_PAIRS = HOW_LONG_PAIRS_01
+HOW_LONG_PAIRS_02 = [
+    {
+        # [6]
+        "query": "How long will it take?",
+        "result": """
+statement: {
+	target: {
+		phrase: how long
+		question type: how
+	},
+	action: {
+		neg: None,
+		verb: {
+			aux_vbs: [will],
+			main_vb: take,
+			modal_vb: None
+		}
+	},
+	related: {
+		phrase: it
+		question type: None
+	}
+}
+"""
+    }
+]
+
+TIME_SPACE_PAIRS = HOW_LONG_PAIRS_01 + \
+                   HOW_LONG_PAIRS_02
