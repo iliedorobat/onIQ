@@ -9,16 +9,18 @@ from ro.webdata.oniq.validation.dataset.which.which_pairs import WHICH_PAIRS
 from ro.webdata.oniq.validation.dataset.which.which_is_pairs import WHICH_IS_PAIRS
 from ro.webdata.oniq.validation.dataset.measurable_questions.how_pairs import HOW_PAIRS, HOW_IS_PAIRS
 from ro.webdata.oniq.validation.dataset.where.where_pairs import WHERE_PAIRS
+from ro.webdata.oniq.validation.dataset.where.where_do_pairs import WHERE_DO_PAIRS
 from ro.webdata.oniq.validation.dataset.where.where_is_pairs import WHERE_IS_PAIRS
 from ro.webdata.oniq.validation.dataset.when.when_pairs import WHEN_PAIRS
+from ro.webdata.oniq.validation.dataset.when.when_do_pairs import WHEN_DO_PAIRS
 from ro.webdata.oniq.validation.dataset.when.when_is_pairs import WHEN_IS_PAIRS
 from ro.webdata.oniq.validation.dataset.why.why_pairs import WHY_PAIRS
 
 PAIRS = DO_PAIRS + DID_PAIRS + \
         HOW_PAIRS + HOW_IS_PAIRS + \
         WHAT_PAIRS + WHAT_DO_PAIRS + WHAT_IS_PAIRS + \
-        WHEN_PAIRS + WHEN_IS_PAIRS + \
-        WHERE_PAIRS + WHERE_IS_PAIRS + \
+        WHEN_PAIRS + WHEN_DO_PAIRS + WHEN_IS_PAIRS + \
+        WHERE_PAIRS + WHERE_DO_PAIRS + WHERE_IS_PAIRS + \
         WHICH_PAIRS + WHICH_IS_PAIRS + \
         WHO_PAIRS + WHOM_PAIRS + WHOSE_PAIRS + \
         WHY_PAIRS

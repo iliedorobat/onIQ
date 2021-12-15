@@ -9,7 +9,6 @@ from ro.webdata.oniq.nlp.utils import is_empty_list
 from ro.webdata.oniq.nlp.word_utils import get_next_word, is_adj, is_conjunction, is_verb, is_wh_word
 
 
-# TODO: ilie.dorobat: "Where can one find farhad and shirin monument?" => check the action list
 # TODO: ilie.dorobat: add the documentation
 def get_action_list(sentence: Span):
     action_list = []
@@ -23,28 +22,36 @@ def get_action_list(sentence: Span):
     for verb_item in verb_list:
         if isinstance(verb_item, list):
             aux_verbs = verb_item
-            next_verb = get_main_verb(aux_verbs[len(aux_verbs) - 1])
+            main_verb = get_main_verb(aux_verbs[len(aux_verbs) - 1])
             is_followed_by_adj = _is_followed_by_adj(aux_verbs)
 
             # E.g.: "Which female actor played in Casablanca and is married to a writer born in Rome and has three children?"
             # E.g.: "When was Bibi Andersson married to Per Ahlmark?" [1]
-            if is_followed_by_adj or next_verb is None:
+            if is_followed_by_adj or main_verb is None:
                 verb = Verb(aux_verbs, None, modal_verb)
                 action = Action(sentence, verb)
                 action_list.append(action)
 
                 aux_verbs = modal_verb = None
         elif isinstance(verb_item, Token):
-            if verb_item.tag_ == "MD":
-                modal_verb = verb_item
-            else:
-                # FIXME: "When did Lena Horne receive the Grammy Award for Best Jazz Vocal Album?" [1]
+            # E.g.: "Where can one find farhad and shirin monument?" [5]
+            if verb_item.dep_ != "nmod":
+                if verb_item.tag_ == "MD":
+                    modal_verb = verb_item
 
-                verb = Verb(aux_verbs, verb_item, modal_verb)
-                action = Action(sentence, verb)
-                action_list.append(action)
+                # E.g.: "How many days do I have to wait for him?"
+                elif verb_item.dep_ == "xcomp" and len(action_list) > 0:
+                    action = action_list[len(action_list) - 1]
+                    action.verb.main_vb = verb_item
 
-                aux_verbs = modal_verb = None
+                else:
+                    # FIXME: "When did Lena Horne receive the Grammy Award for Best Jazz Vocal Album?" [1]
+
+                    verb = Verb(aux_verbs, verb_item, modal_verb)
+                    action = Action(sentence, verb)
+                    action_list.append(action)
+
+                    aux_verbs = modal_verb = None
 
     return action_list
 

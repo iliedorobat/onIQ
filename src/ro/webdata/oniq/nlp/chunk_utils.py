@@ -311,6 +311,8 @@ def _prepare_chunk(chunk: Span):
     aux_verb = None
 
     # E.g.: "What did James Cagney win in the 15th Academy Awards?" [1]
+    # E.g.: "When did Lena Horne receive the Grammy Award for Best Jazz Vocal Album?" [1]
+    # E.g.: "Where did Lena Horne receive the Grammy Award for Best Jazz Vocal Album?" ## derived from [1]
     if is_aux_verb(prev_word):
         aux_verb = prev_word
         prev_word = get_prev_word(prev_word)

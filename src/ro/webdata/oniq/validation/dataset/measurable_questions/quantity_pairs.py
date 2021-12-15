@@ -57,7 +57,7 @@ statement: {
 	action: {
 		neg: None,
 		verb: {
-			aux_vbs: None,
+			aux_vbs: [do],
 			main_vb: wait,
 			modal_vb: None
 		}
@@ -80,7 +80,7 @@ statement: {
 	action: {
 		neg: None,
 		verb: {
-			aux_vbs: None,
+			aux_vbs: [do],
 			main_vb: wait,
 			modal_vb: None
 		}
