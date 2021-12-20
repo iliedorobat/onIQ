@@ -145,4 +145,33 @@ statement: {
     }
 ]
 
-QUANTITY_PAIS = QUANTITY_PAIS_01
+QUANTITY_PAIS_03 = [
+    {
+        # [6]
+        "query": "How many cars are there?",
+        "result": """
+statement: {
+	target: {
+		phrase: how many cars
+		question type: count
+	},
+	action: {
+		neg: None,
+		verb: {
+			aux_vbs: [are],
+			main_vb: None,
+			modal_vb: None
+		}
+	},
+	related: {
+		phrase: there
+		question type: None
+	}
+}
+"""
+    }
+]
+
+QUANTITY_PAIS = QUANTITY_PAIS_01 + \
+                QUANTITY_PAIS_02 + \
+                QUANTITY_PAIS_03

@@ -4,10 +4,13 @@ from iteration_utilities import unique_everseen
 from ro.webdata.oniq.common.print_utils import echo
 
 from ro.webdata.oniq.model.sentence.Action import Action
+from ro.webdata.oniq.model.sentence.Adverb import Adverb
+from ro.webdata.oniq.model.sentence.Adjective import Adjective
 from ro.webdata.oniq.model.sentence.Statement import ConsolidatedStatement, Statement
 
 from ro.webdata.oniq.nlp.actions import get_action_list, is_part_of_action
 from ro.webdata.oniq.nlp.adj_utils import get_next_linked_adj_list, get_prev_linked_adj_list
+from ro.webdata.oniq.nlp.adv_utils import get_next_adv
 from ro.webdata.oniq.nlp.chunk_utils import extract_chunk, get_chunk_index, is_linked_chunk, get_noun_chunks
 from ro.webdata.oniq.nlp.noun_utils import get_noun_ancestor, is_linked_noun
 from ro.webdata.oniq.nlp.nlp_utils import is_wh_noun_chunk, is_wh_noun_phrase, retokenize
@@ -91,7 +94,7 @@ def _generate_statement_list(sentence: Span, action_list: [Action]):
                     if target_chunk != related_chunk:
                         verb = get_verb_ancestor(related_chunk)
                         action = _get_action(action_list, verb)
-                        statements = _append_statement(statements, sentence, target_chunk, action, related_chunk)
+                        _append_statement(statements, sentence, target_chunk, action, related_chunk)
 
         # E.g.: "Which is the noisiest and the largest city"
         # BUT NOT "Which is the noisiest town and the largest city"
@@ -105,13 +108,13 @@ def _generate_statement_list(sentence: Span, action_list: [Action]):
                 # E.g.: "Who is very beautiful and very smart?"
                 if len(related_chunks) == 0:
                     prev_adj_list = get_next_linked_adj_list(target_chunk)
-                    statements = _append_adj_statement(prev_adj_list, statements, sentence, target_chunk, action)
+                    _append_adj_statements(prev_adj_list, statements, sentence, target_chunk, action)
 
                 elif is_wh_noun_chunk(target_chunk) and action is not None:
                     for related_chunk in related_chunks:
-                        statements = _append_statement(statements, sentence, target_chunk, action, related_chunk)
+                        _append_statement(statements, sentence, target_chunk, action, related_chunk)
                         prev_adj_list = get_prev_linked_adj_list(related_chunk)
-                        statements = _append_adj_statement(prev_adj_list, statements, sentence, target_chunk, action)
+                        _append_adj_statements(prev_adj_list, statements, sentence, target_chunk, action)
 
                     # Mirroring the list of statements as long as the list
                     # has been built from the end to the beginning
@@ -119,12 +122,19 @@ def _generate_statement_list(sentence: Span, action_list: [Action]):
 
         # E.g.: "Which of the smart kids are famous?"
         # E.g.: "Which woman is beautiful, generous, tall and rich?"
+        # E.g.: "How many cars are there?"
         elif len(filtered_chunks) == 1:
             for target_chunk in target_chunks:
                 verb = get_verb_ancestor(target_chunk)
                 action = _get_action(action_list, verb)
-                next_linked_adj = get_next_linked_adj_list(target_chunk)
-                statements = _append_adj_statement(next_linked_adj, statements, sentence, target_chunk, action)
+                next_adv = get_next_adv(verb)
+
+                # E.g.: "How many cars are there?"
+                if next_adv is not None:
+                    _append_adv_statement(statements, sentence, target_chunk, action)
+                else:
+                    next_linked_adj = get_next_linked_adj_list(target_chunk)
+                    _append_adj_statements(next_linked_adj, statements, sentence, target_chunk, action)
 
         else:
             print("else...")
@@ -134,19 +144,24 @@ def _generate_statement_list(sentence: Span, action_list: [Action]):
 
 
 # TODO: ilie.dorobat: add the documentation && add safety checks
-def _append_adj_statement(adj_list: [Token], statements: [Statement], sentence: Span, target_chunk: Span, action: Action):
+def _append_adj_statements(adj_list: [Adjective], statements: [Statement], sentence: Span, target_chunk: Span, action: Action):
     for adj in adj_list:
         related_chunk = sentence[adj.token.i: adj.token.i + 1]
-        statements = _append_statement(statements, sentence, target_chunk, action, related_chunk)
+        _append_statement(statements, sentence, target_chunk, action, related_chunk)
 
-    return statements
+
+# TODO: ilie.dorobat: add the documentation && add safety checks
+def _append_adv_statement(statements: [Statement], sentence: Span, target_chunk: Span, action: Action):
+    verb = get_verb_ancestor(target_chunk)
+    adv = get_next_adv(verb)
+    related_chunk = sentence[adv.token.i: adv.token.i + 1]
+    _append_statement(statements, sentence, target_chunk, action, related_chunk)
 
 
 # TODO: ilie.dorobat: add the documentation && add safety checks
 def _append_statement(statements: [Statement], sentence: Span, target_chunk: Span, action: Action, related_chunk: Span):
     statement = Statement(sentence, target_chunk, action, related_chunk)
     statements.append(statement)
-    return statements
 
 
 def _get_related_chunks(chunk_list: [Span], target_chunks: [Span]):

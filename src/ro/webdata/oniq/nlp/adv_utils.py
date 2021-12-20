@@ -2,7 +2,8 @@ import warnings
 from spacy.tokens import Token
 
 from ro.webdata.oniq.common.constants import SYSTEM_MESSAGES
-from ro.webdata.oniq.nlp.word_utils import get_prev_word, is_adj, is_adv, is_common_det
+from ro.webdata.oniq.model.sentence.Adverb import Adverb
+from ro.webdata.oniq.nlp.word_utils import get_next_word, get_prev_word, is_adj, is_adv, is_common_det
 
 
 # TODO: ilie.dorobat: add the documentation
@@ -48,3 +49,16 @@ def get_comparison_adv(word: Token = None):
         return None
 
     return prev_word
+
+
+# TODO: ilie.dorobat: add the documentation
+# E.g.: "How many cars are there?"
+def get_next_adv(word: Token):
+    if not isinstance(word, Token):
+        return None
+
+    next_word = get_next_word(word)
+    if is_adv(next_word):
+        return Adverb(next_word)
+
+    return None
