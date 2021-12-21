@@ -55,7 +55,7 @@ def _init_phrase_list(sentence: Union[Doc, Span]):
     chunk_list = get_noun_chunks(sentence)
 
     for index, chunk in enumerate(chunk_list):
-        phrase = Phrase(sentence, chunk, chunk_list)
+        phrase = Phrase(chunk, chunk_list)
         phrase_list.append(phrase)
 
     return phrase_list

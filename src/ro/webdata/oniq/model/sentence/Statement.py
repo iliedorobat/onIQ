@@ -11,10 +11,10 @@ class Statement:
     Data structure for representing the relationship between two chunks
     """
 
-    def __init__(self, sentence: Union[Doc, Span], target_chunk: Span, action: Action, related_phrase: Span):
+    def __init__(self, target_chunk: Span, action: Action, related_phrase: Span):
         self.action = action
-        self.phrase = Phrase(sentence, target_chunk, PHRASE_TYPES.TARGET)
-        self.related_phrase = Phrase(sentence, related_phrase, PHRASE_TYPES.RELATED)
+        self.phrase = Phrase(target_chunk, PHRASE_TYPES.TARGET)
+        self.related_phrase = Phrase(related_phrase, PHRASE_TYPES.RELATED)
 
     def __eq__(self, other):
         if not isinstance(other, Statement):

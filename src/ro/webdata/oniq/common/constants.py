@@ -1,5 +1,6 @@
 # TODO: complete the types of questions
 class QUESTION_TYPES:
+    ASK = "ask"
     COUNT = "count"  # how many, how much, how often
     HOW = "how"
     WHAT = "what"

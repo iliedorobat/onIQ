@@ -1,9 +1,9 @@
-from typing import Union
-from spacy.tokens import Doc, Span, Token
+from spacy.tokens import Span, Token
 
-from ro.webdata.oniq.common.constants import QUESTION_TYPES
+from ro.webdata.oniq.model.sentence.Action import Action
 from ro.webdata.oniq.model.sentence.Conjunction import Conjunction
-from ro.webdata.oniq.nlp.chunk_utils import extract_comparison_adv, extract_determiner, get_chunk_index, get_noun_chunks
+from ro.webdata.oniq.nlp.chunk_utils import extract_chunk, extract_comparison_adv, extract_determiner, \
+    get_chunk_index, get_noun_chunks
 from ro.webdata.oniq.nlp.utils import is_empty_list
 from ro.webdata.oniq.nlp.word_utils import get_preposition, is_adj, is_conjunction, \
     is_followed_by_conjunction, is_preceded_by_conjunction, is_verb, is_wh_word
@@ -27,9 +27,9 @@ class Phrase:
     :attr text: The text
     """
 
-    def __init__(self, sentence: Span, chunk: Span, phrase_type: str):
+    def __init__(self, chunk: Span, phrase_type: str):
         self.chunk = chunk
-        self.conj = _prepare_conjunction(sentence, self.chunk)
+        self.conj = _prepare_conjunction(self.chunk)
 
         self.comparison_adv = extract_comparison_adv(chunk)
         self.det = extract_determiner(self.chunk)
@@ -37,8 +37,9 @@ class Phrase:
         self.meta_prep = _prepare_meta_prep(self.chunk, self.prep)
 
         self.phrase_type = phrase_type
-        self.question_type = _prepare_question_type(sentence, self.chunk)
-        self.text = _prepare_text(self.chunk,  self.comparison_adv, self.det, self.prep, self.meta_prep, self.question_type)
+        self.question_type = _prepare_question_type(self.chunk)
+        self.text = _prepare_text(self.chunk,  self.comparison_adv, self.det, self.prep, self.meta_prep)
+        self.prep_phrase = None  # TODO: ilie.dorobat
 
     def __eq__(self, other):
         if not isinstance(other, Phrase):
@@ -52,28 +53,28 @@ class Phrase:
         return self.get_str(self.phrase_type)
 
     def get_str(self, phrase_type, indentation=''):
-        text = f'##{self.conj}## {self.text}' if self.conj else self.text
-
         return (
             f'{indentation}{phrase_type}: {{\n'
-            f'{indentation}\tphrase: {text}\n'
-            f'{indentation}\tquestion type: {self.question_type}\n'
+            f'{indentation}\toperator: {self.conj}\n'
+            f'{indentation}\tphrase: {self.text}\n'
+            f'{indentation}\tprep_phrase: {self.prep_phrase}\n'
+            f'{indentation}\ttype: {self.question_type}\n'
             f'{indentation}}}'
         )
 
 
-def _prepare_conjunction(sentence: Union[Doc, Span], chunk: Span):
+def _prepare_conjunction(chunk: Span):
     """
     Prepare the conjunction
 
-    :param sentence: The target sentence
     :param chunk: The current iterated chunk
     :return: Conjunction object
     """
 
-    if sentence is None or len(sentence) == 0:
+    if not isinstance(chunk, Span):
         return None
 
+    sentence = chunk.sent
     first_word = sentence[0]
     chunk_list = get_noun_chunks(sentence)
 
@@ -133,20 +134,20 @@ def _prepare_meta_prep(chunk: Span, prep: Token):
     return None
 
 
-def _prepare_text(chunk: Span, comparison_adv: Token, det: Token, prep: Token, meta_prep: Token, question_type: QUESTION_TYPES):
+def _prepare_text(chunk: Span, comparison_adv: Token, det: Token, prep: Token, meta_prep: Token):
     """
     Prepare the text which will be displayed
 
     :param chunk: The target chunk
     :param prep: The preposition of the phrase
     :param meta_prep: The preposition of the previous related phrase
-    :param question_type: The type of the question
     :return: The text
     """
 
     if not isinstance(chunk, Span):
         return None
 
+    question_type = _prepare_question_type(chunk)
     text = chunk.text
 
     if isinstance(comparison_adv, Token):
@@ -167,42 +168,47 @@ def _prepare_text(chunk: Span, comparison_adv: Token, det: Token, prep: Token, m
 
     # Exclude the WH-word
     if is_wh_word(chunk[0]):
-        text = chunk[chunk.start + 1: chunk.end].text
+        # E.g.: "How old are you?" [6]
+        if isinstance(question_type, Span) and question_type.text in chunk.text:
+            start = chunk.start + len(question_type)
+            text = chunk[start: chunk.end].text
 
-    if isinstance(question_type, str):
-        if question_type == QUESTION_TYPES.COUNT:
-            return f'{QUESTION_TYPES.HOW} {text}'.strip()
-        return f'{question_type} {text}'.strip()
+    if isinstance(question_type, Span):
+        if question_type.text.lower() not in text:
+            return f'{question_type} {text}'.strip()
 
     return f'{text}'
 
 
-def _prepare_question_type(sentence: Span, chunk: Span):
+def _prepare_question_type(chunk: Span):
     """
     Extract the type of the question
 
     :param chunk: The target chunk
-    :return: One of QUESTION_TYPES values
+    :return: what, why, how, how long, etc.
     """
 
-    if not isinstance(sentence, Span) or not isinstance(chunk, Span):
+    if not isinstance(chunk, Span):
         return None
 
-    chunk_list = get_noun_chunks(sentence)
+    chunk_list = get_noun_chunks(chunk.sent)
     first_word = _get_first_word(chunk_list, chunk)
 
-    if first_word is not None and first_word in QUESTION_TYPES.__dict__.values():
-        if first_word == QUESTION_TYPES.HOW:
-            sec_word = chunk[1] if len(chunk) > 1 else None
-            # TODO: how long, how far
-            if sec_word is not None and is_adj(sec_word):  # sec_word.dep_ == "amod"???
-                return QUESTION_TYPES.COUNT
-        return QUESTION_TYPES.__dict__[first_word.upper()]
+    if is_wh_word(first_word):
+        if first_word.lower_ == "how":
+            how_chunk = extract_chunk(chunk_list, first_word)
+            second_word = how_chunk[1] if len(how_chunk) > 1 else None
+
+            # E.g.: "How many paintings are on display at the Amsterdam Museum?"
+            if is_adj(second_word):
+                return chunk.sent[first_word.i: second_word.i + 1]
+
+        return chunk.sent[first_word.i: first_word.i + 1]
 
     return None
 
 
-# TODO: ilie.doroabt: add the documentation
+# TODO: ilie.dorobat: add the documentation
 def _get_first_word(chunk_list: [Span], chunk: Span):
     if is_empty_list(chunk_list) or not isinstance(chunk, Span):
         return None
@@ -214,4 +220,4 @@ def _get_first_word(chunk_list: [Span], chunk: Span):
             return None
         return _get_first_word(chunk_list, chunk_list[chunk_index - 1])
 
-    return chunk[0].lower_
+    return chunk[0]

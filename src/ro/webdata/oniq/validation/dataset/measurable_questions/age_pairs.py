@@ -6,9 +6,9 @@ AGE_PAIRS = [
 statement: {
 	target: {
 		operator: None
-		phrase: how old
+		phrase: How old
 		prep_phrase: None
-		type: count
+		type: How old
 	},
 	action: {
 		neg: None,

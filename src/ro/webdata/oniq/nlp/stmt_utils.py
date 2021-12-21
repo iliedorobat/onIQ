@@ -94,7 +94,7 @@ def _generate_statement_list(sentence: Span, action_list: [Action]):
                     if target_chunk != related_chunk:
                         verb = get_verb_ancestor(related_chunk)
                         action = _get_action(action_list, verb)
-                        _append_statement(statements, sentence, target_chunk, action, related_chunk)
+                        _append_statement(statements, target_chunk, action, related_chunk)
 
         # E.g.: "Which is the noisiest and the largest city"
         # BUT NOT "Which is the noisiest town and the largest city"
@@ -112,7 +112,7 @@ def _generate_statement_list(sentence: Span, action_list: [Action]):
 
                 elif is_wh_noun_chunk(target_chunk) and action is not None:
                     for related_chunk in related_chunks:
-                        _append_statement(statements, sentence, target_chunk, action, related_chunk)
+                        _append_statement(statements, target_chunk, action, related_chunk)
                         prev_adj_list = get_prev_linked_adj_list(related_chunk)
                         _append_adj_statements(prev_adj_list, statements, sentence, target_chunk, action)
 
@@ -147,7 +147,7 @@ def _generate_statement_list(sentence: Span, action_list: [Action]):
 def _append_adj_statements(adj_list: [Adjective], statements: [Statement], sentence: Span, target_chunk: Span, action: Action):
     for adj in adj_list:
         related_chunk = sentence[adj.token.i: adj.token.i + 1]
-        _append_statement(statements, sentence, target_chunk, action, related_chunk)
+        _append_statement(statements, target_chunk, action, related_chunk)
 
 
 # TODO: ilie.dorobat: add the documentation && add safety checks
@@ -155,12 +155,12 @@ def _append_adv_statement(statements: [Statement], sentence: Span, target_chunk:
     verb = get_verb_ancestor(target_chunk)
     adv = get_next_adv(verb)
     related_chunk = sentence[adv.token.i: adv.token.i + 1]
-    _append_statement(statements, sentence, target_chunk, action, related_chunk)
+    _append_statement(statements, target_chunk, action, related_chunk)
 
 
 # TODO: ilie.dorobat: add the documentation && add safety checks
-def _append_statement(statements: [Statement], sentence: Span, target_chunk: Span, action: Action, related_chunk: Span):
-    statement = Statement(sentence, target_chunk, action, related_chunk)
+def _append_statement(statements: [Statement], target_chunk: Span, action: Action, related_chunk: Span):
+    statement = Statement(target_chunk, action, related_chunk)
     statements.append(statement)
 
 

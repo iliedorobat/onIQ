@@ -5,9 +5,58 @@ QUANTITY_PAIS_01 = [
 statement: {
 	target: {
 		operator: None
-		phrase: how many paintings
+		phrase: How many paintings
 		prep_phrase: None
-		type: count
+		type: How many
+	},
+	action: {
+		neg: None,
+		verb: {
+			aux_vbs: [are],
+			main_vb: None,
+			modal_vb: None
+		}
+	},
+	related: {
+		operator: None
+		phrase: on display at the Amsterdam Museum
+		prep_phrase: None
+		type: None
+	}
+}
+"""
+    },
+    {
+        "query": "How many paintings and statues are on display at the Amsterdam Museum?",
+        "result": """
+statement: {
+	target: {
+		operator: None
+		phrase: How many paintings
+		prep_phrase: None
+		type: How many
+	},
+	action: {
+		neg: None,
+		verb: {
+			aux_vbs: [are],
+			main_vb: None,
+			modal_vb: None
+		}
+	},
+	related: {
+		operator: None
+		phrase: on display at the Amsterdam Museum
+		prep_phrase: None
+		type: None
+	}
+}
+statement: {
+	target: {
+		operator: and
+		phrase: How many statues
+		prep_phrase: None
+		type: How many
 	},
 	action: {
 		neg: None,
@@ -32,9 +81,9 @@ statement: {
 statement: {
 	target: {
 		operator: None
-		phrase: how many people
+		phrase: How many people
 		prep_phrase: None
-		type: count
+		type: How many
 	},
 	action: {
 		neg: None,
@@ -60,9 +109,9 @@ statement: {
 statement: {
 	target: {
 		operator: None
-		phrase: how many days do I
+		phrase: How many days do I
 		prep_phrase: None
-		type: count
+		type: How many
 	},
 	action: {
 		neg: None,
@@ -82,14 +131,15 @@ statement: {
 """
     },
     {
+        # TODO: have to wait
         "query": "How many days do I have to wait for him?",
         "result": """
 statement: {
 	target: {
 		operator: None
-		phrase: how many days do I
+		phrase: How many days do I
 		prep_phrase: None
-		type: count
+		type: How many
 	},
 	action: {
 		neg: None,
@@ -115,9 +165,9 @@ statement: {
 statement: {
 	target: {
 		operator: None
-		phrase: how many monuments
+		phrase: How many monuments
 		prep_phrase: None
-		type: count
+		type: How many
 	},
 	action: {
 		neg: None,
@@ -146,9 +196,9 @@ QUANTITY_PAIS_02 = [
 statement: {
 	target: {
 		operator: None
-		phrase: how much money
+		phrase: How much money
 		prep_phrase: None
-		type: count
+		type: How much
 	},
 	action: {
 		neg: None,
@@ -177,9 +227,9 @@ QUANTITY_PAIS_03 = [
 statement: {
 	target: {
 		operator: None
-		phrase: how many cars
+		phrase: How many cars
 		prep_phrase: None
-		type: count
+		type: How many
 	},
 	action: {
 		neg: None,
