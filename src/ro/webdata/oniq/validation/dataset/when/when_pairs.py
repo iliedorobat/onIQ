@@ -15,8 +15,10 @@ WHEN_PAIRS_02 = [
         "result": """
 statement: {
 	target: {
+		operator: None
 		phrase: when
-		question type: when
+		prep_phrase: None
+		type: when
 	},
 	action: {
 		neg: None,
@@ -27,12 +29,15 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: he
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 """
     }
 ]
 
-WHEN_PAIRS = WHEN_PAIRS_01 + WHEN_PAIRS_02
+WHEN_PAIRS = WHEN_PAIRS_01 + \
+             WHEN_PAIRS_02

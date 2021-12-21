@@ -6,8 +6,10 @@ HOW_LONG_PAIRS_01 = [
         "result": """
 statement: {
 	target: {
+		operator: None
 		phrase: how long
-		question type: how
+		prep_phrase: None
+		type: how
 	},
 	action: {
 		neg: None,
@@ -18,8 +20,10 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: the journey
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 """
@@ -29,8 +33,10 @@ statement: {
         "result": """
 statement: {
 	target: {
+		operator: None
 		phrase: how long does the museum
-		question type: how
+		prep_phrase: None
+		type: how
 	},
 	action: {
 		neg: None,
@@ -41,8 +47,10 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: closed
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 """
@@ -52,8 +60,10 @@ statement: {
         "result": """
 statement: {
 	target: {
+		operator: None
 		phrase: how long does the largest museum
-		question type: how
+		prep_phrase: None
+		type: how
 	},
 	action: {
 		neg: None,
@@ -64,8 +74,10 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: closed
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 """
@@ -79,8 +91,10 @@ HOW_LONG_PAIRS_02 = [
         "result": """
 statement: {
 	target: {
+		operator: None
 		phrase: how long
-		question type: how
+		prep_phrase: None
+		type: how
 	},
 	action: {
 		neg: None,
@@ -91,8 +105,10 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: it
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 """

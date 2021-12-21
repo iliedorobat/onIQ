@@ -5,8 +5,10 @@ WHEN_IS_PAIRS_01 = [
         "result": """
 statement: {
 	target: {
+		operator: None
 		phrase: when
-		question type: when
+		prep_phrase: None
+		type: when
 	},
 	action: {
 		neg: None,
@@ -17,8 +19,10 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: anıtkabir
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 """
@@ -28,8 +32,10 @@ statement: {
         "result": """
 statement: {
 	target: {
+		operator: None
 		phrase: when
-		question type: when
+		prep_phrase: None
+		type: when
 	},
 	action: {
 		neg: None,
@@ -40,14 +46,18 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: swords
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 statement: {
 	target: {
+		operator: None
 		phrase: when
-		question type: when
+		prep_phrase: None
+		type: when
 	},
 	action: {
 		neg: None,
@@ -58,8 +68,10 @@ statement: {
 		}
 	},
 	related: {
-		phrase: ##and## shields
-		question type: None
+		operator: and
+		phrase: shields
+		prep_phrase: None
+		type: None
 	}
 }
 """
@@ -73,8 +85,10 @@ WHEN_IS_PAIRS_02 = [
         "result": """
 statement: {
 	target: {
+		operator: None
 		phrase: when
-		question type: when
+		prep_phrase: None
+		type: when
 	},
 	action: {
 		neg: None,
@@ -85,14 +99,18 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: Carl Sagan
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 statement: {
 	target: {
+		operator: None
 		phrase: when
-		question type: when
+		prep_phrase: None
+		type: when
 	},
 	action: {
 		neg: None,
@@ -103,20 +121,25 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: Ann Druyan
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 """
     },
     {
+        # TODO: Per Ahlmark => to Per Ahlmark
         # [1]
         "query": "When was Bibi Andersson married to Per Ahlmark?",
         "result": """
 statement: {
 	target: {
+		operator: None
 		phrase: when
-		question type: when
+		prep_phrase: None
+		type: when
 	},
 	action: {
 		neg: None,
@@ -127,14 +150,18 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: Bibi Andersson
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 statement: {
 	target: {
+		operator: None
 		phrase: when
-		question type: when
+		prep_phrase: None
+		type: when
 	},
 	action: {
 		neg: None,
@@ -145,12 +172,15 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: Per Ahlmark
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 """
     }
 ]
 
-WHEN_IS_PAIRS = WHEN_IS_PAIRS_01 + WHEN_IS_PAIRS_02
+WHEN_IS_PAIRS = WHEN_IS_PAIRS_01 + \
+                WHEN_IS_PAIRS_02

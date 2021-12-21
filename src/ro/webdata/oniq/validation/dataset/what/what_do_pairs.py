@@ -5,8 +5,10 @@ WHAT_DO_PAIRS_01 = [
         "result": """
 statement: {
 	target: {
+		operator: None
 		phrase: what did James Cagney
-		question type: what
+		prep_phrase: None
+		type: what
 	},
 	action: {
 		neg: None,
@@ -17,8 +19,10 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: in the 15th Academy Awards
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 """
@@ -32,8 +36,10 @@ WHAT_DO_PAIRS_02 = [
         "result": """
 statement: {
 	target: {
+		operator: None
 		phrase: what did you
-		question type: what
+		prep_phrase: None
+		type: what
 	},
 	action: {
 		neg: None,
@@ -44,12 +50,15 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: that
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 """
     }
 ]
 
-WHAT_DO_PAIRS = WHAT_DO_PAIRS_01 + WHAT_DO_PAIRS_02
+WHAT_DO_PAIRS = WHAT_DO_PAIRS_01 + \
+                WHAT_DO_PAIRS_02

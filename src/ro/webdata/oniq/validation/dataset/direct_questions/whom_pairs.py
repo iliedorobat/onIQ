@@ -5,8 +5,10 @@ WHOM_PAIRS_01 = [
         "result": """
 statement: {
 	target: {
+		operator: None
 		phrase: whom
-		question type: whom
+		prep_phrase: None
+		type: whom
 	},
 	action: {
 		neg: None,
@@ -17,8 +19,10 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: you
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 """

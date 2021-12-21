@@ -1,11 +1,13 @@
-WHERE_IS_PAIRS = [
+WHERE_IS_PAIRS_01 = [
     {
         "query": "Where is the museum?",
         "result": """
 statement: {
 	target: {
+		operator: None
 		phrase: where
-		question type: where
+		prep_phrase: None
+		type: where
 	},
 	action: {
 		neg: None,
@@ -16,8 +18,10 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: the museum
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 """
@@ -27,8 +31,10 @@ statement: {
         "result": """
 statement: {
 	target: {
+		operator: None
 		phrase: where
-		question type: where
+		prep_phrase: None
+		type: where
 	},
 	action: {
 		neg: None,
@@ -39,8 +45,10 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: the museum
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 """
@@ -50,8 +58,10 @@ statement: {
         "result": """
 statement: {
 	target: {
+		operator: None
 		phrase: where
-		question type: where
+		prep_phrase: None
+		type: where
 	},
 	action: {
 		neg: None,
@@ -62,8 +72,10 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: the black picture
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 """
@@ -73,8 +85,10 @@ statement: {
         "result": """
 statement: {
 	target: {
+		operator: None
 		phrase: where
-		question type: where
+		prep_phrase: None
+		type: where
 	},
 	action: {
 		neg: None,
@@ -85,19 +99,24 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: the picture with the black frame
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 """
     },
     {
+        # TODO: ilie.dorobat: swords => the swords
         "query": "Where are the coins and swords located?",
         "result": """
 statement: {
 	target: {
+		operator: None
 		phrase: where
-		question type: where
+		prep_phrase: None
+		type: where
 	},
 	action: {
 		neg: None,
@@ -108,14 +127,18 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: the coins
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 statement: {
 	target: {
+		operator: None
 		phrase: where
-		question type: where
+		prep_phrase: None
+		type: where
 	},
 	action: {
 		neg: None,
@@ -126,8 +149,10 @@ statement: {
 		}
 	},
 	related: {
-		phrase: ##and## swords
-		question type: None
+		operator: and
+		phrase: swords
+		prep_phrase: None
+		type: None
 	}
 }
 """
@@ -137,8 +162,10 @@ statement: {
         "result": """
 statement: {
 	target: {
+		operator: None
 		phrase: where
-		question type: where
+		prep_phrase: None
+		type: where
 	},
 	action: {
 		neg: None,
@@ -149,8 +176,10 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: the picture with the black frame
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 """
@@ -160,8 +189,10 @@ statement: {
         "result": """
 statement: {
 	target: {
+		operator: None
 		phrase: where
-		question type: where
+		prep_phrase: None
+		type: where
 	},
 	action: {
 		neg: None,
@@ -172,14 +203,18 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: the last place
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 statement: {
 	target: {
+		operator: None
 		phrase: the last place
-		question type: None
+		prep_phrase: None
+		type: None
 	},
 	action: {
 		neg: None,
@@ -190,21 +225,25 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: the picture
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 """
     },
     {
         # [5]
-        # NOTICE: "adam mickiewicz" is the named_entity and not "adam mickiewicz monument"
+        # NOTICE: "adam mickiewicz" is the named_entity but not "adam mickiewicz monument"
         "query": "Where is adam mickiewicz monument?",
         "result": """
 statement: {
 	target: {
+		operator: None
 		phrase: where
-		question type: where
+		prep_phrase: None
+		type: where
 	},
 	action: {
 		neg: None,
@@ -215,8 +254,10 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: adam mickiewicz monument
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 """
@@ -226,8 +267,10 @@ statement: {
         "result": """
 statement: {
 	target: {
+		operator: None
 		phrase: where
-		question type: where
+		prep_phrase: None
+		type: where
 	},
 	action: {
 		neg: None,
@@ -238,19 +281,24 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: the Museum of Amsterdam
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 """
     },
     {
+        # TODO: ilie.dorobat: axes => the axes
         "query": "Where are the swords and axes made?",
         "result": """
 statement: {
 	target: {
+		operator: None
 		phrase: where
-		question type: where
+		prep_phrase: None
+		type: where
 	},
 	action: {
 		neg: None,
@@ -261,14 +309,18 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: the swords
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 statement: {
 	target: {
+		operator: None
 		phrase: where
-		question type: where
+		prep_phrase: None
+		type: where
 	},
 	action: {
 		neg: None,
@@ -279,8 +331,10 @@ statement: {
 		}
 	},
 	related: {
-		phrase: ##and## axes
-		question type: None
+		operator: and
+		phrase: axes
+		prep_phrase: None
+		type: None
 	}
 }
 """
@@ -291,8 +345,10 @@ statement: {
         "result": """
 statement: {
 	target: {
+		operator: None
 		phrase: where
-		question type: where
+		prep_phrase: None
+		type: where
 	},
 	action: {
 		neg: None,
@@ -303,10 +359,14 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: the woman in black
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 """
     }
 ]
+
+WHERE_IS_PAIRS = WHERE_IS_PAIRS_01

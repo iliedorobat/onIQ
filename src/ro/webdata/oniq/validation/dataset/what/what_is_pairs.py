@@ -5,8 +5,10 @@ WHAT_IS_PAIRS_01 = [
         "result": """
 statement: {
 	target: {
+		operator: None
 		phrase: what
-		question type: what
+		prep_phrase: None
+		type: what
 	},
 	action: {
 		neg: None,
@@ -17,8 +19,10 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: villa la reine jeanne
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 """
@@ -28,8 +32,10 @@ statement: {
         "result": """
 statement: {
 	target: {
+		operator: None
 		phrase: what
-		question type: what
+		prep_phrase: None
+		type: what
 	},
 	action: {
 		neg: None,
@@ -40,8 +46,10 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: the most beautiful museum
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 """
@@ -51,8 +59,10 @@ statement: {
         "result": """
 statement: {
 	target: {
+		operator: None
 		phrase: what
-		question type: what
+		prep_phrase: None
+		type: what
 	},
 	action: {
 		neg: None,
@@ -63,8 +73,10 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: the name of the largest museum
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 """
@@ -74,8 +86,10 @@ statement: {
         "result": """
 statement: {
 	target: {
+		operator: None
 		phrase: what
-		question type: what
+		prep_phrase: None
+		type: what
 	},
 	action: {
 		neg: None,
@@ -86,19 +100,24 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: the name of the most beautiful museum
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 """
     },
     {
+        # TODO: ilie.dorobat: ##and## exposed
         "query": "What is the name of the largest museum which hosts more than 10 pictures and exposed one sword?",
         "result": """
 statement: {
 	target: {
+		operator: None
 		phrase: what
-		question type: what
+		prep_phrase: None
+		type: what
 	},
 	action: {
 		neg: None,
@@ -109,14 +128,18 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: the name of the largest museum
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 statement: {
 	target: {
+		operator: None
 		phrase: the name of the largest museum
-		question type: None
+		prep_phrase: None
+		type: None
 	},
 	action: {
 		neg: None,
@@ -127,14 +150,18 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: more than 10 pictures
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 statement: {
 	target: {
+		operator: None
 		phrase: the name of the largest museum
-		question type: None
+		prep_phrase: None
+		type: None
 	},
 	action: {
 		neg: None,
@@ -145,8 +172,10 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: one sword
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 """
@@ -156,8 +185,10 @@ statement: {
         "result": """
 statement: {
 	target: {
+		operator: None
 		phrase: what
-		question type: what
+		prep_phrase: None
+		type: what
 	},
 	action: {
 		neg: None,
@@ -168,14 +199,18 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: the most beautiful place
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 statement: {
 	target: {
+		operator: None
 		phrase: what
-		question type: what
+		prep_phrase: None
+		type: what
 	},
 	action: {
 		neg: None,
@@ -186,8 +221,10 @@ statement: {
 		}
 	},
 	related: {
-		phrase: ##and## the largest cave
-		question type: None
+		operator: and
+		phrase: the largest cave
+		prep_phrase: None
+		type: None
 	}
 }
 """
@@ -201,8 +238,10 @@ WHAT_IS_PAIRS_02 = [
         "result": """
 statement: {
 	target: {
+		operator: None
 		phrase: what
-		question type: what
+		prep_phrase: None
+		type: what
 	},
 	action: {
 		neg: None,
@@ -213,14 +252,18 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: the federated state
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 statement: {
 	target: {
+		operator: None
 		phrase: the federated state
-		question type: None
+		prep_phrase: None
+		type: None
 	},
 	action: {
 		neg: None,
@@ -231,8 +274,10 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: in the Weimar Republic
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 """
@@ -242,13 +287,15 @@ statement: {
 WHAT_IS_PAIRS_03 = [
     {
         # [2]
-        # TODO: the population => the population of the most populated state
+        # TODO: ilie.dorobat: the population of the most populated state
         "query": "What is the population and area of the most populated state?",
         "result": """
 statement: {
 	target: {
+		operator: None
 		phrase: what
-		question type: what
+		prep_phrase: None
+		type: what
 	},
 	action: {
 		neg: None,
@@ -259,14 +306,18 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: the population
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 statement: {
 	target: {
+		operator: None
 		phrase: what
-		question type: what
+		prep_phrase: None
+		type: what
 	},
 	action: {
 		neg: None,
@@ -277,8 +328,10 @@ statement: {
 		}
 	},
 	related: {
-		phrase: ##and## area of the most populated state
-		question type: None
+		operator: and
+		phrase: area of the most populated state
+		prep_phrase: None
+		type: None
 	}
 }
 """
@@ -292,8 +345,10 @@ WHAT_IS_PAIRS_04 = [
         "result": """
 statement: {
 	target: {
+		operator: None
 		phrase: what
-		question type: what
+		prep_phrase: None
+		type: what
 	},
 	action: {
 		neg: None,
@@ -304,8 +359,10 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: your name
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 """
@@ -314,4 +371,5 @@ statement: {
 
 WHAT_IS_PAIRS = WHAT_IS_PAIRS_01 + \
                 WHAT_IS_PAIRS_02 + \
-                WHAT_IS_PAIRS_03
+                WHAT_IS_PAIRS_03 + \
+                WHAT_IS_PAIRS_04

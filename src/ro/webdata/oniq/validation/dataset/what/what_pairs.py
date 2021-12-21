@@ -1,11 +1,13 @@
-WHAT_PAIRS = [
+WHAT_PAIRS_01 = [
     {
         "query": "What museums and libraries are there in Bacau?",
         "result": """
 statement: {
 	target: {
+		operator: None
 		phrase: what museums
-		question type: what
+		prep_phrase: None
+		type: what
 	},
 	action: {
 		neg: None,
@@ -16,14 +18,18 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: in Bacau
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 statement: {
 	target: {
-		phrase: ##and## what libraries
-		question type: what
+		operator: and
+		phrase: what libraries
+		prep_phrase: None
+		type: what
 	},
 	action: {
 		neg: None,
@@ -34,8 +40,10 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: in Bacau
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 """
@@ -45,8 +53,10 @@ statement: {
         "result": """
 statement: {
 	target: {
+		operator: None
 		phrase: what museums
-		question type: what
+		prep_phrase: None
+		type: what
 	},
 	action: {
 		neg: None,
@@ -57,14 +67,18 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: in Bacau
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 statement: {
 	target: {
+		operator: None
 		phrase: what museums
-		question type: what
+		prep_phrase: None
+		type: what
 	},
 	action: {
 		neg: None,
@@ -75,14 +89,18 @@ statement: {
 		}
 	},
 	related: {
-		phrase: ##or## in Bucharest
-		question type: None
+		operator: or
+		phrase: in Bucharest
+		prep_phrase: None
+		type: None
 	}
 }
 statement: {
 	target: {
-		phrase: ##and## what libraries
-		question type: what
+		operator: and
+		phrase: what libraries
+		prep_phrase: None
+		type: what
 	},
 	action: {
 		neg: None,
@@ -93,14 +111,18 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: in Bacau
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 statement: {
 	target: {
-		phrase: ##and## what libraries
-		question type: what
+		operator: and
+		phrase: what libraries
+		prep_phrase: None
+		type: what
 	},
 	action: {
 		neg: None,
@@ -111,8 +133,10 @@ statement: {
 		}
 	},
 	related: {
-		phrase: ##or## in Bucharest
-		question type: None
+		operator: or
+		phrase: in Bucharest
+		prep_phrase: None
+		type: None
 	}
 }
 """
@@ -122,8 +146,10 @@ statement: {
         "result": """
 statement: {
 	target: {
+		operator: None
 		phrase: what museums
-		question type: what
+		prep_phrase: None
+		type: what
 	},
 	action: {
 		neg: None,
@@ -134,14 +160,18 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: in Bacau
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 statement: {
 	target: {
+		operator: None
 		phrase: what museums
-		question type: what
+		prep_phrase: None
+		type: what
 	},
 	action: {
 		neg: None,
@@ -152,8 +182,10 @@ statement: {
 		}
 	},
 	related: {
-		phrase: ##or## in Bucharest
-		question type: None
+		operator: or
+		phrase: in Bucharest
+		prep_phrase: None
+		type: None
 	}
 }
 """
@@ -163,8 +195,10 @@ statement: {
         "result": """
 statement: {
 	target: {
+		operator: None
 		phrase: what museums
-		question type: what
+		prep_phrase: None
+		type: what
 	},
 	action: {
 		neg: None,
@@ -175,14 +209,18 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: in Bacau
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 statement: {
 	target: {
+		operator: None
 		phrase: what museums
-		question type: what
+		prep_phrase: None
+		type: what
 	},
 	action: {
 		neg: None,
@@ -193,14 +231,18 @@ statement: {
 		}
 	},
 	related: {
-		phrase: ##or## in Iasi
-		question type: None
+		operator: or
+		phrase: in Iasi
+		prep_phrase: None
+		type: None
 	}
 }
 statement: {
 	target: {
+		operator: None
 		phrase: what museums
-		question type: what
+		prep_phrase: None
+		type: what
 	},
 	action: {
 		neg: None,
@@ -211,8 +253,10 @@ statement: {
 		}
 	},
 	related: {
-		phrase: ##or## in Bucharest
-		question type: None
+		operator: or
+		phrase: in Bucharest
+		prep_phrase: None
+		type: None
 	}
 }
 """
@@ -222,8 +266,10 @@ statement: {
         "result": """
 statement: {
 	target: {
+		operator: None
 		phrase: what sharp swords
-		question type: what
+		prep_phrase: None
+		type: what
 	},
 	action: {
 		neg: None,
@@ -234,14 +280,18 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: in Bacau
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 statement: {
 	target: {
-		phrase: ##or## what very beautiful paintings
-		question type: what
+		operator: or
+		phrase: what very beautiful paintings
+		prep_phrase: None
+		type: what
 	},
 	action: {
 		neg: None,
@@ -252,14 +302,18 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: in Bacau
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 statement: {
 	target: {
-		phrase: ##or## what tall statues
-		question type: what
+		operator: or
+		phrase: what tall statues
+		prep_phrase: None
+		type: what
 	},
 	action: {
 		neg: None,
@@ -270,10 +324,14 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: in Bacau
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 """
     }
 ]
+
+WHAT_PAIRS = WHAT_PAIRS_01

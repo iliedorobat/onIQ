@@ -4,8 +4,10 @@ QUANTITY_PAIS_01 = [
         "result": """
 statement: {
 	target: {
+		operator: None
 		phrase: how many paintings
-		question type: count
+		prep_phrase: None
+		type: count
 	},
 	action: {
 		neg: None,
@@ -16,8 +18,10 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: on display at the Amsterdam Museum
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 """
@@ -27,8 +31,10 @@ statement: {
         "result": """
 statement: {
 	target: {
+		operator: None
 		phrase: how many people
-		question type: count
+		prep_phrase: None
+		type: count
 	},
 	action: {
 		neg: None,
@@ -39,8 +45,10 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: the Amsterdam Museum
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 """
@@ -51,8 +59,10 @@ statement: {
         "result": """
 statement: {
 	target: {
+		operator: None
 		phrase: how many days do I
-		question type: count
+		prep_phrase: None
+		type: count
 	},
 	action: {
 		neg: None,
@@ -63,8 +73,10 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: until the opening
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 """
@@ -74,8 +86,10 @@ statement: {
         "result": """
 statement: {
 	target: {
+		operator: None
 		phrase: how many days do I
-		question type: count
+		prep_phrase: None
+		type: count
 	},
 	action: {
 		neg: None,
@@ -86,20 +100,24 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: for him
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 """
     },
     {
-        # [??]
+        # [??] TODO: get the reference
         "query": "How many monuments are there in vallon-pont-d'arc",
         "result": """
 statement: {
 	target: {
+		operator: None
 		phrase: how many monuments
-		question type: count
+		prep_phrase: None
+		type: count
 	},
 	action: {
 		neg: None,
@@ -110,8 +128,10 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: in vallon-pont
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 """
@@ -125,8 +145,10 @@ QUANTITY_PAIS_02 = [
         "result": """
 statement: {
 	target: {
+		operator: None
 		phrase: how much money
-		question type: count
+		prep_phrase: None
+		type: count
 	},
 	action: {
 		neg: None,
@@ -137,8 +159,10 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: you
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 """
@@ -152,8 +176,10 @@ QUANTITY_PAIS_03 = [
         "result": """
 statement: {
 	target: {
+		operator: None
 		phrase: how many cars
-		question type: count
+		prep_phrase: None
+		type: count
 	},
 	action: {
 		neg: None,
@@ -164,8 +190,10 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: there
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 """

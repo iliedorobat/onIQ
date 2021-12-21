@@ -4,8 +4,10 @@ DID_PAIRS = [
         "result": """
 statement: {
 	target: {
+		operator: None
 		phrase: James
-		question type: None
+		prep_phrase: None
+		type: None
 	},
 	action: {
 		neg: None,
@@ -16,8 +18,10 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: with Andrew
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 """
@@ -27,8 +31,10 @@ statement: {
         "result": """
 statement: {
 	target: {
+		operator: None
 		phrase: Steve Sampson
-		question type: None
+		prep_phrase: None
+		type: None
 	},
 	action: {
 		neg: None,
@@ -39,8 +45,10 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: a club of Santa Clara university
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 """
@@ -50,8 +58,10 @@ statement: {
         "result": """
 statement: {
 	target: {
+		operator: None
 		phrase: it
-		question type: None
+		prep_phrase: None
+		type: None
 	},
 	action: {
 		neg: None,
@@ -62,8 +72,10 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: at the beginning of the year
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 """

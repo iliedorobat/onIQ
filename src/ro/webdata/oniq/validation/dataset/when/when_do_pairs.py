@@ -5,8 +5,10 @@ WHEN_DO_PAIRS_01 = [
         "result": """
 statement: {
 	target: {
+		operator: None
 		phrase: when did Lena Horne
-		question type: when
+		prep_phrase: None
+		type: when
 	},
 	action: {
 		neg: None,
@@ -17,8 +19,10 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: the Grammy Award for Best Jazz Vocal Album
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 """

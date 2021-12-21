@@ -4,8 +4,10 @@ WHOSE_PAIRS_01 = [
         "result": """
 statement: {
 	target: {
+		operator: None
 		phrase: whose picture
-		question type: whose
+		prep_phrase: None
+		type: whose
 	},
 	action: {
 		neg: None,
@@ -16,8 +18,10 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: it
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 """
@@ -31,8 +35,10 @@ WHOSE_PAIRS_02 = [
         "result": """
 statement: {
 	target: {
+		operator: None
 		phrase: whose turn
-		question type: whose
+		prep_phrase: None
+		type: whose
 	},
 	action: {
 		neg: None,
@@ -43,8 +49,10 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: it
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 """
@@ -58,8 +66,10 @@ WHOSE_ARE_PAIRS_02 = [
         "result": """
 statement: {
 	target: {
+		operator: None
 		phrase: whose
-		question type: whose
+		prep_phrase: None
+		type: whose
 	},
 	action: {
 		neg: None,
@@ -70,12 +80,16 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: these keys
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 """
     }
 ]
 
-WHOSE_PAIRS = WHOSE_PAIRS_01 + WHOSE_PAIRS_02
+WHOSE_PAIRS = WHOSE_PAIRS_01 + \
+              WHOSE_PAIRS_02 + \
+              WHOSE_ARE_PAIRS_02

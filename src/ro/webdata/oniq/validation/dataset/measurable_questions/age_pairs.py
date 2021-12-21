@@ -5,8 +5,10 @@ AGE_PAIRS = [
         "result": """
 statement: {
 	target: {
+		operator: None
 		phrase: how old
-		question type: count
+		prep_phrase: None
+		type: count
 	},
 	action: {
 		neg: None,
@@ -17,8 +19,10 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: you
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 """

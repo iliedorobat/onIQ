@@ -4,8 +4,10 @@ WHICH_IS_PAIRS_01 = [
         "result": """
 statement: {
 	target: {
+		operator: None
 		phrase: which
-		question type: which
+		prep_phrase: None
+		type: which
 	},
 	action: {
 		neg: None,
@@ -16,19 +18,24 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: the most visited museum
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 """
     },
     {
+        # TODO: ilie.dorobat the noisiest => the noisiest city
         "query": "Which is the noisiest and the largest city?",
         "result": """
 statement: {
 	target: {
+		operator: None
 		phrase: which
-		question type: which
+		prep_phrase: None
+		type: which
 	},
 	action: {
 		neg: None,
@@ -39,14 +46,18 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: the noisiest
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 statement: {
 	target: {
+		operator: None
 		phrase: which
-		question type: which
+		prep_phrase: None
+		type: which
 	},
 	action: {
 		neg: None,
@@ -57,8 +68,10 @@ statement: {
 		}
 	},
 	related: {
-		phrase: ##and## the largest city
-		question type: None
+		operator: and
+		phrase: the largest city
+		prep_phrase: None
+		type: None
 	}
 }
 """
@@ -68,8 +81,10 @@ statement: {
         "result": """
 statement: {
 	target: {
+		operator: None
 		phrase: which
-		question type: which
+		prep_phrase: None
+		type: which
 	},
 	action: {
 		neg: None,
@@ -80,14 +95,18 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: the noisiest town
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 statement: {
 	target: {
+		operator: None
 		phrase: which
-		question type: which
+		prep_phrase: None
+		type: which
 	},
 	action: {
 		neg: None,
@@ -98,19 +117,24 @@ statement: {
 		}
 	},
 	related: {
-		phrase: ##and## the largest city
-		question type: None
+		operator: and
+		phrase: the largest city
+		prep_phrase: None
+		type: None
 	}
 }
 """
     },
     {
+        # TODO: the noisiest => the noisiest city
         "query": "Which is the noisiest and the most beautiful city?",
         "result": """
 statement: {
 	target: {
+		operator: None
 		phrase: which
-		question type: which
+		prep_phrase: None
+		type: which
 	},
 	action: {
 		neg: None,
@@ -121,14 +145,18 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: the noisiest
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 statement: {
 	target: {
+		operator: None
 		phrase: which
-		question type: which
+		prep_phrase: None
+		type: which
 	},
 	action: {
 		neg: None,
@@ -139,19 +167,24 @@ statement: {
 		}
 	},
 	related: {
-		phrase: ##and## the most beautiful city
-		question type: None
+		operator: and
+		phrase: the most beautiful city
+		prep_phrase: None
+		type: None
 	}
 }
 """
     },
     {
+        # TODO: the noisiest; the most beautiful => the noisiest city; the most beautiful city
         "query": "Which is the noisiest, the most beautiful and the largest city?",
         "result": """
 statement: {
 	target: {
+		operator: None
 		phrase: which
-		question type: which
+		prep_phrase: None
+		type: which
 	},
 	action: {
 		neg: None,
@@ -162,14 +195,18 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: the noisiest
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 statement: {
 	target: {
+		operator: None
 		phrase: which
-		question type: which
+		prep_phrase: None
+		type: which
 	},
 	action: {
 		neg: None,
@@ -180,14 +217,18 @@ statement: {
 		}
 	},
 	related: {
-		phrase: ##and## the most beautiful
-		question type: None
+		operator: and
+		phrase: the most beautiful
+		prep_phrase: None
+		type: None
 	}
 }
 statement: {
 	target: {
+		operator: None
 		phrase: which
-		question type: which
+		prep_phrase: None
+		type: which
 	},
 	action: {
 		neg: None,
@@ -198,19 +239,24 @@ statement: {
 		}
 	},
 	related: {
-		phrase: ##and## the largest city
-		question type: None
+		operator: and
+		phrase: the largest city
+		prep_phrase: None
+		type: None
 	}
 }
 """
     },
     {
+        # TODO: the noisiest; the largest => the noisiest city; the largest city
         "query": "Which is the noisiest, the largest and the most crowded city?",
         "result": """
 statement: {
 	target: {
+		operator: None
 		phrase: which
-		question type: which
+		prep_phrase: None
+		type: which
 	},
 	action: {
 		neg: None,
@@ -221,14 +267,18 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: the noisiest
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 statement: {
 	target: {
+		operator: None
 		phrase: which
-		question type: which
+		prep_phrase: None
+		type: which
 	},
 	action: {
 		neg: None,
@@ -239,14 +289,18 @@ statement: {
 		}
 	},
 	related: {
-		phrase: ##and## the largest
-		question type: None
+		operator: and
+		phrase: the largest
+		prep_phrase: None
+		type: None
 	}
 }
 statement: {
 	target: {
+		operator: None
 		phrase: which
-		question type: which
+		prep_phrase: None
+		type: which
 	},
 	action: {
 		neg: None,
@@ -257,19 +311,24 @@ statement: {
 		}
 	},
 	related: {
-		phrase: ##and## the most crowded city
-		question type: None
+		operator: and
+		phrase: the most crowded city
+		prep_phrase: None
+		type: None
 	}
 }
 """
     },
     {
+        # TODO: the noisiest; the largest => the noisiest city; the largest city
         "query": "Which is the noisiest and the largest and the most crowded city?",
         "result": """
 statement: {
 	target: {
+		operator: None
 		phrase: which
-		question type: which
+		prep_phrase: None
+		type: which
 	},
 	action: {
 		neg: None,
@@ -280,14 +339,18 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: the noisiest
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 statement: {
 	target: {
+		operator: None
 		phrase: which
-		question type: which
+		prep_phrase: None
+		type: which
 	},
 	action: {
 		neg: None,
@@ -298,14 +361,18 @@ statement: {
 		}
 	},
 	related: {
-		phrase: ##and## the largest
-		question type: None
+		operator: and
+		phrase: the largest
+		prep_phrase: None
+		type: None
 	}
 }
 statement: {
 	target: {
+		operator: None
 		phrase: which
-		question type: which
+		prep_phrase: None
+		type: which
 	},
 	action: {
 		neg: None,
@@ -316,19 +383,24 @@ statement: {
 		}
 	},
 	related: {
-		phrase: ##and## the most crowded city
-		question type: None
+		operator: and
+		phrase: the most crowded city
+		prep_phrase: None
+		type: None
 	}
 }
 """
     },
     {
+        # TODO: the noisiest; the newest; the largest => the noisiest city; the newest city; the largest city
         "query": "Which is the noisiest, the newest, the largest and the most crowded city?",
         "result": """
 statement: {
 	target: {
+		operator: None
 		phrase: which
-		question type: which
+		prep_phrase: None
+		type: which
 	},
 	action: {
 		neg: None,
@@ -339,14 +411,18 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: the noisiest
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 statement: {
 	target: {
+		operator: None
 		phrase: which
-		question type: which
+		prep_phrase: None
+		type: which
 	},
 	action: {
 		neg: None,
@@ -357,14 +433,18 @@ statement: {
 		}
 	},
 	related: {
-		phrase: ##and## the newest
-		question type: None
+		operator: and
+		phrase: the newest
+		prep_phrase: None
+		type: None
 	}
 }
 statement: {
 	target: {
+		operator: None
 		phrase: which
-		question type: which
+		prep_phrase: None
+		type: which
 	},
 	action: {
 		neg: None,
@@ -375,14 +455,18 @@ statement: {
 		}
 	},
 	related: {
-		phrase: ##and## the largest
-		question type: None
+		operator: and
+		phrase: the largest
+		prep_phrase: None
+		type: None
 	}
 }
 statement: {
 	target: {
+		operator: None
 		phrase: which
-		question type: which
+		prep_phrase: None
+		type: which
 	},
 	action: {
 		neg: None,
@@ -393,19 +477,24 @@ statement: {
 		}
 	},
 	related: {
-		phrase: ##and## the most crowded city
-		question type: None
+		operator: and
+		phrase: the most crowded city
+		prep_phrase: None
+		type: None
 	}
 }
 """
     },
     {
+        # TODO: ilie.dorobat: expposed one sword => and exposed one sword
         "query": "Which is the museum which hosts more than 10 pictures and exposed one sword?",
         "result": """
 statement: {
 	target: {
+		operator: None
 		phrase: which
-		question type: which
+		prep_phrase: None
+		type: which
 	},
 	action: {
 		neg: None,
@@ -416,14 +505,18 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: the museum
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 statement: {
 	target: {
+		operator: None
 		phrase: the museum
-		question type: None
+		prep_phrase: None
+		type: None
 	},
 	action: {
 		neg: None,
@@ -434,14 +527,18 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: more than 10 pictures
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 statement: {
 	target: {
+		operator: None
 		phrase: the museum
-		question type: None
+		prep_phrase: None
+		type: None
 	},
 	action: {
 		neg: None,
@@ -452,8 +549,10 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: one sword
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 """
@@ -463,13 +562,15 @@ statement: {
 WHICH_IS_PAIRS_02 = [
     {
         # [1]
-        # TODO: the state => the state of the Watergate scandal
+        # TODO: ilie.dorobat: the state => the state of the Watergate scandal
         "query": "Which is the state and country of the Watergate scandal?",
         "result": """
 statement: {
 	target: {
+		operator: None
 		phrase: which
-		question type: which
+		prep_phrase: None
+		type: which
 	},
 	action: {
 		neg: None,
@@ -480,14 +581,18 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: the state
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 statement: {
 	target: {
+		operator: None
 		phrase: which
-		question type: which
+		prep_phrase: None
+		type: which
 	},
 	action: {
 		neg: None,
@@ -498,8 +603,10 @@ statement: {
 		}
 	},
 	related: {
-		phrase: ##and## country of the Watergate scandal
-		question type: None
+		operator: and
+		phrase: country of the Watergate scandal
+		prep_phrase: None
+		type: None
 	}
 }
 """
@@ -513,8 +620,10 @@ WHICH_IS_PAIRS_03 = [
         "result": """
 statement: {
 	target: {
+		operator: None
 		phrase: which
-		question type: which
+		prep_phrase: None
+		type: which
 	},
 	action: {
 		neg: None,
@@ -525,8 +634,10 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: the longest and shortest river
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 """
@@ -537,8 +648,10 @@ statement: {
         "result": """
 statement: {
 	target: {
+		operator: None
 		phrase: which
-		question type: which
+		prep_phrase: None
+		type: which
 	},
 	action: {
 		neg: None,
@@ -549,14 +662,18 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: the longest and shortest river
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 statement: {
 	target: {
+		operator: None
 		phrase: the longest and shortest river
-		question type: None
+		prep_phrase: None
+		type: None
 	},
 	action: {
 		neg: None,
@@ -567,8 +684,10 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: Mississippi
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 """

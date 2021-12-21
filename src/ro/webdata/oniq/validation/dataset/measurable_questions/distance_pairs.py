@@ -5,8 +5,10 @@ HOW_FAR_PAIRS_01 = [
         "result": """
 statement: {
 	target: {
+		operator: None
 		phrase: how far
-		question type: how
+		prep_phrase: None
+		type: how
 	},
 	action: {
 		neg: None,
@@ -17,8 +19,10 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: Pattaya from Bangkok
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 """

@@ -10,8 +10,10 @@ HOW_IS_PAIRS = [
         "result": """
 statement: {
 	target: {
+		operator: None
 		phrase: how
-		question type: how
+		prep_phrase: None
+		type: how
 	},
 	action: {
 		neg: None,
@@ -22,8 +24,10 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: your exam
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 """
@@ -37,8 +41,10 @@ INFORMAL_PAIRS = [
         "result": """
 statement: {
 	target: {
+		operator: None
 		phrase: how come I
-		question type: how
+		prep_phrase: None
+		type: how
 	},
 	action: {
 		neg: n't,
@@ -49,8 +55,10 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: her
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 """

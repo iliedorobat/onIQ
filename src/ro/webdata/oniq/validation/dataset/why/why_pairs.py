@@ -1,11 +1,13 @@
-WHY_PAIRS = [
+WHY_PAIRS_01 = [
     {
         "query": "Why aren't the artifacts in the museum?",
         "result": """
 statement: {
 	target: {
+		operator: None
 		phrase: why
-		question type: why
+		prep_phrase: None
+		type: why
 	},
 	action: {
 		neg: n't,
@@ -16,20 +18,27 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: the artifacts in the museum
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 """
-    },
+    }
+]
+
+WHY_PAIRS_02 = [
     {
         # [6]
         "query": "Why don't I help you?",
         "result": """
 statement: {
 	target: {
+		operator: None
 		phrase: why don't I
-		question type: why
+		prep_phrase: None
+		type: why
 	},
 	action: {
 		neg: n't,
@@ -40,8 +49,10 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: you
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 """
@@ -52,8 +63,10 @@ statement: {
         "result": """
 statement: {
 	target: {
+		operator: None
 		phrase: why do you
-		question type: why
+		prep_phrase: None
+		type: why
 	},
 	action: {
 		neg: None,
@@ -64,10 +77,15 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: that
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 """
     }
 ]
+
+WHY_PAIRS = WHY_PAIRS_01 + \
+            WHY_PAIRS_02

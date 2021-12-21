@@ -4,8 +4,10 @@ WHICH_PAIRS_01 = [
         "result": """
 statement: {
 	target: {
+		operator: None
 		phrase: which smart kid
-		question type: which
+		prep_phrase: None
+		type: which
 	},
 	action: {
 		neg: None,
@@ -16,8 +18,10 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: famous
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 """
@@ -27,8 +31,10 @@ statement: {
         "result": """
 statement: {
 	target: {
+		operator: None
 		phrase: which of the smart kids
-		question type: which
+		prep_phrase: None
+		type: which
 	},
 	action: {
 		neg: None,
@@ -39,8 +45,10 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: famous
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 """
@@ -50,8 +58,10 @@ statement: {
         "result": """
 statement: {
 	target: {
+		operator: None
 		phrase: which of the paintings
-		question type: which
+		prep_phrase: None
+		type: which
 	},
 	action: {
 		neg: None,
@@ -62,8 +72,10 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: the most beautiful
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 """
@@ -73,8 +85,10 @@ statement: {
         "result": """
 statement: {
 	target: {
+		operator: None
 		phrase: which paintings
-		question type: which
+		prep_phrase: None
+		type: which
 	},
 	action: {
 		neg: None,
@@ -85,14 +99,18 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: in Bacau
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 statement: {
 	target: {
+		operator: None
 		phrase: which paintings
-		question type: which
+		prep_phrase: None
+		type: which
 	},
 	action: {
 		neg: None,
@@ -103,8 +121,10 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: in good shape
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 """
@@ -114,8 +134,10 @@ statement: {
         "result": """
 statement: {
 	target: {
+		operator: None
 		phrase: which paintings
-		question type: which
+		prep_phrase: None
+		type: which
 	},
 	action: {
 		neg: None,
@@ -126,14 +148,18 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: in Bacau
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 statement: {
 	target: {
-		phrase: ##or## which swords
-		question type: which
+		operator: or
+		phrase: which swords
+		prep_phrase: None
+		type: which
 	},
 	action: {
 		neg: None,
@@ -144,14 +170,18 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: in Bacau
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 statement: {
 	target: {
-		phrase: ##or## which statues
-		question type: which
+		operator: or
+		phrase: which statues
+		prep_phrase: None
+		type: which
 	},
 	action: {
 		neg: None,
@@ -162,8 +192,10 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: in Bacau
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 """
@@ -173,8 +205,10 @@ statement: {
         "result": """
 statement: {
 	target: {
+		operator: None
 		phrase: which paintings
-		question type: which
+		prep_phrase: None
+		type: which
 	},
 	action: {
 		neg: None,
@@ -185,14 +219,18 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: in Bacau
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 statement: {
 	target: {
-		phrase: ##or## which swords
-		question type: which
+		operator: or
+		phrase: which swords
+		prep_phrase: None
+		type: which
 	},
 	action: {
 		neg: None,
@@ -203,14 +241,18 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: in Bacau
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 statement: {
 	target: {
-		phrase: ##or## which coins
-		question type: which
+		operator: or
+		phrase: which coins
+		prep_phrase: None
+		type: which
 	},
 	action: {
 		neg: None,
@@ -221,14 +263,18 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: in Bacau
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 statement: {
 	target: {
-		phrase: ##or## which statues
-		question type: which
+		operator: or
+		phrase: which statues
+		prep_phrase: None
+		type: which
 	},
 	action: {
 		neg: None,
@@ -239,8 +285,10 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: in Bacau
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 """
@@ -250,8 +298,10 @@ statement: {
         "result": """
 statement: {
 	target: {
+		operator: None
 		phrase: which paintings
-		question type: which
+		prep_phrase: None
+		type: which
 	},
 	action: {
 		neg: None,
@@ -262,14 +312,18 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: in Bacau
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 statement: {
 	target: {
+		operator: None
 		phrase: which paintings
-		question type: which
+		prep_phrase: None
+		type: which
 	},
 	action: {
 		neg: None,
@@ -280,14 +334,18 @@ statement: {
 		}
 	},
 	related: {
-		phrase: ##or## in Bucharest
-		question type: None
+		operator: or
+		phrase: in Bucharest
+		prep_phrase: None
+		type: None
 	}
 }
 statement: {
 	target: {
-		phrase: ##or## which swords
-		question type: which
+		operator: or
+		phrase: which swords
+		prep_phrase: None
+		type: which
 	},
 	action: {
 		neg: None,
@@ -298,14 +356,18 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: in Bacau
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 statement: {
 	target: {
-		phrase: ##or## which swords
-		question type: which
+		operator: or
+		phrase: which swords
+		prep_phrase: None
+		type: which
 	},
 	action: {
 		neg: None,
@@ -316,14 +378,18 @@ statement: {
 		}
 	},
 	related: {
-		phrase: ##or## in Bucharest
-		question type: None
+		operator: or
+		phrase: in Bucharest
+		prep_phrase: None
+		type: None
 	}
 }
 statement: {
 	target: {
-		phrase: ##or## which coins
-		question type: which
+		operator: or
+		phrase: which coins
+		prep_phrase: None
+		type: which
 	},
 	action: {
 		neg: None,
@@ -334,14 +400,18 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: in Bacau
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 statement: {
 	target: {
-		phrase: ##or## which coins
-		question type: which
+		operator: or
+		phrase: which coins
+		prep_phrase: None
+		type: which
 	},
 	action: {
 		neg: None,
@@ -352,14 +422,18 @@ statement: {
 		}
 	},
 	related: {
-		phrase: ##or## in Bucharest
-		question type: None
+		operator: or
+		phrase: in Bucharest
+		prep_phrase: None
+		type: None
 	}
 }
 statement: {
 	target: {
-		phrase: ##or## which statues
-		question type: which
+		operator: or
+		phrase: which statues
+		prep_phrase: None
+		type: which
 	},
 	action: {
 		neg: None,
@@ -370,14 +444,18 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: in Bacau
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 statement: {
 	target: {
-		phrase: ##or## which statues
-		question type: which
+		operator: or
+		phrase: which statues
+		prep_phrase: None
+		type: which
 	},
 	action: {
 		neg: None,
@@ -388,19 +466,24 @@ statement: {
 		}
 	},
 	related: {
-		phrase: ##or## in Bucharest
-		question type: None
+		operator: or
+		phrase: in Bucharest
+		prep_phrase: None
+		type: None
 	}
 }
 """
     },
     {
+        # TODO: ilie.dorobat: exposed one sword => and exposed one sword
         "query": "Which museum hosts more than 10 pictures and exposed one sword?",
         "result": """
 statement: {
 	target: {
+		operator: None
 		phrase: which museum
-		question type: which
+		prep_phrase: None
+		type: which
 	},
 	action: {
 		neg: None,
@@ -411,14 +494,18 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: more than 10 pictures
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 statement: {
 	target: {
+		operator: None
 		phrase: which museum
-		question type: which
+		prep_phrase: None
+		type: which
 	},
 	action: {
 		neg: None,
@@ -429,8 +516,10 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: one sword
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 """
@@ -440,8 +529,10 @@ statement: {
         "result": """
 statement: {
 	target: {
+		operator: None
 		phrase: which painting
-		question type: which
+		prep_phrase: None
+		type: which
 	},
 	action: {
 		neg: not,
@@ -452,8 +543,10 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: in Bacau
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 """
@@ -463,8 +556,10 @@ statement: {
         "result": """
 statement: {
 	target: {
+		operator: None
 		phrase: which paintings
-		question type: which
+		prep_phrase: None
+		type: which
 	},
 	action: {
 		neg: not,
@@ -475,14 +570,18 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: in Bacau
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 statement: {
 	target: {
-		phrase: ##and## which statues
-		question type: which
+		operator: and
+		phrase: which statues
+		prep_phrase: None
+		type: which
 	},
 	action: {
 		neg: not,
@@ -493,8 +592,10 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: in Bacau
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 """
@@ -504,8 +605,10 @@ statement: {
         "result": """
 statement: {
 	target: {
+		operator: None
 		phrase: which paintings
-		question type: which
+		prep_phrase: None
+		type: which
 	},
 	action: {
 		neg: not,
@@ -516,14 +619,18 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: in Bacau
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 statement: {
 	target: {
-		phrase: ##and## which swords
-		question type: which
+		operator: and
+		phrase: which swords
+		prep_phrase: None
+		type: which
 	},
 	action: {
 		neg: not,
@@ -534,14 +641,18 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: in Bacau
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 statement: {
 	target: {
-		phrase: ##and## which statues
-		question type: which
+		operator: and
+		phrase: which statues
+		prep_phrase: None
+		type: which
 	},
 	action: {
 		neg: not,
@@ -552,8 +663,10 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: in Bacau
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 """
@@ -563,8 +676,10 @@ statement: {
         "result": """
 statement: {
 	target: {
+		operator: None
 		phrase: which paintings
-		question type: which
+		prep_phrase: None
+		type: which
 	},
 	action: {
 		neg: not,
@@ -575,14 +690,18 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: in Bacau
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 statement: {
 	target: {
-		phrase: ##and## which sharp swords
-		question type: which
+		operator: and
+		phrase: which sharp swords
+		prep_phrase: None
+		type: which
 	},
 	action: {
 		neg: not,
@@ -593,14 +712,18 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: in Bacau
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 statement: {
 	target: {
-		phrase: ##and## which tall statues
-		question type: which
+		operator: and
+		phrase: which tall statues
+		prep_phrase: None
+		type: which
 	},
 	action: {
 		neg: not,
@@ -611,8 +734,10 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: in Bacau
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 """
@@ -622,8 +747,10 @@ statement: {
         "result": """
 statement: {
 	target: {
+		operator: None
 		phrase: which paintings
-		question type: which
+		prep_phrase: None
+		type: which
 	},
 	action: {
 		neg: not,
@@ -634,8 +761,10 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: more than three owners
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 """
@@ -645,8 +774,10 @@ statement: {
         "result": """
 statement: {
 	target: {
+		operator: None
 		phrase: which painting
-		question type: which
+		prep_phrase: None
+		type: which
 	},
 	action: {
 		neg: not,
@@ -657,14 +788,18 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: more than three owners
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 statement: {
 	target: {
-		phrase: ##or## which sharp swords
-		question type: which
+		operator: or
+		phrase: which sharp swords
+		prep_phrase: None
+		type: which
 	},
 	action: {
 		neg: not,
@@ -675,14 +810,18 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: more than three owners
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 statement: {
 	target: {
-		phrase: ##or## which statues
-		question type: which
+		operator: or
+		phrase: which statues
+		prep_phrase: None
+		type: which
 	},
 	action: {
 		neg: not,
@@ -693,8 +832,10 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: more than three owners
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 """
@@ -707,8 +848,10 @@ WHICH_PAIRS_02 = [
         "result": """
 statement: {
 	target: {
+		operator: None
 		phrase: which of the most beautiful paintings
-		question type: which
+		prep_phrase: None
+		type: which
 	},
 	action: {
 		neg: not,
@@ -719,19 +862,24 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: to Bacau
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 """
     },
     {
+        # TODO: ilie.dorobat: of artifacts; of gorgeous swords => which of the artifacts; which of the gorgeous swords
         "query": "Which of the most beautiful paintings, artifacts and gorgeous swords has not been moved to Bacau?",
         "result": """
 statement: {
 	target: {
+		operator: None
 		phrase: which of the most beautiful paintings
-		question type: which
+		prep_phrase: None
+		type: which
 	},
 	action: {
 		neg: not,
@@ -742,14 +890,18 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: to Bacau
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 statement: {
 	target: {
-		phrase: ##and## of artifacts
-		question type: which
+		operator: and
+		phrase: of artifacts
+		prep_phrase: None
+		type: which
 	},
 	action: {
 		neg: not,
@@ -760,14 +912,18 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: to Bacau
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 statement: {
 	target: {
-		phrase: ##and## of gorgeous swords
-		question type: which
+		operator: and
+		phrase: of gorgeous swords
+		prep_phrase: None
+		type: which
 	},
 	action: {
 		neg: not,
@@ -778,8 +934,10 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: to Bacau
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 """
@@ -789,8 +947,10 @@ statement: {
         "result": """
 statement: {
 	target: {
+		operator: None
 		phrase: which one of the most beautiful paintings
-		question type: which
+		prep_phrase: None
+		type: which
 	},
 	action: {
 		neg: not,
@@ -801,19 +961,24 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: to Bacau
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 """
     },
     {
+        # TODO: ilie.dorobat: of artifacts; of gorgeous swords => which of the artifacts; which of the gorgeous swords
         "query": "Which one of the most beautiful paintings, artifacts and gorgeous swords has not been moved to Bacau?",
         "result": """
 statement: {
 	target: {
+		operator: None
 		phrase: which one of the most beautiful paintings
-		question type: which
+		prep_phrase: None
+		type: which
 	},
 	action: {
 		neg: not,
@@ -824,14 +989,18 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: to Bacau
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 statement: {
 	target: {
-		phrase: ##and## of artifacts
-		question type: which
+		operator: and
+		phrase: of artifacts
+		prep_phrase: None
+		type: which
 	},
 	action: {
 		neg: not,
@@ -842,14 +1011,18 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: to Bacau
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 statement: {
 	target: {
-		phrase: ##and## of gorgeous swords
-		question type: which
+		operator: and
+		phrase: of gorgeous swords
+		prep_phrase: None
+		type: which
 	},
 	action: {
 		neg: not,
@@ -860,8 +1033,10 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: to Bacau
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 """
@@ -875,8 +1050,10 @@ WHICH_PAIRS_03 = [
         "result": """
 statement: {
 	target: {
+		operator: None
 		phrase: which female actor
-		question type: which
+		prep_phrase: None
+		type: which
 	},
 	action: {
 		neg: None,
@@ -887,14 +1064,18 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: in Casablanca
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 statement: {
 	target: {
+		operator: None
 		phrase: which female actor
-		question type: which
+		prep_phrase: None
+		type: which
 	},
 	action: {
 		neg: None,
@@ -905,14 +1086,18 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: to a writer
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 statement: {
 	target: {
+		operator: None
 		phrase: to a writer
-		question type: None
+		prep_phrase: None
+		type: None
 	},
 	action: {
 		neg: None,
@@ -923,20 +1108,25 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: in Rome
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 """
     },
     {
+        # FIXME: ilie.dorobat:
         # derived from [2]
         "query": "Which female actor played in Casablanca and is married to a writer?",
         "result": """
 statement: {
 	target: {
+		operator: None
 		phrase: which female actor
-		question type: which
+		prep_phrase: None
+		type: which
 	},
 	action: {
 		neg: None,
@@ -947,26 +1137,32 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: in Casablanca
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 statement: {
 	target: {
+		operator: None
 		phrase: which female actor
-		question type: which
+		prep_phrase: None
+		type: which
 	},
 	action: {
 		neg: None,
 		verb: {
 			aux_vbs: [is],
-			main_vb: None,
+			main_vb: married,
 			modal_vb: None
 		}
 	},
 	related: {
+		operator: None
 		phrase: to a writer
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 """
@@ -977,8 +1173,10 @@ statement: {
         "result": """
 statement: {
 	target: {
+		operator: None
 		phrase: which female actor
-		question type: which
+		prep_phrase: None
+		type: which
 	},
 	action: {
 		neg: None,
@@ -989,14 +1187,18 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: in Casablanca
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 statement: {
 	target: {
+		operator: None
 		phrase: which female actor
-		question type: which
+		prep_phrase: None
+		type: which
 	},
 	action: {
 		neg: None,
@@ -1007,20 +1209,25 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: to a writer
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 """
     },
     {
+        # FIXME: ilie.dorobat
         # derived from [2]
         "query": "Which female actor played in Casablanca and is married to a writer born in Rome?",
         "result": """
 statement: {
 	target: {
+		operator: None
 		phrase: which female actor
-		question type: which
+		prep_phrase: None
+		type: which
 	},
 	action: {
 		neg: None,
@@ -1031,32 +1238,40 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: in Casablanca
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 statement: {
 	target: {
+		operator: None
 		phrase: which female actor
-		question type: which
+		prep_phrase: None
+		type: which
 	},
 	action: {
 		neg: None,
 		verb: {
 			aux_vbs: [is],
-			main_vb: None,
+			main_vb: married,
 			modal_vb: None
 		}
 	},
 	related: {
+		operator: None
 		phrase: to a writer
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 statement: {
 	target: {
+		operator: None
 		phrase: to a writer
-		question type: None
+		prep_phrase: None
+		type: None
 	},
 	action: {
 		neg: None,
@@ -1067,8 +1282,10 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: in Rome
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 """
@@ -1079,8 +1296,10 @@ statement: {
         "result": """
 statement: {
 	target: {
+		operator: None
 		phrase: which female actor
-		question type: which
+		prep_phrase: None
+		type: which
 	},
 	action: {
 		neg: None,
@@ -1091,14 +1310,18 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: in Casablanca
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 statement: {
 	target: {
+		operator: None
 		phrase: which female actor
-		question type: which
+		prep_phrase: None
+		type: which
 	},
 	action: {
 		neg: None,
@@ -1109,14 +1332,18 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: to a writer
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 statement: {
 	target: {
+		operator: None
 		phrase: to a writer
-		question type: None
+		prep_phrase: None
+		type: None
 	},
 	action: {
 		neg: None,
@@ -1127,14 +1354,18 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: in Rome
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 statement: {
 	target: {
+		operator: None
 		phrase: which female actor
-		question type: which
+		prep_phrase: None
+		type: which
 	},
 	action: {
 		neg: None,
@@ -1145,20 +1376,25 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: three children
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 """
     },
     {
+        # FIXME: ilie.dorobat
         # derived from [2]
         "query": "Which female actor played in Casablanca and is married to a writer born in Rome and has three children?",
         "result": """
 statement: {
 	target: {
+		operator: None
 		phrase: which female actor
-		question type: which
+		prep_phrase: None
+		type: which
 	},
 	action: {
 		neg: None,
@@ -1169,32 +1405,40 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: in Casablanca
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 statement: {
 	target: {
+		operator: None
 		phrase: which female actor
-		question type: which
+		prep_phrase: None
+		type: which
 	},
 	action: {
 		neg: None,
 		verb: {
 			aux_vbs: [is],
-			main_vb: None,
+			main_vb: married,
 			modal_vb: None
 		}
 	},
 	related: {
+		operator: None
 		phrase: to a writer
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 statement: {
 	target: {
+		operator: None
 		phrase: to a writer
-		question type: None
+		prep_phrase: None
+		type: None
 	},
 	action: {
 		neg: None,
@@ -1205,14 +1449,18 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: in Rome
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 statement: {
 	target: {
+		operator: None
 		phrase: which female actor
-		question type: which
+		prep_phrase: None
+		type: which
 	},
 	action: {
 		neg: None,
@@ -1223,38 +1471,47 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: three children
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 """
     },
     {
+        # FIXME: ilie.dorobat
         # derived from [2]
         "query": "Which beautiful female is married to a writer born in Rome and has three children?",
         "result": """
-statement: {
+	statement: {
 	target: {
+		operator: None
 		phrase: which beautiful female
-		question type: which
+		prep_phrase: None
+		type: which
 	},
 	action: {
 		neg: None,
 		verb: {
 			aux_vbs: [is],
-			main_vb: None,
+			main_vb: married,
 			modal_vb: None
 		}
 	},
 	related: {
+		operator: None
 		phrase: to a writer
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 statement: {
 	target: {
+		operator: None
 		phrase: to a writer
-		question type: None
+		prep_phrase: None
+		type: None
 	},
 	action: {
 		neg: None,
@@ -1265,14 +1522,18 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: in Rome
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 statement: {
 	target: {
+		operator: None
 		phrase: which beautiful female
-		question type: which
+		prep_phrase: None
+		type: which
 	},
 	action: {
 		neg: None,
@@ -1283,8 +1544,10 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: three children
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 """
@@ -1294,8 +1557,10 @@ statement: {
         "result": """
 statement: {
 	target: {
+		operator: None
 		phrase: which woman
-		question type: which
+		prep_phrase: None
+		type: which
 	},
 	action: {
 		neg: None,
@@ -1306,14 +1571,18 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: beautiful
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 statement: {
 	target: {
+		operator: None
 		phrase: which woman
-		question type: which
+		prep_phrase: None
+		type: which
 	},
 	action: {
 		neg: None,
@@ -1324,14 +1593,18 @@ statement: {
 		}
 	},
 	related: {
-		phrase: ##and## generous
-		question type: None
+		operator: and
+		phrase: generous
+		prep_phrase: None
+		type: None
 	}
 }
 statement: {
 	target: {
+		operator: None
 		phrase: which woman
-		question type: which
+		prep_phrase: None
+		type: which
 	},
 	action: {
 		neg: None,
@@ -1342,14 +1615,18 @@ statement: {
 		}
 	},
 	related: {
-		phrase: ##and## tall
-		question type: None
+		operator: and
+		phrase: tall
+		prep_phrase: None
+		type: None
 	}
 }
 statement: {
 	target: {
+		operator: None
 		phrase: which woman
-		question type: which
+		prep_phrase: None
+		type: which
 	},
 	action: {
 		neg: None,
@@ -1360,8 +1637,10 @@ statement: {
 		}
 	},
 	related: {
-		phrase: ##and## rich
-		question type: None
+		operator: and
+		phrase: rich
+		prep_phrase: None
+		type: None
 	}
 }
 """
@@ -1371,8 +1650,10 @@ statement: {
         "result": """
 statement: {
 	target: {
+		operator: None
 		phrase: which smart woman
-		question type: which
+		prep_phrase: None
+		type: which
 	},
 	action: {
 		neg: None,
@@ -1383,14 +1664,18 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: beautiful
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 statement: {
 	target: {
+		operator: None
 		phrase: which smart woman
-		question type: which
+		prep_phrase: None
+		type: which
 	},
 	action: {
 		neg: None,
@@ -1401,14 +1686,18 @@ statement: {
 		}
 	},
 	related: {
-		phrase: ##and## generous
-		question type: None
+		operator: and
+		phrase: generous
+		prep_phrase: None
+		type: None
 	}
 }
 statement: {
 	target: {
+		operator: None
 		phrase: which smart woman
-		question type: which
+		prep_phrase: None
+		type: which
 	},
 	action: {
 		neg: None,
@@ -1419,14 +1708,18 @@ statement: {
 		}
 	},
 	related: {
-		phrase: ##and## tall
-		question type: None
+		operator: and
+		phrase: tall
+		prep_phrase: None
+		type: None
 	}
 }
 statement: {
 	target: {
+		operator: None
 		phrase: which smart woman
-		question type: which
+		prep_phrase: None
+		type: which
 	},
 	action: {
 		neg: None,
@@ -1437,8 +1730,10 @@ statement: {
 		}
 	},
 	related: {
-		phrase: ##and## rich
-		question type: None
+		operator: and
+		phrase: rich
+		prep_phrase: None
+		type: None
 	}
 }
 """
@@ -1452,8 +1747,10 @@ WHICH_PAIRS_04 = [
         "result": """
 statement: {
 	target: {
+		operator: None
 		phrase: which colour
-		question type: which
+		prep_phrase: None
+		type: which
 	},
 	action: {
 		neg: None,
@@ -1464,8 +1761,10 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: you
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 """

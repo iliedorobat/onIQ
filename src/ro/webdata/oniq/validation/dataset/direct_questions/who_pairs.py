@@ -5,8 +5,10 @@ WHO_PAIRS_01 = [
         "result": """
 statement: {
 	target: {
+		operator: None
 		phrase: who
-		question type: who
+		prep_phrase: None
+		type: who
 	},
 	action: {
 		neg: None,
@@ -17,8 +19,10 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: in the film series of Souls of the Departed
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 """
@@ -31,8 +35,10 @@ WHO_PAIRS_02 = [
         "result": """
 statement: {
 	target: {
+		operator: None
 		phrase: who
-		question type: who
+		prep_phrase: None
+		type: who
 	},
 	action: {
 		neg: None,
@@ -43,8 +49,10 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: with Jane
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 """
@@ -54,8 +62,10 @@ statement: {
         "result": """
 statement: {
 	target: {
+		operator: None
 		phrase: who
-		question type: who
+		prep_phrase: None
+		type: who
 	},
 	action: {
 		neg: None,
@@ -66,8 +76,10 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: beautiful
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 """
@@ -77,8 +89,10 @@ statement: {
         "result": """
 statement: {
 	target: {
+		operator: None
 		phrase: who
-		question type: who
+		prep_phrase: None
+		type: who
 	},
 	action: {
 		neg: None,
@@ -89,14 +103,18 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: beautiful
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 statement: {
 	target: {
+		operator: None
 		phrase: who
-		question type: who
+		prep_phrase: None
+		type: who
 	},
 	action: {
 		neg: None,
@@ -107,8 +125,10 @@ statement: {
 		}
 	},
 	related: {
-		phrase: ##and## smart
-		question type: None
+		operator: and
+		phrase: smart
+		prep_phrase: None
+		type: None
 	}
 }
 """
@@ -118,8 +138,10 @@ statement: {
         "result": """
 statement: {
 	target: {
+		operator: None
 		phrase: who
-		question type: who
+		prep_phrase: None
+		type: who
 	},
 	action: {
 		neg: None,
@@ -130,14 +152,18 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: the most beautiful woman
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 statement: {
 	target: {
+		operator: None
 		phrase: who
-		question type: who
+		prep_phrase: None
+		type: who
 	},
 	action: {
 		neg: None,
@@ -148,8 +174,10 @@ statement: {
 		}
 	},
 	related: {
-		phrase: ##and## the most generous person
-		question type: None
+		operator: and
+		phrase: the most generous person
+		prep_phrase: None
+		type: None
 	}
 }
 """
@@ -159,8 +187,10 @@ statement: {
         "result": """
 statement: {
 	target: {
+		operator: None
 		phrase: who
-		question type: who
+		prep_phrase: None
+		type: who
 	},
 	action: {
 		neg: None,
@@ -171,19 +201,24 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: the director of Amsterdam museum
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 """
     },
     {
+        # TODO: ##and## sold
         "query": "Who is the director who own 2 cars and sold a house or a panel?",
         "result": """
 statement: {
 	target: {
+		operator: None
 		phrase: who
-		question type: who
+		prep_phrase: None
+		type: who
 	},
 	action: {
 		neg: None,
@@ -194,14 +229,18 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: the director
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 statement: {
 	target: {
+		operator: None
 		phrase: the director
-		question type: None
+		prep_phrase: None
+		type: None
 	},
 	action: {
 		neg: None,
@@ -212,14 +251,18 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: 2 cars
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 statement: {
 	target: {
+		operator: None
 		phrase: the director
-		question type: None
+		prep_phrase: None
+		type: None
 	},
 	action: {
 		neg: None,
@@ -230,14 +273,18 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: a house
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 statement: {
 	target: {
+		operator: None
 		phrase: the director
-		question type: None
+		prep_phrase: None
+		type: None
 	},
 	action: {
 		neg: None,
@@ -248,8 +295,10 @@ statement: {
 		}
 	},
 	related: {
-		phrase: ##or## a panel
-		question type: None
+		operator: or
+		phrase: a panel
+		prep_phrase: None
+		type: None
 	}
 }
 """
@@ -263,8 +312,10 @@ WHO_PAIRS_03 = [
         "result": """
 statement: {
 	target: {
+		operator: None
 		phrase: who
-		question type: who
+		prep_phrase: None
+		type: who
 	},
 	action: {
 		neg: None,
@@ -275,12 +326,16 @@ statement: {
 		}
 	},
 	related: {
+		operator: None
 		phrase: the door
-		question type: None
+		prep_phrase: None
+		type: None
 	}
 }
 """
     }
 ]
 
-WHO_PAIRS = WHO_PAIRS_01 + WHO_PAIRS_02 + WHO_PAIRS_03
+WHO_PAIRS = WHO_PAIRS_01 + \
+            WHO_PAIRS_02 + \
+            WHO_PAIRS_03
