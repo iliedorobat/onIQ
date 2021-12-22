@@ -142,7 +142,7 @@ def is_preceded_by_conjunction(word: Token):
         return False
 
     # 1. if the iterator has reached to the beginning of the phrase
-    # 2. if the iterator has reached the previous phrase
+    # 2. if the iterator will reach to the previous phrase
     if is_verb(word):
         return False
 

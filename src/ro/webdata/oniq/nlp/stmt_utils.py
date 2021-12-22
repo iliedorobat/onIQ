@@ -17,7 +17,7 @@ from ro.webdata.oniq.nlp.nlp_utils import is_wh_noun_chunk, is_wh_noun_phrase, r
 from ro.webdata.oniq.nlp.phrase_utils import prepare_phrase_list
 from ro.webdata.oniq.nlp.utils import is_empty_list
 from ro.webdata.oniq.nlp.verb_utils import get_verb_ancestor
-from ro.webdata.oniq.nlp.word_utils import is_conjunction, is_preceded_by_conjunction, is_verb
+from ro.webdata.oniq.nlp.word_utils import is_preceded_by_conjunction, is_verb
 
 
 def consolidate_statement_list(stmt_list: [Statement]):
@@ -80,7 +80,7 @@ def _generate_statement_list(sentence: Span, action_list: [Action]):
     chunk_list = get_noun_chunks(sentence)
     # Filter the chunks which are not in dependence of conjunction because they will be added
     # to target_chunks or related_chunks through the _get_associated_chunks method
-    filtered_chunks = list(filter(lambda crr_chunk: _is_not_linked_to(crr_chunk), chunk_list))
+    filtered_chunks = list(filter(lambda crr_chunk: not is_preceded_by_conjunction(crr_chunk[0]), chunk_list))
 
     for chunk in filtered_chunks:
         main_ancestor = _get_main_ancestor(chunk)
@@ -181,39 +181,6 @@ def _get_related_chunks(chunk_list: [Span], target_chunks: [Span]):
                     break
 
     return related_chunks
-
-
-def _is_not_linked_to(chunk: Span):
-    """
-    TODO: update the documentation
-    TODO: ilie.dorobat: rename it to _is_linked_to
-    Check if the root token is in relation of conjunction after the retokenization happened<br/>
-
-    E.g.:
-        - "Where can one find farhad and shirin monument?"
-        - before retokenization, "farhad", "and", "shirin" were independent words
-        - after retokenization, the "farhad and shirin" will be a named entity
-        - after retokenization, the "monument" keeps its relation of conjunction, but,
-                because the conjunction ("and") has been merged to a named entity, its
-                relation is outdated
-
-    :param chunk: The target chunk
-    :return: True/False
-    """
-
-    if not isinstance(chunk, Span):
-        return True
-
-    if is_linked_chunk(chunk):
-        for index, token in reversed(list(enumerate(chunk.sent[0: chunk[0].i]))):
-            # E.g.: "Where can one find farhad and shirin monument?"
-            if is_verb(token):
-                return True
-            # E.g.: "What museums are in Bacau, Iasi or Bucharest?"
-            elif is_conjunction(token):
-                return False
-
-    return True
 
 
 def _get_main_ancestor(chunk: Span):
