@@ -108,7 +108,6 @@ statement: {
 """
     },
     {
-        # TODO: ilie.dorobat: swords => the swords
         "query": "Where are the coins and swords located?",
         "result": """
 statement: {
@@ -291,7 +290,6 @@ statement: {
 """
     },
     {
-        # TODO: ilie.dorobat: axes => the axes
         "query": "Where are the swords and axes made?",
         "result": """
 statement: {

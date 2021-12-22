@@ -130,7 +130,6 @@ statement: {
 """
     },
     {
-        # TODO: Per Ahlmark => to Per Ahlmark
         # [1]
         "query": "When was Bibi Andersson married to Per Ahlmark?",
         "result": """
