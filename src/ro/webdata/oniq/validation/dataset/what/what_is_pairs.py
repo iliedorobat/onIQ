@@ -74,8 +74,8 @@ statement: {
 	},
 	related: {
 		operator: None
-		phrase: the name of the largest museum
-		prep_phrase: None
+		phrase: the name
+		prep_phrase: the largest museum
 		type: None
 	}
 }
@@ -101,8 +101,8 @@ statement: {
 	},
 	related: {
 		operator: None
-		phrase: the name of the most beautiful museum
-		prep_phrase: None
+		phrase: the name
+		prep_phrase: the most beautiful museum
 		type: None
 	}
 }
@@ -129,16 +129,16 @@ statement: {
 	},
 	related: {
 		operator: None
-		phrase: the name of the largest museum
-		prep_phrase: None
+		phrase: the name
+		prep_phrase: the largest museum
 		type: None
 	}
 }
 statement: {
 	target: {
 		operator: None
-		phrase: the name of the largest museum
-		prep_phrase: None
+		phrase: the name
+		prep_phrase: the largest museum
 		type: None
 	},
 	action: {
@@ -159,8 +159,8 @@ statement: {
 statement: {
 	target: {
 		operator: None
-		phrase: the name of the largest museum
-		prep_phrase: None
+		phrase: the name
+		prep_phrase: the largest museum
 		type: None
 	},
 	action: {
@@ -287,7 +287,6 @@ statement: {
 WHAT_IS_PAIRS_03 = [
     {
         # [2]
-        # TODO: ilie.dorobat: the population of the most populated state
         "query": "What is the population and area of the most populated state?",
         "result": """
 statement: {
@@ -308,7 +307,7 @@ statement: {
 	related: {
 		operator: None
 		phrase: the population
-		prep_phrase: None
+		prep_phrase: the most populated state
 		type: None
 	}
 }
@@ -329,8 +328,8 @@ statement: {
 	},
 	related: {
 		operator: and
-		phrase: area of the most populated state
-		prep_phrase: None
+		phrase: area
+		prep_phrase: the most populated state
 		type: None
 	}
 }

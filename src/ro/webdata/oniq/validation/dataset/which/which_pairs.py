@@ -32,8 +32,8 @@ statement: {
 statement: {
 	target: {
 		operator: None
-		phrase: which of the smart kids
-		prep_phrase: None
+		phrase: which
+		prep_phrase: the smart kids
 		type: which
 	},
 	action: {
@@ -59,8 +59,8 @@ statement: {
 statement: {
 	target: {
 		operator: None
-		phrase: which of the paintings
-		prep_phrase: None
+		phrase: which
+		prep_phrase: the paintings
 		type: which
 	},
 	action: {
@@ -849,8 +849,8 @@ WHICH_PAIRS_02 = [
 statement: {
 	target: {
 		operator: None
-		phrase: which of the most beautiful paintings
-		prep_phrase: None
+		phrase: which
+		prep_phrase: the most beautiful paintings
 		type: which
 	},
 	action: {
@@ -877,8 +877,8 @@ statement: {
 statement: {
 	target: {
 		operator: None
-		phrase: which of the most beautiful paintings
-		prep_phrase: None
+		phrase: which
+		prep_phrase: the most beautiful paintings
 		type: which
 	},
 	action: {

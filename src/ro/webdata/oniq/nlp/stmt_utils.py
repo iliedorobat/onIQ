@@ -7,7 +7,7 @@ from ro.webdata.oniq.model.sentence.Action import Action
 from ro.webdata.oniq.model.sentence.Adjective import Adjective
 from ro.webdata.oniq.model.sentence.Statement import ConsolidatedStatement, Statement
 
-from ro.webdata.oniq.nlp.actions import get_action_list
+from ro.webdata.oniq.nlp.actions import extract_action, get_action_list
 from ro.webdata.oniq.nlp.adj_utils import get_next_linked_adj_list, get_prev_linked_adj_list
 from ro.webdata.oniq.nlp.adv_utils import get_next_adv
 from ro.webdata.oniq.nlp.chunk_utils import extract_chunk, get_chunk_index, get_filtered_noun_chunks, get_noun_chunks
@@ -89,8 +89,7 @@ def _generate_statement_list(sentence: Span, action_list: [Action]):
             for target_chunk in target_chunks:
                 for related_chunk in related_chunks:
                     if target_chunk != related_chunk:
-                        verb = get_verb_ancestor(related_chunk)
-                        action = _get_action(action_list, verb)
+                        action = extract_action(action_list, related_chunk)
                         _append_statement(statements, target_chunk, action, related_chunk)
 
         # E.g.: "Which is the noisiest and the largest city"
@@ -98,20 +97,19 @@ def _generate_statement_list(sentence: Span, action_list: [Action]):
         elif is_wh_noun_chunk(chunk) and len(filtered_chunks) == 1:
             related_chunks = _get_related_chunks(chunk_list, target_chunks)
             for target_chunk in target_chunks:
-                verb = get_verb_ancestor(target_chunk)
-                action = _get_action(action_list, verb)
+                action = extract_action(action_list, target_chunk)
 
                 # E.g.: "Who is very smart?"
                 # E.g.: "Who is very beautiful and very smart?"
                 if len(related_chunks) == 0:
                     prev_adj_list = get_next_linked_adj_list(target_chunk)
-                    _append_adj_statements(prev_adj_list, statements, sentence, target_chunk, action)
+                    _append_adj_statements(sentence, statements, prev_adj_list, action, target_chunk)
 
                 elif is_wh_noun_chunk(target_chunk) and action is not None:
                     for related_chunk in related_chunks:
                         _append_statement(statements, target_chunk, action, related_chunk)
                         prev_adj_list = get_prev_linked_adj_list(related_chunk)
-                        _append_adj_statements(prev_adj_list, statements, sentence, target_chunk, action)
+                        _append_adj_statements(sentence, statements, prev_adj_list, action, target_chunk)
 
                     # Mirroring the list of statements as long as the list
                     # has been built from the end to the beginning
@@ -122,16 +120,16 @@ def _generate_statement_list(sentence: Span, action_list: [Action]):
         # E.g.: "How many cars are there?"
         elif len(filtered_chunks) == 1:
             for target_chunk in target_chunks:
+                action = extract_action(action_list, target_chunk)
                 verb = get_verb_ancestor(target_chunk)
-                action = _get_action(action_list, verb)
                 next_adv = get_next_adv(verb)
 
                 # E.g.: "How many cars are there?"
                 if next_adv is not None:
-                    _append_adv_statement(statements, sentence, target_chunk, action)
+                    _append_adv_statement(sentence, statements, target_chunk, action)
                 else:
                     next_linked_adj = get_next_linked_adj_list(target_chunk)
-                    _append_adj_statements(next_linked_adj, statements, sentence, target_chunk, action)
+                    _append_adj_statements(sentence, statements, next_linked_adj, action, target_chunk)
 
         else:
             print("else...")
@@ -140,25 +138,106 @@ def _generate_statement_list(sentence: Span, action_list: [Action]):
     return statements
 
 
-# TODO: ilie.dorobat: add the documentation && add safety checks
-def _append_adj_statements(adj_list: [Adjective], statements: [Statement], sentence: Span, target_chunk: Span, action: Action):
+def _append_adj_statements(sentence: Span, statements: [Statement], adj_list: [Adjective], action: Action, target_chunk: Span):
+    """
+    Append new statements whose related chunk is built on an adjective
+
+    E.g.:
+        - question: "How long does the largest museum remain closed?"
+        - question: "Which smart kid is famous?"
+
+    :param sentence: The target sentence
+    :param statements: The list of statements
+    :param adj_list: The list of adjectives used to build the statements
+    :param action: The target action
+    :param target_chunk: The current target chunk (see _get_target_chunks)
+    :return: None
+    """
+
+    if not isinstance(sentence, Span) or \
+            not isinstance(statements, list) or \
+            not isinstance(adj_list, list) or \
+            not isinstance(action, Action) or \
+            not isinstance(target_chunk, Span):
+        return None
+
     for adj in adj_list:
         related_chunk = sentence[adj.token.i: adj.token.i + 1]
         _append_statement(statements, target_chunk, action, related_chunk)
 
 
-# TODO: ilie.dorobat: add the documentation && add safety checks
-def _append_adv_statement(statements: [Statement], sentence: Span, target_chunk: Span, action: Action):
+def _append_adv_statement(sentence: Span, statements: [Statement], target_chunk: Span, action: Action):
+    """
+    Append a new statement whose related chunk is built on an adverb
+
+    E.g.:
+        - question: "How many cars are there?"
+
+    :param sentence: The target sentence
+    :param statements: The list of statements
+    :param target_chunk: The current target chunk (see _get_target_chunks)
+    :param action: The target action
+    :return: None
+    """
+
+    if not isinstance(sentence, Span) or \
+            not isinstance(statements, list) or \
+            not isinstance(target_chunk, Span) or \
+            not isinstance(action, Action):
+        return None
+
     verb = get_verb_ancestor(target_chunk)
     adv = get_next_adv(verb)
     related_chunk = sentence[adv.token.i: adv.token.i + 1]
     _append_statement(statements, target_chunk, action, related_chunk)
 
 
-# TODO: ilie.dorobat: add the documentation && add safety checks
 def _append_statement(statements: [Statement], target_chunk: Span, action: Action, related_chunk: Span):
+    """
+    Append a new statement and update the previous one if the current statement
+    phrase and/or related_phrase is in relation of conjunction
+
+    :param statements: The list of statements
+    :param target_chunk: The current target chunk (see _get_target_chunks)
+    :param action: The target action
+    :param related_chunk: The current related chunk (see _get_related_chunks)
+    :return: None
+    """
+
+    if not isinstance(statements, list) or \
+            not isinstance(target_chunk, Span) or \
+            not isinstance(action, Action) or \
+            not isinstance(related_chunk, Span):
+        return None
+
     statement = Statement(target_chunk, action, related_chunk)
+    _update_prev_statement(statements, statement)
     statements.append(statement)
+
+
+def _update_prev_statement(statements: [Statement], statement: Statement):
+    """
+    Update the phrase and/or related_phrase of the previous statement based
+    on the phrase and/or related_phrase of the input statement
+
+    E.g.:
+        - question: "How many paintings and statues are on display at the Amsterdam Museum?"
+        - question: "What museums and libraries are in Bacau or Bucharest?"
+
+    :param statements: The list of statements
+    :param statement: The target statement
+    :return: None
+    """
+
+    if is_empty_list(statements) or not isinstance(statement, Statement):
+        return None
+
+    prev_statement = statements[len(statements) - 1]
+    if prev_statement is not None:
+        if statement.phrase.conj is not None and prev_statement.phrase.prep_phrase is None:
+            prev_statement.phrase.prep_phrase = statement.phrase.prep_phrase
+        if statement.related_phrase.conj is not None and prev_statement.related_phrase.prep_phrase is None:
+            prev_statement.related_phrase.prep_phrase = statement.related_phrase.prep_phrase
 
 
 def _get_related_chunks(chunk_list: [Span], target_chunks: [Span]):
@@ -184,7 +263,7 @@ def _get_main_ancestor(filtered_chunks, index):
     """
     Extract the noun ancestor if exists, otherwise the left edge item
 
-    :param filtered_chunks: The target chunks excluding the the chunks which are in dependence of conjunction
+    :param filtered_chunks: The target chunks excluding the chunks which are in dependence of conjunction
     :param index: The index of the current iterated chunk
     :return: The main ancestor
     """
@@ -210,35 +289,16 @@ def _get_main_ancestor(filtered_chunks, index):
     return main_ancestor
 
 
+# TODO: ilie.dorobat: add the documentation
 def _get_prep_main_accessor(filtered_chunks, index, main_ancestor: Token):
     new_filtered_chunks = [chunk for idx, chunk in enumerate(filtered_chunks) if idx < index]
-
     found_chunk = extract_chunk(new_filtered_chunks, main_ancestor)
+
     # main_ancestor.i > 0   e.g.: "How long does the museum remain closed?"
     if found_chunk is None and main_ancestor.i > 0:
         return _get_prep_main_accessor(filtered_chunks, index, main_ancestor.head)
+
     return main_ancestor
-
-
-def _get_action(action_list: [Span], word: Token):
-    """
-    TODO: pass the chunk => verb = get_verb_ancestor(related_chunk)
-    Retrieve the event (Action) to which the word belongs
-
-    :param action_list: The list of events (Actions)
-    :param word: The input verb
-    :return: The event (Action)
-    """
-
-    if is_empty_list(action_list) or not isinstance(word, Token):
-        return None
-
-    for action in action_list:
-        verbs = action.verb.to_list()
-        for verb in verbs:
-            if verb == word:
-                return action
-    return None
 
 
 # TODO: ilie.dorobat: add the documentation

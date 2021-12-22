@@ -1,12 +1,11 @@
 from spacy.tokens import Span, Token
 
-from ro.webdata.oniq.model.sentence.Action import Action
 from ro.webdata.oniq.model.sentence.Conjunction import Conjunction
 from ro.webdata.oniq.nlp.chunk_utils import extract_chunk, extract_comparison_adv, extract_determiner, \
     get_chunk_index, get_noun_chunks
 from ro.webdata.oniq.nlp.utils import is_empty_list
-from ro.webdata.oniq.nlp.word_utils import get_preposition, is_adj, is_conjunction, \
-    is_followed_by_conjunction, is_preceded_by_conjunction, is_verb, is_wh_word
+from ro.webdata.oniq.nlp.word_utils import get_next_word, get_preposition, get_prev_word, is_adj, is_conjunction, \
+    is_followed_by_conjunction, is_preceded_by_conjunction, is_preposition, is_verb, is_wh_word
 
 
 class PHRASE_TYPES:
@@ -39,7 +38,7 @@ class Phrase:
         self.phrase_type = phrase_type
         self.question_type = _prepare_question_type(self.chunk)
         self.text = _prepare_text(self.chunk,  self.comparison_adv, self.det, self.prep, self.meta_prep)
-        self.prep_phrase = None  # TODO: ilie.dorobat
+        self.prep_phrase = _prepare_prep_chunk(self.chunk)
 
     def __eq__(self, other):
         if not isinstance(other, Phrase):
@@ -132,6 +131,59 @@ def _prepare_meta_prep(chunk: Span, prep: Token):
             return meta_prep
 
     return None
+
+
+def _prepare_prep_chunk(chunk: Span):
+    """
+    Extract the span that is linked to the input chunk through a preposition
+
+    E.g.:
+        - question: "Who is starring in the film series of Souls of the Departed?"
+            - chunks: ["who", "in the film series", "of Souls", "of the Departed"]
+                - chunk: "who"                      prep_chunk: None
+                - chunk: "in the film series"       prep_chunk: "of Souls of the Departed"
+        - question: "Who is the director of Amsterdam museum?"
+            - chunks: ["who", "the director", "of Amsterdam museum"]
+                - chunk: "who"                      prep_chunk: None
+                - chunk: "the director"             prep_chunk: "of Amsterdam museum"
+
+    :param chunk: The target chunk
+    :return: The prepared preposition chunk
+    """
+
+    if not isinstance(chunk, Span):
+        return None
+
+    sentence = chunk.sent
+    noun_chunk_list = list(sentence.noun_chunks)
+
+    chunk_index = get_chunk_index(noun_chunk_list, chunk)
+    last_word = chunk[len(chunk) - 1]
+    next_word = get_next_word(last_word)
+
+    prep_phrase = None
+    for index, noun_chunk in enumerate(noun_chunk_list):
+        if index > chunk_index:
+            # E.g.: "What is the name of the largest museum which hosts more than 10 pictures and exposed one sword?"
+            if not is_wh_word(next_word) and is_preposition(next_word) and next_word.dep_ == "prep":
+                last_word = noun_chunk[len(noun_chunk) - 1]
+                next_word = get_next_word(last_word)
+
+                # E.g.: "Who is starring in the film series of Souls of the Departed?" [1]
+                # E.g.: "Where does the holder of the position of Lech Kaczynski live?" [1]
+                if isinstance(prep_phrase, Span):
+                    prep_phrase = sentence[prep_phrase.start: noun_chunk.end]
+
+                # E.g.: "Who is the director of Amsterdam museum?"
+                # E.g.: "How many paintings are on display at the Amsterdam Museum?"
+                else:
+                    prep_phrase = noun_chunk
+
+            # Exit the loop if the next_word is not a preposition
+            else:
+                break
+
+    return prep_phrase
 
 
 def _prepare_text(chunk: Span, comparison_adv: Token, det: Token, prep: Token, meta_prep: Token):

@@ -46,8 +46,8 @@ statement: {
 	},
 	related: {
 		operator: None
-		phrase: a club of Santa Clara university
-		prep_phrase: None
+		phrase: a club
+		prep_phrase: Santa Clara university
 		type: None
 	}
 }
@@ -73,8 +73,8 @@ statement: {
 	},
 	related: {
 		operator: None
-		phrase: at the beginning of the year
-		prep_phrase: None
+		phrase: at the beginning
+		prep_phrase: the year
 		type: None
 	}
 }

@@ -1,6 +1,6 @@
 HOW_FAR_PAIRS_01 = [
     {
-        # [6]
+        # [1]
         "query": "How far is Pattaya from Bangkok?",
         "result": """
 statement: {
@@ -20,8 +20,8 @@ statement: {
 	},
 	related: {
 		operator: None
-		phrase: Pattaya from Bangkok
-		prep_phrase: None
+		phrase: Pattaya
+		prep_phrase: Bangkok
 		type: None
 	}
 }

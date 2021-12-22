@@ -562,7 +562,6 @@ statement: {
 WHICH_IS_PAIRS_02 = [
     {
         # [1]
-        # TODO: ilie.dorobat: the state => the state of the Watergate scandal
         "query": "Which is the state and country of the Watergate scandal?",
         "result": """
 statement: {
@@ -583,7 +582,7 @@ statement: {
 	related: {
 		operator: None
 		phrase: the state
-		prep_phrase: None
+		prep_phrase: the Watergate scandal
 		type: None
 	}
 }
@@ -604,8 +603,8 @@ statement: {
 	},
 	related: {
 		operator: and
-		phrase: country of the Watergate scandal
-		prep_phrase: None
+		phrase: country
+		prep_phrase: the Watergate scandal
 		type: None
 	}
 }

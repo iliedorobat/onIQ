@@ -29,7 +29,7 @@ def extract_chunk(chunk_list: [Span], word: Token):
 
     for chunk in chunk_list:
         for token in chunk:
-            if word == token:
+            if word == token and word.i == token.i:
                 return chunk
 
     return None

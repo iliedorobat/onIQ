@@ -20,8 +20,8 @@ statement: {
 	},
 	related: {
 		operator: None
-		phrase: the Grammy Award for Best Jazz Vocal Album
-		prep_phrase: None
+		phrase: the Grammy Award
+		prep_phrase: Best Jazz Vocal Album
 		type: None
 	}
 }
@@ -83,8 +83,8 @@ statement: {
 	},
 	related: {
 		operator: None
-		phrase: the holder of the position of Lech Kaczynski
-		prep_phrase: None
+		phrase: the holder
+		prep_phrase: the position of Lech Kaczynski
 		type: None
 	}
 }

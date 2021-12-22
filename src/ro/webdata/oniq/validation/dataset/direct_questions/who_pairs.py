@@ -20,8 +20,8 @@ statement: {
 	},
 	related: {
 		operator: None
-		phrase: in the film series of Souls of the Departed
-		prep_phrase: None
+		phrase: in the film series
+		prep_phrase: Souls of the Departed
 		type: None
 	}
 }
@@ -202,8 +202,8 @@ statement: {
 	},
 	related: {
 		operator: None
-		phrase: the director of Amsterdam museum
-		prep_phrase: None
+		phrase: the director
+		prep_phrase: Amsterdam museum
 		type: None
 	}
 }

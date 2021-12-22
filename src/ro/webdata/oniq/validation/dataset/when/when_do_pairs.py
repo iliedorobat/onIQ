@@ -20,8 +20,8 @@ statement: {
 	},
 	related: {
 		operator: None
-		phrase: the Grammy Award for Best Jazz Vocal Album
-		prep_phrase: None
+		phrase: the Grammy Award
+		prep_phrase: Best Jazz Vocal Album
 		type: None
 	}
 }

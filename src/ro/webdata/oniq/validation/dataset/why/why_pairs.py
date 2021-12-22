@@ -19,8 +19,8 @@ statement: {
 	},
 	related: {
 		operator: None
-		phrase: the artifacts in the museum
-		prep_phrase: None
+		phrase: the artifacts
+		prep_phrase: the museum
 		type: None
 	}
 }

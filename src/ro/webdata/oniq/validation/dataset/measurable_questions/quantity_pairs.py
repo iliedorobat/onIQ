@@ -19,8 +19,8 @@ statement: {
 	},
 	related: {
 		operator: None
-		phrase: on display at the Amsterdam Museum
-		prep_phrase: None
+		phrase: on display
+		prep_phrase: the Amsterdam Museum
 		type: None
 	}
 }
@@ -46,8 +46,8 @@ statement: {
 	},
 	related: {
 		operator: None
-		phrase: on display at the Amsterdam Museum
-		prep_phrase: None
+		phrase: on display
+		prep_phrase: the Amsterdam Museum
 		type: None
 	}
 }
@@ -68,8 +68,8 @@ statement: {
 	},
 	related: {
 		operator: None
-		phrase: on display at the Amsterdam Museum
-		prep_phrase: None
+		phrase: on display
+		prep_phrase: the Amsterdam Museum
 		type: None
 	}
 }

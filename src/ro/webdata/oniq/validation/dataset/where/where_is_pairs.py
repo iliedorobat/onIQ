@@ -100,8 +100,8 @@ statement: {
 	},
 	related: {
 		operator: None
-		phrase: the picture with the black frame
-		prep_phrase: None
+		phrase: the picture
+		prep_phrase: the black frame
 		type: None
 	}
 }
@@ -177,8 +177,8 @@ statement: {
 	},
 	related: {
 		operator: None
-		phrase: the picture with the black frame
-		prep_phrase: None
+		phrase: the picture
+		prep_phrase: the black frame
 		type: None
 	}
 }
@@ -263,6 +263,7 @@ statement: {
 """
     },
     {
+        # TODO: ilie.dorobat: Museum of Amsterdam => named entity
         "query": "Where is the Museum of Amsterdam?",
         "result": """
 statement: {
@@ -282,8 +283,8 @@ statement: {
 	},
 	related: {
 		operator: None
-		phrase: the Museum of Amsterdam
-		prep_phrase: None
+		phrase: the Museum
+		prep_phrase: Amsterdam
 		type: None
 	}
 }
@@ -360,8 +361,8 @@ statement: {
 	},
 	related: {
 		operator: None
-		phrase: the woman in black
-		prep_phrase: None
+		phrase: the woman
+		prep_phrase: black
 		type: None
 	}
 }

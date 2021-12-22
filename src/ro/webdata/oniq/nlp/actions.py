@@ -1,12 +1,36 @@
 import warnings
 from spacy.tokens import Span, Token
+
 from ro.webdata.oniq.common.constants import SYSTEM_MESSAGES
 from ro.webdata.oniq.model.sentence.Action import Action
 from ro.webdata.oniq.model.sentence.Adjective import Adjective
 from ro.webdata.oniq.model.sentence.Verb import Verb, get_main_verb, is_aux_preceded_by_aux
 from ro.webdata.oniq.nlp.nlp_utils import get_next_token
 from ro.webdata.oniq.nlp.utils import is_empty_list
+from ro.webdata.oniq.nlp.verb_utils import get_verb_ancestor
 from ro.webdata.oniq.nlp.word_utils import get_next_word, is_adj, is_conjunction, is_verb, is_wh_word
+
+
+def extract_action(action_list: [Span], chunk: Span):
+    """
+    Retrieve the event (Action) to which the input chunk belongs
+
+    :param action_list: The list of events (Actions)
+    :param chunk: The input chunk
+    :return: The event (Action)
+    """
+
+    if is_empty_list(action_list) or not isinstance(chunk, Span):
+        return None
+
+    word = get_verb_ancestor(chunk)
+    for action in action_list:
+        verbs = action.verb.to_list()
+        for verb in verbs:
+            if word == verb and word.i == verb.i:
+                return action
+
+    return None
 
 
 # TODO: ilie.dorobat: add the documentation
