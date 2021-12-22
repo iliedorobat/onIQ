@@ -6,8 +6,9 @@ from ro.webdata.oniq.common.constants import SYSTEM_MESSAGES
 from ro.webdata.oniq.nlp.adv_utils import get_comparison_adv
 from ro.webdata.oniq.nlp.nlp_utils import is_wh_noun_chunk, get_wh_words
 from ro.webdata.oniq.nlp.utils import is_doc_or_span, is_empty_list
-from ro.webdata.oniq.nlp.word_utils import get_next_word, get_prev_word, is_adj, is_adv, is_aux_verb, is_cardinal, \
-    is_common_det, is_linked_by_conjunction, is_noun, is_preposition, is_verb, is_wh_det, is_wh_word
+from ro.webdata.oniq.nlp.word_utils import get_next_word, get_prev_word, is_adj, is_adv, is_aux_verb, \
+    is_cardinal, is_common_det, is_followed_by_preposition, is_linked_by_conjunction, is_noun, \
+    is_preceded_by_conjunction, is_preposition, is_verb, is_wh_det, is_wh_word
 
 
 def extract_chunk(chunk_list: [Span], word: Token):
@@ -131,6 +132,24 @@ def is_linked_chunk(chunk: Span):
     return is_linked_by_conjunction(chunk[0])
 
 
+def get_filtered_noun_chunks(sentence: Union[Doc, Span]):
+    """
+    Exclude the chunks which are in dependence of conjunction
+    because they will be added to target_chunks or related_chunks
+    through the _get_associated_chunks method (see more info in
+    stmt_utils.py)
+
+    :param sentence: The target sentence
+    :return: The list of filtered chunks
+    """
+
+    if not is_doc_or_span(sentence):
+        return []
+
+    chunk_list = get_noun_chunks(sentence)
+    return list(filter(lambda chunk: not is_preceded_by_conjunction(chunk[0]), chunk_list))
+
+
 def get_noun_chunks(sentence: Union[Doc, Span]):
     """
     Get the list of noun chunks
@@ -221,7 +240,7 @@ def _get_extended_noun_chunks(sentence: Union[Doc, Span]):
     if not is_doc_or_span(sentence):
         return chunk_list
 
-    initial_chunks = _get_merged_prep_chunks(sentence)
+    initial_chunks = _get_main_noun_chunks(sentence)
     for index, initial_chunk in enumerate(initial_chunks):
         chunk_list.append(
             _prepare_chunk(initial_chunk)
@@ -240,7 +259,7 @@ def _get_extended_noun_chunks(sentence: Union[Doc, Span]):
 
 def _get_wh_span(sentence: Union[Doc, Span]):
     """
-    Retrieve the tokens that form the starting wh-span ("which", "what", "how", "how long", etc.)
+    Retrieve the tokens that stand form the starting wh-span ("which", "what", "how", "how long", etc.)
 
     :param sentence: The target sentence
     :return: The wh-span
@@ -263,14 +282,14 @@ def _get_wh_span(sentence: Union[Doc, Span]):
     return None
 
 
-def _get_merged_prep_chunks(sentence: Union[Doc, Span]):
+def _get_main_noun_chunks(sentence: Union[Doc, Span]):
     """
-    Merge te chunks that are linked through a preposition and get the prepared list
+    Exclude the chunks that are linked through a preposition and get the prepared list
 
     E.g.:
-        - question: "Who is the director of Amsterdam museum?"
-        - chunks: ["who", "the director", "Amsterdam museum"]
-        - merged chunks: ["who", "the director of Amsterdam museum"]
+        - question: "What is the population and area of the most populated state?" [2]
+        - chunks: ["what", "the population", "area", "the most populated state"]
+        - main chunks: ["what", "the population", "area"]
 
     :param sentence: The target sentence
     :return: The list of prepared chunks
@@ -283,31 +302,21 @@ def _get_merged_prep_chunks(sentence: Union[Doc, Span]):
     noun_chunk_list = list(sentence.noun_chunks)
 
     for index, chunk in enumerate(noun_chunk_list):
+        # E.g.: "When did Lena Horne receive the Grammy Award for Best Jazz Vocal Album?" [1]
         if index == 0:
             chunk_list.append(chunk)
-        if index == len(noun_chunk_list) - 1:
-            break
 
-        last_word = chunk[len(chunk) - 1]
-        next_word = get_next_word(last_word)
-        next_chunk = noun_chunk_list[index + 1]
-
-        # Merge two chunks that are linked through a preposition
-        # E.g.: "Who is the director of Amsterdam museum?"
-        # E.g.: "How many paintings are on display at the Amsterdam Museum?"
-        # E.g.: "Where does the holder of the position of Lech Kaczynski live?" [1]
-        if is_preposition(next_word) and next_word.dep_ == "prep":
-            crr_chunk = chunk_list[len(chunk_list) - 1]
-            chunk_list[len(chunk_list) - 1] = sentence[crr_chunk.start: next_chunk.end]
-        else:
-            chunk_list.append(next_chunk)
+        if index < len(noun_chunk_list) - 1:
+            if not is_followed_by_preposition(chunk[len(chunk) - 1]):
+                next_chunk = noun_chunk_list[index + 1]
+                chunk_list.append(next_chunk)
 
     return chunk_list
 
 
 # TODO: ilie.dorobat: add the documentation
 def _prepare_chunk(chunk: Span):
-    initial_chunks = _get_merged_prep_chunks(chunk.sent)
+    initial_chunks = _get_main_noun_chunks(chunk.sent)
     filtered_initial_chunks = [
         init_chunk
         for init_chunk in initial_chunks

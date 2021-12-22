@@ -176,6 +176,34 @@ def is_followed_by_conjunction(word: Token):
     return is_followed_by_conjunction(next_word)
 
 
+def is_followed_by_preposition(word: Token):
+    """
+    Determine if the input word is followed by a preposition
+
+    E.g.:
+        - question: "Where does the holder of the position of Lech Kaczynski live?" [1]
+        - question: "What is the population and area of the most populated state?" [2]
+
+    :param word: The target word
+    :return: True/False
+    """
+
+    if not isinstance(word, Token):
+        return False
+
+    # 1. if the iterator has reached to the end of the phrase
+    # 2. if the iterator has reached the next phrase
+    # is_conjunction(word) => E.g.: "What is the population and area of the most populated state?" [2]
+    if is_verb(word) or is_conjunction(word):
+        return False
+
+    if is_preposition(word):
+        return True
+
+    next_word = get_next_word(word)
+    return is_followed_by_preposition(next_word)
+
+
 def is_nsubj_wh_word(sentence: Span, word: Token):
     """
     Check if the current word is part of a chunk which is composed by

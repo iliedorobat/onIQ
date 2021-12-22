@@ -4,14 +4,13 @@ from iteration_utilities import unique_everseen
 from ro.webdata.oniq.common.print_utils import echo
 
 from ro.webdata.oniq.model.sentence.Action import Action
-from ro.webdata.oniq.model.sentence.Adverb import Adverb
 from ro.webdata.oniq.model.sentence.Adjective import Adjective
 from ro.webdata.oniq.model.sentence.Statement import ConsolidatedStatement, Statement
 
-from ro.webdata.oniq.nlp.actions import get_action_list, is_part_of_action
+from ro.webdata.oniq.nlp.actions import get_action_list
 from ro.webdata.oniq.nlp.adj_utils import get_next_linked_adj_list, get_prev_linked_adj_list
 from ro.webdata.oniq.nlp.adv_utils import get_next_adv
-from ro.webdata.oniq.nlp.chunk_utils import extract_chunk, get_chunk_index, is_linked_chunk, get_noun_chunks
+from ro.webdata.oniq.nlp.chunk_utils import extract_chunk, get_chunk_index, get_filtered_noun_chunks, get_noun_chunks
 from ro.webdata.oniq.nlp.noun_utils import get_noun_ancestor, is_linked_noun
 from ro.webdata.oniq.nlp.nlp_utils import is_wh_noun_chunk, is_wh_noun_phrase, retokenize
 from ro.webdata.oniq.nlp.phrase_utils import prepare_phrase_list
@@ -78,12 +77,10 @@ def _generate_statement_list(sentence: Span, action_list: [Action]):
 
     # TODO: phrase_list = prepare_phrase_list(sentence) => instead of get_noun_chunks ???
     chunk_list = get_noun_chunks(sentence)
-    # Filter the chunks which are not in dependence of conjunction because they will be added
-    # to target_chunks or related_chunks through the _get_associated_chunks method
-    filtered_chunks = list(filter(lambda crr_chunk: not is_preceded_by_conjunction(crr_chunk[0]), chunk_list))
+    filtered_chunks = get_filtered_noun_chunks(sentence)
 
-    for chunk in filtered_chunks:
-        main_ancestor = _get_main_ancestor(chunk)
+    for index, chunk in enumerate(filtered_chunks):
+        main_ancestor = _get_main_ancestor(filtered_chunks, index)
         main_chunk = extract_chunk(filtered_chunks, main_ancestor)
         target_chunks = _get_target_chunks(chunk_list, main_chunk)
 
@@ -183,14 +180,16 @@ def _get_related_chunks(chunk_list: [Span], target_chunks: [Span]):
     return related_chunks
 
 
-def _get_main_ancestor(chunk: Span):
+def _get_main_ancestor(filtered_chunks, index):
     """
     Extract the noun ancestor if exists, otherwise the left edge item
 
-    :param chunk: The current iterated chunk
+    :param filtered_chunks: The target chunks excluding the the chunks which are in dependence of conjunction
+    :param index: The index of the current iterated chunk
     :return: The main ancestor
     """
 
+    chunk = filtered_chunks[index]
     if not isinstance(chunk, Span):
         return None
 
@@ -204,6 +203,20 @@ def _get_main_ancestor(chunk: Span):
             main_ancestor = chunk.root.head
         main_ancestor = _get_left_edge(main_ancestor)
 
+    # E.g.: "What is the name of the largest museum which hosts more than 10 pictures and exposed one sword?"
+    if main_ancestor is not None:
+        main_ancestor = _get_prep_main_accessor(filtered_chunks, index, main_ancestor)
+
+    return main_ancestor
+
+
+def _get_prep_main_accessor(filtered_chunks, index, main_ancestor: Token):
+    new_filtered_chunks = [chunk for idx, chunk in enumerate(filtered_chunks) if idx < index]
+
+    found_chunk = extract_chunk(new_filtered_chunks, main_ancestor)
+    # main_ancestor.i > 0   e.g.: "How long does the museum remain closed?"
+    if found_chunk is None and main_ancestor.i > 0:
+        return _get_prep_main_accessor(filtered_chunks, index, main_ancestor.head)
     return main_ancestor
 
 
