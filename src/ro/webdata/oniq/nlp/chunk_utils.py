@@ -243,9 +243,9 @@ def _get_extended_noun_chunks(sentence: Union[Doc, Span]):
     initial_chunks = _get_main_noun_chunks(sentence)
     for index, initial_chunk in enumerate(initial_chunks):
         chunk_list.append(
+            _prepare_chunk(initial_chunk)
             # TODO: check
-            # _prepare_chunk(initial_chunk)
-            initial_chunk
+            # initial_chunk
         )
 
     # TODO: documentation
