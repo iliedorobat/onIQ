@@ -243,7 +243,9 @@ def _get_extended_noun_chunks(sentence: Union[Doc, Span]):
     initial_chunks = _get_main_noun_chunks(sentence)
     for index, initial_chunk in enumerate(initial_chunks):
         chunk_list.append(
-            _prepare_chunk(initial_chunk)
+            # TODO: check
+            # _prepare_chunk(initial_chunk)
+            initial_chunk
         )
 
     # TODO: documentation
@@ -347,6 +349,9 @@ def _prepare_chunk(chunk: Span):
     while (is_noun(prev_word) and prev_word.dep_ == "npadvmod") or is_adj(prev_word):
         prev_word = get_prev_word(prev_word)
 
+    # E.g.: "What did James Cagney win in the 15th Academy Awards?" [1]
+    # E.g.: "When did Lena Horne receive the Grammy Award for Best Jazz Vocal Album?" [1]
+    # E.g.: "Where did Lena Horne receive the Grammy Award for Best Jazz Vocal Album?"
     if is_wh_word(prev_word):
         # OLD:
         # if (prev_word.lower_ == "what" and prev_word.dep_ in ["dobj", "pobj"]) or \
