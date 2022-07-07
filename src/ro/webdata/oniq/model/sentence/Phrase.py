@@ -24,6 +24,7 @@ class Phrase:
     :attr phrase_type: The type of the phrase (one of PHRASE_TYPES values)
     :attr question_type: The type of the question (one of QUESTION_TYPES values)
     :attr text: The text
+    :attr prep_phrase: TODO: doc
     """
 
     def __init__(self, chunk: Span, phrase_type: str):

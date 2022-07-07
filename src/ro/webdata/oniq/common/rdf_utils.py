@@ -1,36 +1,31 @@
-# https://rdflib.dev/sparqlwrapper/
-from SPARQLWrapper import SPARQLWrapper, JSON
-from pathlib import Path
-from rdflib import Graph, Literal
+import warnings
+
+from rdflib import Graph
 
 from ro.webdata.oniq.model.rdf.Namespace import Namespace
 from ro.webdata.oniq.model.rdf.Property import Property
+from ro.webdata.oniq.endpoint.query import QueryService
+from ro.webdata.oniq.endpoint.sparql_query import CLASSES_QUERY, PROPERTIES_QUERY
 
-_CLASSES_QUERY = """
-    PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-    
-    SELECT DISTINCT ?uri
-    WHERE {
-        ?s rdf:type ?uri .
-        FILTER(?uri != rdf:Property)
-    }
-    ORDER BY ?uri
-"""
 
-_PROPERTIES_QUERY = """
-    PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-    
-    SELECT DISTINCT ?uri
-    WHERE {
-        ?uri rdf:type ?o .
-        FILTER(
-            ?uri NOT IN (rdf:type, rdfs:subPropertyOf, rdfs:subClassOf) &&
-            ?o = rdf:Property
-        )
-    }
-    ORDER BY ?uri
-"""
+def parse_rdf(file_name):
+    """
+    TODO: parse & query the local RDF file:
+        https://stackoverflow.com/questions/9877989/python-sparql-querying-local-file
+    TODO: add some additional params (path, file_name, extension, format)
+    """
+
+    graph = Graph()
+    graph.parse(file_name)
+
+    # for s, p, o in graph:
+    #     if isinstance(o, Literal):
+    #         print(f'{s} {p} {o}')
+    #         graph.add([s, p, Literal("tt", o.language)])
+    #         graph.remove([s, p, o])
+    # graph.serialize(destination=get_output_file_path("test", "rdf"), format="turtle")
+
+    return graph
 
 
 def get_namespaces(endpoint):
@@ -38,8 +33,10 @@ def get_namespaces(endpoint):
     Get the list of namespaces
     """
 
+    warnings.warn("deprecated in favour of QueryService.run_classes_query", DeprecationWarning)
+
     nss = []
-    uris = _get_uris(endpoint, _CLASSES_QUERY) + _get_uris(endpoint, _PROPERTIES_QUERY)
+    uris = _get_uris(endpoint, CLASSES_QUERY) + _get_uris(endpoint, PROPERTIES_QUERY)
 
     for uri in uris:
         nss.append(Namespace(uri))
@@ -52,10 +49,12 @@ def get_properties(endpoint):
     Get the list of properties
     """
 
-    props = []
-    uris = _get_uris(endpoint, _PROPERTIES_QUERY)
+    warnings.warn("deprecated in favour of QueryService.run_properties_query", DeprecationWarning)
 
-    for uri in uris:
+    props = []
+    uris = _get_uris(endpoint, PROPERTIES_QUERY)
+
+    for index, uri in enumerate(uris):
         prop = Property(uri)
         if prop.__bool__():
             props.append(prop)
@@ -68,10 +67,7 @@ def _get_uris(endpoint, query):
     Get the list of URIs
     """
 
-    sparql = SPARQLWrapper(endpoint)
-    sparql.setQuery(query)
-    sparql.setReturnFormat(JSON)
-    output = sparql.query().convert()
+    output = QueryService.run_query(endpoint, query)
 
     uris = set()
     for result in output["results"]["bindings"]:
@@ -79,17 +75,3 @@ def _get_uris(endpoint, query):
         uris.add(uri)
 
     return sorted(uris)
-
-
-# TODO: add some additional params (path, file_name, extension, format)
-def parse_rdf(file_name):
-    graph = Graph()
-    graph.parse(file_name)
-
-    for s, p, o in graph:
-        if isinstance(o, Literal):
-            graph.add([s, p, Literal("tt", o.language)])
-            graph.remove([s, p, o])
-
-    path = str(Path.home()) + "/workspace/personal/semIQ/files/output"
-    graph.serialize(destination=path + "/test.rdf", format="turtle")

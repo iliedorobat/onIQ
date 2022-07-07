@@ -12,6 +12,8 @@ class Conjunction:
     The conjunction ("and", "or", ",")
 
     :attr token: The target token
+    :attr meta_token: TODO: doc
+    :attr text: TODO: doc
     """
 
     def __init__(self, conj: Token = None):

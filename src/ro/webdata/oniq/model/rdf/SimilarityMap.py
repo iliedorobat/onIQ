@@ -1,9 +1,14 @@
 import math
+import warnings
+
 import nltk
+
 from ro.webdata.oniq.common.print_utils import console
 
 
 class SimilarityMap:
+    warnings.warn("Deprecated in favour or PropertyMatcher", PendingDeprecationWarning)
+
     def __init__(self, prop_name, prop_lemma, syn_name, syn_lemma):
         self.prop_name = prop_name
         self.prop_lemma = prop_lemma
@@ -20,7 +25,7 @@ class SimilarityMap:
 
 
 def _get_similarity_score(prop_name, prop_lemma, syn_name, syn_lemma):
-    # TODO: customizable fit
+    # TODO: customize the matching mechanism
     for item in CUSTOM_FIT:
         if (prop_name == item["prop_name"] and syn_name == item["syn_name"]) or \
                 (prop_name == item["syn_name"] and syn_name == item["prop_name"]):

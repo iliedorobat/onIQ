@@ -56,9 +56,6 @@ class Verb:
     def to_list(self):
         verb_list = []
 
-        if self.main_vb is not None:
-            verb_list.append(self.main_vb)
-
         if self.modal_vb is not None:
             verb_list.append(self.modal_vb)
 
@@ -66,7 +63,20 @@ class Verb:
             for aux_verb in self.aux_vbs:
                 verb_list.append(aux_verb)
 
+        if self.main_vb is not None:
+            verb_list.append(self.main_vb)
+
         return [token for token in verb_list if token is not None]
+
+    def to_non_stop_list(self):
+        verb_list = self.to_list()
+
+        return [token for token in verb_list if not token.is_stop]
+
+    def to_lemma_list(self):
+        verb_list = self.to_list()
+
+        return [token.lemma_ for token in verb_list if not token.is_stop]
 
 
 def get_main_verb(aux_verb: Token):

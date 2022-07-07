@@ -1,10 +1,15 @@
-from ro.webdata.oniq.common.rdf_ns_utils import get_ns_label, get_ns_name
+import warnings
+
+from ro.webdata.oniq.endpoint.namespace import NamespaceService
 
 
 class Namespace:
+    # TODO: remove
+    warnings.warn("Deprecated in favour or RDFClass", PendingDeprecationWarning)
+
     def __init__(self, uri):
-        self.name = get_ns_name(uri)
-        self.label = get_ns_label(self.name)
+        self.name = NamespaceService.get_namespace(uri)
+        self.label = NamespaceService.get_ns_label(self.name)
 
     def __hash__(self):
         return hash(self.name)

@@ -1,17 +1,43 @@
 import nltk
+import os
 
-# install NLTK
-# pip install --user -U nltk
-# pip install --user -U numpy
-nltk.download('wordnet')
+from ro.webdata.oniq.endpoint.dbpedia.setup import DBpediaSetup
 
-# install spacy
-# pip install -U pip setuptools wheel
-# pip install -U spacy
-# python -m spacy download en_core_web_sm
-# python -m spacy download en_core_web_md
+
+# install spacy & download models
+def _init_spacy():
+    os.system("pip install -U pip setuptools wheel")
+    os.system("pip install -U spacy")
+    os.system("python -m spacy download en_core_web_sm")
+    os.system("python -m spacy download en_core_web_md")
+
+
+# install NLTK & download models
+def _init_nltk():
+    os.system("pip install --user -U nltk")
+    os.system("pip install --user -U numpy")
+    nltk.download('wordnet')
+
 
 # install dependencies
-# pip install langdetect
-# pip install SPARQLWrapper
-# pip install iteration-utilities
+def _install_deps():
+    os.system("pip install langdetect")
+    os.system("pip install SPARQLWrapper")
+    os.system("pip install iteration-utilities")
+    os.system("pip install progress")
+    os.system("pip install pydash")
+    os.system("pip install sphinx")
+
+
+# cache DBpedia on local files
+def _init_dbpedia():
+    DBpediaSetup.init_classes()
+    DBpediaSetup.init_main_classes()
+    DBpediaSetup.init_properties()
+    DBpediaSetup.init_categories()
+
+
+_init_spacy()
+_init_nltk()
+_install_deps()
+_init_dbpedia()

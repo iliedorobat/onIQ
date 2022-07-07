@@ -1,9 +1,9 @@
+import warnings
+
 import spacy
-from spacy import displacy
 
-from ro.webdata.oniq.model.sparql.Query import Query
+from ro.webdata.oniq.endpoint.dbpedia.lookup import LookupService
 from ro.webdata.oniq.nlp.stmt_utils import get_statement_list
-
 
 nlp = spacy.load('en_core_web_sm')
 # nlp = spacy.load('en_core_web_md')
@@ -19,6 +19,9 @@ _QUERY_SKELETON = "{prefixes}" \
 
 class MetaQuery:
     # nl_query: The query provided by the user in natural language
+
+    warnings.warn("deprecated in favour of SPARQLQuery", DeprecationWarning)
+
     def __init__(self, endpoint, question):
         # TODO: nlp("document", disable=["parser"])
         document = nlp(question)
@@ -34,4 +37,4 @@ class MetaQuery:
         # )
 
         # nlp_query = nlp(question)
-        # displacy.serve(nlp_query, style="dep")
+        # displacy.serve(nlp_query, style="dep", port=7700)

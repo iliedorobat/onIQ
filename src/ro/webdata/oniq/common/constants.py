@@ -81,9 +81,9 @@ class SENTENCE_TYPE:
 
 
 class SEPARATOR:
-    NAMESPACE = ':'
-    STRING = '_'
-    TRIPLE_PATTERN = ' '
+    NAMESPACE = ":"  # deprecated in favour of NAMESPACE_SEPARATOR
+    STRING = "_"
+    TRIPLE_PATTERN = " "
 
 
 class SYSTEM_MESSAGES:

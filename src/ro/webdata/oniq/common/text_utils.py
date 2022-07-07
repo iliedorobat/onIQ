@@ -17,8 +17,11 @@ MONTHS = [
     "December"
 ]
 
+WORD_SEPARATOR = " "
 
-# TODO: ilie.dorobat: add the documentation
+
+# TODO: doc
+# TODO: text.lower()
 def array_exists_in_text(array, text):
     for item in array:
         if item.lower() in text:
@@ -29,7 +32,7 @@ def array_exists_in_text(array, text):
 def remove_determiner(sentence: Span):
     """
     TODO: ilie.dorobat: move the method to chunk_utils?
-    Remove the determiner from the passed sentence<br/>
+    Remove the determiner from the passed sentence\n
     It is used to clean name entities.
     E.g.:
         - question: "Where is the Museum of Amsterdam?"
@@ -51,7 +54,7 @@ def remove_determiner(sentence: Span):
     return sentence
 
 
-def split_camel_case_string(value, separator=" "):
+def split_camel_case_string(value, separator=WORD_SEPARATOR):
     """
     Split a camel-case string into multiple lower case pieces.\n
     E.g.:

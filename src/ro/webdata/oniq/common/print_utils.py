@@ -69,14 +69,14 @@ class echo:
 
     @staticmethod
     def statement_list(statements):
-        if GLOBAL_ENV.IS_DEBUG and PRINT_MODE.PRINT_STATEMENT is True:
+        if GLOBAL_ENV.IS_DEBUG and PRINT_MODE.PRINT_STATEMENT:
             print()
             for statement in statements:
                 print(Statement.get_str(statement))
 
     @staticmethod
     def target_list(targets: [Target]):
-        if GLOBAL_ENV.IS_DEBUG and PRINT_MODE.PRINT_TARGET is True:
+        if GLOBAL_ENV.IS_DEBUG and PRINT_MODE.PRINT_TARGET:
             print()
             for target in targets:
                 print(target)

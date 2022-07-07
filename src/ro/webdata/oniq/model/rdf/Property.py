@@ -1,7 +1,10 @@
+import warnings
+
 import spacy
 
 from ro.webdata.oniq.common.text_utils import split_camel_case_string
-from ro.webdata.oniq.common.rdf_ns_utils import NS_DC, NS_DC_TERMS, get_ns_label, get_ns_name
+from ro.webdata.oniq.endpoint.namespace import NAMESPACE
+from ro.webdata.oniq.endpoint.namespace import NamespaceService
 
 nlp = spacy.load('en_core_web_sm', disable=['parser', 'ner'])
 
@@ -10,13 +13,16 @@ PROPERTIES_TYPE = {
     "AGE": [],
     "PLACE": [],
     "TIMESPAN": [
-        {"ns_name": NS_DC, "prop_name": "date"},
-        {"ns_name": NS_DC_TERMS, "prop_name": "issued"}
+        {"ns_name": NAMESPACE.DC, "prop_name": "date"},
+        {"ns_name": NAMESPACE.DC_TERMS, "prop_name": "issued"}
     ]
 }
 
 
 class Property:
+    warnings.warn("Deprecated in favour or RDFProperty", PendingDeprecationWarning)
+
+    # deprecated in favour of RDFProperty
     lemma = None
     ns_label = None
     ns_name = None
@@ -24,8 +30,8 @@ class Property:
     prop_name_extended = None
 
     def __init__(self, uri):
-        ns_name = get_ns_name(uri)
-        ns_label = get_ns_label(ns_name)
+        ns_name = NamespaceService.get_namespace(uri)
+        ns_label = NamespaceService.get_ns_label(ns_name)
         prop_name = _get_prop_name(uri)
         prop_label = split_camel_case_string(prop_name)
 
@@ -84,7 +90,8 @@ def _get_prop_name(uri):
     """
     Remove the namespace and return the name of the property
     """
-    ns_name = get_ns_name(uri)
+
+    ns_name = NamespaceService.get_namespace(uri)
     prop_name = uri[len(ns_name):]
 
     if prop_name == "basediameter":
