@@ -308,7 +308,9 @@ def _csv_file_to_basic_props(filepath, extract_label=False, separator=CSV_COLUMN
                 csv_entry.parent_uris,
                 csv_entry.resource_label,
                 csv_entry.namespace,
-                csv_entry.namespace_label
+                csv_entry.namespace_label,
+                csv_entry.res_domain,
+                csv_entry.res_range
             )
         )
 

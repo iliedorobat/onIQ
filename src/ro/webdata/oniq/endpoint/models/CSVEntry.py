@@ -43,6 +43,8 @@ class CSVEntry:
         self.resource_label = _extract_resource_label(self.resource_uri, self.namespace) \
             if extract_label \
             else csv_entry[1]
+        self.res_domain = csv_entry[5] if len(csv_entry) > 5 else None
+        self.res_range = csv_entry[6] if len(csv_entry) > 6 else None
 
 
 def _extract_resource_label(resource_uri, namespace):
