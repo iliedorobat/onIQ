@@ -7,6 +7,7 @@ from ro.webdata.oniq.common.print_utils import console
 from ro.webdata.oniq.endpoint.common.path_utils import filename_to_number, get_categories_filenames
 from ro.webdata.oniq.endpoint.dbpedia.query import DBpediaQueryService
 from ro.webdata.oniq.endpoint.dbpedia.sparql_query import DBP_OFFSET
+from ro.webdata.oniq.endpoint.query import CLASSES_HEADERS, PROPERTIES_HEADERS
 
 _ERROR_COUNTER_THRESHOLD = 10
 _TIMEOUT_SECONDS = {
@@ -46,7 +47,7 @@ class DBpediaSetup:
         """
 
         dbo_class_list = DBpediaQueryService.run_classes_query()
-        DBpediaQueryService.write_query_result(dbo_class_list, "class_list")
+        DBpediaQueryService.write_query_result(dbo_class_list, CLASSES_HEADERS, "class_list")
         print("DBpedia classes has been written to disk!")
 
     @staticmethod
@@ -57,7 +58,7 @@ class DBpediaSetup:
         """
 
         dbo_class_list = DBpediaQueryService.run_main_classes_query()
-        DBpediaQueryService.write_query_result(dbo_class_list, "main_class_list")
+        DBpediaQueryService.write_query_result(dbo_class_list, CLASSES_HEADERS, "main_class_list")
         print("DBpedia main classes has been written to disk!")
 
     @staticmethod
@@ -67,7 +68,7 @@ class DBpediaSetup:
         """
 
         dbo_prop_list = DBpediaQueryService.run_properties_query()
-        DBpediaQueryService.write_query_result(dbo_prop_list, "prop_list")
+        DBpediaQueryService.write_query_result(dbo_prop_list, PROPERTIES_HEADERS, "prop_list")
         print("DBpedia properties has been written to disk!")
 
 
@@ -169,7 +170,12 @@ def _write_categories(meta, timeout=_TIMEOUT_SECONDS["DEFAULT"]):
             console.info(f"{meta['i']}. QUERYING: DBpedia categories with offset={meta['offset']}")
             time.sleep(timeout)
             categories_list = DBpediaQueryService.run_categories_query(meta["offset"])
-            DBpediaQueryService.write_query_result(categories_list, f"category_list_{meta['offset']}", "categories/")
+            DBpediaQueryService.write_query_result(
+                categories_list,
+                CLASSES_HEADERS,
+                f"category_list_{meta['offset']}",
+                "categories/"
+            )
             console.debug(f"{meta['i']}. PASSED: DBpedia categories query with offset={meta['offset']}")
 
         meta["i"] += 1

@@ -13,6 +13,10 @@ from ro.webdata.oniq.endpoint.sparql_query import CATEGORIES_COUNTER_QUERY, CATE
     PROPERTIES_QUERY, RESOURCE_QUERY
 
 
+CLASSES_HEADERS = ['namespace label', 'resource label', 'namespace', 'resource uri', 'parent uri']
+PROPERTIES_HEADERS = ['namespace label', 'resource label', 'namespace', 'resource uri', 'parent uri', 'domain', 'range']
+
+
 class QueryService:
     """
     Service used for querying a specific endpoint.
@@ -32,7 +36,7 @@ class QueryService:
             Query the target endpoint to get the list of matched resources
         run_resource_query(endpoint, resource_name=None, sparql_query=RESOURCE_QUERY):
             Query the target endpoint to get a specific resource.
-        write_query_result(resource_list, filepath):
+        write_query_result(resource_list, headers, filepath):
             Save the queried resources to disk.
     """
 
@@ -162,9 +166,11 @@ class QueryService:
             uri = result["property"]["value"]
             parent_uri = pydash.get(result, ["subclassOf", "value"])
             parent_uris = [parent_uri] if parent_uri is not None else []
+            res_domain = pydash.get(result, ["domain", "value"])
+            res_range = pydash.get(result, ["range", "value"])
 
             properties.append(
-                RDFProperty(uri, parent_uris, label)
+                RDFProperty(uri, parent_uris, label, res_domain=res_domain, res_range=res_range)
             )
 
         properties.unique()
@@ -252,17 +258,19 @@ class QueryService:
         return None
 
     @staticmethod
-    def write_query_result(resource_list, filepath):
+    def write_query_result(resource_list, headers, filepath):
         """
         Save the queried resources to disk.
 
         Args:
             resource_list (List[RDFCategory, RDFClass, RDFProperty]):
                 List of resources (lookup to QueryService.run_classes_query() etc.).
-            filepath (str): Absolute path (including the filename and extension).
+            headers (List[str]):
+                Name of the columns.
+            filepath (str):
+                Absolute path (including the filename and extension).
         """
 
-        headers = ['namespace label', 'resource label', 'namespace', 'resource uri', 'parent uri']
         file = open(filepath, "w+")
         file.write(CSV_COLUMN_SEPARATOR.join(headers) + "\n")
 

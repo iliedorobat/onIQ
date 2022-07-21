@@ -21,7 +21,7 @@ class DBpediaQueryService:
             Query DBpedia to get the list of DBP_ONTOLOGY properties.
         run_resource_query(resource_name, sparql_query):
             Query DBpedia to get a specific DBP_ONTOLOGY / DBP_RESOURCE resource.
-        write_query_result(resource_list, filename, mid_path=""):
+        write_query_result(resource_list, headers, filename, mid_path=""):
             Save the queried resources to disk.
     """
 
@@ -111,18 +111,21 @@ class DBpediaQueryService:
         return QueryService.run_resource_query(DBP_ENDPOINT, resource_name, sparql_query)
 
     @staticmethod
-    def write_query_result(resource_list, filename, mid_path=""):
+    def write_query_result(resource_list, headers, filename, mid_path=""):
         """
         Save the queried resources to disk.
 
         Args:
             resource_list (List[RDFCategory, RDFClass, RDFProperty]):
                 List of resources (lookup to QueryService.run_classes_query() etc.).
-            filename (str): Name of the file.
+            headers (List[str]):
+                Name of the columns.
+            filename (str):
+                Name of the file.
             mid_path (str):
                 Path between DBpedia directory and the file.
                 E.g.: get_dbpedia_file_path(filename, "csv", "categories/").
         """
 
         filepath = get_dbpedia_file_path(filename, "csv", mid_path)
-        QueryService.write_query_result(resource_list, filepath)
+        QueryService.write_query_result(resource_list, headers, filepath)

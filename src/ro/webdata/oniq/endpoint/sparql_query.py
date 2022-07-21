@@ -41,7 +41,7 @@ CLASSES_QUERY = f"""
     PREFIX rdf: <{NAMESPACE.RDF}>
     PREFIX owl: <{NAMESPACE.OWL}>
         
-    SELECT DISTINCT ?class ("undefined" as ?subclassOf) ("undefined" as ?label) ("undefined" as ?namespace)
+    SELECT DISTINCT ?class ?subclassOf ?label ?namespace
     WHERE {{
         ?s rdf:type ?class .
         FILTER(
@@ -49,6 +49,9 @@ CLASSES_QUERY = f"""
             ?class != owl:SymmetricProperty &&
             ?class != owl:TransitiveProperty
         )
+        bind("" as ?subclassOf)
+        bind("" as ?label)
+        bind("" as ?namespace)
     }}
     ORDER BY ?class
 """
@@ -57,13 +60,19 @@ PROPERTIES_QUERY = f"""
     PREFIX rdf: <{NAMESPACE.RDF}>
     PREFIX rdfs: <{NAMESPACE.RDFS}>
     
-    SELECT DISTINCT ?property ("undefined" as ?label) ?subclassOf
+    SELECT DISTINCT ?property ?label ?subclassOf ?domain ?range
     WHERE {{
         ?property rdf:type ?subclassOf .
+
+        OPTIONAL {{ ?property rdfs:domain ?domain }} .
+        OPTIONAL {{ ?property rdfs:range ?range }} .
+
         FILTER(
             ?property NOT IN (rdf:type, rdfs:subPropertyOf, rdfs:subClassOf) &&
             ?subclassOf = rdf:Property
         )
+        
+        bind("" as ?label)
     }}
     ORDER BY ?property
 """

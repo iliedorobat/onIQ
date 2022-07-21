@@ -76,8 +76,13 @@ class RDFElement:
         return self.to_str()
 
     def to_csv(self, separator: str = CSV_COLUMN_SEPARATOR):
-        values = [self.ns_label, self.label, self.ns, self.uri, CSV_VALUE_SEPARATOR.join(self.parent_uris)]
-        return separator.join(values)
+        return separator.join([
+            self.ns_label,
+            self.label,
+            self.ns,
+            self.uri,
+            CSV_VALUE_SEPARATOR.join(self.parent_uris)
+        ])
 
     def to_str(self):
         return self.ns_label + NAMESPACE_SEPARATOR + self.name
@@ -228,9 +233,13 @@ class RDFProperty(RDFElement):
             List of parent resource URIs.
         uri (str):
             Resource URI.
+        res_domain (str):
+            Domain of the resource.
+        res_range (str):
+            Range of the resource.
     """
 
-    def __init__(self, uri, parent_uris, label, namespace=None, ns_label=None):
+    def __init__(self, uri, parent_uris, label, namespace=None, ns_label=None, res_domain=None, res_range=None):
         """
         Args:
             uri (str):
@@ -243,9 +252,15 @@ class RDFProperty(RDFElement):
                 Namespace of the resource.
             ns_label (str):
                 Label of the namespace of the resource.
+            res_domain (str):
+                Domain of the resource.
+            res_range (str):
+                Range of the resource.
         """
 
         super().__init__(uri, parent_uris, label, namespace, ns_label)
+        self.res_domain = res_domain
+        self.res_range = res_range
 
     def __eq__(self, other):
         # only equality tests to other 'RDFProperty' instances are supported
@@ -255,6 +270,17 @@ class RDFProperty(RDFElement):
 
     def __hash__(self):
         return hash(self.uri)
+
+    def to_csv(self, separator: str = CSV_COLUMN_SEPARATOR):
+        return separator.join([
+            self.ns_label,
+            self.label,
+            self.ns,
+            self.uri,
+            CSV_VALUE_SEPARATOR.join(self.parent_uris),
+            self.res_domain if self.res_domain is not None else "",
+            self.res_range if self.res_range is not None else ""
+        ])
 
 
 def _prepare_label(name, label):

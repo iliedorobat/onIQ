@@ -114,10 +114,14 @@ DBO_PROPERTIES_QUERY = f"""
     PREFIX rdfs: <{NAMESPACE.RDFS}>
     PREFIX dbo: <{NAMESPACE.DBP_ONTOLOGY}>
     
-    SELECT DISTINCT ?property ?label ?subclassOf
+    SELECT DISTINCT ?property ?label ?subclassOf ?domain ?range
     WHERE {{
         ?property   rdf:type ?subclassOf ;
                     rdfs:label ?label .
+
+        OPTIONAL {{ ?property rdfs:domain ?domain }} .
+        OPTIONAL {{ ?property rdfs:range ?range }} .
+
         FILTER(?subclassOf = rdf:Property) .
         FILTER(langMatches(lang(?label), "en")) .
         FILTER(strStarts(str(?property), str(dbo:)))
@@ -134,20 +138,23 @@ DBO_PROPERTIES_OF_RESOURCE_QUERY = f"""
     PREFIX rdfs: <{NAMESPACE.RDFS}>
     PREFIX dbr: <{NAMESPACE.DBP_RESOURCE}>
     
-    SELECT DISTINCT ?property ?label ?subclassOf
+    SELECT DISTINCT ?property ?label ?subclassOf ?domain ?range
     WHERE {{
         {{ dbr:%s ?property ?o }}
-    
+
         OPTIONAL {{
             ?property rdfs:label ?label .
             FILTER(langMatches(lang(?label), "en"))
         }}
-    
+
         OPTIONAL {{
             ?property rdf:type ?optSubclassOf .
             FILTER(?optSubclassOf = rdf:Property)
         }}
-        
+
+        OPTIONAL {{ ?property rdfs:domain ?domain }} .
+        OPTIONAL {{ ?property rdfs:range ?range }} .
+
         bind(coalesce(?optSubclassOf, rdf:Property) as ?subclassOf)
     }}
     ORDER BY ?property
