@@ -7,7 +7,6 @@ from nltk.corpus import wordnet
 from spacy.tokens import Token
 
 from ro.webdata.oniq.endpoint.models.RDFElement import RDFProperty
-from ro.webdata.oniq.model.sentence.Verb import Verb
 
 nlp = spacy.load('en_core_web_md')
 SCORE_BUFFER = 1
@@ -15,13 +14,13 @@ SCORE_BUFFER = 1
 
 class PropertiesMatcher:
     """
-    Representation of the similarity score calculated for a specific verb
-    (type of Verb) against each property in the target list.
+    Representation of the similarity score calculated for a specific action
+    (verb) against each property in the target list.
 
     Attributes:
         matched (List[RDFProperty]):
             List of PropertyMatcher elements representing the properties
-            that match the verb.
+            that match the action (verb).
 
     Methods:
         head():
@@ -29,14 +28,15 @@ class PropertiesMatcher:
             matched properties.
     """
 
-    def __init__(self, verb, props):
+    def __init__(self, props, action):
         """
         Args:
-            verb (Verb): Target verb for which the similarity is calculated.
             props (List[RDFProperty]): List of properties against which the
                 similarity is calculated.
+            action (Token): Target verb for which the similarity is calculated.
         """
-        self.matched = _get_matched_props(verb, props)
+
+        self.matched = _get_matched_props(props, action)
 
     def __hash__(self):
         hash_value = ""
@@ -58,13 +58,13 @@ class PropertiesMatcher:
 
         return True
 
-    def head(self):
+    def get_best_matched(self):
         """
         Retrieve the PropertyMatcher element containing the property with the
             highest score from the list of matched properties.
 
         Returns:
-            PropertyMatcher: Property with the highest score.
+            PropertyMatcher: Property having the highest score.
         """
 
         if len(self.matched) > 0:
@@ -72,13 +72,13 @@ class PropertiesMatcher:
         return None
 
 
-def _get_matched_props(verb, props):
+def _get_matched_props(props, action):
     """
     Determine the similarity between the input verb and the label of each
     property.
 
     Args:
-        verb (Verb): Verb for which the similarity is calculated.
+        action (Token): Verb for which the similarity is calculated.
         props (List[RDFProperty]): List of properties against which the
             similarity is calculated.
 
@@ -91,7 +91,7 @@ def _get_matched_props(verb, props):
 
     for rdf_prop in props:
         matched_props.append(
-            PropertyMatcher(verb, rdf_prop)
+            PropertyMatcher(rdf_prop, action)
         )
 
     return sorted(
@@ -107,22 +107,22 @@ class PropertyMatcher:
     against an individual property.
 
     Attributes:
-        verb (Verb): Verb for which the similarity is calculated.
+        action (Token): Verb for which the similarity is calculated.
         property (RDFProperty): Property against which the similarity is
             calculated.
         score (float): Calculated similarity score.
     """
 
-    def __init__(self, verb, rdf_prop):
+    def __init__(self, rdf_prop, action):
         """
         Args:
-            verb (Verb): Verb for which the similarity is calculated.
+            action (Token): Verb for which the similarity is calculated.
             rdf_prop (RDFProperty): Property against which the similarity
                 is calculated.
         """
-        self.verb = verb
+        self.action = action
         self.property = rdf_prop
-        self.score = _calculate_verbs_similarity_score(verb, rdf_prop)
+        self.score = _calculate_similarity_score(rdf_prop, action)
 
     def __hash__(self):
         return hash(f'{self.property.uri}_{self.score}')
@@ -137,49 +137,32 @@ class PropertyMatcher:
         return f'{self.score} => {self.property}'
 
 
-def _calculate_verbs_similarity_score(verb, rdf_prop):
+def _calculate_similarity_score(rdf_prop, action):
     """
-    Determine the similarity between the list of lexical verbs (a Verb
-    consists in a list of auxiliary verbs, modal verbs and main verb) and
-    the words that make up the label of the property.
+    Determine the similarity between the action and the words that make up
+    the label of the property.
 
     Args:
-        verb (Verb): Verb for which the similarity is calculated.
+        action (Token): Verb for which the similarity is calculated.
         rdf_prop (RDFProperty): Property against which the similarity is
             calculated.
 
     Returns:
-        float: The score which defines how close the list of lexical verbs
-            is to the property.
+        float: The score which defines how close the action is to the property.
     """
 
-    similarity_score = 1
-    count = 0
-
-    verb_tokens = verb.to_non_stop_list()
-
-    for token in verb_tokens:
-        similarity_score *= (_calculate_word_similarity_score(token, rdf_prop) + SCORE_BUFFER)
-        count += 1
-
-    if len(verb_tokens) > 0:
-        if similarity_score > 0:
-            return math.pow(similarity_score, 1/count) - SCORE_BUFFER
-        elif similarity_score < 0:
-            return -math.pow(-similarity_score, 1/count) - SCORE_BUFFER
-
-    return 0
+    return _calculate_word_similarity_score(rdf_prop, action) + SCORE_BUFFER
 
 
-def _calculate_word_similarity_score(word, rdf_prop):
+def _calculate_word_similarity_score(rdf_prop, word):
     """
     Determine the similarity between a specific word and the words that
     make up the label of an individual property.
 
     Args:
-        word (Token): Token for which the similarity is calculated.
         rdf_prop (RDFProperty): Property against which the similarity is
             calculated.
+        word (Token): Token for which the similarity is calculated.
 
     Returns:
         float: The score which defines how close the property is to word.
