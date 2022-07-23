@@ -57,7 +57,7 @@ class TestLookupService:
         document = nlp(question)
         statements = get_statement_list(document)
 
-        verb = statements[0].action.verb
+        verb = statements[0].action.verb.main_vb
         prop = LookupService.property_lookup(resource_name, verb)
 
         print(

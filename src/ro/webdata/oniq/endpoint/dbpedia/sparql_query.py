@@ -133,14 +133,15 @@ SPARQL query for getting the list of properties
 """
 
 
-DBO_PROPERTIES_OF_RESOURCE_QUERY = f"""
+
+DBP_PROPERTIES_OF_RESOURCE_QUERY = f"""
     PREFIX rdf: <{NAMESPACE.RDF}>
     PREFIX rdfs: <{NAMESPACE.RDFS}>
     PREFIX dbr: <{NAMESPACE.DBP_RESOURCE}>
-    
+
     SELECT DISTINCT ?property ?label ?subclassOf ?domain ?range
     WHERE {{
-        {{ dbr:%s ?property ?o }}
+        dbr:%s ?property ?value .
 
         OPTIONAL {{
             ?property rdfs:label ?label .
@@ -148,14 +149,16 @@ DBO_PROPERTIES_OF_RESOURCE_QUERY = f"""
         }}
 
         OPTIONAL {{
-            ?property rdf:type ?optSubclassOf .
-            FILTER(?optSubclassOf = rdf:Property)
+            ?property rdf:type ?subclassOf .
+            FILTER(?subclassOf = rdf:Property or !bound(?subclassOf))
         }}
 
-        OPTIONAL {{ ?property rdfs:domain ?domain }} .
-        OPTIONAL {{ ?property rdfs:range ?range }} .
+        OPTIONAL {{ ?property rdfs:domain ?domain }}
+        OPTIONAL {{ ?property rdfs:range ?range }}
 
-        bind(coalesce(?optSubclassOf, rdf:Property) as ?subclassOf)
+        FILTER(
+            ?property NOT IN (rdf:type, rdfs:subPropertyOf, rdfs:subClassOf)
+        )
     }}
     ORDER BY ?property
 """
@@ -203,20 +206,5 @@ DBP_RESOURCE_QUERY = f"""
 """
 """
 SPARQL query for getting main key-value pairs related to a particular resource
-E.g.: dbr:%s => http://dbpedia.org/resource/Barda_Mausoleum
-"""
-
-
-DBP_PROPERTIES_QUERY = f"""
-    PREFIX dbr: <{NAMESPACE.DBP_RESOURCE}>
-    
-    SELECT DISTINCT ?property
-    WHERE {{
-        ?class ?property ?o .
-        FILTER(?class = dbr:%s)
-    }}
-"""
-"""
-SPARQL query for getting properties related to a particular resource
 E.g.: dbr:%s => http://dbpedia.org/resource/Barda_Mausoleum
 """

@@ -19,6 +19,8 @@ class NAMESPACE:
     DC_TERMS = "http://purl.org/dc/terms/"
     EDM = "http://www.europeana.eu/schemas/edm/"
     FOAF = "http://xmlns.com/foaf/0.1/"
+    GEORSS = "http://www.georss.org/georss/"
+    LINGUISTICS_GOLD = "http://purl.org/linguistics/gold/"
     OPEN_DATA_P = "http://opendata.cs.pub.ro/property/"
     OPEN_DATA_R = "http://opendata.cs.pub.ro/resource/"
     ORE = "http://www.openarchives.org/ore/terms/"
@@ -27,7 +29,9 @@ class NAMESPACE:
     PROV = "http://www.w3.org/ns/prov#"
     RDF = "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
     RDFS = "http://www.w3.org/2000/01/rdf-schema#"
+    SCHEMA_ORG = "http://schema.org/"
     SKOS = "http://www.w3.org/2004/02/skos/core#"
+    WGS84 = "http://www.w3.org/2003/01/geo/wgs84_pos#"
 
 
 class NamespaceService:
@@ -75,16 +79,24 @@ class NamespaceService:
             return "dcterms"
         elif namespace == NAMESPACE.EDM:
             return "edm"
+        elif namespace == NAMESPACE.GEORSS:
+            return "georss"
+        elif namespace == NAMESPACE.LINGUISTICS_GOLD:
+            return "linguistics"
         elif namespace == NAMESPACE.RDF:
             return "rdf"
         elif namespace == NAMESPACE.RDFS:
             return "rdfs"
         elif namespace == NAMESPACE.OWL:
             return "owl"
+        elif namespace == NAMESPACE.SCHEMA_ORG:
+            return "schemaOrg"
         elif namespace == NAMESPACE.SKOS:
             return "skos"
         elif namespace == NAMESPACE.FOAF:
             return "foaf"
+        elif namespace == NAMESPACE.WGS84:
+            return "wgs84"
         elif namespace == "undefined":
             return namespace
         else:

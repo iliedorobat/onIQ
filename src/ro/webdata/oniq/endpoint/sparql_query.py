@@ -77,6 +77,31 @@ PROPERTIES_QUERY = f"""
     ORDER BY ?property
 """
 
+
+# TODO: check the query
+PROPERTIES_OF_RESOURCE_QUERY = f"""
+    SELECT DISTINCT ?property ?subclassOf ?domain ?range
+    WHERE {{
+        ?class ?property ?value .
+
+        OPTIONAL {{ ?property rdfs:domain ?domain }}
+        OPTIONAL {{ ?property rdfs:range ?range }}
+        OPTIONAL {{ ?property rdf:type ?subclassOf }}
+
+        FILTER(
+            ?class = <{NAMESPACE.OPEN_DATA_R}%s>
+        )
+        FILTER(
+            ?property NOT IN (rdf:type, rdfs:subPropertyOf, rdfs:subClassOf)
+        )
+        FILTER(
+            ?subclassOf = rdf:Property or !bound(?subclassOf)
+        )
+    }}
+    ORDER BY ?property
+"""
+
+# TODO: check the query
 RESOURCE_QUERY = f"""
     SELECT DISTINCT ?class
     WHERE {{

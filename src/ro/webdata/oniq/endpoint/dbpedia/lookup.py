@@ -1,17 +1,17 @@
 from typing import List
 
+import pydash
 import requests
-from spacy.tokens import Span
+from spacy.tokens import Span, Token
 
 from ro.webdata.oniq.common.text_utils import WORD_SEPARATOR
 from ro.webdata.oniq.endpoint.common.match.PropertyMatcher import PropertiesMatcher
 from ro.webdata.oniq.endpoint.common.translator.CSVTranslator import CSVTranslator
 from ro.webdata.oniq.endpoint.common.translator.URITranslator import URITranslator
 from ro.webdata.oniq.endpoint.dbpedia.query import DBpediaQueryService
-from ro.webdata.oniq.endpoint.dbpedia.sparql_query import DBO_PROPERTIES_OF_RESOURCE_QUERY
+from ro.webdata.oniq.endpoint.dbpedia.sparql_query import DBP_PROPERTIES_OF_RESOURCE_QUERY
 from ro.webdata.oniq.endpoint.dbpedia.sparql_query import DBP_RESOURCE_QUERY, DBP_ONTOLOGY_RESOURCE_QUERY
 from ro.webdata.oniq.endpoint.models.RDFElement import RDFClass, ROOT_CLASS_URI
-from ro.webdata.oniq.model.sentence.Verb import Verb
 
 _MAX_LOOKUP_RESULTS = 10
 _NAME_TYPE_SEPARATOR = ','
@@ -87,25 +87,44 @@ class LookupService:
         return response.json().get("docs")
 
     @staticmethod
-    def property_lookup(resource_name, verb):
+    def property_lookup(resource_name, action):
         """
         Lookup for the property which has the highest similarity degree with the verb.
 
         Args:
             resource_name (str): Name of the resource (E.g.: "Barda_Mausoleum").
-            verb (Verb): Target verb used for looking up for a property.
+            action (Token): Target verb used for looking up for a property.
 
         Returns:
              RDFProperty: Property having the highest similarity degree with the verb.
         """
 
-        sparql_query = DBO_PROPERTIES_OF_RESOURCE_QUERY % resource_name
+        sparql_query = DBP_PROPERTIES_OF_RESOURCE_QUERY % resource_name
         props = DBpediaQueryService.run_properties_query(sparql_query)
 
-        matcher = PropertiesMatcher(verb, props)
-        head = matcher.head()
+        matcher = PropertiesMatcher(props, action)
+        best_matched = matcher.get_best_matched()
 
-        return head.property if head is not None else None
+        return pydash.get(best_matched, "property")
+
+    @staticmethod
+    def resource_lookup(resource_name):
+        """
+        Lookup for a specific resource.
+
+        Args:
+            resource_name (str): Resource name.
+
+        Returns:
+            RDFClass: Identified resource.
+        """
+
+        resource_type = DBpediaQueryService.run_resource_query(resource_name, DBP_ONTOLOGY_RESOURCE_QUERY)
+
+        if resource_type is None:
+            resource_type = DBpediaQueryService.run_resource_query(resource_name, DBP_RESOURCE_QUERY)
+
+        return resource_type
 
 
 def _generate_lookup_params(types, output_format, noun_chunk):
@@ -150,7 +169,7 @@ def _get_noun_chunk_types(noun_chunk):
     # E.g.: "when was barda mausoleum built?"
     #   => resource_name: "Barda_Mausoleum"
     resource_name = noun_chunk.text.title().replace(WORD_SEPARATOR, "_")
-    resource = _get_resource(resource_name)
+    resource = LookupService.resource_lookup(resource_name)
 
     if resource is not None:
         resource_types = []
@@ -167,31 +186,12 @@ def _get_noun_chunk_types(noun_chunk):
     #   => word: "barda", "mausoleum"
     for word in noun_chunk:
         resource_name = word.text.strip().capitalize()
-        resource = _get_resource(resource_name)
-
+        resource = LookupService.resource_lookup(resource_name)
+    
         if resource is not None:
             types.append(resource)
 
     return list(set(types))
-
-
-def _get_resource(resource_name: str):
-    """
-    Query the repo for getting the resource.
-
-    Args:
-        resource_name (str): Resource name.
-
-    Returns:
-        RDFClass: Queried resource.
-    """
-
-    resource_type = DBpediaQueryService.run_resource_query(resource_name, DBP_ONTOLOGY_RESOURCE_QUERY)
-
-    if resource_type is None:
-        resource_type = DBpediaQueryService.run_resource_query(resource_name, DBP_RESOURCE_QUERY)
-
-    return resource_type
 
 
 def _get_named_entity_types(named_entity: Span):

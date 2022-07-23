@@ -10,7 +10,7 @@ from ro.webdata.oniq.endpoint.common.CSVService import CSV_COLUMN_SEPARATOR
 from ro.webdata.oniq.endpoint.models.RDFElement import RDFCategory, RDFClass, RDFProperty
 from ro.webdata.oniq.endpoint.models.RDFElements import RDFElements
 from ro.webdata.oniq.endpoint.sparql_query import CATEGORIES_COUNTER_QUERY, CATEGORIES_QUERY, CLASSES_QUERY, \
-    PROPERTIES_QUERY, RESOURCE_QUERY
+    PROPERTIES_OF_RESOURCE_QUERY, PROPERTIES_QUERY, RESOURCE_QUERY
 
 
 CLASSES_HEADERS = ['namespace label', 'resource label', 'namespace', 'resource uri', 'parent uri']
@@ -235,7 +235,6 @@ class QueryService:
     def run_resource_query(endpoint, resource_name=None, sparql_query=RESOURCE_QUERY):
         """
         Query the target endpoint to get a specific resource.
-        TODO: check the query against opendata repo
 
         Args:
             endpoint (str): Communication channel.
@@ -256,6 +255,44 @@ class QueryService:
             return result[0]
 
         return None
+
+    @staticmethod
+    def run_resource_properties_query(endpoint, resource_name=None, sparql_query=PROPERTIES_OF_RESOURCE_QUERY):
+        """
+        Query the target endpoint to get the list of properties of a specific resource.
+
+        Args:
+            endpoint (str): Communication channel.
+            resource_name (str): Name of the target resource (E.g.: "Barda_Mausoleum").
+            sparql_query (str): SPARQL query.
+
+        Returns:
+            RDFElements[RDFProperty]: The list of properties.
+        """
+
+        if resource_name is None or len(resource_name) == 0:
+            return None
+
+        props = RDFElements([])
+        query = sparql_query % resource_name
+        response = QueryService.run_query(endpoint, query)
+        results = pydash.get(response, ["results", "bindings"], [])
+
+        for result in results:
+            label = pydash.get(result, ["label", "value"])
+            uri = pydash.get(result, ["property", "value"])
+            res_domain = pydash.get(result, ["domain", "value"])
+            res_range = pydash.get(result, ["range", "value"])
+            parent_uri = pydash.get(result, ["subclassOf", "value"])
+            parent_uris = [parent_uri] if parent_uri is not None else []
+            props.append(
+                RDFProperty(uri, parent_uris, label, res_domain=res_domain, res_range=res_range)
+            )
+
+        props.unique()
+        props.sort()
+
+        return props
 
     @staticmethod
     def write_query_result(resource_list, headers, filepath):

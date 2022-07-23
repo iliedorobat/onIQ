@@ -1,7 +1,7 @@
 from ro.webdata.oniq.endpoint.namespace import NAMESPACE
 from ro.webdata.oniq.endpoint.common.path_utils import get_dbpedia_file_path
 from ro.webdata.oniq.endpoint.dbpedia.sparql_query import DBO_CATEGORIES_COUNTER_QUERY, DBO_CATEGORIES_QUERY, \
-    DBO_CLASSES_QUERY, DBO_MAIN_CLASSES_QUERY, DBO_PROPERTIES_QUERY, DBP_ENDPOINT
+    DBO_CLASSES_QUERY, DBO_MAIN_CLASSES_QUERY, DBO_PROPERTIES_QUERY, DBP_ENDPOINT, DBP_PROPERTIES_OF_RESOURCE_QUERY
 from ro.webdata.oniq.endpoint.query import QueryService
 
 
@@ -81,7 +81,7 @@ class DBpediaQueryService:
 
         Args:
             sparql_query (str): SPARQL query (E.g.: DBO_PROPERTIES_QUERY,
-                DBO_PROPERTIES_OF_RESOURCE_QUERY).
+                DBP_PROPERTIES_OF_RESOURCE_QUERY).
 
         Returns:
             RDFElements[RDFProperty]: The list of DBP_ONTOLOGY properties.
@@ -109,6 +109,20 @@ class DBpediaQueryService:
         """
 
         return QueryService.run_resource_query(DBP_ENDPOINT, resource_name, sparql_query)
+
+    @staticmethod
+    def run_resource_properties_query(resource_name):
+        """
+        Query DBpedia to get the list of properties of a specific resource.
+
+        Args:
+            resource_name (str): Name of the target resource (E.g.: "Barda_Mausoleum").
+
+        Returns:
+            RDFElements[RDFProperty]: The list of properties.
+        """
+
+        return QueryService.run_resource_properties_query(DBP_ENDPOINT, resource_name, DBP_PROPERTIES_OF_RESOURCE_QUERY)
 
     @staticmethod
     def write_query_result(resource_list, headers, filename, mid_path=""):
