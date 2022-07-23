@@ -1,12 +1,8 @@
-import spacy
-
 from ro.webdata.oniq.endpoint.dbpedia.lookup import LookupService
 from ro.webdata.oniq.model.sentence.Statement import Statement
 from ro.webdata.oniq.nlp.nlp_utils import is_wh_noun_chunk
 from ro.webdata.oniq.nlp.stmt_utils import get_statement_list
-
-nlp = spacy.load('en_core_web_sm')
-# nlp = spacy.load('en_core_web_md')
+from ro.webdata.oniq.spacy_model import nlp_model
 
 
 class TestLookupService:
@@ -19,7 +15,7 @@ class TestLookupService:
     @staticmethod
     def test_entities_lookup():
         question = "What did James Cagney win in the 15th Academy Awards?"
-        document = nlp(question)
+        document = nlp_model(question)
         statements = get_statement_list(document)
 
         for stmt in statements:
@@ -34,7 +30,7 @@ class TestLookupService:
     @staticmethod
     def test_noun_chunk_lookup():
         question = "When was barda mausoleum built?"
-        document = nlp(question)
+        document = nlp_model(question)
         statements = get_statement_list(document)
 
         for stmt in statements:
@@ -54,7 +50,7 @@ class TestLookupService:
 
         # question = "When was barda mausoleum built?"
         question = "Where is barda mausoleum located?"
-        document = nlp(question)
+        document = nlp_model(question)
         statements = get_statement_list(document)
 
         verb = statements[0].action.verb.main_vb

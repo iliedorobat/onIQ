@@ -1,17 +1,14 @@
 from typing import List
 
-import spacy
-
 from ro.webdata.oniq.common.text_utils import WORD_SEPARATOR
 from ro.webdata.oniq.common.text_utils import split_camel_case_string
 from ro.webdata.oniq.endpoint.common.CSVService import CSV_COLUMN_SEPARATOR, CSV_VALUE_SEPARATOR
 from ro.webdata.oniq.endpoint.namespace import NAMESPACE_SEPARATOR
 from ro.webdata.oniq.endpoint.namespace import NamespaceService
+from ro.webdata.oniq.spacy_model import nlp_model
 
 ROOT_CLASS_URI = "http://www.w3.org/2002/07/owl#Thing"
 ROOT_PROPERTY_CLASS_URI = "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"
-
-nlp = spacy.load('en_core_web_sm', disable=['parser', 'ner'])
 
 
 class RDFElement:
@@ -95,7 +92,7 @@ class RDFElement:
              List[Token]: List of tokens.
         """
 
-        document = nlp(self.label)
+        document = nlp_model(self.label)
 
         return [
             token for token in document

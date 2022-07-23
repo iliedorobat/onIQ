@@ -10,6 +10,7 @@ def _init_spacy():
     os.system("pip install -U spacy")
     os.system("python -m spacy download en_core_web_sm")
     os.system("python -m spacy download en_core_web_md")
+    os.system("pip install spacy-wordnet")
 
 
 # install NLTK & download models

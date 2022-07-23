@@ -2,14 +2,15 @@ import math
 import warnings
 from typing import List
 
-import spacy
 from nltk.corpus import wordnet
 from spacy.tokens import Token
 
 from ro.webdata.oniq.endpoint.models.RDFElement import RDFProperty
+from ro.webdata.oniq.spacy_model import nlp_model
 
-nlp = spacy.load('en_core_web_md')
 SCORE_BUFFER = 1
+
+nlp_model.add_pipe("spacy_wordnet", after='tagger', config={'lang': nlp_model.lang})
 
 
 class PropertiesMatcher:
@@ -174,8 +175,8 @@ def _calculate_word_similarity_score(rdf_prop, word):
     prop_tokens = rdf_prop.label_to_non_stop_tokens()
 
     for prop_token in prop_tokens:
-        word_1 = nlp(word.text)[0]
-        word_2 = nlp(prop_token.text)[0]
+        word_1 = nlp_model(word.text)[0]
+        word_2 = nlp_model(prop_token.text)[0]
         similarity_score *= (word_1.similarity(word_2) + SCORE_BUFFER)
         count += 1
         # similarity_list += _get_word_similarity_list(word, non_stop_token, rdf_prop)

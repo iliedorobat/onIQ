@@ -1,13 +1,9 @@
 import warnings
 
-import spacy
-
 from ro.webdata.oniq.common.text_utils import split_camel_case_string
 from ro.webdata.oniq.endpoint.namespace import NAMESPACE
 from ro.webdata.oniq.endpoint.namespace import NamespaceService
-
-nlp = spacy.load('en_core_web_sm', disable=['parser', 'ner'])
-
+from ro.webdata.oniq.spacy_model import nlp_model
 
 PROPERTIES_TYPE = {
     "AGE": [],
@@ -76,7 +72,7 @@ def _get_lemma(prop_label):
     # prop_label = "current location"
     # result = "location" (the adjective is removed)
 
-    document = nlp(prop_label)
+    document = nlp_model(prop_label)
     label = next((
         token for token in document
         # TODO: check to see if we need more exceptions
