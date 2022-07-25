@@ -72,6 +72,10 @@ class RDFElement:
     def __str__(self):
         return self.to_str()
 
+    @staticmethod
+    def get_csv_headers():
+        return ['namespace label', 'resource label', 'namespace', 'resource uri', 'parent uri']
+
     def to_csv(self, separator: str = CSV_COLUMN_SEPARATOR):
         return separator.join([
             self.ns_label,
@@ -211,6 +215,78 @@ class RDFClass(RDFElement):
         return hash(self.uri)
 
 
+class RDFEntity(RDFElement):
+    """
+    Representation of an RDF entity (a place, an organization, etc.).
+
+    Attributes:
+        label (str):
+            Label of the resource.
+        name (str):
+            Name of the resource.
+        lemma (str):
+            Lemma of the name of the resource.
+        name (str):
+            Name of the resource.
+        res_type (str):
+            Type of the resource. E.g.:
+                - http://dbpedia.org/ontology/Person;
+                - http://dbpedia.org/ontology/Place.
+        ns (str):
+            Namespace of the resource.
+        ns_label (str):
+            Label of the namespace of the resource.
+        uri (str):
+            Resource URI.
+    """
+
+    def __init__(self, uri, label, name, res_type, namespace=None, ns_label=None):
+        """
+        Args:
+            uri (str):
+                Resource URI.
+            label (str):
+                Label of the resource.
+            name (str):
+                Name of the resource.
+            res_type (str):
+                Type of the resource. E.g.:
+                    - http://dbpedia.org/ontology/Person;
+                    - http://dbpedia.org/ontology/Place.
+            namespace (str):
+                Namespace of the resource.
+            ns_label (str):
+                Label of the namespace of the resource.
+        """
+
+        super().__init__(uri, [], label, namespace, ns_label)
+        self.name = name
+        self.res_type = res_type
+
+    def __eq__(self, other):
+        # only equality tests to other 'RDFProperty' instances are supported
+        if not isinstance(other, RDFProperty):
+            return NotImplemented
+        return self.uri == other.uri
+
+    def __hash__(self):
+        return hash(self.uri)
+
+    @staticmethod
+    def get_csv_headers():
+        return ['namespace label', 'resource label', 'resource name', 'namespace', 'resource uri', 'resource type']
+
+    def to_csv(self, separator: str = CSV_COLUMN_SEPARATOR):
+        return separator.join([
+            self.ns_label,
+            self.label,
+            self.name if self.name is not None else "",
+            self.ns,
+            self.uri,
+            self.res_type
+        ])
+
+
 class RDFProperty(RDFElement):
     """
     Representation of an RDF property.
@@ -267,6 +343,10 @@ class RDFProperty(RDFElement):
 
     def __hash__(self):
         return hash(self.uri)
+
+    @staticmethod
+    def get_csv_headers():
+        return ['namespace label', 'resource label', 'namespace', 'resource uri', 'parent uri', 'domain', 'range']
 
     def to_csv(self, separator: str = CSV_COLUMN_SEPARATOR):
         return separator.join([

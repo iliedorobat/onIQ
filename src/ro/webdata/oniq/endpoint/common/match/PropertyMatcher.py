@@ -10,7 +10,8 @@ from ro.webdata.oniq.spacy_model import nlp_model
 
 SCORE_BUFFER = 1
 
-nlp_model.add_pipe("spacy_wordnet", after='tagger', config={'lang': nlp_model.lang})
+# FIXME:
+# nlp_model.add_pipe("spacy_wordnet", after='tagger', config={'lang': nlp_model.lang})
 
 
 class PropertiesMatcher:

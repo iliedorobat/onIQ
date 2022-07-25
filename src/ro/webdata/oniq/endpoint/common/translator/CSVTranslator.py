@@ -1,13 +1,13 @@
 from progress.bar import Bar
 
-from ro.webdata.oniq.endpoint.namespace import NAMESPACE
-from ro.webdata.oniq.endpoint.common.path_utils import get_categories_filenames
-from ro.webdata.oniq.endpoint.common.path_utils import get_dbpedia_file_path
 from ro.webdata.oniq.endpoint.common.CSVService import CSVService, CSV_COLUMN_SEPARATOR
+from ro.webdata.oniq.endpoint.common.path_const import CATEGORIES_PATH, CATEGORIES_FILENAME_PREFIX
+from ro.webdata.oniq.endpoint.common.path_utils import get_filenames, get_dbpedia_file_path
 from ro.webdata.oniq.endpoint.models.CSVEntry import CSVEntry
 from ro.webdata.oniq.endpoint.models.RDFElement import RDFCategory, RDFClass, RDFProperty, ROOT_CLASS_URI, \
     ROOT_PROPERTY_CLASS_URI
 from ro.webdata.oniq.endpoint.models.RDFElements import RDFElements
+from ro.webdata.oniq.endpoint.namespace import NAMESPACE
 
 
 class CSVTranslator:
@@ -43,7 +43,7 @@ class CSVTranslator:
         """
 
         categories = []
-        filenames = get_categories_filenames()
+        filenames = get_filenames(CATEGORIES_PATH, CATEGORIES_FILENAME_PREFIX)
         bar = Bar("Reading categories from DBpedia files", max=len(filenames))
 
         for filename in filenames:

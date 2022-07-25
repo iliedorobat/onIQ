@@ -1,20 +1,16 @@
-from typing import List, Union
+from typing import List
 
 import pydash
 # https://rdflib.dev/sparqlwrapper/
 from SPARQLWrapper import SPARQLWrapper, JSON
 
-from ro.webdata.oniq.endpoint.namespace import NAMESPACE
-from ro.webdata.oniq.endpoint.common.translator.URITranslator import URITranslator
 from ro.webdata.oniq.endpoint.common.CSVService import CSV_COLUMN_SEPARATOR
-from ro.webdata.oniq.endpoint.models.RDFElement import RDFCategory, RDFClass, RDFProperty
+from ro.webdata.oniq.endpoint.common.translator.URITranslator import URITranslator
+from ro.webdata.oniq.endpoint.models.RDFElement import RDFCategory, RDFClass, RDFEntity, RDFProperty
 from ro.webdata.oniq.endpoint.models.RDFElements import RDFElements
-from ro.webdata.oniq.endpoint.sparql_query import CATEGORIES_COUNTER_QUERY, CATEGORIES_QUERY, CLASSES_QUERY, \
+from ro.webdata.oniq.endpoint.namespace import NAMESPACE
+from ro.webdata.oniq.endpoint.sparql_query import CATEGORIES_QUERY, CLASSES_QUERY, \
     PROPERTIES_OF_RESOURCE_QUERY, PROPERTIES_QUERY, RESOURCE_QUERY
-
-
-CLASSES_HEADERS = ['namespace label', 'resource label', 'namespace', 'resource uri', 'parent uri']
-PROPERTIES_HEADERS = ['namespace label', 'resource label', 'namespace', 'resource uri', 'parent uri', 'domain', 'range']
 
 
 class QueryService:
@@ -24,7 +20,7 @@ class QueryService:
     Methods:
         run_query(endpoint, query):
             Query the target endpoint.
-        get_categories_counter(endpoint, sparql_query=CATEGORIES_COUNTER_QUERY):
+        count_categories(endpoint, sparql_query=CATEGORIES_COUNTER_QUERY):
             Query the target endpoint to get the number of categories.
         run_categories_query(endpoint, category_ns, sparql_query=CATEGORIES_QUERY, offset=0):
             Query the target endpoint to get the list of categories.
@@ -60,25 +56,29 @@ class QueryService:
         return sparql.query().convert()
 
     @staticmethod
-    def get_categories_counter(endpoint, sparql_query=CATEGORIES_COUNTER_QUERY):
+    def count_resources(endpoint, sparql_query):
         """
-        Query the target endpoint to get the number of categories.
+        Query the target endpoint to get the number of resources.
 
         Args:
             endpoint (str): Communication channel.
             sparql_query (str): SPARQL query.
 
         Returns:
-            int: Number of categories.
+            int: Number of resources.
         """
 
-        counter = 0
         response = QueryService.run_query(endpoint, sparql_query)
 
-        for result in response["results"]["bindings"]:
-            counter = int(result["counter"]["value"])
+        count_json = pydash.get(response, ["results", "bindings", 0, "count"], {})
+        count_type = pydash.get(count_json, "datatype")
 
-        return counter
+        if count_type != "http://www.w3.org/2001/XMLSchema#integer":
+            return 0
+
+        count_value = pydash.get(count_json, "value", 0)
+
+        return int(count_value)
 
     @staticmethod
     def run_categories_query(endpoint, category_ns, sparql_query=CATEGORIES_QUERY, offset=0):
@@ -92,7 +92,7 @@ class QueryService:
             offset (int): Skip "offset" tuples from the total result set.
 
         Returns:
-            RDFElements[RDFClass]: Sorted list of unique categories.
+            RDFElements[RDFCategory]: Sorted list of unique categories.
         """
 
         categories = RDFElements([])
@@ -102,13 +102,47 @@ class QueryService:
             label = result["label"]["value"]
             uri = result["class"]["value"]
             categories.append(
-                RDFClass(uri, [], label, category_ns)
+                RDFCategory(uri, [], label, category_ns)
             )
 
         categories.unique()
         categories.sort()
 
         return categories
+
+    @staticmethod
+    def run_entities_query(endpoint, namespace, sparql_query, entity_type, offset=0):
+        """
+        Query the target endpoint to get the list of entities.
+
+        Args:
+            endpoint (str): Communication channel.
+            namespace (str): Entity namespace (E.g.: NAMESPACE.DBP_CATEGORY).
+            sparql_query (str): SPARQL query.
+            entity_type (str): Type of entity (E.g.: Organisation, Person, etc.).
+            offset (int): Skip "offset" tuples from the total result set.
+
+        Returns:
+            RDFElements[RDFEntity]: Sorted list of unique entities.
+        """
+
+        entities = RDFElements([])
+        response = QueryService.run_query(endpoint, sparql_query % (entity_type, offset))
+        results = pydash.get(response, ["results", "bindings"], [])
+
+        for result in results:
+            label = pydash.get(result, ["label", "value"])
+            name = pydash.get(result, ["name", "value"])
+            uri = pydash.get(result, ["resource", "value"])
+            res_type = NAMESPACE.DBP_ONTOLOGY + entity_type
+            entities.append(
+                RDFEntity(uri, label, name, res_type, namespace)
+            )
+
+        entities.unique()
+        entities.sort()
+
+        return entities
 
     @staticmethod
     def run_classes_query(endpoint, sparql_query=CLASSES_QUERY):

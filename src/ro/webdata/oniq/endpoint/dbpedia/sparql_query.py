@@ -26,7 +26,7 @@ DBO_CATEGORIES_QUERY = f"""
 """
 """
 SPARQL query for getting categories
-DBpedia restricts up to 5000 items (DBP_LIMIT) from a single query
+DBpedia restricts up to 5000 items (DBP_LIMIT) from a single query.
 
 # https://stackoverflow.com/questions/50526921/10000-row-dbpedia-query-result-set-size-limit
 # https://stackoverflow.com/questions/20937556/how-to-get-all-companies-from-dbpedia
@@ -42,7 +42,7 @@ DBO_CATEGORIES_COUNTER_QUERY = f"""
     }}
 """
 """
-SPARQL query for getting the number of categories in the repository
+SPARQL query for getting the number of categories in the repository.
 """
 
 
@@ -72,8 +72,8 @@ DBO_CLASSES_QUERY = f"""
     ORDER BY ?class
 """
 """
-SPARQL query for getting the list of classes
-# TODO: rdfs:isDefinedBy ?namespace .
+SPARQL query for getting the list of classes.
+# TODO: "rdfs:isDefinedBy ?namespace ."
 """
 
 
@@ -104,8 +104,8 @@ DBO_MAIN_CLASSES_QUERY = f"""
     ORDER BY ?class
 """
 """
-SPARQL query for getting the list of main classes
-The "main class" is a class for which "http://www.w3.org/2002/07/owl#Thing" is its parent
+SPARQL query for getting the list of main classes.
+The "main class" is a class for which "http://www.w3.org/2002/07/owl#Thing" is its parent.
 """
 
 
@@ -129,7 +129,7 @@ DBO_PROPERTIES_QUERY = f"""
     ORDER BY ?property
 """
 """
-SPARQL query for getting the list of properties
+SPARQL query for getting the list of properties.
 """
 
 
@@ -163,9 +163,61 @@ DBP_PROPERTIES_OF_RESOURCE_QUERY = f"""
     ORDER BY ?property
 """
 """
-SPARQL query for getting the list of properties for a specific resource
+SPARQL query for getting the list of properties for a specific resource.
 E.g.: dbr:%s => http://dbpedia.org/resource/Barda_Mausoleum
 """
+
+
+DBP_ENTITY_TYPE_QUERY = f"""
+    PREFIX dbo: <{NAMESPACE.DBP_ONTOLOGY}>
+    PREFIX foaf: <{NAMESPACE.FOAF}>
+    PREFIX rdf: <{NAMESPACE.RDF}>
+    PREFIX rdfs: <{NAMESPACE.RDFS}>
+
+    SELECT *
+    WHERE {{
+        SELECT DISTINCT ?resource ?label ?name
+        WHERE {{
+            ?resource   rdf:type dbo:%s ;
+                        rdfs:label ?label .
+            FILTER(langMatches(lang(?label), "en"))
+    
+            OPTIONAL {{ ?resource foaf:name ?name }}
+        }}
+        ORDER BY ?resource
+    }}
+    LIMIT {DBP_LIMIT}
+    OFFSET %d
+"""
+"""
+SPARQL query for getting entities.
+E.g.:
+    - dbo:%s => http://dbpedia.org/ontology/Place
+    - %d => 0; 5000; etc.
+
+DBpedia restricts up to 5000 items (DBP_LIMIT) from a single query.
+
+# https://stackoverflow.com/questions/50526921/10000-row-dbpedia-query-result-set-size-limit
+# https://stackoverflow.com/questions/20937556/how-to-get-all-companies-from-dbpedia
+"""
+
+
+
+DBP_ENTITY_TYPE_COUNTER_QUERY = f"""
+    SELECT DISTINCT count(?resource) as ?count
+    WHERE {{
+        ?resource   rdf:type dbo:%s ;
+                    rdfs:label ?label .
+        FILTER(langMatches(lang(?label), "en"))
+
+        OPTIONAL {{ ?resource foaf:name ?name }}
+    }}
+"""
+"""
+SPARQL query for getting the number of entities in the repository.
+E.g.: dbo:%s => http://dbpedia.org/ontology/Place
+"""
+
 
 
 DBP_ONTOLOGY_RESOURCE_QUERY = f"""

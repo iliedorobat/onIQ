@@ -2,6 +2,10 @@ import os
 from pathlib import Path
 
 
+def get_questions_file_path(filename: str, extension: str = "json"):
+    return get_root_path() + "/files/questions/" + filename + "." + extension
+
+
 def get_dbpedia_file_path(filename, extension, mid_path=""):
     """
     Retrieve the full path of the file.
@@ -13,7 +17,9 @@ def get_dbpedia_file_path(filename, extension, mid_path=""):
             Name of the file extension (E.g.: "csv").
         mid_path (str):
             Path between DBpedia directory and the file.
-            E.g.: get_dbpedia_file_path(filename, "csv", "categories/").
+            E.g.:
+                - get_dbpedia_file_path(filename, "csv", "categories/");
+                - get_dbpedia_file_path(filename, "csv", "entities/").
 
     Returns:
          str: Full path of the file.
@@ -75,36 +81,45 @@ def get_root_path():
     return full_path[0: index]
 
 
-_CATEGORIES_PATH = get_root_path() + "/files/dbpedia/categories/"
-_CATEGORIES_FILENAME_PREFIX = "category_list_"
-
-
-def get_categories_filenames():
+def get_filenames(relative_path, file_prefix):
     """
-    Read the category file names and return a sorted list of them.
+    Read file names from <b>filepath</b> and return a sorted list of them.
+
+    Args:
+        relative_path (List[str]):
+            Relative path to the target files.
+            E.g.:
+                - "/files/dbpedia/categories/";
+                - "/files/dbpedia/entities/".
+        file_prefix (str):
+            String from the beginning of the file which will be removed
+            to determine the integer (check <b>filename_to_number</b>).
 
     Returns:
-        List[str]: Sorted list of category file names.
+        List[str]: Sorted list of file names.
     """
 
-    if not os.path.exists(_CATEGORIES_PATH):
-        os.makedirs(_CATEGORIES_PATH)
+    filepath = get_root_path() + relative_path
+
+    if not os.path.exists(filepath):
+        os.makedirs(filepath)
 
     return sorted([
         filename.replace(".csv", "")
-        for filename in os.listdir(_CATEGORIES_PATH)
-        if filename.__contains__(_CATEGORIES_FILENAME_PREFIX)
-    ], key=lambda filename: filename_to_number(filename))
+        for filename in os.listdir(filepath)
+        if filename.__contains__(file_prefix)
+    ], key=lambda filename: filename_to_number(filename, file_prefix))
 
 
-def filename_to_number(filename):
+def filename_to_number(filename, prefix):
     """
     If the file name ends with a number, extract it and convert
     it to an integer. Otherwise, throw an error.
 
     Args:
-        filename (str):
-            Name of the file.
+        filename (str): Name of the file.
+        prefix (str): String from the beginning of the file which will
+            be removed to determine the integer.
 
     Returns:
          int: The integer at the end of the file name.
@@ -115,6 +130,6 @@ def filename_to_number(filename):
     """
 
     try:
-        return int(filename.replace(_CATEGORIES_FILENAME_PREFIX, "").replace(".csv", ""))
+        return int(filename.replace(prefix, "").replace(".csv", ""))
     except ValueError:
         return None

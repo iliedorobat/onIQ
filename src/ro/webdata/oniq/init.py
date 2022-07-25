@@ -1,15 +1,19 @@
-import nltk
 import os
 
+import nltk
+
 from ro.webdata.oniq.endpoint.dbpedia.setup import DBpediaSetup
+from ro.webdata.oniq.endpoint.dbpedia.setup import ENTITY_TYPES
 
 
 # install spacy & download models
 def _init_spacy():
     os.system("pip install -U pip setuptools wheel")
     os.system("pip install -U spacy")
+    os.system("pip install spacy-transformers")
     os.system("python -m spacy download en_core_web_sm")
     os.system("python -m spacy download en_core_web_md")
+    os.system("python -m spacy download en_core_web_trf")
     os.system("pip install spacy-wordnet")
 
 
@@ -36,6 +40,9 @@ def _init_dbpedia():
     DBpediaSetup.init_main_classes()
     DBpediaSetup.init_properties()
     DBpediaSetup.init_categories()
+
+    for entity_type in [a for a in dir(ENTITY_TYPES) if not a.startswith('__')]:
+        DBpediaSetup.init_entities(entity_type)
 
 
 _init_spacy()
