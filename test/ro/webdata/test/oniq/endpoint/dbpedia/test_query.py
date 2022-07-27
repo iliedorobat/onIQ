@@ -1,5 +1,5 @@
+from ro.webdata.oniq.endpoint.dbpedia.constants import DBPEDIA_CLASS_TYPES
 from ro.webdata.oniq.endpoint.dbpedia.query import DBpediaQueryService
-from ro.webdata.oniq.endpoint.dbpedia.setup import ENTITY_TYPES
 from ro.webdata.oniq.endpoint.dbpedia.sparql_query import DBP_RESOURCE_QUERY, DBP_ONTOLOGY_RESOURCE_QUERY
 from ro.webdata.test.oniq.common.print_utils import print_not_implemented
 
@@ -26,9 +26,9 @@ class TestDBpediaQueryService:
 
     @staticmethod
     def test_count_entities():
-        counter_resp = DBpediaQueryService.count_entities(ENTITY_TYPES.ORGANISATION)
+        counter_resp = DBpediaQueryService.count_entities(DBPEDIA_CLASS_TYPES.ORGANISATION)
         print(
-            f'count_entities("{ENTITY_TYPES.ORGANISATION}"):\n'
+            f'count_entities("{DBPEDIA_CLASS_TYPES.ORGANISATION}"):\n'
             f'\tentities_counter: {counter_resp}'
         )
 

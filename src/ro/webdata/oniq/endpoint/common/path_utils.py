@@ -81,7 +81,7 @@ def get_root_path():
     return full_path[0: index]
 
 
-def get_filenames(relative_path, file_prefix):
+def get_filenames(relative_path, file_prefix, mid_path=""):
     """
     Read file names from <b>filepath</b> and return a sorted list of them.
 
@@ -94,6 +94,11 @@ def get_filenames(relative_path, file_prefix):
         file_prefix (str):
             String from the beginning of the file which will be removed
             to determine the integer (check <b>filename_to_number</b>).
+        mid_path (str):
+            Path between main directory and the file.
+            E.g.:
+                - get_filenames(ENTITIES_PATH, entity_type, "ArchitecturalStructure/");
+                - get_filenames(ENTITIES_PATH, entity_type, "Person/").
 
     Returns:
         List[str]: Sorted list of file names.
@@ -104,11 +109,17 @@ def get_filenames(relative_path, file_prefix):
     if not os.path.exists(filepath):
         os.makedirs(filepath)
 
+    if len(mid_path) > 0:
+        filepath = filepath + mid_path
+
+    if not os.path.exists(filepath):
+        return []
+
     return sorted([
         filename.replace(".csv", "")
         for filename in os.listdir(filepath)
         if filename.__contains__(file_prefix)
-    ], key=lambda filename: filename_to_number(filename, file_prefix))
+    ], key=lambda name: filename_to_number(name, file_prefix))
 
 
 def filename_to_number(filename, prefix):
