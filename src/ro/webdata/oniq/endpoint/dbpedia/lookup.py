@@ -8,10 +8,12 @@ from ro.webdata.oniq.common.text_utils import WORD_SEPARATOR
 from ro.webdata.oniq.endpoint.common.match.PropertyMatcher import PropertiesMatcher
 from ro.webdata.oniq.endpoint.common.translator.CSVTranslator import CSVTranslator
 from ro.webdata.oniq.endpoint.common.translator.URITranslator import URITranslator
+from ro.webdata.oniq.endpoint.dbpedia.constants import DBPEDIA_CLASS_TYPES
 from ro.webdata.oniq.endpoint.dbpedia.query import DBpediaQueryService
 from ro.webdata.oniq.endpoint.dbpedia.sparql_query import DBP_PROPERTIES_OF_RESOURCE_QUERY
 from ro.webdata.oniq.endpoint.dbpedia.sparql_query import DBP_RESOURCE_QUERY, DBP_ONTOLOGY_RESOURCE_QUERY
 from ro.webdata.oniq.endpoint.models.RDFElement import RDFClass, ROOT_CLASS_URI
+from ro.webdata.oniq.endpoint.namespace import NAMESPACE
 
 _MAX_LOOKUP_RESULTS = 10
 _NAME_TYPE_SEPARATOR = ','
@@ -214,68 +216,110 @@ def _get_named_entity_types(named_entity: Span):
     label = named_entity.label_
 
     if label == "DATE" or label == "TIME":
-        return [item for item in classes if item.uri == "http://dbpedia.org/ontology/TimePeriod"]
+        return [item for item in classes if item.uri == NAMESPACE.DBP_ONTOLOGY + DBPEDIA_CLASS_TYPES.TIME_PERIOD]
     elif label == "EVENT":
-        return [item for item in classes if item.uri == "http://dbpedia.org/ontology/Event"]
+        return [item for item in classes if item.uri == NAMESPACE.DBP_ONTOLOGY + DBPEDIA_CLASS_TYPES.EVENT]
     elif label == "FAC":
         # FAC Buildings, airports, highways, bridges, etc
-        return [item for item in classes if item.uri == "http://dbpedia.org/ontology/Building"]
+        return [item for item in classes if item.uri == NAMESPACE.DBP_ONTOLOGY + DBPEDIA_CLASS_TYPES.ARCHITECTURAL_STRUCTURE]
     elif label == "GPE" or label == "LOC":
         # GPE Countries, cities, states
         # LOC Non-GPE locations, mountain ranges, bodies of water
-        return [item for item in classes if item.uri == "http://dbpedia.org/ontology/Place"]
+        return [item for item in classes if item.uri == NAMESPACE.DBP_ONTOLOGY + DBPEDIA_CLASS_TYPES.PLACE]
     elif label == "LANGUAGE":
-        return [item for item in classes if item.uri == "http://dbpedia.org/ontology/Language"]
+        return [item for item in classes if item.uri == NAMESPACE.DBP_ONTOLOGY + DBPEDIA_CLASS_TYPES.LANGUAGE]
     elif label == "LAW":
-        return [item for item in classes if item.uri == "http://dbpedia.org/ontology/Law"]
+        return [item for item in classes if item.uri == NAMESPACE.DBP_ONTOLOGY + DBPEDIA_CLASS_TYPES.LAW]
     elif label == "MONEY":
-        return [item for item in classes if item.uri == "http://dbpedia.org/ontology/Currency"]
+        return [item for item in classes if item.uri == NAMESPACE.DBP_ONTOLOGY + DBPEDIA_CLASS_TYPES.CURRENCY]
     elif label == "NORP":
         # Nationalities or religious or political groups
         return [
             item for item in classes if item.uri in [
-                "http://dbpedia.org/ontology/EthnicGroup",
-                "http://dbpedia.org/ontology/PoliticalParty",
-                "http://dbpedia.org/ontology/ReligiousOrganisation"
+                NAMESPACE.DBP_ONTOLOGY + DBPEDIA_CLASS_TYPES.ETHNIC_GROUP,
+                NAMESPACE.DBP_ONTOLOGY + DBPEDIA_CLASS_TYPES.POLITICAL_PARTY,
+                NAMESPACE.DBP_ONTOLOGY + DBPEDIA_CLASS_TYPES.RELIGIOUS_ORGANISATION
             ]
         ]
     elif label == "ORG":
-        return [item for item in classes if item.uri == "http://dbpedia.org/ontology/Organisation"]
+        return [item for item in classes if item.uri == NAMESPACE.DBP_ONTOLOGY + DBPEDIA_CLASS_TYPES.ORGANISATION]
     elif label == "PERSON":
-        return [item for item in classes if item.uri == "http://dbpedia.org/ontology/Person"]
+        return [item for item in classes if item.uri == NAMESPACE.DBP_ONTOLOGY + DBPEDIA_CLASS_TYPES.PERSON]
     elif label == "PRODUCT":
         # Objects, vehicles, foods, etc. (Not services)
         return [
             item for item in classes if item.uri in [
-                "http://dbpedia.org/ontology/ArchitecturalStructure",
-                "http://dbpedia.org/ontology/CelestialBody",
-                "http://dbpedia.org/ontology/ChemicalSubstance",
-                "http://dbpedia.org/ontology/Device",
-                "http://dbpedia.org/ontology/Engine",
-                "http://dbpedia.org/ontology/Flag",
-                "http://dbpedia.org/ontology/Food",
-                "http://dbpedia.org/ontology/MeanOfTransportation",
-                "http://dbpedia.org/ontology/Satellite",
-                "http://dbpedia.org/ontology/WrittenWork",
+                NAMESPACE.DBP_ONTOLOGY + DBPEDIA_CLASS_TYPES.CHEMICAL_SUBSTANCE,
+                NAMESPACE.DBP_ONTOLOGY + DBPEDIA_CLASS_TYPES.DEVICE,
+                NAMESPACE.DBP_ONTOLOGY + DBPEDIA_CLASS_TYPES.FLAG,
+                NAMESPACE.DBP_ONTOLOGY + DBPEDIA_CLASS_TYPES.FOOD,
+                NAMESPACE.DBP_ONTOLOGY + DBPEDIA_CLASS_TYPES.MEAN_OF_TRANSPORTATION,
 
-                "http://dbpedia.org/ontology/Album",
-                "http://dbpedia.org/ontology/Award",
-                "http://dbpedia.org/ontology/UnitOfWork",
-                "http://dbpedia.org/ontology/Software",
-                "http://dbpedia.org/ontology/Spreadsheet",
-                "http://dbpedia.org/ontology/Website"
+                NAMESPACE.DBP_ONTOLOGY + DBPEDIA_CLASS_TYPES.DATABASE,
+                NAMESPACE.DBP_ONTOLOGY + DBPEDIA_CLASS_TYPES.SOFTWARE,
+                NAMESPACE.DBP_ONTOLOGY + DBPEDIA_CLASS_TYPES.SPREADSHEET,
+                NAMESPACE.DBP_ONTOLOGY + DBPEDIA_CLASS_TYPES.WEBSITE
             ]
         ]
     elif label == "QUANTITY":
         return [
             item for item in classes if item.uri in [
-                "http://dbpedia.org/ontology/Altitude",
-                "http://dbpedia.org/ontology/Depth",
-                "http://dbpedia.org/ontology/GrossDomesticProduct",
-                "http://dbpedia.org/ontology/GrossDomesticProductPerCapita"
+                NAMESPACE.DBP_ONTOLOGY + DBPEDIA_CLASS_TYPES.ALTITUDE,
+                NAMESPACE.DBP_ONTOLOGY + DBPEDIA_CLASS_TYPES.DEPTH,
+                NAMESPACE.DBP_ONTOLOGY + DBPEDIA_CLASS_TYPES.GROSS_DOMESTIC_PRODUCT,
+                NAMESPACE.DBP_ONTOLOGY + DBPEDIA_CLASS_TYPES.GROSS_DOMESTIC_PRODUCT_PER_CAPITA
             ]
         ]
     elif label == "WORK_OF_ART":
-        return [item for item in classes if item.uri == "http://dbpedia.org/ontology/Artwork"]
+        return [
+            item for item in classes if item.uri in [
+                NAMESPACE.DBP_ONTOLOGY + DBPEDIA_CLASS_TYPES.ARTWORK,
+                NAMESPACE.DBP_ONTOLOGY + DBPEDIA_CLASS_TYPES.MUSICAL_WORK
+            ]
+        ]
+
+    # custom labels
+    elif label == "CUSTOM_ANATOMY":
+        return [item for item in classes if item.uri == NAMESPACE.DBP_ONTOLOGY + DBPEDIA_CLASS_TYPES.ANATOMICAL_STRUCTURE]
+    elif label == "CUSTOM_AWARD":
+        return [item for item in classes if item.uri == NAMESPACE.DBP_ONTOLOGY + DBPEDIA_CLASS_TYPES.AWARD]
+    elif label == "CUSTOM_BIOCHEMISTRY":
+        return [item for item in classes if item.uri == NAMESPACE.DBP_ONTOLOGY + DBPEDIA_CLASS_TYPES.BIOMOLECULE]
+    elif label == "CUSTOM_CHEMISTRY":
+        return [item for item in classes if item.uri == NAMESPACE.DBP_ONTOLOGY + DBPEDIA_CLASS_TYPES.CHEMICAL_SUBSTANCE]
+    elif label == "CUSTOM_CONCEPT":
+        return [item for item in classes if item.uri == NAMESPACE.DBP_ONTOLOGY + DBPEDIA_CLASS_TYPES.TOPICAL_CONCEPT]
+    elif label == "CUSTOM_COLOUR":
+        return [item for item in classes if item.uri == NAMESPACE.DBP_ONTOLOGY + DBPEDIA_CLASS_TYPES.COLOUR]
+    elif label == "CUSTOM_DISEASE":
+        return [
+            item for item in classes if item.uri in [
+                NAMESPACE.DBP_ONTOLOGY + DBPEDIA_CLASS_TYPES.DISEASE,
+                NAMESPACE.DBP_ONTOLOGY + DBPEDIA_CLASS_TYPES.PANDEMIC
+            ]
+        ]
+    elif label == "CUSTOM_LITERATURE":
+        return [item for item in classes if item.uri == NAMESPACE.DBP_ONTOLOGY + DBPEDIA_CLASS_TYPES.WRITTEN_WORK]
+    elif label == "CUSTOM_NAME":
+        return [item for item in classes if item.uri == NAMESPACE.DBP_ONTOLOGY + DBPEDIA_CLASS_TYPES.NAME]
+    elif label == "CUSTOM_OCCUPATION":
+        return [item for item in classes if item.uri == NAMESPACE.DBP_ONTOLOGY + DBPEDIA_CLASS_TYPES.PERSON_FUNCTION]
+    elif label == "CUSTOM_SPECIALISATION":
+        return [
+            item for item in classes if item.uri in [
+                NAMESPACE.DBP_ONTOLOGY + DBPEDIA_CLASS_TYPES.DIPLOMA,
+                NAMESPACE.DBP_ONTOLOGY + DBPEDIA_CLASS_TYPES.MEDICAL_SPECIALTY
+            ]
+        ]
+    elif label == "CUSTOM_RADIO_TV":
+        return [
+            item for item in classes if item.uri in [
+                NAMESPACE.DBP_ONTOLOGY + DBPEDIA_CLASS_TYPES.FILM,
+                NAMESPACE.DBP_ONTOLOGY + DBPEDIA_CLASS_TYPES.RADIO_PROGRAM,
+                NAMESPACE.DBP_ONTOLOGY + DBPEDIA_CLASS_TYPES.TELEVISION_EPISODE,
+                NAMESPACE.DBP_ONTOLOGY + DBPEDIA_CLASS_TYPES.TELEVISION_SEASON,
+                NAMESPACE.DBP_ONTOLOGY + DBPEDIA_CLASS_TYPES.TELEVISION_SHOW
+            ]
+        ]
 
     return []

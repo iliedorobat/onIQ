@@ -100,7 +100,7 @@ class SetupService:
                 Path between DBpedia directory and the file.
                 E.g.:
                     - get_dbpedia_file_path(filename, "csv", "categories/");
-                    - get_dbpedia_file_path(filename, "csv", "entities/").
+                    - get_dbpedia_file_path(filename, "csv", "entities/Person/").
             headers (List[str]):
                 List of CSV headers.
                 E.g.: RDF.Entity.get_csv_headers().
@@ -149,7 +149,7 @@ def _write_query_result(meta, file_prefix, mid_path, headers, run_query, timeout
             Path between DBpedia directory and the file.
             E.g.:
                 - get_dbpedia_file_path(filename, "csv", "categories/");
-                - get_dbpedia_file_path(filename, "csv", "entities/").
+                - get_dbpedia_file_path(filename, "csv", "entities/Person/").
         headers (List[str]):
             List of CSV headers.
             E.g.: RDF.Entity.get_csv_headers().
@@ -164,7 +164,7 @@ def _write_query_result(meta, file_prefix, mid_path, headers, run_query, timeout
 
     try:
         if meta["error_counter"] < _ERROR_COUNTER_THRESHOLD:
-            console.info(f"{meta['i']}. QUERYING: DBpedia with offset={meta['offset']}")
+            console.info(f"{meta['i']}. QUERYING: DBpedia {mid_path} with offset={meta['offset']}")
             time.sleep(timeout)
             resources = run_query(meta["offset"])
             DBpediaQueryService.write_query_result(
@@ -173,7 +173,7 @@ def _write_query_result(meta, file_prefix, mid_path, headers, run_query, timeout
                 f"{file_prefix}{meta['offset']}",
                 mid_path
             )
-            console.debug(f"{meta['i']}. PASSED: DBpedia query with offset={meta['offset']}")
+            console.debug(f"{meta['i']}. PASSED: DBpedia {mid_path} query with offset={meta['offset']}")
 
         meta["i"] += 1
         meta["error_counter"] = 0
@@ -182,7 +182,7 @@ def _write_query_result(meta, file_prefix, mid_path, headers, run_query, timeout
         meta["error_counter"] += 1
 
         if meta["error_counter"] == _ERROR_COUNTER_THRESHOLD:
-            console.error(f"{meta['i']}. FAILED: DBpedia query with offset={meta['offset']}")
+            console.error(f"{meta['i']}. FAILED: DBpedia {mid_path} query with offset={meta['offset']}")
         else:
             console.warning(f"{meta['i']}. Restoring the connection with offset={meta['offset']}...")
 

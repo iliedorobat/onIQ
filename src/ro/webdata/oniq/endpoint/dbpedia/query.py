@@ -180,7 +180,7 @@ class DBpediaQueryService:
                 Path between DBpedia directory and the file.
                 E.g.:
                     - get_dbpedia_file_path(filename, "csv", "categories/");
-                    - get_dbpedia_file_path(filename, "csv", "entities/").
+                    - get_dbpedia_file_path(filename, "csv", "entities/Person/").
         """
 
         filepath = get_dbpedia_file_path(filename, "csv", mid_path)

@@ -1,3 +1,4 @@
+from ro.webdata.oniq.common.print_utils import console
 from ro.webdata.oniq.endpoint.common.path_const import CATEGORIES_PATH, CATEGORIES_FILENAME_PREFIX, ENTITIES_PATH
 from ro.webdata.oniq.endpoint.common.path_utils import get_filenames
 from ro.webdata.oniq.endpoint.common.setup_utils import SetupService
@@ -9,21 +10,6 @@ _TIMEOUT_SECONDS = {
     "DEFAULT": 10,
     "ERROR": 60
 }
-
-class ENTITY_TYPES:
-    ARTWORK = "Artwork"
-    AWARD = "Award"
-    BUILDING = "Building"
-    CELESTIAL_BODY = "CelestialBody"
-    CHEMICAL_SUBSTANCE = "ChemicalSubstance"
-    ETHNIC_GROUP = "EthnicGroup"
-    EVENT = "Event"
-    FOOD = "Food"
-    ORGANISATION = "Organisation"
-    PERSON = "Person"
-    PLACE = "Place"
-    POLITICAL_PARTY = "PoliticalParty"
-    WRITTEN_WORK = "WrittenWork"
 
 
 class DBpediaSetup:
@@ -57,7 +43,7 @@ class DBpediaSetup:
             return DBpediaQueryService.run_categories_query(offset)
 
         SetupService.write_query_result(counter, filename_list, file_prefix, mid_path, headers, run_entities_query)
-        print("DBpedia categories has been written to disk!")
+        console.info("DBpedia categories has been written to disk!")
 
     @staticmethod
     def init_classes():
@@ -67,7 +53,7 @@ class DBpediaSetup:
 
         dbo_class_list = DBpediaQueryService.run_classes_query()
         DBpediaQueryService.write_query_result(dbo_class_list, RDFClass.get_csv_headers(), "class_list")
-        print("DBpedia classes has been written to disk!")
+        console.info("DBpedia classes has been written to disk!")
 
     @staticmethod
     def init_entities(entity_type):
@@ -79,16 +65,18 @@ class DBpediaSetup:
         """
 
         counter = DBpediaQueryService.count_entities(entity_type)
+        console.info(f'count({entity_type}) = {counter}')
+
         file_prefix = entity_type
-        filename_list = get_filenames(ENTITIES_PATH, file_prefix)
+        filename_list = get_filenames(ENTITIES_PATH + entity_type + "/", file_prefix)
         headers = RDFEntity.get_csv_headers()
-        mid_path = "entities/"
+        mid_path = "entities/" + entity_type + "/"
 
         def run_entities_query(offset):
             return DBpediaQueryService.run_entities_query(entity_type, offset)
 
         SetupService.write_query_result(counter, filename_list, file_prefix, mid_path, headers, run_entities_query)
-        print("DBpedia entities has been written to disk!")
+        console.info(f"DBpedia {entity_type} has been written to disk!")
 
     @staticmethod
     def init_main_classes():
@@ -99,7 +87,7 @@ class DBpediaSetup:
 
         dbo_class_list = DBpediaQueryService.run_main_classes_query()
         DBpediaQueryService.write_query_result(dbo_class_list, RDFClass.get_csv_headers(), "main_class_list")
-        print("DBpedia main classes has been written to disk!")
+        console.info("DBpedia main classes has been written to disk!")
 
     @staticmethod
     def init_properties():
@@ -109,4 +97,4 @@ class DBpediaSetup:
 
         dbo_prop_list = DBpediaQueryService.run_properties_query()
         DBpediaQueryService.write_query_result(dbo_prop_list, RDFProperty.get_csv_headers(), "prop_list")
-        print("DBpedia properties has been written to disk!")
+        console.info("DBpedia properties has been written to disk!")

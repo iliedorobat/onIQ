@@ -204,13 +204,21 @@ DBpedia restricts up to 5000 items (DBP_LIMIT) from a single query.
 
 
 DBP_ENTITY_TYPE_COUNTER_QUERY = f"""
-    SELECT DISTINCT count(?resource) as ?count
-    WHERE {{
-        ?resource   rdf:type dbo:%s ;
-                    rdfs:label ?label .
-        FILTER(langMatches(lang(?label), "en"))
+    PREFIX dbo: <{NAMESPACE.DBP_ONTOLOGY}>
+    PREFIX foaf: <{NAMESPACE.FOAF}>
+    PREFIX rdf: <{NAMESPACE.RDF}>
+    PREFIX rdfs: <{NAMESPACE.RDFS}>
 
-        OPTIONAL {{ ?resource foaf:name ?name }}
+    SELECT count(?resource) as ?count
+    WHERE {{
+        SELECT DISTINCT ?resource ?label ?name
+        WHERE {{
+            ?resource   rdf:type dbo:%s ;
+                        rdfs:label ?label .
+            FILTER(langMatches(lang(?label), "en"))
+    
+            OPTIONAL {{ ?resource foaf:name ?name }}
+        }}
     }}
 """
 """
