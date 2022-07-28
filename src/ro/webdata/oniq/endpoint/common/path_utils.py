@@ -97,8 +97,8 @@ def get_filenames(relative_path, file_prefix, mid_path=""):
         mid_path (str):
             Path between main directory and the file.
             E.g.:
-                - get_filenames(ENTITIES_PATH, entity_type, "ArchitecturalStructure/");
-                - get_filenames(ENTITIES_PATH, entity_type, "Person/").
+                - get_filenames(DBPEDIA_ENTITIES_PATH, entity_type, "ArchitecturalStructure/");
+                - get_filenames(DBPEDIA_ENTITIES_PATH, entity_type, "Person/").
 
     Returns:
         List[str]: Sorted list of file names.

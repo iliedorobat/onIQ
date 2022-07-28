@@ -1,5 +1,5 @@
 from ro.webdata.oniq.common.print_utils import console
-from ro.webdata.oniq.endpoint.common.path_const import CATEGORIES_PATH, CATEGORIES_FILENAME_PREFIX, ENTITIES_PATH
+from ro.webdata.oniq.endpoint.common.path_const import DBPEDIA_CATEGORIES_PATH, DBPEDIA_CATEGORIES_FILENAME_PREFIX, DBPEDIA_ENTITIES_PATH
 from ro.webdata.oniq.endpoint.common.path_utils import get_filenames
 from ro.webdata.oniq.endpoint.common.setup_utils import SetupService
 from ro.webdata.oniq.endpoint.dbpedia.query import DBpediaQueryService
@@ -34,8 +34,8 @@ class DBpediaSetup:
         """
 
         counter = DBpediaQueryService.count_categories()
-        file_prefix = CATEGORIES_FILENAME_PREFIX
-        filename_list = get_filenames(CATEGORIES_PATH, file_prefix)
+        file_prefix = DBPEDIA_CATEGORIES_FILENAME_PREFIX
+        filename_list = get_filenames(DBPEDIA_CATEGORIES_PATH, file_prefix)
         headers = RDFClass.get_csv_headers()
         mid_path = "categories/"
 
@@ -68,7 +68,7 @@ class DBpediaSetup:
         console.info(f'count({entity_type}) = {counter}')
 
         file_prefix = entity_type
-        filename_list = get_filenames(ENTITIES_PATH + entity_type + "/", file_prefix)
+        filename_list = get_filenames(DBPEDIA_ENTITIES_PATH + entity_type + "/", file_prefix)
         headers = RDFEntity.get_csv_headers()
         mid_path = "entities/" + entity_type + "/"
 

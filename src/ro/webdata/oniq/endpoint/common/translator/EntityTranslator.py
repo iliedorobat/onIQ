@@ -5,6 +5,7 @@ from progress.bar import Bar
 
 from ro.webdata.oniq.endpoint.common.CSVService import CSVService
 from ro.webdata.oniq.endpoint.common.CSVService import CSV_COLUMN_SEPARATOR
+from ro.webdata.oniq.endpoint.common.path_const import DBPEDIA_ENTITIES_PATH
 from ro.webdata.oniq.endpoint.common.path_const import ENTITIES_PATH
 from ro.webdata.oniq.endpoint.common.path_utils import get_filenames, get_dbpedia_file_path, get_root_path
 from ro.webdata.oniq.endpoint.dbpedia.constants import DBPEDIA_CLASS_TYPES
@@ -22,8 +23,10 @@ class EntityTranslator:
             Save lists of names and labels of a specific entity type to disk.
         write_list_to_json(path, target_list):
             Save the list to disk.
-        read_entities(entity_type, separator=CSV_COLUMN_SEPARATOR):
+        read_csv_entity_files(entity_type, separator=CSV_COLUMN_SEPARATOR):
             Read the content of the files of an entity type.
+        read_entity_data(entity_type):
+            Read the contents of a given entity's name and label lists.
     """
 
     @staticmethod
@@ -51,10 +54,10 @@ class EntityTranslator:
             separator (str): CSV column separator.
         """
 
-        entities = EntityTranslator.read_entities(entity_type, separator)
+        entities = EntityTranslator.read_csv_entity_files(entity_type, separator)
 
-        labels_path = get_root_path() + "/files/entities/" + entity_type + ".labels.json"
-        names_path = get_root_path() + "/files/entities/" + entity_type + ".names.json"
+        labels_path = get_root_path() + ENTITIES_PATH + entity_type + ".labels.json"
+        names_path = get_root_path() + ENTITIES_PATH + entity_type + ".names.json"
 
         EntityTranslator.write_list_to_json(labels_path, entities["labels"])
         EntityTranslator.write_list_to_json(names_path, entities["names"])
@@ -76,9 +79,9 @@ class EntityTranslator:
             file.close()
 
     @staticmethod
-    def read_entities(entity_type, separator=CSV_COLUMN_SEPARATOR):
+    def read_csv_entity_files(entity_type, separator=CSV_COLUMN_SEPARATOR):
         """
-        Read the content of the files of an entity type (E.g.: "files/dbpedia/entities/Person/Person0.csv, etc.).
+        Read the content of the files of an entity type (E.g.: "files/dbpedia/entities/Person/Person0.csv", etc.).
         Throw an exception if the file extension does not end with <b>.csv</b>.
 
         Args:
@@ -93,7 +96,7 @@ class EntityTranslator:
         names = []
 
         mid_path = entity_type + "/"
-        filenames = get_filenames(ENTITIES_PATH, entity_type, mid_path)
+        filenames = get_filenames(DBPEDIA_ENTITIES_PATH, entity_type, mid_path)
         bar = Bar("Reading entities from DBpedia files", max=len(filenames))
 
         for filename in filenames:
@@ -112,6 +115,35 @@ class EntityTranslator:
         names = [name for name in list(set(names)) if len(name) > 0]
         labels.sort()
         names.sort()
+
+        return {
+            "labels": labels,
+            "names": names
+        }
+
+    @staticmethod
+    def read_entity_data(entity_type):
+        """
+        Read the contents of a given entity's name and label lists
+        (E.g.: "files/entities/Person.labels.json", etc.).
+
+        Args:
+            entity_type (str): Type of entity (E.g.: Organisation, Person, etc.).
+
+        Returns:
+            dict: Dictionary containing local lists of names and labels.
+        """
+
+        labels_path = get_root_path() + ENTITIES_PATH + entity_type + ".labels.json"
+        names_path = get_root_path() + ENTITIES_PATH + entity_type + ".names.json"
+
+        labels_file = open(labels_path)
+        labels = json.load(labels_file)
+        labels_file.close()
+
+        names_file = open(names_path)
+        names = json.load(names_file)
+        names_file.close()
 
         return {
             "labels": labels,
