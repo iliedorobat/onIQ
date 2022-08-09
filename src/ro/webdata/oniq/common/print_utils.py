@@ -2,10 +2,24 @@ import logging
 
 from langdetect import detect
 from ro.webdata.oniq.common.constants import GLOBAL_ENV, PRINT_MODE
-from ro.webdata.oniq.common.print_const import COLORS
-from ro.webdata.oniq.model.sentence.Action import Action
-from ro.webdata.oniq.model.sentence.Statement import Statement
-from ro.webdata.oniq.model.sparql.Target import Target
+
+
+# https://godoc.org/github.com/whitedevops/colors
+class COLORS:
+    BLUE = "\033[34m"
+    CYAN = "\033[36m"
+    LIGHT_CYAN = "\033[96m"
+    LIGHT_YELLOW = "\033[93m"
+    LIGHT_RED = "\033[91m"
+    RED = "\033[31m"
+    RESET_ALL = '\033[0m'
+
+
+class SYSTEM_MESSAGES:
+    METHOD_IS_OBSOLETE = "The method is obsolete and should be updated!"
+    METHOD_NOT_TESTED = "The method has not been tested!"
+    METHOD_NOT_USED = "The method is not used anymore!"
+    METHOD_USED_WITH_SPACY_2 = "The method is intended to be used with Spacy v2"
 
 
 # https://stackoverflow.com/questions/287871/how-to-print-colored-text-in-python#answer-287944
@@ -46,14 +60,6 @@ def _prepare_message(message, location=None):
 
 class echo:
     @staticmethod
-    def action_list(actions):
-        if GLOBAL_ENV.IS_DEBUG and PRINT_MODE.PRINT_ACTION:
-            print(f'\nlen(action_list) = {len(actions)}\n')
-            for action in actions:
-                print(Action.get_str(action))
-                print()
-
-    @staticmethod
     def lang_warning(query):
         if detect(query) != "en":
             logging.warning(
@@ -66,20 +72,6 @@ class echo:
         if GLOBAL_ENV.IS_DEBUG:
             for prop in properties:
                 print(f'property:    {prop.prop_name_extended}   {prop.ns_name}')
-
-    @staticmethod
-    def statement_list(statements):
-        if GLOBAL_ENV.IS_DEBUG and PRINT_MODE.PRINT_STATEMENT:
-            print()
-            for statement in statements:
-                print(Statement.get_str(statement))
-
-    @staticmethod
-    def target_list(targets: [Target]):
-        if GLOBAL_ENV.IS_DEBUG and PRINT_MODE.PRINT_TARGET:
-            print()
-            for target in targets:
-                print(target)
 
     @staticmethod
     def token_list(document):
@@ -100,4 +92,27 @@ class echo:
             console.info(
                 '-------------------------------------------------------------------------------------------------------'
             )
+            console.info(f'sentence: {document}')
+
+    @staticmethod
+    def deps_list(document):
+        if GLOBAL_ENV.IS_DEBUG and PRINT_MODE.PRINT_DEPS:
+            separator = ''
+            for i in range(145):
+                separator += '-'
+
+            console.info(
+                f'{separator}'
+                f'\n{"text":{15}}|{"head":{10}}|{"main_head":{10}}|'
+                f'{"lefts":{20}}|{"rights":{20}}|'
+                f'{"lemma_":{15}}|{"pos_":{10}}|{"tag_":{10}}|{"dep_":{10}}|{"is_stop":{10}}'
+            )
+            console.info(separator)
+            for token in document:
+                console.info(
+                    f'{token.text:{15}}|{token.head.text:{10}}|{str(token == token.head):{10}}|'
+                    f'{str(list(token.lefts)):{20}}|{str(list(token.rights)):{20}}|'
+                    f'{token.lemma_:{15}}|{token.pos_:{10}}|{token.tag_:{10}}|{token.dep_:{10}}|{str(token.is_stop):{10}}'
+                )
+            console.info(separator)
             console.info(f'sentence: {document}')

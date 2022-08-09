@@ -2,6 +2,25 @@ from spacy.tokens import Span, Token
 import warnings
 
 
+AUXILIARY_VERBS = [
+    # common auxiliary verbs
+    "be",
+    "do",
+    "have",
+    # modal auxiliary verbs
+    "can",
+    "could",
+    "may",
+    "might",
+    "must",
+    "ought to",
+    "shall",
+    "should",
+    "will",
+    "would"
+]
+
+
 def get_preposition(word: Token):
     """
     Extract the preposition of a word
@@ -63,6 +82,16 @@ def get_prev_word(word: Token):
     return word.sent[prev_index]
 
 
+def is_compound_word(word: Token):
+    return word.dep_ == "compound"
+
+
+# TODO: merge with is_aux_verb
+def is_aux(word: Token):
+    is_aux_lemma = word.lemma_.lower() in AUXILIARY_VERBS
+    return is_aux_verb(word) or is_aux_lemma
+
+
 def is_cardinal(word: Token):
     """
     Determine if the input word is a cardinal number
@@ -107,7 +136,20 @@ def is_noun(word: Token):
     if not isinstance(word, Token):
         return False
 
+    # TODO: is_pronoun => for wrong questions?
+    # return word.pos_ in ["NOUN", "PROPN"] or is_pronoun(word)
+
     return word.pos_ in ["NOUN", "PROPN"]
+
+
+def is_pronoun(word: Token):
+    if not isinstance(word, Token):
+        return False
+
+    # TODO: process wrong questions??
+    #   - "Where Gregory I at Byzantine Empire dired?"
+    #   - "Where Alexis of Russia was born at Tsardom of Russia?"
+    return word.tag_ in ["PRP", "PRP$"]
 
 
 def is_linked_by_conjunction(word: Token):
@@ -240,6 +282,11 @@ def is_preposition(word: Token):
 
     if not isinstance(word, Token):
         return False
+
+    # TODO:
+    # return word.dep_ == "prep" or len(
+    #     [conj.dep_ == "prop" for conj in list(word.conjuncts)]
+    # ) > 0
 
     return word.pos_ == "ADP" and word.tag_ == "IN"
 
@@ -416,3 +463,14 @@ def is_wh_word(word: Token):
         return False
 
     return word.tag_ in ['WDT', 'WP', 'WP$', 'WRB']
+
+
+# Check if the verb is preceded by a WH-word
+# E.g.: "What are the ethnic group which start with the letter z?"
+def is_wh_related_verb(item: Token):
+    prev_word = get_prev_word(item)
+
+    if is_verb(item) and is_wh_word(prev_word) and prev_word.i == 0:
+        return True
+
+    return False

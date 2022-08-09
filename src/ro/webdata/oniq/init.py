@@ -53,6 +53,7 @@ class Initializer:
         """
 
         os.system("pip install --user -U numpy")
+        os.system("pip install parse")
         os.system("pip install langdetect")
         os.system("pip install SPARQLWrapper")
         os.system("pip install iteration-utilities")
@@ -126,6 +127,7 @@ def _add_ruler_patterns(label, entity_type):
     if not os.path.exists(path):
         os.makedirs(path)
 
+    # serialization
     ruler.to_disk(f'{path}{entity_type}.jsonl')
     console.info(f'{entity_type} patterns have been written to disk!')
 

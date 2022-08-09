@@ -1,18 +1,3 @@
-# TODO: complete the types of questions
-class QUESTION_TYPES:
-    ASK = "ask"
-    COUNT = "count"  # how many, how much, how often
-    HOW = "how"
-    WHAT = "what"
-    WHEN = "when"
-    WHERE = "where"
-    WHICH = "which"
-    WHO = "who"
-    WHOM = "whom"
-    WHOSE = "whose"
-    WHY = "why"
-
-
 class TEST_MODES:
     DEFAULT = None
     LOCAL_TEST = "local_test"
@@ -22,14 +7,12 @@ class TEST_MODES:
 class GLOBAL_ENV:
     IS_DEBUG = True
     IS_DEBUG_EXTRA = False
-    TEST_MODE = TEST_MODES.GLOBAL_TEST
+    TEST_MODE = TEST_MODES.DEFAULT
 
 
 class PRINT_MODE:
-    PRINT_ACTION = False
-    PRINT_STATEMENT = True
-    PRINT_TARGET = True
     PRINT_TOKEN = True
+    PRINT_DEPS = True
 
 
 class COMPARISON_OPERATORS:
@@ -44,19 +27,9 @@ class COMPARISON_OPERATORS:
     LTE = '<='
 
 
-# TODO: remove
-class LOGICAL_OPERATIONS:
-    AND = 'conjunction'
-    OR = 'disjunction'
-
-
 class LOGICAL_OPERATORS:
     AND = '&&'
     OR = '||'
-
-
-class PREFIX:
-    VARIABLE = '?'
 
 
 PRONOUNS = [
@@ -69,28 +42,6 @@ PRONOUNS = [
     "they", "them",
     "its"
 ]
-
-
-class SENTENCE_TYPE:
-    PRON = "Pronoun Sentence"
-    WH = "WH Sentence"
-    WH_PRON_START = "WH Pronoun Start Sentence"
-    WH_START = "WH Start Sentence"
-    SELECT_CLAUSE = "Select Clause"
-    WHERE_CLAUSE = "Where clause"
-
-
-class SEPARATOR:
-    NAMESPACE = ":"  # deprecated in favour of NAMESPACE_SEPARATOR
-    STRING = "_"
-    TRIPLE_PATTERN = " "
-
-
-class SYSTEM_MESSAGES:
-    METHOD_IS_OBSOLETE = "The method is obsolete and should be updated!"
-    METHOD_NOT_TESTED = "The method has not been tested!"
-    METHOD_NOT_USED = "The method is not used anymore!"
-    METHOD_USED_WITH_SPACY_2 = "The method is intended to be used with Spacy v2"
 
 
 # TODO: complete the map

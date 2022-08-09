@@ -1,12 +1,12 @@
 import warnings
 from typing import Union
+
 from spacy.tokens import Doc, Span, Token
 
-from ro.webdata.oniq.common.constants import SYSTEM_MESSAGES
-from ro.webdata.oniq.common.print_const import COLORS
+from ro.webdata.oniq.common.nlp.utils import is_doc_or_span
+from ro.webdata.oniq.common.nlp.word_utils import get_prev_word, is_wh_word
+from ro.webdata.oniq.common.print_utils import SYSTEM_MESSAGES
 from ro.webdata.oniq.common.text_utils import MONTHS, array_exists_in_text, remove_determiner
-from ro.webdata.oniq.nlp.utils import is_doc_or_span
-from ro.webdata.oniq.nlp.word_utils import get_prev_word, is_wh_word
 
 
 def get_cardinals(sentence: Span):
