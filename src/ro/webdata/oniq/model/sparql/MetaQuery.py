@@ -1,13 +1,8 @@
 import warnings
 
-import spacy
-
 from ro.webdata.oniq.endpoint.dbpedia.lookup import LookupService
 from ro.webdata.oniq.nlp.stmt_utils import get_statement_list
-
-nlp = spacy.load('en_core_web_sm')
-# nlp = spacy.load('en_core_web_md')
-
+from ro.webdata.oniq.spacy_model import nlp_model
 
 _QUERY_SKELETON = "{prefixes}" \
                   "SELECT {targets}" \
@@ -23,9 +18,26 @@ class MetaQuery:
     warnings.warn("deprecated in favour of SPARQLQuery", DeprecationWarning)
 
     def __init__(self, endpoint, question):
-        # TODO: nlp("document", disable=["parser"])
-        document = nlp(question)
+        document = nlp_model(question)
         statements = get_statement_list(document)
+
+        for stmt in statements:
+            for ent in stmt.phrase.chunk.ents:
+                classes = LookupService.entities_lookup(ent)
+                print(classes)
+
+            for ent in stmt.related_phrase.chunk.ents:
+                classes = LookupService.entities_lookup(ent)
+                print(classes)
+
+            noun_chunks = stmt.related_phrase.chunk.noun_chunks
+            for noun_chunk in noun_chunks:
+                root = noun_chunk.root
+                if root.pos_ == "PROPN" and noun_chunk.text != root.text:
+                    # e.g. "rizal monument" is compound PROPN
+                    classes = LookupService.noun_chunk_lookup(noun_chunk)
+                    print(classes)
+
         # query = Query(endpoint, statements)
         #
         # TODO: query.get_str method

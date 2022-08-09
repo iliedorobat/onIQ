@@ -1,13 +1,12 @@
 from ro.webdata.oniq.model.sparql.Filter import Filter
-from ro.webdata.oniq.model.sparql.Pill import Pills
+from ro.webdata.oniq.model.sparql.Pill import Pill
 from ro.webdata.oniq.model.sparql.Triple import Triple
 
 
 class MetaTriple:
-    def __init__(self, triple: Triple = None, pills: Pills = None):
+    def __init__(self, triple: Triple = None, pills: [Pill] = None):
         self.triple: Triple = triple
-        self.pills = pills if pills is not None else Pills()
-        self.filter = Filter(self.pills)
+        self.filter = Filter(pills)
 
     def __str__(self):
         return self.get_str()

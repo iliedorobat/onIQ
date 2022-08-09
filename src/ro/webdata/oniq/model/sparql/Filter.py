@@ -1,9 +1,9 @@
-from ro.webdata.oniq.model.sparql.Pill import Pills
+from ro.webdata.oniq.model.sparql.Pill import Pill
 
 
 class Filter:
-    def __init__(self, pills: Pills = None):
-        self.pills = pills if pills is not None else Pills()
+    def __init__(self, pills: [Pill] = None):
+        self.pills = pills if pills is not None else []
 
     def get_filter_pattern(self, indentation='\t'):
         if len(self.pills.targets) == 0 and len(self.pills.conditions) == 0:

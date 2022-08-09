@@ -1,251 +1,137 @@
-from functools import reduce
-
-from spacy.tokens import Span
-
+from ro.webdata.oniq.common.print_utils import echo
 from ro.webdata.oniq.model.rdf.Match import Match
 from ro.webdata.oniq.model.rdf.Property import Property
-from ro.webdata.oniq.model.sentence.Statement import Statement
-from ro.webdata.oniq.model.sentence.Verb import Verb
+from ro.webdata.oniq.model.sentence.Statement import ConsolidatedStatement, Statement
 from ro.webdata.oniq.model.sparql.MetaTriple import MetaTriple
-from ro.webdata.oniq.model.sparql.Pill import Pill, Pills
+from ro.webdata.oniq.model.sparql.Pill import Pill
 from ro.webdata.oniq.model.sparql.Target import Target
 from ro.webdata.oniq.model.sparql.Triple import Triple
 
-from ro.webdata.oniq.common.constants import COMPARISON_OPERATORS, SEPARATOR, PRINT_MODE
+from ro.webdata.oniq.common.constants import COMPARISON_OPERATORS, QUESTION_TYPES
 from ro.webdata.oniq.common import rdf_utils
 from ro.webdata.oniq.nlp.meta_triple import prepare_where_meta_triple
-from ro.webdata.oniq.nlp.phrase import get_nouns
+from ro.webdata.oniq.nlp.meta_triples.where_when import prepare_where_meta_triple_list, prepare_when_meta_triple_list
+from ro.webdata.oniq.nlp.nlp_utils import is_wh_noun_chunk
+from ro.webdata.oniq.nlp.noun_utils import get_nouns
+from ro.webdata.oniq.nlp.stmt_utils import consolidate_statement_list
+from ro.webdata.oniq.nlp.targets import prepare_target_list
 
 
 class Query:
     def __init__(self, endpoint: str, statements: [Statement]):
-        self.target_list = _prepare_target_list(statements)
-        # self.meta_triple_list = _prepare_meta_triple_list(endpoint, statements)
+        cons_statements = consolidate_statement_list(statements)
+        rdf_props = rdf_utils.get_properties(endpoint)
 
-        for target in self.target_list:
-            if PRINT_MODE.PRINT_TARGET is True:
-                print(target)
+        self.target_list = _prepare_target_list(rdf_props, cons_statements)
+        self.meta_triple_list = _prepare_meta_triple_list(rdf_props, cons_statements)
 
-
-    @staticmethod
-    def get_prefixes(endpoint):
-        namespaces = rdf_utils.get_namespaces(endpoint)
-        prefixes = ''
-
-        for i in range(len(namespaces)):
-            namespace = namespaces[i]
-            left_space = '\n' if i > 0 else ''
-            prefixes += f'{left_space}PREFIX {namespace.label}: <{namespace.name}>'
-
-        return prefixes
-
-    def get_targets_str(self, indentation=''):
-        targets_str = ''
-
-        for target in self.targets:
-            targets_str += target.get_variable_pattern()
-
-        return targets_str.rstrip()
-
-    def get_where_block(self, indentation='\t'):
-        triples_str = ''
-
-        for meta_triple in self.meta_triples:
-            triples_str += meta_triple.triple.get_triple_pattern() + '.\n'
-
-        return triples_str.rstrip()
-
-    def get_filter_block(self, indentation='\t'):
-        filter_str = ''
-
-        for meta_triple in self.meta_triples:
-            filter_str += f'{meta_triple.filter.get_filter_pattern()}\n'
-
-        return filter_str.rstrip()
-
-    def __str__(self):
-        return self.get_str()
-
-    def get_str(self, indentation=''):
-        meta_triples_str = ""
-        tab = '\t\t'
-
-        for i in range(len(self.meta_triples)):
-            meta_triple = self.meta_triples[i]
-            meta_triples_str += f'{indentation}{meta_triple.get_str(tab)}'
-            meta_triples_str += ',\n' if i < len(self.meta_triples) - 1 else ''
-
-        return (
-            f'{indentation}query: {{\n'
-            f'{indentation}\ttargets: {self.targets},\n'
-            f'{indentation}\tmeta triples: [\n'
-            f'{indentation}{meta_triples_str}\n'
-            f'{indentation}\t]\n'
-            f'{indentation}}}'
-        )
+        echo.target_list(self.target_list)
 
 
-def _prepare_targets(endpoint, statements):
-    targets = []
-    prev_prop = None
-    prev_stmt_type = None
-
-    for i in range(0, len(statements)):
-        stmt = statements[i]
-        verb = stmt.action.verb.get_verb()
-        prop = _get_matched_property(endpoint, verb)
-        target_token = _get_target_token(stmt)
-
-        if target_token is not None:
-            if stmt.type != prev_stmt_type or not prop.__eq__(prev_prop):
-                # TODO: 'Which statues do not have more than three owners?'
-                targets.append(Target(target_token.lemma_, [target_token], stmt.type))
-            else:
-                target = targets[i - 1]
-                target.values.append(target_token)
-                target.name = SEPARATOR.STRING.join([value.lemma_ for value in target.values])
-
-            prev_prop = prop
-            prev_stmt_type = stmt.type
-
-    return targets
-
-
-def _get_target_token(stmt):
+def _prepare_target_list(rdf_props: [Property], cons_statements: [ConsolidatedStatement]):
     """
-    Get the target from the user query (the noun in the TYPE_SELECT_CLAUSE statement)
-    :param stmt: The query statement
-    :return: The noun (singular / mass / plural)
+    Get the list of unique targets in each statement
+
+    :param rdf_props: TODO
+    :param cons_statements: The list of statements
+    :return: The list of unique targets
     """
 
-    if stmt.type == SENTENCE_TYPE.SELECT_CLAUSE:
-        return next((
-            token for token in stmt.phrase
-            if token.pos_ == "NOUN" and token.tag_ in ["NN", "NNS"]
-        ), None)
+    target_list = []
 
-    return None
+    for cons_stmt in cons_statements:
+        target_list += prepare_target_list(rdf_props, cons_stmt)
 
-
-"""
-_consolidate_meta_triples documentation
-input = Which paintings or statues are located in Bacau?
-
-prep_meta_triples = [
-    {
-        triple: { <painting_statue> <edm:currentLocation> <edm_currentLocation> },
-        pill: target pills: [ { [] <painting_statue> <contains> <paintings> } ]
-    },
-    {
-        triple: { <painting_statue> <edm:currentLocation> <edm_currentLocation> },
-        pill: target pills: [ { [or] <painting_statue> <contains> <statues> } ]
-    }
-]
-meta_triples = [
-    {
-        triple: { <painting_statue> <edm:currentLocation> <edm_currentLocation> },
-        pill: target pills: [
-            { [] <painting_statue> <contains> <paintings> },
-            { [or] <painting_statue> <contains> <statues> }
-        ]
-    }
-]
-"""
+    return list(set(target_list))
 
 
-def _consolidate_meta_triples(endpoint, statements):
-    prep_meta_triples: [MetaTriple] = _prepare_meta_triples(endpoint, statements)
-    meta_triples = _get_base_meta_triples(endpoint, statements)
+def _prepare_meta_triple_list(rdf_props: [Property], cons_statements: [Statement]):
+    meta_triple_list = []
 
-    for prep_meta_triple in prep_meta_triples:
-        for meta_triple in meta_triples:
-            if meta_triple.triple.__eq__(prep_meta_triple.triple):
-                meta_triple.pills.targets = meta_triple.pills.targets + prep_meta_triple.pills.targets
+    for cons_stmt in cons_statements:
+        meta_triple = None
+        chunk = cons_stmt.phrase.chunk
 
-    print('------')
-    for meta in prep_meta_triples:
-        print(meta)
-    print('------')
-    for meta in meta_triples:
-        print(meta)
+        if is_wh_noun_chunk(chunk):
+            target_list = prepare_target_list(rdf_props, cons_stmt)
 
-    return meta_triples
+            for target in target_list:
+                if chunk[0].lower_ == QUESTION_TYPES.WHERE:
+                    mt_list = prepare_where_meta_triple_list(rdf_props, cons_stmt, target)
+                    print(mt_list)
+                elif chunk[0].lower_ == QUESTION_TYPES.WHEN:
+                    mt_list = prepare_when_meta_triple_list(rdf_props, cons_stmt, target)
+                    print(mt_list)
+        else:
+            print(chunk)
 
-
-"""
-_get_base_meta_triples documentation
-input = Which paintings or statues are located in Bacau?
-
-in_meta_triples = [
-    {
-        triple: { <painting_statue> <edm:currentLocation> <edm_currentLocation> },
-        pill: target pills: [{  <painting_statue> <contains> <paintings> }]
-    },
-    {
-        triple: { <painting_statue> <edm:currentLocation> <edm_currentLocation> },
-        pill: target pills: [{ [or] <painting_statue> <contains> <statues> }]
-    }
-]
-base_meta_triples = [
-    {
-        triple: { <painting_statue> <edm:currentLocation> <edm_currentLocation> },
-        pill: None
-    }
-]
-"""
+    return meta_triple_list
 
 
-def _get_base_meta_triples(endpoint, statements):
-    base_meta_triples: [MetaTriple] = []
-    in_meta_triples: [MetaTriple] = _prepare_meta_triples(endpoint, statements)
+def _prepare_meta_triple_list_bk(endpoint: str, statements: [Statement]):
+    """
+    Generate the list of meta triples
 
-    for in_meta_triple in in_meta_triples:
-        in_triple = in_meta_triple.triple
+    :param endpoint: The SPARQL endpoint
+    :param statements: The list of generated statements
+    :return: The list of meta triples
+    """
 
-        filtered = [meta_triple.triple for meta_triple in base_meta_triples if in_triple.__eq__(meta_triple.triple)]
-        if len(filtered) == 0:
-            base_meta_triples.append(MetaTriple(in_triple))
-
-    return base_meta_triples
-
-
-def _prepare_meta_triples(endpoint, statements):
-    meta_triples: [MetaTriple] = []
-    targets = _prepare_targets(endpoint, statements)
+    meta_triple_list = []
 
     for stmt in statements:
-        verb = stmt.action.verb.get_verb()
-        negation = stmt.action.verb.neg
-        logical_operation = stmt.logical_operation
+        meta_triple = None
+        first_word = stmt.phrase[0]
+        backend_prop = _get_backend_property(endpoint, stmt.action.verb)
 
-        prop = _get_matched_property(endpoint, verb)
-        target_item = _get_target_token(stmt)
+        # TODO: 'when'
+        if first_word.lower_ in ['where']:
+            meta_triple = prepare_where_meta_triple(stmt.related_phrases, backend_prop)
+        else:
+            for noun in get_nouns([stmt.phrase]):
+                target = Target(noun)
+                meta_triple = _prepare_meta_triple(backend_prop, target, stmt)
 
-        if stmt.type == SENTENCE_TYPE.SELECT_CLAUSE:
-            target = list(filter(lambda item: target_item in item.values != -1, targets))
-            triple_s = target[0].name
-            triple_p = prop.prop_name_extended if prop is not None else None
-            triple_o = prop.prop_name_extended.replace(SEPARATOR.NAMESPACE, SEPARATOR.STRING) if prop is not None else None
+        if meta_triple is not None:
+            meta_triple_list.append(meta_triple)
 
-            triple = Triple(triple_s, triple_p, triple_o)
-            target_pill = Pill(logical_operation, triple_s, negation, COMPARISON_OPERATORS.CONTAINS, target_item.text)
-            pills = Pills([target_pill])
-
-            meta_triples.append(MetaTriple(triple, pills))
-        elif stmt.type == SENTENCE_TYPE.WHERE_CLAUSE:
-            # TODO: TYPE_WHERE_CLAUSE
-            print(f'Query.py: stmt.type {stmt.type} is not implemented')
-
-    return meta_triples
+    return meta_triple_list
 
 
-def _get_matched_property(endpoint, verb):
-    # if there is an auxiliary verb
-    if isinstance(verb, list):
-        return None
+def _prepare_meta_triple(prop: Property, target: Target, stmt: Statement):
+    pill_list = []
+    triple = Triple(target, prop)
+
+    for value in get_nouns(stmt.related_phrases):
+        # TODO: triple.s is not correct !!!
+        pill = Pill(triple.s, stmt.action.neg, COMPARISON_OPERATORS.CONTAINS, value)
+        pill_list.append(pill)
+
+    meta_triple = MetaTriple(triple, pill_list)
+
+    return meta_triple
+
+
+def _get_backend_property(endpoint, primary_verb):
+    """
+    TODO
+    Get the name of the backend property which best matches main_verb.
+    # Get nothing (None) if main_verb is missing.
+
+    :param endpoint: The SPARQL endpoint
+    :param verb: The verb statement
+    :return: The name of the backend property
+    """
+
+    # # if the main verb is missing
+    # if not verb.has_main_verb():
+    #     return None
+    # # TODO: momentan trateaza exemplul urmator: "Where is the museum?"
+    # primary_verb = verb.main_vb.lemma_ if verb.main_vb is not None else verb.aux_vbs[0].lemma_
+    # primary_verb = 'location' if primary_verb == 'be' else primary_verb
 
     properties = rdf_utils.get_properties(endpoint)
-    match = Match(endpoint, verb.text)
+    match = Match(endpoint, [primary_verb])
 
     # TODO: add support for all properties from "matched" set
     for prop in properties:

@@ -1,11 +1,12 @@
 from ro.webdata.oniq.common.constants import PREFIX, SEPARATOR
+from ro.webdata.oniq.model.rdf.Property import Property
 
 
 class Triple:
-    def __init__(self, s: str = None, p: str = None, o: str = None):
-        self.s = s
-        self.p = p
-        self.o = o
+    def __init__(self, target_name: str = None, prop: Property = None):
+        self.s = target_name
+        self.p = prop.prop_name_extended if prop is not None else None
+        self.o = prop.prop_name_extended.replace(SEPARATOR.NAMESPACE, SEPARATOR.STRING) if prop is not None else None
 
     def __str__(self):
         return self.get_str()

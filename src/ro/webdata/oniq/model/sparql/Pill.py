@@ -3,24 +3,25 @@ from ro.webdata.oniq.common.constants \
 
 
 class Pill:
-    def __init__(self, logical_operation=None, key: str = None, negation: str = None, operator=None, values: str = None):
+    def __init__(self, key: str = None, negation: str = None, operator=None, value: str = None):
         self.key = key
         self.operator = operator
-        self.values = values
-        self.logical_operation = logical_operation
+        self.value = value
+        # self.logical_operation = logical_operation
         self.negation = negation
 
     def __str__(self):
         return self.get_str('\t\t')
 
     def get_str(self, indentation=''):
-        logical_operation = f'[{self.logical_operation}]' if self.logical_operation.name is not None else '[]'
+        # logical_operation = f'[{self.logical_operation}]' if self.logical_operation.name is not None else '[]'
         key = f'<{self.key}>'
         operator = f'<{self.operator}>'
-        values = f'<{self.values}>'
+        value = f'<{self.value}>'
 
         return (
-            f'{indentation}{{ {logical_operation} {key} {operator} {values} }}'
+            # f'{indentation}{{ {logical_operation} {key} {operator} {value} }}'
+            f'{indentation}{{ {key} {operator} {value} }}'
         )
 
     def get_pill_pattern(self, indentation='\t'):
@@ -29,7 +30,7 @@ class Pill:
             f'{indentation}'
             f'{_get_operand(variable, True, True)}{SEPARATOR.TRIPLE_PATTERN}'
             f'{_get_operator(self)}{SEPARATOR.TRIPLE_PATTERN}'
-            f'{_get_operand(self.values, False, True)}'
+            f'{_get_operand(self.value, False, True)}'
         )
 
 
