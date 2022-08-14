@@ -1,3 +1,4 @@
+import json
 from typing import List
 
 import pydash
@@ -5,15 +6,17 @@ import requests
 from spacy.tokens import Span, Token
 
 from ro.webdata.oniq.common.text_utils import WORD_SEPARATOR
-from ro.webdata.oniq.endpoint.common.match.PropertyMatcher import PropertiesMatcher
+from ro.webdata.oniq.endpoint.common.match.PropertiesMatcher import PropertiesMatcher
+from ro.webdata.oniq.endpoint.common.match.PropertyMatcher import PropertyMatcher
 from ro.webdata.oniq.endpoint.common.translator.CSVTranslator import CSVTranslator
 from ro.webdata.oniq.endpoint.common.translator.URITranslator import URITranslator
 from ro.webdata.oniq.endpoint.dbpedia.constants import DBPEDIA_CLASS_TYPES
 from ro.webdata.oniq.endpoint.dbpedia.query import DBpediaQueryService
 from ro.webdata.oniq.endpoint.dbpedia.sparql_query import DBP_PROPERTIES_OF_RESOURCE_QUERY
 from ro.webdata.oniq.endpoint.dbpedia.sparql_query import DBP_RESOURCE_QUERY, DBP_ONTOLOGY_RESOURCE_QUERY
-from ro.webdata.oniq.endpoint.models.RDFElement import RDFClass, ROOT_CLASS_URI
+from ro.webdata.oniq.endpoint.models.RDFElement import RDFClass, RDFProperty, ROOT_CLASS_URI
 from ro.webdata.oniq.endpoint.namespace import NAMESPACE
+from ro.webdata.oniq.service.query_const import ACCESSORS, PATHS
 
 _MAX_LOOKUP_RESULTS = 10
 _NAME_TYPE_SEPARATOR = ','
@@ -89,23 +92,52 @@ class LookupService:
         return response.json().get("docs")
 
     @staticmethod
-    def property_lookup(resource_name, action):
+    def property_lookup(resource_name, action, result_type):
         """
         Lookup for the property which has the highest similarity degree with the verb.
 
         Args:
-            resource_name (str): Name of the resource (E.g.: "Barda_Mausoleum").
-            action (Token): Target verb used for looking up for a property.
+            resource_name (str):
+                Name of the resource (E.g.: "Barda_Mausoleum").
+            action (Token):
+                Target word used for looking up for a property.
+            result_type (str|None):
+                Type of the expected result.
+                E.g.: "place", "person", etc. (check DBPEDIA_CLASS_TYPES).
 
         Returns:
              RDFProperty: Property having the highest similarity degree with the verb.
         """
 
-        sparql_query = DBP_PROPERTIES_OF_RESOURCE_QUERY % resource_name
-        props = DBpediaQueryService.run_properties_query(sparql_query)
+        best_matched = None
 
-        matcher = PropertiesMatcher(props, action)
-        best_matched = matcher.get_best_matched()
+        # E.g.: "Where is Barda Mausoleum located?"
+        #   => "Barda Mausoleum"
+        if resource_name is not None:
+            sparql_query = DBP_PROPERTIES_OF_RESOURCE_QUERY % resource_name
+            props = DBpediaQueryService.run_properties_query(sparql_query)
+            best_matched = PropertiesMatcher.get_best_matched(props, action, result_type)
+
+        # E.g.: "Where was the person born whose successor was Le Hong Phong?"
+        #   => "person"
+        else:
+            matcher_uri = f'http://localhost:8200/{PATHS.MATCHER}?' \
+                          f'{ACCESSORS.QUESTION}={action.sent}&' \
+                          f'{ACCESSORS.ACTION_INDEX}={action.i}&' \
+                          f'{ACCESSORS.RESULT_TYPE}={result_type}'
+            entities_response = requests.get(matcher_uri)
+            response = json.loads(entities_response.content)
+            prop_json = json.loads(response[ACCESSORS.PROPERTY])
+            prop = RDFProperty(
+                prop_json["uri"],
+                prop_json["parent_uris"],
+                prop_json["label"],
+                prop_json["ns"],
+                prop_json["ns_label"],
+                prop_json["res_domain"],
+                prop_json["res_range"]
+            )
+            best_matched = PropertyMatcher(prop, action, result_type)
 
         return pydash.get(best_matched, "property")
 

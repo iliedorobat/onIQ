@@ -5,17 +5,23 @@ from ro.webdata.oniq.endpoint.models.RDFElement import RDFCategory, RDFClass, RD
 
 class RDFElements:
     """
-    Representation of the list of RDF elements (RDFElement,
-    RDFCategory, RDFClass, RDFProperty).
+    Representation of the list of RDF elements (RDFElement, RDFCategory,
+    RDFClass, RDFProperty).
 
     Attributes:
         elements (List[Union[RDFElement, RDFCategory, RDFClass, RDFProperty]]):
-            List of RDFElement, RDFCategory, RDFClass, RDFProperty
+            List of RDFElement, RDFCategory, RDFClass, RDFProperty items.
     """
 
     elements: List[Union[RDFElement, RDFCategory, RDFClass, RDFProperty]]
 
     def __init__(self, elements: List[Union[RDFElement, RDFCategory, RDFClass, RDFProperty]]):
+        """
+        Args:
+            elements (List[Union[RDFElement, RDFCategory, RDFClass, RDFProperty]]):
+                Initial list of RDFElement, RDFCategory, RDFClass, RDFProperty items.
+        """
+
         self.elements = elements
 
     def __len__(self):
@@ -25,9 +31,6 @@ class RDFElements:
         return self.elements[item]
 
     def __str__(self):
-        return self.to_str()
-
-    def to_str(self):
         string = ", ".join(
             [str(element) for element in self.elements]
         )
@@ -36,7 +39,7 @@ class RDFElements:
 
     def append(self, element: Union[RDFElement, RDFCategory, RDFClass, RDFProperty]):
         """
-        Add new element to the list of elements.
+        Add a new element to the list of elements.
 
         Args:
             element (RDFElement, RDFCategory, RDFClass, RDFProperty):
@@ -61,7 +64,7 @@ class RDFElements:
 
     def exists(self, uri):
         """
-        Check if the input URI exists in the input list of elements
+        Check if the input URI exists in the input list of elements.
 
         E.g.:
             * RDFClass:

@@ -20,6 +20,7 @@ class SYSTEM_MESSAGES:
     METHOD_NOT_TESTED = "The method has not been tested!"
     METHOD_NOT_USED = "The method is not used anymore!"
     METHOD_USED_WITH_SPACY_2 = "The method is intended to be used with Spacy v2"
+    VECTORS_NOT_AVAILABLE = f'No vectors are available for word "%s"'
 
 
 # https://stackoverflow.com/questions/287871/how-to-print-colored-text-in-python#answer-287944

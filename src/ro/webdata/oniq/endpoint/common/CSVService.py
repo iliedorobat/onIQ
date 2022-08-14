@@ -1,3 +1,5 @@
+import os
+
 CSV_COLUMN_SEPARATOR = "|"
 CSV_VALUE_SEPARATOR = " && "
 
@@ -12,13 +14,44 @@ class CSVService:
     """
 
     @staticmethod
-    def read_lines(filepath, exclude_header=True):
+    def append_line(path, filename, csv_line, header, separator=CSV_COLUMN_SEPARATOR):
         """
-        Read the content of a CSV file. Throw an exception if the file
-        extension does not end with <b>.csv</b>.
+        Add a line to the target CSV file. Throw an exception if the
+        file extension does not end with <b>.csv</b>.
 
         Args:
-            filepath (str): Full path of the target file.
+            path (str): Path of the target CSV file.
+            filename (str): Name of the file (E.g.: "best_matched").
+            csv_line (str): CSV line that will be written to disk.
+            header (List[str]): List of column names.
+            separator (str): CSV column separator.
+
+        Raises:
+            SyntaxError: If <b>filepath</b> does not end with <b>.csv</b>.
+        """
+
+        filepath = path + "/" + filename + ".csv"
+
+        if not os.path.exists(path):
+            os.makedirs(path)
+
+        if not os.path.isfile(filepath):
+            file = open(filepath, "w+")
+            file.write(separator.join(header) + "\n")
+            file.close()
+
+        file = open(filepath, "a+")
+        file.write(csv_line + "\n")
+        file.close()
+
+    @staticmethod
+    def read_lines(filepath, exclude_header=True):
+        """
+        Read the content of the target CSV file. Throw an exception if
+        the file extension does not end with <b>.csv</b>.
+
+        Args:
+            filepath (str): Full path of the target CSV file.
             exclude_header (bool): Flag used to remove or not the header
             (the first line of the CSV file).
 
@@ -31,6 +64,9 @@ class CSVService:
 
         if not filepath.lower().endswith(".csv"):
             raise SyntaxError("CSVService.read_lines: The only supported file extension is \".csv\"!")
+
+        if not os.path.isfile(filepath):
+            return []
 
         file = open(filepath, 'r+')
         lines = file.readlines()

@@ -3,8 +3,7 @@ from typing import List
 
 from progress.bar import Bar
 
-from ro.webdata.oniq.endpoint.common.CSVService import CSVService
-from ro.webdata.oniq.endpoint.common.CSVService import CSV_COLUMN_SEPARATOR
+from ro.webdata.oniq.endpoint.common.CSVService import CSVService, CSV_COLUMN_SEPARATOR
 from ro.webdata.oniq.endpoint.common.path_const import DBPEDIA_ENTITIES_PATH
 from ro.webdata.oniq.endpoint.common.path_const import ENTITIES_PATH
 from ro.webdata.oniq.endpoint.common.path_utils import get_filenames, get_dbpedia_file_path, get_root_path

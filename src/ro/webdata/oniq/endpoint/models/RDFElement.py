@@ -1,3 +1,4 @@
+import json
 from typing import List
 
 from ro.webdata.oniq.common.text_utils import WORD_SEPARATOR
@@ -70,13 +71,34 @@ class RDFElement:
         return self.uri == other.uri
 
     def __str__(self):
-        return self.to_str()
+        return self.ns_label + NAMESPACE_SEPARATOR + self.name
 
     @staticmethod
     def get_csv_headers():
+        """
+        Get the list of column names.
+        """
+
         return ['namespace label', 'resource label', 'namespace', 'resource uri', 'parent uri']
 
-    def to_csv(self, separator: str = CSV_COLUMN_SEPARATOR):
+    def serialize(self):
+        """
+        Serialize the class to a JSON-like string.
+        """
+
+        return json.dumps(self.__dict__)
+
+    def to_csv(self, separator=CSV_COLUMN_SEPARATOR):
+        """
+        Prepare the CSV entry.
+
+        Args:
+            separator (str): CSV column separator.
+
+        Returns:
+            str: CSV entry.
+        """
+
         return separator.join([
             self.ns_label,
             self.label,
@@ -84,9 +106,6 @@ class RDFElement:
             self.uri,
             CSV_VALUE_SEPARATOR.join(self.parent_uris)
         ])
-
-    def to_str(self):
-        return self.ns_label + NAMESPACE_SEPARATOR + self.name
 
     def label_to_tokens(self):
         """
@@ -264,8 +283,8 @@ class RDFEntity(RDFElement):
         self.res_type = res_type
 
     def __eq__(self, other):
-        # only equality tests to other 'RDFProperty' instances are supported
-        if not isinstance(other, RDFProperty):
+        # only equality tests to other 'RDFEntity' instances are supported
+        if not isinstance(other, RDFEntity):
             return NotImplemented
         return self.uri == other.uri
 
@@ -274,9 +293,23 @@ class RDFEntity(RDFElement):
 
     @staticmethod
     def get_csv_headers():
+        """
+        Get the list of column names.
+        """
+
         return ['namespace label', 'resource label', 'resource name', 'namespace', 'resource uri', 'resource type']
 
-    def to_csv(self, separator: str = CSV_COLUMN_SEPARATOR):
+    def to_csv(self, separator=CSV_COLUMN_SEPARATOR):
+        """
+        Prepare the CSV entry.
+
+        Args:
+            separator (str): CSV column separator.
+
+        Returns:
+            str: CSV entry.
+        """
+
         return separator.join([
             self.ns_label,
             self.label,
@@ -346,9 +379,23 @@ class RDFProperty(RDFElement):
 
     @staticmethod
     def get_csv_headers():
+        """
+        Get the list of column names.
+        """
+
         return ['namespace label', 'resource label', 'namespace', 'resource uri', 'parent uri', 'domain', 'range']
 
-    def to_csv(self, separator: str = CSV_COLUMN_SEPARATOR):
+    def to_csv(self, separator=CSV_COLUMN_SEPARATOR):
+        """
+        Prepare the CSV entry.
+
+        Args:
+            separator (str): CSV column separator.
+
+        Returns:
+            str: CSV entry.
+        """
+
         return separator.join([
             self.ns_label,
             self.label,
