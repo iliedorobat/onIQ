@@ -87,6 +87,7 @@ class CachedMatches:
         Args:
             separator (str): CSV column separator.
         """
+
         self.elements = []
 
         for csv_line in CSVService.read_lines(MATCHED_ENTRIES_FILEPATH, True):

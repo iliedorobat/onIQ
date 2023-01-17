@@ -133,3 +133,4 @@ dmypy.json
 .idea
 out/production
 /files/dbpedia
+/files/patterns

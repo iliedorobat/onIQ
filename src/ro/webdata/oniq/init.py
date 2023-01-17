@@ -1,6 +1,5 @@
 import os
 
-import nltk
 import spacy
 
 from progress.bar import Bar
@@ -15,51 +14,8 @@ from ro.webdata.oniq.endpoint.dbpedia.setup import DBpediaSetup
 class Initializer:
     @staticmethod
     def init():
-        Initializer.init_spacy()
-        Initializer.init_nltk()
-        Initializer.install_deps()
         Initializer.init_dbpedia()
         Initializer.init_patterns()
-
-    @staticmethod
-    def init_spacy():
-        """
-        Install <b>spacy</b>, its dependencies and download models.
-        """
-
-        os.system("pip install -U pip setuptools wheel")
-        os.system("pip install -U spacy")
-        # TODO: to read: https://towardsdatascience.com/named-entity-recognition-with-spacy-and-the-mighty-roberta-97d879f981#c19e
-        os.system("pip install spacy-transformers")
-        os.system("pip install spacy-wordnet")
-        os.system("python -m spacy download en_core_web_sm")
-        os.system("python -m spacy download en_core_web_md")
-        os.system("python -m spacy download en_core_web_trf")
-
-    @staticmethod
-    def init_nltk():
-        """
-        Install <b>NLTK</b> and download models.
-        """
-
-        os.system("pip install --user -U nltk")
-        nltk.download('wordnet')
-        nltk.download('punkt')
-
-    @staticmethod
-    def install_deps():
-        """
-        Install dependencies.
-        """
-
-        os.system("pip install --user -U numpy")
-        os.system("pip install parse")
-        os.system("pip install langdetect")
-        os.system("pip install SPARQLWrapper")
-        os.system("pip install iteration-utilities")
-        os.system("pip install progress")
-        os.system("pip install pydash")
-        os.system("pip install sphinx")
 
     @staticmethod
     def init_dbpedia():
@@ -97,6 +53,7 @@ class Initializer:
         """
 
         console.info("Initializing of entities patterns started...")
+        # TODO: complete the list of patterns as needed
         _add_ruler_patterns("FAC", DBPEDIA_CLASS_TYPES.ARCHITECTURAL_STRUCTURE)
         _add_ruler_patterns("PERSON", DBPEDIA_CLASS_TYPES.PERSON)
         console.info("All patterns have been written to disk!")
