@@ -4,17 +4,17 @@ from typing import Union
 from spacy.tokens import Doc, Span, Token
 
 from ro.webdata.oniq.common.nlp.utils import is_doc_or_span
-from ro.webdata.oniq.common.nlp.word_utils import get_prev_word, is_wh_word
+from ro.webdata.oniq.common.nlp.word_utils import get_prev_word, is_wh_word, get_next_word
 from ro.webdata.oniq.common.print_utils import SYSTEM_MESSAGES
 from ro.webdata.oniq.common.text_utils import MONTHS, array_exists_in_text, remove_determiner
 
 
 def get_cardinals(sentence: Span):
     """
-    Get the list of cardinals in a chunk
+    Get the list of cardinals in a chunk.
 
-    :param sentence: The target sentence
-    :return: The list of cardinals
+    :param sentence: The target sentence.
+    :return: The list of cardinals.
     """
 
     warnings.warn(SYSTEM_MESSAGES.METHOD_NOT_USED, DeprecationWarning)
@@ -27,12 +27,14 @@ def get_cardinals(sentence: Span):
 
 def get_next_token(word: Token, pos_list: [str]):
     """
-    Get the next token which POS is not in pos_list
+    Get the next token which POS is not in pos_list.
 
-    :param word: The target token
-    :param pos_list: The list of POS for which the iteration is allowed
-    :return: The token after the target token which POS not in pos_list
+    :param word: The target token.
+    :param pos_list: The list of POS for which the iteration is allowed.
+    :return: The token after the target token which POS not in pos_list.
     """
+
+    warnings.warn(SYSTEM_MESSAGES.METHOD_NOT_USED, DeprecationWarning)
 
     if not isinstance(word, Token) or not isinstance(pos_list, list):
         return None
@@ -41,13 +43,7 @@ def get_next_token(word: Token, pos_list: [str]):
     last_index = len(sentence) - 1
     next_index = word.i + 1
 
-    if next_index > last_index:
-        return None
-
-    if next_index == last_index:
-        return sentence[next_index]
-
-    next_word = sentence[next_index]
+    next_word = get_next_word(word)
 
     for i in range(next_index, last_index):
         token = sentence[i]
@@ -65,17 +61,19 @@ def get_next_token(word: Token, pos_list: [str]):
 def get_wh_adverbs(document: Union[Doc, Span]):
     """
     Get the list of WH-adverbs (tag = 'WRB'):\n
-    - when, where, why\n
-    - whence, whereby, wherein, whereupon\n
-    - how\n
+        - when, where, why\n
+        - whence, whereby, wherein, whereupon\n
+        - how\n
 
     Resources:\n
-    - https://grammar.collinsdictionary.com/easy-learning/wh-words\n
-    - https://www.ling.upenn.edu/hist-corpora/annotation/pos-wh.htm
+        - https://grammar.collinsdictionary.com/easy-learning/wh-words\n
+        - https://www.ling.upenn.edu/hist-corpora/annotation/pos-wh.htm
 
-    :param document: The parsed document
-    :return: The list of WH-adverbs
+    :param document: The parsed document.
+    :return: The list of WH-adverbs.
     """
+
+    warnings.warn(SYSTEM_MESSAGES.METHOD_NOT_USED, DeprecationWarning)
 
     if not is_doc_or_span(document):
         return []
@@ -86,15 +84,17 @@ def get_wh_adverbs(document: Union[Doc, Span]):
 def get_wh_determiners(document: Union[Doc, Span]):
     """
     Get the list of WH-determiners (tag = 'WDT'):\n
-    - what, which, whose\n
+        - what, which, whose\n
 
     Resources:\n
-    - https://grammar.collinsdictionary.com/easy-learning/wh-words\n
-    - https://www.ling.upenn.edu/hist-corpora/annotation/pos-wh.htm
+        - https://grammar.collinsdictionary.com/easy-learning/wh-words\n
+        - https://www.ling.upenn.edu/hist-corpora/annotation/pos-wh.htm
 
-    :param document: The parsed document
-    :return: The list of WH-determiners
+    :param document: The parsed document.
+    :return: The list of WH-determiners.
     """
+
+    warnings.warn(SYSTEM_MESSAGES.METHOD_NOT_USED, DeprecationWarning)
 
     if not is_doc_or_span(document):
         return []
@@ -104,16 +104,18 @@ def get_wh_determiners(document: Union[Doc, Span]):
 
 def get_wh_pronouns(document: Union[Doc, Span]):
     """
-    Get the list of WH-pronouns (tag in ['WP', 'WP$'])\n
-    - who, whose, which, what\n
+    Get the list of WH-pronouns (tag in ['WP', 'WP$']):\n
+        - who, whose, which, what\n
 
     Resources:\n
-    - https://grammar.collinsdictionary.com/easy-learning/wh-words\n
-    - https://www.ling.upenn.edu/hist-corpora/annotation/pos-wh.htm
+        - https://grammar.collinsdictionary.com/easy-learning/wh-words\n
+        - https://www.ling.upenn.edu/hist-corpora/annotation/pos-wh.htm
 
-    :param document: The parsed document
-    :return: The list of WH-pronouns
+    :param document: The parsed document.
+    :return: The list of WH-pronouns.
     """
+
+    warnings.warn(SYSTEM_MESSAGES.METHOD_NOT_USED, DeprecationWarning)
 
     if not is_doc_or_span(document):
         return []
@@ -123,20 +125,22 @@ def get_wh_pronouns(document: Union[Doc, Span]):
 
 def get_wh_words(document: Union[Doc, Span]):
     """
-    Get the list of WH-words\n
-    - when, where, why\n
-    - whence, whereby, wherein, whereupon\n
-    - how\n
-    - what, which, whose\n
-    - who, whose, which, what\n
+    Get the list of WH-words:\n
+        - when, where, why\n
+        - whence, whereby, wherein, whereupon\n
+        - how\n
+        - what, which, whose\n
+        - who, whose, which, what\n
 
     Resources:\n
-    - https://grammar.collinsdictionary.com/easy-learning/wh-words\n
-    - https://www.ling.upenn.edu/hist-corpora/annotation/pos-wh.htm
+        - https://grammar.collinsdictionary.com/easy-learning/wh-words\n
+        - https://www.ling.upenn.edu/hist-corpora/annotation/pos-wh.htm
 
-    :param document: The parsed document
-    :return: The list of WH-words
+    :param document: The parsed document.
+    :return: The list of WH-words.
     """
+
+    warnings.warn(SYSTEM_MESSAGES.METHOD_NOT_USED, DeprecationWarning)
 
     if not is_doc_or_span(document):
         return []
@@ -144,8 +148,16 @@ def get_wh_words(document: Union[Doc, Span]):
     return list([token for token in document if token.tag_ in ['WDT', 'WP', 'WP$', 'WRB']])
 
 
-# TODO: ilie.dorobat: add the documentation
 def is_wh_noun_chunk(chunk: Span):
+    """
+    Determine if the input chunk is a WH-noun chunk.
+
+    :param chunk: The target chunk.
+    :return: True/False
+    """
+
+    warnings.warn(SYSTEM_MESSAGES.METHOD_NOT_USED, DeprecationWarning)
+
     if not isinstance(chunk, Span) or len(chunk) > 1:
         return False
 
@@ -154,7 +166,7 @@ def is_wh_noun_chunk(chunk: Span):
 
 def is_wh_noun_phrase(phrase: Union[Doc, Span]):
     """
-    Determine if the phrase is a WH-noun phrase
+    Determine if the input phrase is a WH-noun phrase.
 
     E.g.:
         - question: "Which is the noisiest and the largest city?"
@@ -164,7 +176,7 @@ def is_wh_noun_phrase(phrase: Union[Doc, Span]):
         - question: "Who is the most beautiful woman?"
         - Wh-noun phrase: "Who"
 
-    :param phrase: The target phrase/chunk/document
+    :param phrase: The target phrase/chunk/document.
     :return: True/False
     """
 
@@ -179,11 +191,10 @@ def is_wh_noun_phrase(phrase: Union[Doc, Span]):
 
 def retokenize(document: Union[Doc, Span], sentence: Span):
     """
-    Integrate the named entities into the document and retokenize it
+    Integrate the named entities into the document and retokenize it.
 
-    :param document: The parsed document
-    :param sentence: The target sentence
-    :return: Nothing
+    :param document: The parsed document.
+    :param sentence: The target sentence.
     """
 
     warnings.warn(SYSTEM_MESSAGES.METHOD_USED_WITH_SPACY_2, DeprecationWarning)
@@ -199,15 +210,15 @@ def retokenize(document: Union[Doc, Span], sentence: Span):
 
 def _prepare_compound_entity(named_entity: Span):
     """
-    Join two or more words which have a "compound" dependency
+    Join two or more words which have a "compound" dependency.
 
     E.g.:
         - "Where is adam mickiewicz monument?"
         - named_entity: "adam mickiewicz monument"
         - compound_entity: "adam mickiewicz"
 
-    :param named_entity: The initial named entity
-    :return: The compound named_entity
+    :param named_entity: The initial named entity.
+    :return: The compound named_entity.
     """
 
     if not isinstance(named_entity, Span):

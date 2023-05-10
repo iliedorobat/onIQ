@@ -78,7 +78,7 @@ class PropertyMatcher:
         """
 
         return separator.join([
-            self.action,
+            self.action.text,
             self.property.uri,
             str(self.score),
             str(self.detachment_score)

@@ -1,0 +1,930 @@
+namespace label|resource label|namespace|resource uri|parent uri
+dbo|Academic Person|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Academic|http://dbpedia.org/ontology/Person
+dbo|academic conference|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/AcademicConference|http://dbpedia.org/ontology/SocietalEvent
+dbo|academic journal|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/AcademicJournal|http://dbpedia.org/ontology/PeriodicalLiterature
+dbo|academic subject|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/AcademicSubject|http://dbpedia.org/ontology/TopicalConcept
+dbo|activity|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Activity|http://www.w3.org/2002/07/owl#Thing
+dbo|actor|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Actor|http://dbpedia.org/ontology/Artist
+dbo|administrative region|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/AdministrativeRegion|http://dbpedia.org/ontology/Region
+dbo|adult (pornographic) actor|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/AdultActor|http://dbpedia.org/ontology/Actor
+dbo|agent|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Agent|http://www.w3.org/2002/07/owl#Thing
+dbo|agglomeration|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Agglomeration|http://dbpedia.org/ontology/PopulatedPlace
+dbo|aircraft|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Aircraft|http://schema.org/Product && http://dbpedia.org/ontology/MeanOfTransportation
+dbo|airline|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Airline|http://dbpedia.org/ontology/PublicTransitSystem
+dbo|airport|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Airport|http://dbpedia.org/ontology/Infrastructure
+dbo|album|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Album|http://dbpedia.org/ontology/MusicalWork
+dbo|algorithm|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Algorithm|http://www.w3.org/2002/07/owl#Thing
+dbo|altitude|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Altitude|http://www.w3.org/2002/07/owl#Thing
+dbo|amateur boxer|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/AmateurBoxer|http://dbpedia.org/ontology/Boxer
+dbo|ambassador|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Ambassador|http://dbpedia.org/ontology/Politician
+dbo|american football coach|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/AmericanFootballCoach|http://dbpedia.org/ontology/Coach
+dbo|american football league|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/AmericanFootballLeague|http://dbpedia.org/ontology/SportsLeague
+dbo|american football player|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/AmericanFootballPlayer|http://dbpedia.org/ontology/GridironFootballPlayer
+dbo|american football Team|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/AmericanFootballTeam|http://dbpedia.org/ontology/SportsTeam
+dbo|American Leader|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/AmericanLeader|http://dbpedia.org/ontology/Person
+dbo|amphibian|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Amphibian|http://dbpedia.org/ontology/Animal
+dbo|amusement park attraction|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/AmusementParkAttraction|http://dbpedia.org/ontology/ArchitecturalStructure
+dbo|anatomical structure|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/AnatomicalStructure|http://www.w3.org/2002/07/owl#Thing
+dbo|animal|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Animal|http://dbpedia.org/ontology/Eukaryote
+dbo|animanga character|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/AnimangaCharacter|http://dbpedia.org/ontology/ComicsCharacter
+dbo|anime|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Anime|http://dbpedia.org/ontology/Cartoon
+dbo|annotation|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Annotation|http://dbpedia.org/ontology/WrittenWork
+dbo|arachnid|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Arachnid|http://dbpedia.org/ontology/Animal
+dbo|archaea|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Archaea|http://dbpedia.org/ontology/Species
+dbo|archbishop|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Archbishop|http://dbpedia.org/ontology/ChristianBishop
+dbo|archeologist|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Archeologist|http://dbpedia.org/ontology/Person
+dbo|Archer Player|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/ArcherPlayer|http://dbpedia.org/ontology/Athlete
+dbo|archipelago|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Archipelago|http://dbpedia.org/ontology/NaturalPlace
+dbo|architect|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Architect|http://dbpedia.org/ontology/Person
+dbo|architectural structure|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/ArchitecturalStructure|http://www.w3.org/2002/07/owl#Thing
+dbo|area|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Area|http://www.w3.org/2002/07/owl#Thing
+dbo|arena|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Arena|http://schema.org/StadiumOrArena && http://dbpedia.org/ontology/ArchitecturalStructure
+dbo|aristocrat|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Aristocrat|http://dbpedia.org/ontology/Person
+dbo|arrondissement|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Arrondissement|http://dbpedia.org/ontology/GovernmentalAdministrativeRegion
+dbo|artery|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Artery|http://dbpedia.org/ontology/AnatomicalStructure
+dbo|article|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Article|http://dbpedia.org/ontology/WrittenWork
+dbo|artificial satellite|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/ArtificialSatellite|http://dbpedia.org/ontology/Satellite
+dbo|artist|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Artist|http://dbpedia.org/ontology/Person
+dbo|artist discography|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/ArtistDiscography|http://dbpedia.org/ontology/MusicalWork
+dbo|artistic genre|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/ArtisticGenre|http://dbpedia.org/ontology/Genre
+dbo|artwork|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Artwork|http://dbpedia.org/ontology/Work
+dbo|asteroid|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Asteroid|http://dbpedia.org/ontology/CelestialBody
+dbo|astronaut|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Astronaut|http://dbpedia.org/ontology/Person
+dbo|athlete|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Athlete|http://dbpedia.org/ontology/Person
+dbo|athletics|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Athletics|http://dbpedia.org/ontology/Sport
+dbo|athletics player|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/AthleticsPlayer|http://dbpedia.org/ontology/Athlete
+dbo|atoll|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Atoll|http://dbpedia.org/ontology/Island
+dbo|attack|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Attack|http://dbpedia.org/ontology/SocietalEvent
+dbo|australian football league|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/AustralianFootballLeague|http://dbpedia.org/ontology/SportsLeague
+dbo|australian football Team|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/AustralianFootballTeam|http://dbpedia.org/ontology/SportsTeam
+dbo|Australian rules football player|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/AustralianRulesFootballPlayer|http://dbpedia.org/ontology/Athlete
+dbo|auto racing league|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/AutoRacingLeague|http://dbpedia.org/ontology/SportsLeague
+dbo|automobile|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Automobile|http://schema.org/Product && http://dbpedia.org/ontology/MeanOfTransportation
+dbo|automobile engine|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/AutomobileEngine|http://dbpedia.org/ontology/Engine
+dbo|award|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Award|http://www.w3.org/2002/07/owl#Thing
+dbo|back scene|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/BackScene|http://dbpedia.org/ontology/MusicalArtist
+dbo|bacteria|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Bacteria|http://dbpedia.org/ontology/Species
+dbo|badminton player|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/BadmintonPlayer|http://dbpedia.org/ontology/Athlete
+dbo|band|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Band|http://schema.org/MusicGroup && http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#SocialPerson && http://dbpedia.org/ontology/Group
+dbo|bank|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Bank|http://dbpedia.org/ontology/Company
+dbo|baronet|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Baronet|http://dbpedia.org/ontology/BritishRoyalty
+dbo|baseball league|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/BaseballLeague|http://dbpedia.org/ontology/SportsLeague
+dbo|baseball player|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/BaseballPlayer|http://dbpedia.org/ontology/Athlete
+dbo|baseball season|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/BaseballSeason|http://dbpedia.org/ontology/SportsTeamSeason
+dbo|baseball team|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/BaseballTeam|http://dbpedia.org/ontology/SportsTeam
+dbo|basketball league|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/BasketballLeague|http://dbpedia.org/ontology/کھیلوں_کی_انجمن
+dbo|basketball player|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/BasketballPlayer|http://dbpedia.org/ontology/Athlete
+dbo|basketball team|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/BasketballTeam|http://dbpedia.org/ontology/SportsTeam
+dbo|battery|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Battery|http://dbpedia.org/ontology/Device
+dbo|bay|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Bay|http://dbpedia.org/ontology/BodyOfWater
+dbo|beach|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Beach|http://dbpedia.org/ontology/NaturalPlace
+dbo|beach volleyball player|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/BeachVolleyballPlayer|http://dbpedia.org/ontology/VolleyballPlayer
+dbo|beauty queen|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/BeautyQueen|http://dbpedia.org/ontology/Person
+dbo|beer|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Beer|http://dbpedia.org/ontology/Beverage
+dbo|beverage|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Beverage|http://dbpedia.org/ontology/Food
+dbo|biathlete|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Biathlete|http://dbpedia.org/ontology/WinterSportPlayer
+dbo|Biological database|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/BiologicalDatabase|http://dbpedia.org/ontology/Database
+dbo|biologist|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Biologist|http://dbpedia.org/ontology/Scientist
+dbo|biomolecule|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Biomolecule|http://www.w3.org/2002/07/owl#Thing
+dbo|bird|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Bird|http://dbpedia.org/ontology/Animal
+dbo|blazon|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Blazon|http://www.w3.org/2002/07/owl#Thing
+dbo|blood vessel|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/BloodVessel|http://dbpedia.org/ontology/AnatomicalStructure
+dbo|board game|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/BoardGame|http://dbpedia.org/ontology/Game
+dbo|bobsleigh athlete|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/BobsleighAthlete|http://dbpedia.org/ontology/WinterSportPlayer
+dbo|body of water|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/BodyOfWater|http://dbpedia.org/ontology/NaturalPlace
+dbo|bodybuilder|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Bodybuilder|http://dbpedia.org/ontology/Athlete
+dbo|bone|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Bone|http://dbpedia.org/ontology/AnatomicalStructure
+dbo|book|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Book|http://dbpedia.org/ontology/WrittenWork
+dbo|bowling league|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/BowlingLeague|http://dbpedia.org/ontology/SportsLeague
+dbo|boxer|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Boxer|http://dbpedia.org/ontology/Athlete
+dbo|boxing league|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/BoxingLeague|http://dbpedia.org/ontology/SportsLeague
+dbo|brain|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Brain|http://dbpedia.org/ontology/AnatomicalStructure
+dbo|brewery|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Brewery|http://dbpedia.org/ontology/Company
+dbo|bridge|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Bridge|http://dbpedia.org/ontology/RouteOfTransportation
+dbo|British royalty|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/BritishRoyalty|http://dbpedia.org/ontology/Royalty
+dbo|broadcast network|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/BroadcastNetwork|http://dbpedia.org/ontology/Broadcaster
+dbo|broadcaster|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Broadcaster|http://dbpedia.org/ontology/Organisation
+dbo|brown dwarf|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/BrownDwarf|http://dbpedia.org/ontology/Star
+dbo|browser|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Browser|http://www.w3.org/2002/07/owl#Thing
+dbo|building|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Building|http://dbpedia.org/ontology/ArchitecturalStructure
+dbo|bullfighter|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/BullFighter|http://dbpedia.org/ontology/Athlete
+dbo|bus company|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/BusCompany|http://dbpedia.org/ontology/PublicTransitSystem
+dbo|businessperson|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/BusinessPerson|http://dbpedia.org/ontology/Person
+dbo|camera|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Camera|http://dbpedia.org/ontology/Device
+dbo|liga de fútbol canadiense|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/CanadianFootballLeague|http://dbpedia.org/ontology/SportsLeague
+dbo|canadian football Player|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/CanadianFootballPlayer|http://dbpedia.org/ontology/GridironFootballPlayer
+dbo|canadian football Team|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/CanadianFootballTeam|http://dbpedia.org/ontology/SportsTeam
+dbo|canal|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Canal|http://dbpedia.org/ontology/Stream
+dbo|canoeist|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Canoeist|http://dbpedia.org/ontology/Athlete
+dbo|canton|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Canton|http://dbpedia.org/ontology/GovernmentalAdministrativeRegion
+dbo|cape|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Cape|http://dbpedia.org/ontology/NaturalPlace
+dbo|capital|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Capital|http://dbpedia.org/ontology/City
+dbo|Capital of region|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/CapitalOfRegion|http://dbpedia.org/ontology/City
+dbo|card game|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/CardGame|http://dbpedia.org/ontology/Game
+dbo|cardinal|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Cardinal|http://dbpedia.org/ontology/Cleric
+dbo|Cardinal direction|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/CardinalDirection|http://dbpedia.org/ontology/TopicalConcept
+dbo|career station|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/CareerStation|http://dbpedia.org/ontology/TimePeriod
+dbo|cartoon|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Cartoon|http://dbpedia.org/ontology/work
+dbo|case|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Case|http://dbpedia.org/ontology/UnitOfWork
+dbo|casino|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Casino|http://dbpedia.org/ontology/Building
+dbo|castle|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Castle|http://dbpedia.org/ontology/Building
+dbo|cat|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Cat|http://dbpedia.org/ontology/Mammal
+dbo|caterer|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Caterer|http://dbpedia.org/ontology/Company
+dbo|cave|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Cave|http://dbpedia.org/ontology/NaturalPlace
+dbo|celestial body|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/CelestialBody|http://dbpedia.org/ontology/Place
+dbo|cemetery|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Cemetery|http://dbpedia.org/ontology/Place
+dbo|chancellor|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Chancellor|http://dbpedia.org/ontology/Politician
+dbo|Place in the Music Charts|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/ChartsPlacements|http://www.w3.org/2002/07/owl#Thing
+dbo|cheese|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Cheese|http://dbpedia.org/ontology/Food
+dbo|chef|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Chef|http://dbpedia.org/ontology/Person
+dbo|chemical compound|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/ChemicalCompound|http://dbpedia.org/ontology/ChemicalSubstance
+dbo|chemical element|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/ChemicalElement|http://dbpedia.org/ontology/ChemicalSubstance
+dbo|chemical substance|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/ChemicalSubstance|http://www.w3.org/2002/07/owl#Thing
+dbo|chess player|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/ChessPlayer|http://dbpedia.org/ontology/Athlete
+dbo|Christian Bishop|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/ChristianBishop|http://dbpedia.org/ontology/Cleric
+dbo|Christian Doctrine|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/ChristianDoctrine|http://dbpedia.org/ontology/TheologicalConcept
+dbo|Christian Patriarch|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/ChristianPatriarch|http://dbpedia.org/ontology/Cleric
+dbo|church|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Church|http://dbpedia.org/ontology/ReligiousBuilding
+dbo|cinema (movie theater)|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Cinema|http://dbpedia.org/ontology/Venue
+dbo|cipher|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Cipher|http://www.w3.org/2002/07/owl#Thing
+dbo|city|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/City|http://dbpedia.org/ontology/Settlement
+dbo|city district|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/CityDistrict|http://dbpedia.org/ontology/Settlement
+dbo|classical music artist|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/ClassicalMusicArtist|http://dbpedia.org/ontology/MusicalArtist
+dbo|classical music composition|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/ClassicalMusicComposition|http://dbpedia.org/ontology/MusicalWork
+dbo|cleric|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Cleric|http://dbpedia.org/ontology/Person
+dbo|clerical administrative region|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/ClericalAdministrativeRegion|http://dbpedia.org/ontology/انتظامی_علاقہ
+dbo|clerical order|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/ClericalOrder|http://dbpedia.org/ontology/ReligiousOrganisation
+dbo|club moss|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/ClubMoss|http://dbpedia.org/ontology/Plant
+dbo|coach|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Coach|http://dbpedia.org/ontology/Person
+dbo|coal pit|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/CoalPit|http://dbpedia.org/ontology/Mine
+dbo|collection of valuables|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/CollectionOfValuables|http://dbpedia.org/ontology/Work
+dbo|college|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/College|http://dbpedia.org/ontology/EducationalInstitution && http://schema.org/CollegeOrUniversity
+dbo|college coach|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/CollegeCoach|http://dbpedia.org/ontology/Coach
+dbo|colour|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Colour|http://www.w3.org/2002/07/owl#Thing
+dbo|combination drug|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/CombinationDrug|http://dbpedia.org/ontology/Drug
+dbo|comedian|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Comedian|http://dbpedia.org/ontology/Artist
+dbo|Comedy Group|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/ComedyGroup|http://dbpedia.org/ontology/Group
+dbo|comic|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Comic|http://dbpedia.org/ontology/WrittenWork
+dbo|comic strip|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/ComicStrip|http://dbpedia.org/ontology/Comic
+dbo|comics character|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/ComicsCharacter|http://dbpedia.org/ontology/FictionalCharacter
+dbo|comics creator|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/ComicsCreator|http://dbpedia.org/ontology/Artist
+dbo|community|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Community|http://dbpedia.org/ontology/PopulatedPlace
+dbo|company|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Company|http://purl.org/goodrelations/v1#BusinessEntity && http://dbpedia.org/ontology/Organisation
+dbo|competition|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Competition|http://dbpedia.org/ontology/Event
+dbo|Concentration camp|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/ConcentrationCamp|http://dbpedia.org/ontology/Place
+dbo|congressman|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Congressman|http://dbpedia.org/ontology/Politician
+dbo|conifer|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Conifer|http://dbpedia.org/ontology/Plant
+dbo|constellation|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Constellation|http://dbpedia.org/ontology/CelestialBody
+dbo|contest|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Contest|http://dbpedia.org/ontology/Competition
+dbo|continent|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Continent|http://dbpedia.org/ontology/PopulatedPlace
+dbo|Controlled designation of origin wine|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/ControlledDesignationOfOriginWine|http://dbpedia.org/ontology/Wine
+dbo|convention|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Convention|http://dbpedia.org/ontology/SocietalEvent
+dbo|conveyor system|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/ConveyorSystem|http://dbpedia.org/ontology/On-SiteTransportation
+dbo|country|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Country|http://dbpedia.org/ontology/PopulatedPlace
+dbo|country estate|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/CountrySeat|http://dbpedia.org/ontology/Place
+dbo|COVID-19 pandemic|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Covid19|http://www.w3.org/2002/07/owl#Thing
+dbo|crater|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Crater|http://dbpedia.org/ontology/NaturalPlace
+dbo|cricket ground|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/CricketGround|http://dbpedia.org/ontology/SportFacility
+dbo|cricket league|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/CricketLeague|http://dbpedia.org/ontology/SportsLeague
+dbo|cricket team|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/CricketTeam|http://dbpedia.org/ontology/SportsTeam
+dbo|cricketer|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Cricketer|http://dbpedia.org/ontology/Athlete
+dbo|criminal|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Criminal|http://dbpedia.org/ontology/Person
+dbo|cross-country skier|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/CrossCountrySkier|http://dbpedia.org/ontology/WinterSportPlayer
+dbo|crustacean|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Crustacean|http://dbpedia.org/ontology/Animal
+dbo|cultivar (cultivated variety)|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/CultivatedVariety|http://dbpedia.org/ontology/Plant
+dbo|curler|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Curler|http://dbpedia.org/ontology/WinterSportPlayer
+dbo|curling league|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/CurlingLeague|http://dbpedia.org/ontology/SportsLeague
+dbo|currency|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Currency|http://www.w3.org/2002/07/owl#Thing
+dbo|cycad|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Cycad|http://dbpedia.org/ontology/Plant
+dbo|cycling competition|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/CyclingCompetition|http://dbpedia.org/ontology/SportsEvent
+dbo|cycling league|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/CyclingLeague|http://dbpedia.org/ontology/SportsLeague
+dbo|cycling race|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/CyclingRace|http://dbpedia.org/ontology/Race
+dbo|cycling team|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/CyclingTeam|http://dbpedia.org/ontology/SportsTeam
+dbo|cyclist|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Cyclist|http://dbpedia.org/ontology/Athlete
+dbo|d bpedian|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/DBpedian|http://dbpedia.org/ontology/Person
+dbo|DTM racer|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/DTMRacer|http://dbpedia.org/ontology/RacingDriver
+dbo|dam|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Dam|http://dbpedia.org/ontology/Infrastructure
+dbo|dancer|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Dancer|http://dbpedia.org/ontology/Artist
+dbo|darts player|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/DartsPlayer|http://dbpedia.org/ontology/Athlete
+dbo|database|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Database|http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#InformationObject && http://dbpedia.org/ontology/Work
+dbo|deanery|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Deanery|http://dbpedia.org/ontology/ClericalAdministrativeRegion
+dbo|decoration|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Decoration|http://dbpedia.org/ontology/Award
+dbo|deity|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Deity|http://dbpedia.org/ontology/Agent
+dbo|demographics|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Demographics|http://www.w3.org/2002/07/owl#Thing
+dbo|department|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Department|http://dbpedia.org/ontology/GovernmentalAdministrativeRegion
+dbo|depth|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Depth|http://www.w3.org/2002/07/owl#Thing
+dbo|deputy|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Deputy|http://dbpedia.org/ontology/Politician
+dbo|desert|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Desert|http://dbpedia.org/ontology/NaturalPlace
+dbo|device|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Device|http://www.w3.org/2002/07/owl#Thing
+dbo|digital camera|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/DigitalCamera|http://dbpedia.org/ontology/Camera
+dbo|dike|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Dike|http://dbpedia.org/ontology/Infrastructure
+dbo|diocese|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Diocese|http://dbpedia.org/ontology/ClericalAdministrativeRegion
+dbo|diploma|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Diploma|http://www.w3.org/2002/07/owl#Thing
+dbo|disease|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Disease|http://www.w3.org/2002/07/owl#Thing
+dbo|disney character|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/DisneyCharacter|http://dbpedia.org/ontology/FictionalCharacter
+dbo|district|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/District|http://dbpedia.org/ontology/GovernmentalAdministrativeRegion
+dbo|district water board|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/DistrictWaterBoard|http://dbpedia.org/ontology/GovernmentalAdministrativeRegion
+dbo|document|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Document|http://dbpedia.org/ontology/Work
+dbo|Document Type|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/DocumentType|http://dbpedia.org/ontology/Type
+dbo|dog|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Dog|http://dbpedia.org/ontology/Mammal
+dbo|drama|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Drama|http://dbpedia.org/ontology/WrittenWork
+dbo|drug|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Drug|http://dbpedia.org/ontology/ChemicalSubstance
+dbo|earthquake|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Earthquake|http://dbpedia.org/ontology/NaturalEvent
+dbo|economist|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Economist|http://dbpedia.org/ontology/Person
+dbo|educational institution|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/EducationalInstitution|http://dbpedia.org/ontology/Organisation
+dbo|egyptologist|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Egyptologist|http://dbpedia.org/ontology/Person
+dbo|election|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Election|http://dbpedia.org/ontology/SocietalEvent
+dbo|Election Diagram|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/ElectionDiagram|http://www.w3.org/2002/07/owl#Thing
+dbo|electrical substation|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/ElectricalSubstation|http://dbpedia.org/ontology/Infrastucture
+dbo|embryology|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Embryology|http://dbpedia.org/ontology/AnatomicalStructure
+dbo|employer|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Employer|http://dbpedia.org/ontology/Agent
+dbo|Employers' Organisation|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/EmployersOrganisation|http://dbpedia.org/ontology/Organisation
+dbo|engine|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Engine|http://dbpedia.org/ontology/Device
+dbo|engineer|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Engineer|http://dbpedia.org/ontology/Person
+dbo|entomologist|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Entomologist|http://dbpedia.org/ontology/Scientist
+dbo|enzyme|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Enzyme|http://dbpedia.org/ontology/Biomolecule
+dbo|escalator|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Escalator|http://dbpedia.org/ontology/On-SiteTransportation
+dbo|ethnic group|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/EthnicGroup|http://www.w3.org/2002/07/owl#Thing
+dbo|eukaryote|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Eukaryote|http://dbpedia.org/ontology/Species
+dbo|Eurovision song contest entry|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/EurovisionSongContestEntry|http://dbpedia.org/ontology/Song
+dbo|event|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Event|http://www.w3.org/2002/07/owl#Thing
+dbo|factory|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Factory|http://dbpedia.org/ontology/Building
+dbo|family|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Family|http://dbpedia.org/ontology/Agent
+dbo|farmer|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Farmer|http://dbpedia.org/ontology/Person
+dbo|fashion|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Fashion|http://dbpedia.org/ontology/TopicalConcept
+dbo|fashion designer|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/FashionDesigner|http://dbpedia.org/ontology/Artist
+dbo|fencer|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Fencer|http://dbpedia.org/ontology/Athlete
+dbo|fern|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Fern|http://dbpedia.org/ontology/Plant
+dbo|fictional character|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/FictionalCharacter|http://dbpedia.org/ontology/Agent
+dbo|field hockey league|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/FieldHockeyLeague|http://dbpedia.org/ontology/SportsLeague
+dbo|figure skater|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/FigureSkater|http://dbpedia.org/ontology/WinterSportPlayer
+dbo|file|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/File|http://dbpedia.org/ontology/Document
+dbo|File system|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/FileSystem|http://www.w3.org/2002/07/owl#Thing
+dbo|movie|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Film|http://dbpedia.org/ontology/Work
+dbo|film festival|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/FilmFestival|http://schema.org/Festival && http://dbpedia.org/ontology/SocietalEvent
+dbo|fish|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Fish|http://dbpedia.org/ontology/Animal
+dbo|flag|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Flag|http://www.w3.org/2002/07/owl#Thing
+dbo|flowering plant|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/FloweringPlant|http://dbpedia.org/ontology/Plant
+dbo|food|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Food|http://www.w3.org/2002/07/owl#Thing
+dbo|football league season|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/FootballLeagueSeason|http://dbpedia.org/ontology/SportsTeamSeason
+dbo|football match|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/FootballMatch|http://dbpedia.org/ontology/SportsEvent
+dbo|forest|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Forest|http://dbpedia.org/ontology/NaturalPlace
+dbo|one-time municipality|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/FormerMunicipality|http://dbpedia.org/ontology/Municipality
+dbo|Formula One racer|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/FormulaOneRacer|http://dbpedia.org/ontology/RacingDriver
+dbo|formula one racing|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/FormulaOneRacing|http://dbpedia.org/ontology/SportsLeague
+dbo|formula 1 team|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/FormulaOneTeam|http://dbpedia.org/ontology/SportsTeam
+dbo|fort|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Fort|http://dbpedia.org/ontology/MilitaryStructure
+dbo|پھُپھُوندی|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Fungus|http://dbpedia.org/ontology/Eukaryote
+dbo|Gaelic games player|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/GaelicGamesPlayer|http://dbpedia.org/ontology/Athlete
+dbo|galaxy|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Galaxy|http://dbpedia.org/ontology/CelestialBody
+dbo|game|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Game|http://dbpedia.org/ontology/Activity
+dbo|garden|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Garden|http://dbpedia.org/ontology/Place
+dbo|Gated community|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/GatedCommunity|http://dbpedia.org/ontology/PopulatedPlace
+dbo|gene|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Gene|http://dbpedia.org/ontology/Biomolecule
+dbo|gene location|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/GeneLocation|http://www.w3.org/2002/07/owl#Thing
+dbo|genre|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Genre|http://dbpedia.org/ontology/TopicalConcept
+dbo|geological period|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/GeologicalPeriod|http://dbpedia.org/ontology/TimePeriod
+dbo|geopolitical organisation|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/GeopoliticalOrganisation|http://dbpedia.org/ontology/Organisation
+dbo|ginkgo|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Ginkgo|http://dbpedia.org/ontology/Plant
+dbo|given name|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/GivenName|http://dbpedia.org/ontology/Name
+dbo|glacier|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Glacier|http://dbpedia.org/ontology/NaturalPlace
+dbo|Globular Swarm|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Globularswarm|http://dbpedia.org/ontology/Swarm
+dbo|gnetophytes|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Gnetophytes|http://dbpedia.org/ontology/Plant
+dbo|golf course|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/GolfCourse|http://dbpedia.org/ontology/SportFacility
+dbo|golf league|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/GolfLeague|http://dbpedia.org/ontology/SportsLeague
+dbo|golf player|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/GolfPlayer|http://dbpedia.org/ontology/Athlete
+dbo|golf tournament|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/GolfTournament|http://dbpedia.org/ontology/Tournament
+dbo|government agency|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/GovernmentAgency|http://dbpedia.org/ontology/Organisation
+dbo|cabinet of ministers|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/GovernmentCabinet|http://dbpedia.org/ontology/GovernmentAgency
+dbo|Government Type|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/GovernmentType|http://dbpedia.org/ontology/Type
+dbo|governmental administrative region|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/GovernmentalAdministrativeRegion|http://dbpedia.org/ontology/AdministrativeRegion
+dbo|governor|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Governor|http://dbpedia.org/ontology/Politician
+dbo|Grand Prix|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/GrandPrix|http://dbpedia.org/ontology/SportsEvent
+dbo|grape|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Grape|http://dbpedia.org/ontology/FloweringPlant
+dbo|grave stone or grave monument|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/GraveMonument|http://dbpedia.org/ontology/Monument
+dbo|green alga|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/GreenAlga|http://dbpedia.org/ontology/Plant
+dbo|gridiron football player|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/GridironFootballPlayer|http://dbpedia.org/ontology/Athlete
+dbo|gross domestic product|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/GrossDomesticProduct|http://www.w3.org/2002/07/owl#Thing
+dbo|gross domestic product per capita|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/GrossDomesticProductPerCapita|http://www.w3.org/2002/07/owl#Thing
+dbo|group|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Group|http://dbpedia.org/ontology/Organisation && http://schema.org/Organization
+dbo|guitar|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Guitar|http://dbpedia.org/ontology/Instrument
+dbo|guitarist|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Guitarist|http://dbpedia.org/ontology/Instrumentalist
+dbo|gymnast|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Gymnast|http://dbpedia.org/ontology/Athlete
+dbo|handball league|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/HandballLeague|http://dbpedia.org/ontology/SportsLeague
+dbo|handball player|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/HandballPlayer|http://dbpedia.org/ontology/Athlete
+dbo|handball team|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/HandballTeam|http://dbpedia.org/ontology/SportsTeam
+dbo|high diver|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/HighDiver|http://dbpedia.org/ontology/Athlete
+dbo|historian|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Historian|http://dbpedia.org/ontology/Writer
+dbo|historic building|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/HistoricBuilding|http://dbpedia.org/ontology/Building && http://schema.org/LandmarksOrHistoricalBuildings
+dbo|historic place|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/HistoricPlace|http://dbpedia.org/ontology/Place && http://schema.org/LandmarksOrHistoricalBuildings
+dbo|ancient area of jurisdiction of a person (feudal) or of a governmental body|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/HistoricalAreaOfAuthority|http://dbpedia.org/ontology/AdministrativeRegion
+dbo|Historical country|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/HistoricalCountry|http://dbpedia.org/ontology/Country
+dbo|Historical district|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/HistoricalDistrict|http://dbpedia.org/ontology/District
+dbo|historical event|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/HistoricalEvent|http://dbpedia.org/ontology/SocietalEvent
+dbo|historical period|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/HistoricalPeriod|http://dbpedia.org/ontology/TimePeriod
+dbo|Historical province|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/HistoricalProvince|http://dbpedia.org/ontology/Province
+dbo|Historical region|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/HistoricalRegion|http://dbpedia.org/ontology/Region
+dbo|Historical settlement|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/HistoricalSettlement|http://dbpedia.org/ontology/Settlement
+dbo|hockey club|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/HockeyClub|http://dbpedia.org/ontology/SportsClub
+dbo|hockey team|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/HockeyTeam|http://dbpedia.org/ontology/SportsTeam
+dbo|holiday|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Holiday|http://dbpedia.org/ontology/TimeInterval
+dbo|hollywood cartoon|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/HollywoodCartoon|http://dbpedia.org/ontology/Cartoon
+dbo|hormone|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Hormone|http://dbpedia.org/ontology/Biomolecule
+dbo|horse|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Horse|http://dbpedia.org/ontology/Mammal
+dbo|horse race|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/HorseRace|http://dbpedia.org/ontology/Race
+dbo|horse rider|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/HorseRider|http://dbpedia.org/ontology/Athlete
+dbo|horse trainer|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/HorseTrainer|http://dbpedia.org/ontology/Person
+dbo|hospital|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Hospital|http://dbpedia.org/ontology/building
+dbo|hot spring|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/HotSpring|http://dbpedia.org/ontology/NaturalPlace
+dbo|hotel|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Hotel|http://dbpedia.org/ontology/Building
+dbo|human gene|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/HumanGene|http://dbpedia.org/ontology/Gene
+dbo|human gene location|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/HumanGeneLocation|http://dbpedia.org/ontology/GeneLocation
+dbo|humorist|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Humorist|http://dbpedia.org/ontology/Artist
+dbo|ice hockey league|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/IceHockeyLeague|http://dbpedia.org/ontology/SportsLeague
+dbo|ice hockey player|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/IceHockeyPlayer|http://dbpedia.org/ontology/WinterSportPlayer
+dbo|identifier|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Identifier|http://www.w3.org/2002/07/owl#Thing
+dbo|ideology|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Ideology|http://dbpedia.org/ontology/TopicalConcept
+dbo|image|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Image|http://dbpedia.org/ontology/Document
+dbo|information appliance|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/InformationAppliance|http://dbpedia.org/ontology/Device
+dbo|infrastructure|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Infrastructure|http://dbpedia.org/ontology/ArchitecturalStructure
+dbo|infrastructure|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Infrastucture|http://dbpedia.org/ontology/ArchitecturalStructure
+dbo|inline hockey league|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/InlineHockeyLeague|http://dbpedia.org/ontology/SportsLeague
+dbo|insect|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Insect|http://dbpedia.org/ontology/Animal
+dbo|instrument|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Instrument|http://dbpedia.org/ontology/Device && http://schema.org/Product
+dbo|instrumentalist|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Instrumentalist|http://dbpedia.org/ontology/MusicalArtist
+dbo|intercommunality|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Intercommunality|http://dbpedia.org/ontology/PopulatedPlace
+dbo|international football league event|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/InternationalFootballLeagueEvent|http://dbpedia.org/ontology/SportsEvent
+dbo|international organisation|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/InternationalOrganisation|http://dbpedia.org/ontology/Organisation
+dbo|island|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Island|http://dbpedia.org/ontology/PopulatedPlace
+dbo|jewish leader|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/JewishLeader|http://dbpedia.org/ontology/Religious
+dbo|jockey (horse racer)|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Jockey|http://dbpedia.org/ontology/Athlete
+dbo|journalist|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Journalist|http://dbpedia.org/ontology/Person
+dbo|judge|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Judge|http://dbpedia.org/ontology/Person
+dbo|lacrosse league|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/LacrosseLeague|http://dbpedia.org/ontology/SportsLeague
+dbo|lacrosse player|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/LacrossePlayer|http://dbpedia.org/ontology/Athlete
+dbo|lake|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Lake|http://dbpedia.org/ontology/BodyOfWater
+dbo|language|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Language|http://www.w3.org/2002/07/owl#Thing
+dbo|Latter Day Saint|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/LatterDaySaint|http://dbpedia.org/ontology/Religious
+dbo|launch pad|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/LaunchPad|http://dbpedia.org/ontology/Infrastructure
+dbo|law|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Law|http://dbpedia.org/ontology/WrittenWork
+dbo|law firm|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/LawFirm|http://dbpedia.org/ontology/Company
+dbo|lawyer|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Lawyer|http://dbpedia.org/ontology/Person
+dbo|Legal Case|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/LegalCase|http://dbpedia.org/ontology/Case
+dbo|legislature|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Legislature|http://dbpedia.org/ontology/Organisation
+dbo|letter|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Letter|http://dbpedia.org/ontology/WrittenWork
+dbo|library|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Library|http://dbpedia.org/ontology/EducationalInstitution
+dbo|lieutenant|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Lieutenant|http://dbpedia.org/ontology/Politician
+dbo|life cycle event|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/LifeCycleEvent|http://dbpedia.org/ontology/Event
+dbo|ligament|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Ligament|http://dbpedia.org/ontology/AnatomicalStructure
+dbo|light novel|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/LightNovel|http://dbpedia.org/ontology/Novel
+dbo|lighthouse|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Lighthouse|http://dbpedia.org/ontology/Tower
+dbo|line of fashion|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/LineOfFashion|http://dbpedia.org/ontology/Work
+dbo|linguist|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Linguist|http://dbpedia.org/ontology/Person
+dbo|lipid|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Lipid|http://dbpedia.org/ontology/Biomolecule
+dbo|list|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/List|http://www.w3.org/2002/07/owl#Thing
+dbo|literary genre|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/LiteraryGenre|http://dbpedia.org/ontology/Genre
+dbo|locality|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Locality|http://dbpedia.org/ontology/PopulatedPlace
+dbo|lock|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Lock|http://dbpedia.org/ontology/Infrastructure
+dbo|locomotive|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Locomotive|http://schema.org/Product && http://dbpedia.org/ontology/MeanOfTransportation
+dbo|lunar crater|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/LunarCrater|http://dbpedia.org/ontology/Crater
+dbo|lymph|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Lymph|http://dbpedia.org/ontology/AnatomicalStructure
+dbo|magazine|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Magazine|http://dbpedia.org/ontology/PeriodicalLiterature
+dbo|mammal|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Mammal|http://dbpedia.org/ontology/Animal
+dbo|man|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Man|http://dbpedia.org/ontology/Person
+dbo|manga|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Manga|http://dbpedia.org/ontology/Comic
+dbo|manhua|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Manhua|http://dbpedia.org/ontology/Comic
+dbo|manhwa|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Manhwa|http://dbpedia.org/ontology/Comic
+dbo|manor|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Manor|http://dbpedia.org/ontology/HistoricalAreaOfAuthority
+dbo|martial artist|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/MartialArtist|http://dbpedia.org/ontology/Athlete
+dbo|Mathematical concept|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/MathematicalConcept|http://dbpedia.org/ontology/TopicalConcept
+dbo|میئر|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Mayor|http://dbpedia.org/ontology/Politician
+dbo|mean of transportation|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/MeanOfTransportation|http://www.w3.org/2002/07/owl#Thing
+dbo|media|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Media|http://www.w3.org/2002/07/owl#Thing
+dbo|medical specialty|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/MedicalSpecialty|http://www.w3.org/2002/07/owl#Thing
+dbo|medician|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Medician|http://dbpedia.org/ontology/Scientist
+dbo|medicine|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Medicine|http://www.w3.org/2002/07/owl#Thing
+dbo|meeting|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Meeting|http://dbpedia.org/ontology/SocietalEvent
+dbo|member of parliament|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/MemberOfParliament|http://dbpedia.org/ontology/Politician
+dbo|Member of a Resistance Movement|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/MemberResistanceMovement|http://dbpedia.org/ontology/Person
+dbo|memorial|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Memorial|http://dbpedia.org/ontology/Monument
+dbo|subway station|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/MetroStation|http://dbpedia.org/ontology/Station
+dbo|micro-region|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/MicroRegion|http://dbpedia.org/ontology/GovernmentalAdministrativeRegion
+dbo|military aircraft|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/MilitaryAircraft|http://dbpedia.org/ontology/Aircraft
+dbo|military conflict|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/MilitaryConflict|http://dbpedia.org/ontology/SocietalEvent
+dbo|military person|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/MilitaryPerson|http://dbpedia.org/ontology/Person
+dbo|military service|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/MilitaryService|http://dbpedia.org/ontology/CareerStation
+dbo|military structure|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/MilitaryStructure|http://dbpedia.org/ontology/ArchitecturalStructure
+dbo|military unit|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/MilitaryUnit|http://dbpedia.org/ontology/Organisation
+dbo|military vehicle|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/MilitaryVehicle|http://schema.org/Product && http://dbpedia.org/ontology/MeanOfTransportation
+dbo|mill|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Mill|http://dbpedia.org/ontology/ArchitecturalStructure
+dbo|mine|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Mine|http://dbpedia.org/ontology/Place
+dbo|mineral|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Mineral|http://dbpedia.org/ontology/ChemicalSubstance
+dbo|minister|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Minister|http://dbpedia.org/ontology/Politician
+dbo|mixed martial arts event|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/MixedMartialArtsEvent|http://dbpedia.org/ontology/SportsEvent
+dbo|mixed martial arts league|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/MixedMartialArtsLeague|http://dbpedia.org/ontology/SportsLeague
+dbo|mobile phone|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/MobilePhone|http://dbpedia.org/ontology/Device
+dbo|model|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Model|http://dbpedia.org/ontology/Person
+dbo|mollusca|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Mollusca|http://dbpedia.org/ontology/Animal
+dbo|monarch|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Monarch|http://dbpedia.org/ontology/Person
+dbo|monastery|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Monastery|http://dbpedia.org/ontology/ReligiousBuilding
+dbo|monoclonal antibody|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/MonoclonalAntibody|http://dbpedia.org/ontology/Drug
+dbo|monument|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Monument|http://dbpedia.org/ontology/ArchitecturalStructure
+dbo|mosque|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Mosque|http://dbpedia.org/ontology/ReligiousBuilding
+dbo|moss|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Moss|http://dbpedia.org/ontology/Plant
+dbo|motocycle racer|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/MotocycleRacer|http://dbpedia.org/ontology/MotorcycleRider
+dbo|motor race|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/MotorRace|http://dbpedia.org/ontology/Race
+dbo|motorcycle|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Motorcycle|http://dbpedia.org/ontology/MeanOfTransportation
+dbo|motorcycle racing league|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/MotorcycleRacingLeague|http://dbpedia.org/ontology/SportsLeague
+dbo|motorcycle rider|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/MotorcycleRider|http://dbpedia.org/ontology/MotorsportRacer
+dbo|motorsport racer|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/MotorsportRacer|http://dbpedia.org/ontology/Athlete
+dbo|motorsport season|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/MotorsportSeason|http://dbpedia.org/ontology/SportsSeason
+dbo|mountain|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Mountain|http://dbpedia.org/ontology/NaturalPlace
+dbo|mountain pass|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/MountainPass|http://dbpedia.org/ontology/NaturalPlace
+dbo|mountain range|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/MountainRange|http://dbpedia.org/ontology/NaturalPlace
+dbo|mouse gene|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/MouseGene|http://dbpedia.org/ontology/Gene
+dbo|mouse gene location|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/MouseGeneLocation|http://dbpedia.org/ontology/GeneLocation
+dbo|Movie director|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/MovieDirector|http://dbpedia.org/ontology/Person
+dbo|movie genre|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/MovieGenre|http://dbpedia.org/ontology/Genre
+dbo|moving image|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/MovingImage|http://dbpedia.org/ontology/Image
+dbo|travellator|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/MovingWalkway|http://dbpedia.org/ontology/On-SiteTransportation
+dbo|multi volume publication|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/MultiVolumePublication|http://dbpedia.org/ontology/WrittenWork
+dbo|municipality|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Municipality|http://dbpedia.org/ontology/GovernmentalAdministrativeRegion
+dbo|murderer|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Murderer|http://dbpedia.org/ontology/Criminal
+dbo|muscle|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Muscle|http://dbpedia.org/ontology/AnatomicalStructure
+dbo|museum|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Museum|http://dbpedia.org/ontology/Building
+dbo|music composer|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/MusicComposer|http://dbpedia.org/ontology/Writer
+dbo|music director|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/MusicDirector|http://dbpedia.org/ontology/MusicalArtist
+dbo|music festival|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/MusicFestival|http://dbpedia.org/ontology/SocietalEvent
+dbo|music genre|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/MusicGenre|http://dbpedia.org/ontology/Genre
+dbo|musical|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Musical|http://dbpedia.org/ontology/MusicalWork
+dbo|musical artist|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/MusicalArtist|http://dbpedia.org/ontology/Artist && http://schema.org/MusicGroup && http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#NaturalPerson
+dbo|musical work|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/MusicalWork|http://dbpedia.org/ontology/Work
+dbo|mythological figure|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/MythologicalFigure|http://dbpedia.org/ontology/FictionalCharacter
+dbo|national collegiate athletic association team season|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/NCAATeamSeason|http://dbpedia.org/ontology/SportsTeamSeason
+dbo|name|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Name|http://www.w3.org/2002/07/owl#Thing
+dbo|naruto character|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/NarutoCharacter|http://dbpedia.org/ontology/FictionalCharacter
+dbo|nascar driver|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/NascarDriver|http://dbpedia.org/ontology/RacingDriver
+dbo|National anthem|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/NationalAnthem|http://dbpedia.org/ontology/MusicalWork
+dbo|national collegiate athletic association athlete|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/NationalCollegiateAthleticAssociationAthlete|http://dbpedia.org/ontology/Athlete
+dbo|national football league event|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/NationalFootballLeagueEvent|http://dbpedia.org/ontology/SportsEvent
+dbo|national football league season|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/NationalFootballLeagueSeason|http://dbpedia.org/ontology/FootballLeagueSeason
+dbo|national soccer club|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/NationalSoccerClub|http://dbpedia.org/ontology/SoccerClub
+dbo|natural event|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/NaturalEvent|http://dbpedia.org/ontology/Event
+dbo|natural place|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/NaturalPlace|http://dbpedia.org/ontology/Place
+dbo|natural region|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/NaturalRegion|http://dbpedia.org/ontology/Region
+dbo|nebula|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Nebula|http://dbpedia.org/ontology/CelestialBody
+dbo|nerve|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Nerve|http://dbpedia.org/ontology/AnatomicalStructure
+dbo|netball player|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/NetballPlayer|http://dbpedia.org/ontology/Athlete
+dbo|newspaper|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Newspaper|http://dbpedia.org/ontology/PeriodicalLiterature
+dbo|Nobel Prize|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/NobelPrize|http://dbpedia.org/ontology/Award
+dbo|noble|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Noble|http://dbpedia.org/ontology/Person
+dbo|Noble family|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/NobleFamily|http://dbpedia.org/ontology/Family
+dbo|non-profit organisation|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Non-ProfitOrganisation|http://dbpedia.org/ontology/Organisation
+dbo|Nordic Combined|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/NordicCombined|http://dbpedia.org/ontology/WinterSportPlayer
+dbo|novel|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Novel|http://dbpedia.org/ontology/book
+dbo|Nuclear Power plant|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/NuclearPowerStation|http://dbpedia.org/ontology/PowerStation
+dbo|ocean|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Ocean|http://dbpedia.org/ontology/BodyOfWater
+dbo|office holder|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/OfficeHolder|http://dbpedia.org/ontology/Person
+dbo|old territory|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/OldTerritory|http://dbpedia.org/ontology/Territory
+dbo|olympic event|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/OlympicEvent|http://dbpedia.org/ontology/Olympics
+dbo|olympic result|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/OlympicResult|http://dbpedia.org/ontology/SportCompetitionResult
+dbo|olympics|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Olympics|http://dbpedia.org/ontology/SportsEvent
+dbo|on-site mean of transportation|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/On-SiteTransportation|http://dbpedia.org/ontology/MeanOfTransportation
+dbo|Open Swarm|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Openswarm|http://dbpedia.org/ontology/Swarm
+dbo|opera|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Opera|http://dbpedia.org/ontology/MusicalWork
+dbo|organ|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Organ|http://dbpedia.org/ontology/Instrument
+dbo|organisation|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Organisation|http://dbpedia.org/ontology/Agent
+dbo|Organisation member|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/OrganisationMember|http://dbpedia.org/ontology/Person
+dbo|outbreak|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Outbreak|http://dbpedia.org/ontology/Event
+dbo|overseas department|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/OverseasDepartment|http://dbpedia.org/ontology/Department
+dbo|paintball league|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/PaintballLeague|http://dbpedia.org/ontology/SportsLeague
+dbo|painter|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Painter|http://dbpedia.org/ontology/Artist
+dbo|painting|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Painting|http://dbpedia.org/ontology/Artwork
+dbo|pandemic|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Pandemic|http://www.w3.org/2002/07/owl#Thing
+dbo|parish|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Parish|http://dbpedia.org/ontology/ClericalAdministrativeRegion
+dbo|park|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Park|http://dbpedia.org/ontology/Place
+dbo|parliament|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Parliament|http://dbpedia.org/ontology/Organisation
+dbo|penalty shoot-out|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/PenaltyShootOut|http://dbpedia.org/ontology/Event && http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#Event
+dbo|period of artistic style|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/PeriodOfArtisticStyle|http://dbpedia.org/ontology/TimePeriod
+dbo|periodical literature|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/PeriodicalLiterature|http://dbpedia.org/ontology/WrittenWork
+dbo|person|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Person|http://dbpedia.org/ontology/Animal
+dbo|person function|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/PersonFunction|http://www.w3.org/2002/07/owl#Thing
+dbo|personal event|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/PersonalEvent|http://dbpedia.org/ontology/LifeCycleEvent
+dbo|pharaoh|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Pharaoh|http://dbpedia.org/ontology/Royalty
+dbo|philosopher|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Philosopher|http://dbpedia.org/ontology/Person
+dbo|Philosophical concept|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/PhilosophicalConcept|http://dbpedia.org/ontology/TopicalConcept
+dbo|photographer|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Photographer|http://dbpedia.org/ontology/Artist
+dbo|pilot|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Pilot|http://dbpedia.org/ontology/Person
+dbo|place|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Place|http://www.w3.org/2002/07/owl#Thing
+dbo|planet|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Planet|http://dbpedia.org/ontology/CelestialBody
+dbo|plant|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Plant|http://dbpedia.org/ontology/Eukaryote
+dbo|play|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Play|http://dbpedia.org/ontology/WrittenWork
+dbo|Playwright|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/PlayWright|http://dbpedia.org/ontology/Writer
+dbo|Playboy Playmate|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/PlayboyPlaymate|http://dbpedia.org/ontology/Person
+dbo|poem|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Poem|http://dbpedia.org/ontology/WrittenWork
+dbo|poet|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Poet|http://dbpedia.org/ontology/Writer
+dbo|poker player|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/PokerPlayer|http://dbpedia.org/ontology/Athlete
+dbo|Police Officer|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/PoliceOfficer|http://dbpedia.org/ontology/Person
+dbo|Political concept|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/PoliticalConcept|http://dbpedia.org/ontology/TopicalConcept
+dbo|political function|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/PoliticalFunction|http://dbpedia.org/ontology/PersonFunction
+dbo|political party|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/PoliticalParty|http://dbpedia.org/ontology/Organisation
+dbo|politician|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Politician|http://dbpedia.org/ontology/Person
+dbo|politician spouse|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/PoliticianSpouse|http://dbpedia.org/ontology/Person
+dbo|polo league|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/PoloLeague|http://dbpedia.org/ontology/SportsLeague
+dbo|polysaccharide|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Polysaccharide|http://dbpedia.org/ontology/Biomolecule
+dbo|pope|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Pope|http://dbpedia.org/ontology/Cleric
+dbo|populated place|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/PopulatedPlace|http://dbpedia.org/ontology/Place
+dbo|population|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Population|http://www.w3.org/2002/07/owl#Thing
+dbo|port|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Port|http://dbpedia.org/ontology/Infrastructure
+dbo|power station|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/PowerStation|http://dbpedia.org/ontology/Infrastructure
+dbo|prefecture|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Prefecture|http://dbpedia.org/ontology/GovernmentalAdministrativeRegion
+dbo|prehistorical period|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/PrehistoricalPeriod|http://dbpedia.org/ontology/TimePeriod
+dbo|presenter|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Presenter|http://dbpedia.org/ontology/Person
+dbo|president|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/President|http://dbpedia.org/ontology/Politician
+dbo|pretender|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Pretender|http://dbpedia.org/ontology/Royalty
+dbo|priest|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Priest|http://dbpedia.org/ontology/Cleric
+dbo|prime minister|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/PrimeMinister|http://dbpedia.org/ontology/Politician
+dbo|prison|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Prison|http://dbpedia.org/ontology/Building
+dbo|producer|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Producer|http://dbpedia.org/ontology/Person
+dbo|profession|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Profession|http://dbpedia.org/ontology/PersonFunction
+dbo|professor|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Professor|http://dbpedia.org/ontology/Scientist
+dbo|programming language|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/ProgrammingLanguage|http://dbpedia.org/ontology/Language
+dbo|project|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Project|http://dbpedia.org/ontology/UnitOfWork
+dbo|protected area|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/ProtectedArea|http://dbpedia.org/ontology/Place
+dbo|protein|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Protein|http://dbpedia.org/ontology/Biomolecule
+dbo|protocol|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Protocol|http://www.w3.org/2002/07/owl#Thing
+dbo|protohistorical period|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/ProtohistoricalPeriod|http://dbpedia.org/ontology/TimePeriod
+dbo|province|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Province|http://dbpedia.org/ontology/GovernmentalAdministrativeRegion
+dbo|psychologist|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Psychologist|http://dbpedia.org/ontology/Person
+dbo|public service|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/PublicService|http://www.w3.org/2002/07/owl#Thing
+dbo|public transit system|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/PublicTransitSystem|http://dbpedia.org/ontology/Company
+dbo|publisher|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Publisher|http://dbpedia.org/ontology/Company
+dbo|pyramid|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Pyramid|http://dbpedia.org/ontology/ArchitecturalStructure
+dbo|quote|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Quote|http://dbpedia.org/ontology/WrittenWork
+dbo|race|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Race|http://dbpedia.org/ontology/SportsEvent
+dbo|race track|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/RaceTrack|http://dbpedia.org/ontology/SportFacility
+dbo|racecourse|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Racecourse|http://dbpedia.org/ontology/RaceTrack
+dbo|racing driver|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/RacingDriver|http://dbpedia.org/ontology/MotorsportRacer
+dbo|radio-controlled racing league|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/RadioControlledRacingLeague|http://dbpedia.org/ontology/SportsLeague
+dbo|radio host|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/RadioHost|http://dbpedia.org/ontology/Presenter
+dbo|radio program|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/RadioProgram|http://dbpedia.org/ontology/Work
+dbo|radio station|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/RadioStation|http://dbpedia.org/ontology/Broadcaster
+dbo|railway line|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/RailwayLine|http://dbpedia.org/ontology/RouteOfTransportation
+dbo|train station|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/RailwayStation|http://dbpedia.org/ontology/Station
+dbo|railway tunnel|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/RailwayTunnel|http://dbpedia.org/ontology/RouteOfTransportation
+dbo|rally driver|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/RallyDriver|http://dbpedia.org/ontology/RacingDriver
+dbo|rebbe|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Rebbe|http://dbpedia.org/ontology/Religious
+dbo|rebellion|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Rebellion|http://dbpedia.org/ontology/SocietalEvent
+dbo|record label|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/RecordLabel|http://dbpedia.org/ontology/Company
+dbo|Record Office|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/RecordOffice|http://dbpedia.org/ontology/Non-ProfitOrganisation
+dbo|referee|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Referee|http://dbpedia.org/ontology/Person
+dbo|reference|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Reference|http://dbpedia.org/ontology/Annotation
+dbo|regency|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Regency|http://dbpedia.org/ontology/GovernmentalAdministrativeRegion
+dbo|region|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Region|http://dbpedia.org/ontology/PopulatedPlace
+dbo|reign|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Reign|http://dbpedia.org/ontology/TimePeriod
+dbo|relationship|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Relationship|http://www.w3.org/2002/07/owl#Thing
+dbo|مذہبی|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Religious|http://dbpedia.org/ontology/Person
+dbo|religious building|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/ReligiousBuilding|http://dbpedia.org/ontology/Building
+dbo|religious organisation|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/ReligiousOrganisation|http://dbpedia.org/ontology/Organisation
+dbo|reptile|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Reptile|http://dbpedia.org/ontology/Animal
+dbo|research project|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/ResearchProject|http://dbpedia.org/ontology/Project
+dbo|rest area|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/RestArea|http://dbpedia.org/ontology/Infrastructure
+dbo|restaurant|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Restaurant|http://dbpedia.org/ontology/Building
+dbo|resume|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Resume|http://dbpedia.org/ontology/WrittenWork
+dbo|river|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/River|http://dbpedia.org/ontology/Stream
+dbo|road|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Road|http://dbpedia.org/ontology/RouteOfTransportation
+dbo|road junction|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/RoadJunction|http://dbpedia.org/ontology/RouteOfTransportation
+dbo|road tunnel|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/RoadTunnel|http://dbpedia.org/ontology/RouteOfTransportation
+dbo|robot|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Robot|http://dbpedia.org/ontology/Device
+dbo|rocket|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Rocket|http://dbpedia.org/ontology/MeanOfTransportation
+dbo|rocket engine|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/RocketEngine|http://dbpedia.org/ontology/Engine
+dbo|roller coaster|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/RollerCoaster|http://dbpedia.org/ontology/AmusementParkAttraction
+dbo|roman emperor|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/RomanEmperor|http://dbpedia.org/ontology/Person
+dbo|route of transportation|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/RouteOfTransportation|http://dbpedia.org/ontology/Infrastructure
+dbo|route stop|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/RouteStop|http://dbpedia.org/ontology/Station
+dbo|rower|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Rower|http://dbpedia.org/ontology/Athlete
+dbo|royalty|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Royalty|http://dbpedia.org/ontology/Person
+dbo|rugby club|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/RugbyClub|http://dbpedia.org/ontology/SportsClub
+dbo|rugby league|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/RugbyLeague|http://dbpedia.org/ontology/SportsLeague
+dbo|rugby player|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/RugbyPlayer|http://dbpedia.org/ontology/Athlete
+dbo|sailor|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Sailor|http://dbpedia.org/ontology/Athlete
+dbo|saint|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Saint|http://dbpedia.org/ontology/Cleric
+dbo|sales|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Sales|http://dbpedia.org/ontology/Activity
+dbo|samba school|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/SambaSchool|http://dbpedia.org/ontology/Organisation
+dbo|satellite|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Satellite|http://dbpedia.org/ontology/CelestialBody
+dbo|school|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/School|http://dbpedia.org/ontology/EducationalInstitution
+dbo|Scientific concept|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/ScientificConcept|http://dbpedia.org/ontology/TopicalConcept
+dbo|scientist|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Scientist|http://dbpedia.org/ontology/Person
+dbo|screenwriter|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/ScreenWriter|http://dbpedia.org/ontology/Writer
+dbo|sculptor|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Sculptor|http://dbpedia.org/ontology/Artist
+dbo|sculpture|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Sculpture|http://dbpedia.org/ontology/Artwork
+dbo|sea|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Sea|http://dbpedia.org/ontology/BodyOfWater
+dbo|senator|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Senator|http://dbpedia.org/ontology/Politician
+dbo|serial killer|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/SerialKiller|http://dbpedia.org/ontology/Murderer
+dbo|settlement|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Settlement|http://dbpedia.org/ontology/PopulatedPlace
+dbo|ship|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Ship|http://schema.org/Product && http://dbpedia.org/ontology/MeanOfTransportation
+dbo|shopping mall|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/ShoppingMall|http://dbpedia.org/ontology/Building
+dbo|shrine|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Shrine|http://dbpedia.org/ontology/ReligiousBuilding
+dbo|singer|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Singer|http://dbpedia.org/ontology/MusicalArtist
+dbo|single|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Single|http://dbpedia.org/ontology/MusicalWork
+dbo|Site of Special Scientific Interest|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/SiteOfSpecialScientificInterest|http://dbpedia.org/ontology/Place
+dbo|skater|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Skater|http://dbpedia.org/ontology/WinterSportPlayer
+dbo|ski area|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/SkiArea|http://dbpedia.org/ontology/SportFacility
+dbo|ski resort|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/SkiResort|http://dbpedia.org/ontology/SkiArea
+dbo|ski jumper|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Ski_jumper|http://dbpedia.org/ontology/WinterSportPlayer
+dbo|skier|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Skier|http://dbpedia.org/ontology/WinterSportPlayer
+dbo|skyscraper|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Skyscraper|http://dbpedia.org/ontology/Building
+dbo|snooker world champion|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/SnookerChamp|http://dbpedia.org/ontology/SnookerPlayer
+dbo|snooker player|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/SnookerPlayer|http://dbpedia.org/ontology/Athlete
+dbo|snooker world ranking|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/SnookerWorldRanking|http://dbpedia.org/ontology/SportCompetitionResult
+dbo|soap character|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/SoapCharacter|http://dbpedia.org/ontology/FictionalCharacter
+dbo|soccer club|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/SoccerClub|http://dbpedia.org/ontology/SportsClub
+dbo|soccer club season|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/SoccerClubSeason|http://dbpedia.org/ontology/SportsTeamSeason
+dbo|soccer league|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/SoccerLeague|http://dbpedia.org/ontology/SportsLeague
+dbo|soccer league season|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/SoccerLeagueSeason|http://dbpedia.org/ontology/SportsTeamSeason
+dbo|soccer manager|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/SoccerManager|http://dbpedia.org/ontology/SportsManager
+dbo|soccer player|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/SoccerPlayer|http://dbpedia.org/ontology/Athlete
+dbo|soccer tournoment|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/SoccerTournament|http://dbpedia.org/ontology/Tournament
+dbo|societal event|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/SocietalEvent|http://dbpedia.org/ontology/Event
+dbo|softball league|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/SoftballLeague|http://dbpedia.org/ontology/SportsLeague
+dbo|software|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Software|http://dbpedia.org/ontology/Work
+dbo|solar eclipse|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/SolarEclipse|http://dbpedia.org/ontology/NaturalEvent
+dbo|song|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Song|http://dbpedia.org/ontology/MusicalWork && http://schema.org/MusicRecording
+dbo|songwriter|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/SongWriter|http://dbpedia.org/ontology/Writer
+dbo|sound|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Sound|http://dbpedia.org/ontology/Document
+dbo|space mission|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/SpaceMission|http://dbpedia.org/ontology/SocietalEvent
+dbo|space shuttle|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/SpaceShuttle|http://dbpedia.org/ontology/MeanOfTransportation
+dbo|space station|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/SpaceStation|http://dbpedia.org/ontology/MeanOfTransportation
+dbo|spacecraft|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Spacecraft|http://dbpedia.org/ontology/MeanOfTransportation
+dbo|species|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Species|http://www.w3.org/2002/07/owl#Thing
+dbo|speed skater|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/SpeedSkater|http://dbpedia.org/ontology/WinterSportPlayer
+dbo|speedway league|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/SpeedwayLeague|http://dbpedia.org/ontology/SportsLeague
+dbo|speedway rider|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/SpeedwayRider|http://dbpedia.org/ontology/MotorcycleRider
+dbo|speedway team|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/SpeedwayTeam|http://dbpedia.org/ontology/SportsTeam
+dbo|sport|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Sport|http://dbpedia.org/ontology/Activity
+dbo|results of a sport competition|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/SportCompetitionResult|http://www.w3.org/2002/07/owl#Thing
+dbo|sport facility|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/SportFacility|http://dbpedia.org/ontology/ArchitecturalStructure
+dbo|sports club|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/SportsClub|http://dbpedia.org/ontology/Organisation
+dbo|sports event|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/SportsEvent|http://dbpedia.org/ontology/SocietalEvent
+dbo|sports league|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/SportsLeague|http://dbpedia.org/ontology/Organisation
+dbo|sports manager|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/SportsManager|http://dbpedia.org/ontology/Person
+dbo|sports season|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/SportsSeason|http://www.w3.org/2002/07/owl#Thing
+dbo|sports team|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/SportsTeam|http://dbpedia.org/ontology/Organisation
+dbo|Sports team member|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/SportsTeamMember|http://dbpedia.org/ontology/OrganisationMember
+dbo|sports team season|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/SportsTeamSeason|http://dbpedia.org/ontology/SportsSeason
+dbo|spreadsheet|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Spreadsheet|http://www.w3.org/2002/07/owl#Thing
+dbo|spy|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Spy|http://dbpedia.org/ontology/Person
+dbo|square|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Square|http://dbpedia.org/ontology/ArchitecturalStructure
+dbo|squash player|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/SquashPlayer|http://dbpedia.org/ontology/Athlete
+dbo|stadium|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Stadium|http://dbpedia.org/ontology/Venue && http://schema.org/StadiumOrArena
+dbo|standard|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Standard|http://dbpedia.org/ontology/TopicalConcept
+dbo|star|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Star|http://dbpedia.org/ontology/CelestialBody
+dbo|Star сluster|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/StarCluster|http://www.w3.org/2002/07/owl#Thing
+dbo|state|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/State|http://dbpedia.org/ontology/PopulatedPlace
+dbo|Stated Resolution|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/StatedResolution|http://dbpedia.org/ontology/WrittenWork
+dbo|station|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Station|http://dbpedia.org/ontology/Infrastructure
+dbo|statistic|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Statistic|http://www.w3.org/2002/07/owl#Thing
+dbo|still image|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/StillImage|http://dbpedia.org/ontology/Image
+dbo|storm surge|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/StormSurge|http://dbpedia.org/ontology/NaturalEvent
+dbo|stream|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Stream|http://dbpedia.org/ontology/BodyOfWater
+dbo|street|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Street|http://dbpedia.org/ontology/PopulatedPlace
+dbo|borough|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/SubMunicipality|http://dbpedia.org/ontology/GovernmentalAdministrativeRegion
+dbo|sumo wrestler|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/SumoWrestler|http://dbpedia.org/ontology/Wrestler
+dbo|Supreme Court of the United States case|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/SupremeCourtOfTheUnitedStatesCase|http://dbpedia.org/ontology/LegalCase
+dbo|surfer|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Surfer|http://dbpedia.org/ontology/Athlete
+dbo|surname|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Surname|http://dbpedia.org/ontology/Name
+dbo|swarm|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Swarm|http://dbpedia.org/ontology/CelestialBody
+dbo|swimmer|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Swimmer|http://dbpedia.org/ontology/Athlete
+dbo|synagogue|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Synagogue|http://dbpedia.org/ontology/ReligiousBuilding
+dbo|System of law|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/SystemOfLaw|http://dbpedia.org/ontology/TopicalConcept
+dbo|table tennis player|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/TableTennisPlayer|http://dbpedia.org/ontology/Athlete
+dbo|tank|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Tank|http://www.w3.org/2002/07/owl#Thing
+dbo|tax|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Tax|http://dbpedia.org/ontology/TopicalConcept
+dbo|taxonomic group|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Taxon|http://dbpedia.org/ontology/TopicalConcept
+dbo|Team member|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/TeamMember|http://dbpedia.org/ontology/Athlete
+dbo|team sport|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/TeamSport|http://dbpedia.org/ontology/Sport
+dbo|Television director|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/TelevisionDirector|http://dbpedia.org/ontology/Person
+dbo|television episode|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/TelevisionEpisode|http://dbpedia.org/ontology/Work
+dbo|television host|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/TelevisionHost|http://dbpedia.org/ontology/Presenter
+dbo|television season|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/TelevisionSeason|http://dbpedia.org/ontology/Work
+dbo|television show|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/TelevisionShow|http://dbpedia.org/ontology/Work
+dbo|television station|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/TelevisionStation|http://dbpedia.org/ontology/Broadcaster
+dbo|temple|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Temple|http://dbpedia.org/ontology/ReligiousBuilding
+dbo|tennis league|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/TennisLeague|http://dbpedia.org/ontology/SportsLeague
+dbo|tennis player|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/TennisPlayer|http://dbpedia.org/ontology/Athlete
+dbo|tennis tournament|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/TennisTournament|http://dbpedia.org/ontology/Tournament
+dbo|tenure|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Tenure|http://dbpedia.org/ontology/TimePeriod
+dbo|term of office|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/TermOfOffice|http://dbpedia.org/ontology/Organisation
+dbo|territory|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Territory|http://dbpedia.org/ontology/PopulatedPlace
+dbo|theatre|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Theatre|http://dbpedia.org/ontology/Venue
+dbo|Theatre director|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/TheatreDirector|http://dbpedia.org/ontology/Person
+dbo|Theological concept|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/TheologicalConcept|http://dbpedia.org/ontology/TopicalConcept
+dbo|time period|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/TimePeriod|http://www.w3.org/2002/07/owl#Thing && http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#TimeInterval
+dbo|top level domain|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/TopLevelDomain|http://dbpedia.org/ontology/Identifier
+dbo|topical concept|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/TopicalConcept|http://www.w3.org/2002/07/owl#Thing
+dbo|tournament|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Tournament|http://dbpedia.org/ontology/SportsEvent
+dbo|tower|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Tower|http://dbpedia.org/ontology/ArchitecturalStructure
+dbo|town|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Town|http://dbpedia.org/ontology/Settlement
+dbo|track list|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/TrackList|http://dbpedia.org/ontology/List
+dbo|trade union|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/TradeUnion|http://dbpedia.org/ontology/Organisation
+dbo|train|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Train|http://dbpedia.org/ontology/MeanOfTransportation
+dbo|train carriage|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/TrainCarriage|http://dbpedia.org/ontology/MeanOfTransportation
+dbo|streetcar|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Tram|http://dbpedia.org/ontology/MeanOfTransportation
+dbo|tram station|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/TramStation|http://dbpedia.org/ontology/Station
+dbo|treadmill|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Treadmill|http://dbpedia.org/ontology/Mill
+dbo|treaty|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Treaty|http://dbpedia.org/ontology/WrittenWork
+dbo|tunnel|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Tunnel|http://dbpedia.org/ontology/ArchitecturalStructure
+dbo|type|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Type|http://dbpedia.org/ontology/TopicalConcept
+dbo|underground journal|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/UndergroundJournal|http://dbpedia.org/ontology/PeriodicalLiterature
+dbo|unit of work|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/UnitOfWork|http://www.w3.org/2002/07/owl#Thing
+dbo|university|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/University|http://dbpedia.org/ontology/EducationalInstitution && http://schema.org/CollegeOrUniversity
+dbo|unknown|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Unknown|http://www.w3.org/2002/07/owl#Thing
+dbo|Vaccination Statistics|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/VaccinationStatistics|http://dbpedia.org/ontology/Drug
+dbo|vaccine|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Vaccine|http://dbpedia.org/ontology/Drug
+dbo|valley|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Valley|http://dbpedia.org/ontology/NaturalPlace
+dbo|vein|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Vein|http://dbpedia.org/ontology/AnatomicalStructure
+dbo|venue|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Venue|http://dbpedia.org/ontology/Building
+dbo|vicar|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Vicar|http://dbpedia.org/ontology/Cleric
+dbo|vice president|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/VicePresident|http://dbpedia.org/ontology/Politician
+dbo|vice prime minister|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/VicePrimeMinister|http://dbpedia.org/ontology/Politician
+dbo|video game|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/VideoGame|http://dbpedia.org/ontology/Software
+dbo|videogames league|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/VideogamesLeague|http://dbpedia.org/ontology/SportsLeague
+dbo|village|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Village|http://dbpedia.org/ontology/Settlement
+dbo|vodka|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Vodka|http://dbpedia.org/ontology/Beverage
+dbo|voice actor|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/VoiceActor|http://dbpedia.org/ontology/Actor
+dbo|volcano|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Volcano|http://dbpedia.org/ontology/NaturalPlace
+dbo|volleyball coach|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/VolleyballCoach|http://dbpedia.org/ontology/Coach
+dbo|volleyball league|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/VolleyballLeague|http://dbpedia.org/ontology/SportsLeague
+dbo|volleyball player|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/VolleyballPlayer|http://dbpedia.org/ontology/Athlete
+dbo|water polo Player|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/WaterPoloPlayer|http://dbpedia.org/ontology/Athlete
+dbo|water ride|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/WaterRide|http://dbpedia.org/ontology/AmusementParkAttraction
+dbo|Water tower|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/WaterTower|http://dbpedia.org/ontology/Tower
+dbo|watermill|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Watermill|http://dbpedia.org/ontology/Mill
+dbo|waterway tunnel|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/WaterwayTunnel|http://dbpedia.org/ontology/RouteOfTransportation
+dbo|weapon|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Weapon|http://dbpedia.org/ontology/Device && http://schema.org/Product
+dbo|website|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Website|http://dbpedia.org/ontology/Work
+dbo|Wikimedia template|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/WikimediaTemplate|http://dbpedia.org/ontology/Unknown
+dbo|Wind motor|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/WindMotor|http://dbpedia.org/ontology/Mill
+dbo|windmill|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Windmill|http://dbpedia.org/ontology/Mill
+dbo|wine|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Wine|http://dbpedia.org/ontology/Beverage
+dbo|wine region|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/WineRegion|http://dbpedia.org/ontology/Place
+dbo|winery|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Winery|http://dbpedia.org/ontology/Company
+dbo|winter sport Player|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/WinterSportPlayer|http://dbpedia.org/ontology/Athlete
+dbo|woman|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Woman|http://dbpedia.org/ontology/Person
+dbo|Women's Tennis Association tournament|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/WomensTennisAssociationTournament|http://dbpedia.org/ontology/Tournament
+dbo|work|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Work|http://www.w3.org/2002/07/owl#Thing
+dbo|World Heritage Site|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/WorldHeritageSite|http://dbpedia.org/ontology/Place
+dbo|wrestler|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Wrestler|http://dbpedia.org/ontology/Athlete
+dbo|wrestling event|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/WrestlingEvent|http://dbpedia.org/ontology/SportsEvent
+dbo|writer|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Writer|http://dbpedia.org/ontology/Person
+dbo|written work|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/WrittenWork|http://dbpedia.org/ontology/Work
+dbo|year|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Year|http://dbpedia.org/ontology/TimePeriod
+dbo|year in spaceflight|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/YearInSpaceflight|http://dbpedia.org/ontology/TimePeriod
+dbo|youtuber|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Youtuber|http://dbpedia.org/ontology/Person
+dbo|zoo|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Zoo|http://dbpedia.org/ontology/ArchitecturalStructure
+dbo|article|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/آرٹیکل|http://dbpedia.org/ontology/WrittenWork
+dbo|archbishop|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/آرچبی_شاپ|http://dbpedia.org/ontology/ChristianBishop
+dbo|Archer Player|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/آرچر_پلیئر|http://dbpedia.org/ontology/کھلاڑی
+dbo|archaea|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/آرکیا|http://dbpedia.org/ontology/قسم
+dbo|Australian rules football player|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/آسٹریلوی_رولز_فٹ_بال_پلیئر|http://dbpedia.org/ontology/Athlete
+dbo|australian football Team|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/آسٹریلوی_فٹ_بال_ٹیم|http://dbpedia.org/ontology/کھیل_کی_ٹیم
+dbo|automobile engine|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/آٹوموبائل_انجن|http://dbpedia.org/ontology/Engine
+dbo|actor|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/اداکار|http://dbpedia.org/ontology/Artist
+dbo|sports league|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/اسپورٹس_لیگ|http://dbpedia.org/ontology/تنظیم۔
+dbo|aristocrat|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/اشرافیہ|http://dbpedia.org/ontology/Person
+dbo|mythological figure|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/افسانوی_شکل|http://dbpedia.org/ontology/خیالی_کردار
+dbo|ancient area of jurisdiction of a person (feudal) or of a governmental body|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/اقتدارکا_تاریخی_علاقہ|http://dbpedia.org/ontology/AdministrativeRegion
+dbo|album|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/البم|http://dbpedia.org/ontology/MusicalWork
+dbo|american football league|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/امریکن_فٹ_بال_لیگ|http://dbpedia.org/ontology/SportsLeague
+dbo|american football Team|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/امریکن_فٹ_بال_ٹیم|http://dbpedia.org/ontology/کھیل_کی_ٹیم
+dbo|american football coach|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/امریکن_فٹ_بال_کوچ|http://dbpedia.org/ontology/تربیت_کرنے_والا
+dbo|amphibian|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/امفبیئن|http://dbpedia.org/ontology/Animal
+dbo|inline hockey league|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/ان_لائن_ہاکی_لیگ|http://dbpedia.org/ontology/کھیلوں_کی_انجمن
+dbo|HumanGene|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/انسانی_نَسبہ|http://dbpedia.org/ontology/نَسبہ
+dbo|HumanGeneLocation|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/انسانی_نَسبہ_کا_مقام|http://dbpedia.org/ontology/نَسبہ_کا_مقام
+dbo|animanga character|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/انیمنگا_کردار|http://dbpedia.org/ontology/ComicsCharacter
+dbo|atoll|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/اٹول|http://dbpedia.org/ontology/جزیرہ
+dbo|airline|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/ایئر_لائن|http://dbpedia.org/ontology/PublicTransitSystem
+dbo|athletics|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/ایتھلیٹکس|http://dbpedia.org/ontology/Sport
+dbo|Biathlete|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/بائیتھلیٹ|http://dbpedia.org/ontology/WinterSportPlayer
+dbo|monarch|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/بادشاہ|http://dbpedia.org/ontology/شخص
+dbo|basketball league|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/باسکٹ_بال_لیگ|http://dbpedia.org/ontology/SportsLeague
+dbo|adult (pornographic) actor|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/بالغ_اداکار|http://dbpedia.org/ontology/Actor
+dbo|power station|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/بجلی_گھر|http://dbpedia.org/ontology/بنیادی_ڈھانچہ
+dbo|Community|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/برادری|http://dbpedia.org/ontology/آبادی_والی_جگہ
+dbo|broadcast network|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/براڈکاسٹ_نیٹ_ورک|http://dbpedia.org/ontology/Broadcaster
+dbo|ice hockey league|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/برفانی_ہاکی_لیگ|http://dbpedia.org/ontology/کھیلوں_کی_انجمن
+dbo|ice hockey player|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/برفانی_ہاکی_کا_کھلاڑی|http://dbpedia.org/ontology/سرمائی_کھیل_کھیلنے_والا
+dbo|altitude|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/بلندی|http://www.w3.org/2002/07/owl#Thing
+dbo|Blazon|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/بلیزن|http://www.w3.org/2002/07/owl#Thing
+dbo|infrastructure|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/بنیادی_ڈھانچہ|http://dbpedia.org/ontology/تعمیراتی_ڈھانچے
+dbo|international organisation|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/بین_الاقوامی_تنظیم|http://dbpedia.org/ontology/تنظیم
+dbo|international football league event|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/بین_الاقوامی_فٹ_بال_لیگ_کی_تقریب|http://dbpedia.org/ontology/کھیلوں_کی_تقریب
+dbo|Historical region|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/تاریخی_علاقہ|http://www.w3.org/2002/07/owl#Thing
+dbo|card game|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/تاش|http://dbpedia.org/ontology/Game
+dbo|Annotation|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/تشریح|http://dbpedia.org/ontology/WrittenWork
+dbo|image|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/تصویر|http://dbpedia.org/ontology/دستاویز
+dbo|academic subject|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/تعلیمی_مضمون|http://dbpedia.org/ontology/موضوع_کا_تصور
+dbo|amusement park attraction|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/تفریحی_پارک_کی_کشش|http://dbpedia.org/ontology/ArchitecturalStructure
+dbo|jockey (horse racer)|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/جاکی|http://dbpedia.org/ontology/کھلاڑی
+dbo|Manor|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/جاگیر|http://dbpedia.org/ontology/کسی_شخص_(جاگیردار)_یا_سرکاری_ادارے_کے_دائرہ_اختیار_کا_قدیم_علاقہ
+dbo|island|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/جزیرہ|http://dbpedia.org/ontology/آبادی_والی_جگہ
+dbo|archipelago|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/جزیرہ_نما|http://dbpedia.org/ontology/NaturalPlace
+dbo|ginkgo|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/جنکگو|http://dbpedia.org/ontology/پودا
+dbo||http://dbpedia.org/ontology/|http://dbpedia.org/ontology/جھنڈا|http://www.w3.org/2002/07/owl#Thing
+dbo|Concentration camp|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/حراستی_کیمپ|http://dbpedia.org/ontology/جگہ
+dbo|Algorithm|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/حساب_و_شمار|http://www.w3.org/2002/07/owl#Thing
+dbo|attack|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/حملہ|http://dbpedia.org/ontology/SocietalEvent
+dbo|magazine|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/رسالہ|http://dbpedia.org/ontology/متواتر_ادب
+dbo|member of parliament|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/رکن_پارلیمنٹ|http://dbpedia.org/ontology/سیاستدان
+dbo|Cipher|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/سائفر|http://www.w3.org/2002/07/owl#Thing
+dbo|Instrument|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/ساز|http://schema.org/Product && http://dbpedia.org/ontology/آلہ
+dbo|instrumentalist|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/سازندہ|http://dbpedia.org/ontology/موسیقی_کا_فنکار
+dbo|hotel|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/سرائے|http://dbpedia.org/ontology/عمارت
+dbo|artery|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/شریان|http://dbpedia.org/ontology/جسمانی_ساخت۔
+dbo|Noble family|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/شریف_خاندان|http://dbpedia.org/ontology/خاندان
+dbo|identifier|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/شناخت_کنندہ|http://www.w3.org/2002/07/owl#Thing
+dbo|amateur boxer|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/شوقیہ_باکسر|http://dbpedia.org/ontology/Boxer
+dbo|journalist|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/صحافی|http://dbpedia.org/ontology/شخص
+dbo|medical specialty|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/طبی_خصوصیت|http://www.w3.org/2002/07/owl#Thing
+dbo|medician|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/طبیب|http://dbpedia.org/ontology/سائنسدان
+dbo|humorist|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/ظریف|http://dbpedia.org/ontology/فنکار
+dbo|deanery|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/عمید_کا_عہدہ|http://dbpedia.org/ontology/ClericalAdministrativeRegion
+dbo|arachnid|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/عنکبات|http://dbpedia.org/ontology/Animal
+dbo|Intercommunality|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/فرقہ_واریت|http://dbpedia.org/ontology/آبادی_والی_جگہ
+dbo|movie genre|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/فلم_کی_صنف|http://dbpedia.org/ontology/صنف
+dbo|artist discography|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/فنکارڈسکوگرافی|http://dbpedia.org/ontology/MusicalWork
+dbo|military conflict|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/فوجی_تنازعہ|http://dbpedia.org/ontology/معاشرتی_واقعہ
+dbo|military service|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/فوجی_خدمات|http://dbpedia.org/ontology/کیریئر_سٹیشن
+dbo|military vehicle|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/فوجی_گاڑی|http://schema.org/Product && http://dbpedia.org/ontology/نقل_و_حمل_کے_ذرائع
+dbo|military aircraft|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/فوجی_ہوائی_جہاز|http://dbpedia.org/ontology/ہوائی_جہاز۔
+dbo|judge|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/قاضی|http://dbpedia.org/ontology/شخص
+dbo|cemetery|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/قبرستان|http://dbpedia.org/ontology/Place
+dbo|national football league season|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/قومی_فٹ_بال_لیگ_کا_موسم|http://dbpedia.org/ontology/فٹ_بال_لیگ_کے_موسم
+dbo|MouseGene|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/ماؤس_جین|http://dbpedia.org/ontology/نَسبہ
+dbo|martial artist|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/مارشل_آرٹسٹ|http://dbpedia.org/ontology/کھلاڑی
+dbo|manga|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/مانگا|http://dbpedia.org/ontology/مزاحیہ
+dbo|archeologist|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/ماہر_آثار_قدیمہ|http://dbpedia.org/ontology/Person
+dbo|periodical literature|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/متواتر_ادب|http://dbpedia.org/ontology/تحریری_کام۔
+dbo|agglomeration|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/مجموعہ|http://dbpedia.org/ontology/آبادی_والی_جگہ
+dbo|Archive|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/محفوظ_شدہ_دستاویزات|http://dbpedia.org/ontology/CollectionOfValuables
+dbo||http://dbpedia.org/ontology/|http://dbpedia.org/ontology/مذہبی|http://dbpedia.org/ontology/شخص
+dbo|writer|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/مصنف|http://dbpedia.org/ontology/شخص
+dbo|mineral|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/معدنیات|http://dbpedia.org/ontology/کیمیائی_مادہ
+dbo|information appliance|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/معلوماتی_آلات|http://dbpedia.org/ontology/آلہ
+dbo|spatial thing|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/مقامی_تھنگ|http://www.w3.org/2002/07/owl#Thing
+dbo|meeting|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/ملاقات|http://dbpedia.org/ontology/معاشرتی_واقعہ
+dbo|mobile phone|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/موبائل_فون|http://dbpedia.org/ontology/آلہ
+dbo|Anime|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/موبائل_فونز|http://dbpedia.org/ontology/کارٹون۔
+dbo|musical artist|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/موسیقی_کا_فنکار|http://schema.org/MusicGroup && http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#NaturalPerson && http://dbpedia.org/ontology/فنکار
+dbo|monoclonal antibody|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/مونوکلونل_اینٹی_باڈی|http://dbpedia.org/ontology/دوا
+dbo|motocycle racer|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/موٹر_سائیکل_ریسر|http://dbpedia.org/ontology/موٹر_سائیکل_سوار
+dbo|motorcycle racing league|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/موٹر_سائیکل_ریسنگ_لیگ|http://dbpedia.org/ontology/کھیلوں_کی_انجمن
+dbo|motorsport season|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/موٹرسپورٹ_سیزن|http://dbpedia.org/ontology/کھیلوں_کا_موسم
+dbo|mixed martial arts league|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/مکسڈ_مارشل_آرٹس_لیگ|http://dbpedia.org/ontology/کھیلوں_کی_انجمن
+dbo||http://dbpedia.org/ontology/|http://dbpedia.org/ontology/میئر|http://dbpedia.org/ontology/سیاستدان
+dbo|arena|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/میدان|http://schema.org/StadiumOrArena && http://dbpedia.org/ontology/تعمیراتی_ڈھانچے
+dbo|music director|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/میوزک_ڈائریکٹر|http://dbpedia.org/ontology/موسیقی_کا_فنکار
+dbo|musical|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/میوزیکل|http://dbpedia.org/ontology/موسیقی_کا_کام
+dbo|subway station|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/میٹرو_اسٹیشن|http://dbpedia.org/ontology/Station
+dbo|stream|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/ندی|http://dbpedia.org/ontology/BodyOfWater
+dbo|ideology|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/نظریہ|http://dbpedia.org/ontology/موضوع_کا_تصور
+dbo|mean of transportation|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/نقل_و_حمل_کے_ذرائع|http://www.w3.org/2002/07/owl#Thing
+dbo|darts player|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/نيزہ_باز|http://dbpedia.org/ontology/کھلاڑی
+dbo|constellation|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/نکشتر|http://dbpedia.org/ontology/CelestialBody
+dbo|canal|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/نہر|http://dbpedia.org/ontology/Stream
+dbo|minister|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/وزیر|http://dbpedia.org/ontology/سیاستدان
+dbo|cheese|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/پنیر|http://dbpedia.org/ontology/Food
+dbo|muscle|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/پٹھوں|http://dbpedia.org/ontology/جسمانی_ساخت
+dbo||http://dbpedia.org/ontology/|http://dbpedia.org/ontology/پھُپھُوندی|http://dbpedia.org/ontology/خلوی_مادہ
+dbo|mountain|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/پہاڑ|http://dbpedia.org/ontology/قدرتی_جگہ
+dbo|mountain range|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/پہاڑی_سلسلہ|http://dbpedia.org/ontology/قدرتی_جگہ
+dbo|church|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/چرچ|http://dbpedia.org/ontology/ReligiousBuilding
+dbo|Mill|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/چکی|http://dbpedia.org/ontology/ArchitecturalStructure
+dbo|manhua|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/چینی_مزاحیہ|http://dbpedia.org/ontology/مزاحیہ
+dbo|cartoon|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/کارٹون۔|http://dbpedia.org/ontology/کام
+dbo|multi volume publication|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/کثیر_حجم_کی_اشاعت|http://dbpedia.org/ontology/تحریری_کام۔
+dbo|Christian Bishop|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/کرسچن_بی_کی_دکان|http://dbpedia.org/ontology/Cleric
+dbo|fern|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/کزف|http://dbpedia.org/ontology/پودا
+dbo|asteroid|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/کشودرگرہ|http://dbpedia.org/ontology/CelestialBody
+dbo|career station|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/کیریئر_سٹیشن|http://dbpedia.org/ontology/TimePeriod
+dbo|casino|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/کیسینو|http://dbpedia.org/ontology/Building
+dbo|chemical element|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/کیمیائی_عنصر|http://dbpedia.org/ontology/ChemicalSubstance
+dbo|liga de fútbol canadiense|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/کینیڈین_فٹ_بال_لیگ|http://dbpedia.org/ontology/SportsLeague
+dbo|Caterer|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/کیٹرر|http://dbpedia.org/ontology/Company
+dbo|cape|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/کیپ|http://dbpedia.org/ontology/NaturalPlace
+dbo|insect|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/کیڑا|http://dbpedia.org/ontology/جانور
+dbo|automobile|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/گاڑی|http://schema.org/Product && http://dbpedia.org/ontology/نقل_و_حمل_کے_ذرائع
+dbo|hot spring|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/گرم_پانی_کا_قدرتی_چشمہ|http://dbpedia.org/ontology/قدرتی_جگہ
+dbo|hot spring|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/گرم_پانی_کاقدرتی_چشم|http://dbpedia.org/ontology/NaturalPlace
+dbo|gridiron football player|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/گرڈیرون_فٹ_بال_کھلاڑی|http://dbpedia.org/ontology/کھلاڑی
+dbo|horse trainer|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/گھوڑا_سدھانے_والا|http://dbpedia.org/ontology/شخص
+dbo|Hormone|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/ہارمون|http://dbpedia.org/ontology/Biomolecule
+dbo|hockey team|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/ہاکی_ٹیم|http://dbpedia.org/ontology/SportsTeam
+dbo|hockey team|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/ہاکی_کھیل_کی_جماعت|http://dbpedia.org/ontology/کھیل_کی_ٹیم
+dbo|hospital|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/ہسپتال|http://dbpedia.org/ontology/عمارت
+dbo|airport|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/ہوائی_اڈہ|http://dbpedia.org/ontology/بنیادی_ڈھانچہ
+dbo|aircraft|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/ہوائی_جہاز|http://schema.org/Product && http://dbpedia.org/ontology/نقل_و_حمل_کے_ذرائع
+dbo|eukaryote|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/یوکاریوٹ۔|http://dbpedia.org/ontology/پرجاتیوں
+dbo|JewishLeader|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/یہودی_رہنما|http://dbpedia.org/ontology/مذہبی
+owl|thing|http://www.w3.org/2002/07/owl#|http://www.w3.org/2002/07/owl#Thing|http://www.w3.org/2002/07/owl#Class

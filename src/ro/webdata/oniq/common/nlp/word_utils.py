@@ -1,6 +1,6 @@
-from spacy.tokens import Span, Token
 import warnings
 
+from spacy.tokens import Span, Token
 
 AUXILIARY_VERBS = [
     # common auxiliary verbs
@@ -23,10 +23,10 @@ AUXILIARY_VERBS = [
 
 def get_preposition(word: Token):
     """
-    Extract the preposition of a word
+    Extract the preposition of the input word.
 
-    :param word: The target token
-    :return: The preposition that precedes the token
+    :param word: The target token.
+    :return: The preposition that precedes the token.
     """
 
     if not isinstance(word, Token):
@@ -42,13 +42,12 @@ def get_preposition(word: Token):
     return None
 
 
-# TODO: ilie.dorobat: to be used in other places as well (next_word)
 def get_next_word(word: Token):
     """
-    Get the token after the input word
+    Get the token after the input word.
 
-    :param word: The target word
-    :return: The token after the input word
+    :param word: The target word.
+    :return: The token after the input word.
     """
 
     if not isinstance(word, Token):
@@ -62,13 +61,12 @@ def get_next_word(word: Token):
     return word.sent[next_index]
 
 
-# TODO: ilie.dorobat: to be used in other places as well (prev_word)
 def get_prev_word(word: Token):
     """
-    Get the token before the input word
+    Get the token before the input word.
 
-    :param word: The target word
-    :return: The token before the input word
+    :param word: The target word.
+    :return: The token before the input word.
     """
 
     if not isinstance(word, Token):
@@ -82,21 +80,11 @@ def get_prev_word(word: Token):
     return word.sent[prev_index]
 
 
-def is_compound_word(word: Token):
-    return word.dep_ == "compound"
-
-
-# TODO: merge with is_aux_verb
-def is_aux(word: Token):
-    is_aux_lemma = word.lemma_.lower() in AUXILIARY_VERBS
-    return is_aux_verb(word) or is_aux_lemma
-
-
 def is_cardinal(word: Token):
     """
-    Determine if the input word is a cardinal number
+    Determine if the input word is a cardinal number.
 
-    :param word: The target token
+    :param word: The target token.
     :return: True/False
     """
 
@@ -108,10 +96,10 @@ def is_cardinal(word: Token):
 
 def is_conjunction(word: Token):
     """
-    Determine if the input word has the role of conjunction or not
+    Determine if the input word has the role of conjunction.
     ("and"; "or"; ",").
 
-    :param word: The target token
+    :param word: The target token.
     :return: True/False
     """
 
@@ -127,137 +115,45 @@ def is_conjunction(word: Token):
 
 def is_noun(word: Token):
     """
-    Determine if the input word is a noun or not
+    Determine if the input word is a noun.
 
-    :param word: The target token
+    :param word: The target token.
     :return: True/False
     """
 
     if not isinstance(word, Token):
         return False
 
-    # TODO: is_pronoun => for wrong questions?
-    # return word.pos_ in ["NOUN", "PROPN"] or is_pronoun(word)
-
+    # TODO: add "PRON"?
     return word.pos_ in ["NOUN", "PROPN"]
 
 
 def is_pronoun(word: Token):
+    """
+    Determine if the input word is a pronoun.
+
+    :param word: The target token.
+    :return: True/False
+    """
+
     if not isinstance(word, Token):
         return False
 
-    # TODO: process wrong questions??
-    #   - "Where Gregory I at Byzantine Empire dired?"
-    #   - "Where Alexis of Russia was born at Tsardom of Russia?"
     return word.tag_ in ["PRP", "PRP$"]
-
-
-def is_linked_by_conjunction(word: Token):
-    """
-    Determine if the input word is preceded or followed by a conjunction
-
-    :param word: The target word
-    :return: True/False
-    """
-
-    if not isinstance(word, Token):
-        return False
-
-    if is_conjunction(word):
-        return True
-
-    prev_word = get_prev_word(word)
-    next_word = get_next_word(word)
-
-    return is_preceded_by_conjunction(prev_word) or is_followed_by_conjunction(next_word)
-
-
-def is_preceded_by_conjunction(word: Token):
-    """
-    Determine if the input word is preceded by a conjunction
-
-    :param word: The target word
-    :return: True/False
-    """
-
-    if not isinstance(word, Token):
-        return False
-
-    # 1. if the iterator has reached to the beginning of the phrase
-    # 2. if the iterator will reach to the previous phrase
-    if is_verb(word):
-        return False
-
-    if is_conjunction(word):
-        return True
-
-    prev_word = get_prev_word(word)
-    return is_preceded_by_conjunction(prev_word)
-
-
-def is_followed_by_conjunction(word: Token):
-    """
-    Determine if the input word is followed by a conjunction
-
-    :param word: The target word
-    :return: True/False
-    """
-
-    if not isinstance(word, Token):
-        return False
-
-    # 1. if the iterator has reached to the end of the phrase
-    # 2. if the iterator has reached the next phrase
-    if is_verb(word):
-        return False
-
-    if is_conjunction(word):
-        return True
-
-    next_word = get_next_word(word)
-    return is_followed_by_conjunction(next_word)
-
-
-def is_followed_by_preposition(word: Token):
-    """
-    Determine if the input word is followed by a preposition
-
-    E.g.:
-        - question: "Where does the holder of the position of Lech Kaczynski live?" [1]
-        - question: "What is the population and area of the most populated state?" [2]
-
-    :param word: The target word
-    :return: True/False
-    """
-
-    if not isinstance(word, Token):
-        return False
-
-    # 1. if the iterator has reached to the end of the phrase
-    # 2. if the iterator has reached the next phrase
-    # is_conjunction(word) => E.g.: "What is the population and area of the most populated state?" [2]
-    if is_verb(word) or is_conjunction(word):
-        return False
-
-    if is_preposition(word):
-        return True
-
-    next_word = get_next_word(word)
-    return is_followed_by_preposition(next_word)
 
 
 def is_nsubj_wh_word(sentence: Span, word: Token):
     """
-    Check if the current word is part of a chunk which is composed by
-    only a WH-word in relation of "nsubj"
+    Check if the input word is part of a chunk which is composed by
+    only a WH-word in relation of "nsubj".
 
     E.g.:
         - question: "Which is the noisiest and the largest city?"
         - chunks "Which", "the noisiest", "the largest city"
             * the chunk "Which" is WH-word in relation of "nsubj"
 
-    :param sentence: The target sentence
-    :param word: The target token
+    :param sentence: The target sentence.
+    :param word: The target token.
     :return: True/False
     """
 
@@ -274,9 +170,9 @@ def is_nsubj_wh_word(sentence: Span, word: Token):
 
 def is_preposition(word: Token):
     """
-    Determine if the input word is a preposition or not
+    Determine if the input word is a preposition.
 
-    :param word: The target token
+    :param word: The target token.
     :return: True/False
     """
 
@@ -293,9 +189,9 @@ def is_preposition(word: Token):
 
 def is_verb(word: Token):
     """
-    Determine if the input word is a verb or not
+    Determine if the input word is a verb.
 
-    :param word: The target token
+    :param word: The target token.
     :return: True/False
     """
 
@@ -305,25 +201,28 @@ def is_verb(word: Token):
     return word.pos_ in ["AUX", "VERB"]
 
 
-def is_aux_verb(word: Token):
+def is_aux(word: Token):
     """
-    Determine if the input word is an auxiliary verb or not
+    Determine if the input word is an auxiliary verb.
 
-    :param word: The target token
+    :param word: The target token.
     :return: True/False
     """
 
     if not isinstance(word, Token):
         return False
 
-    return word.pos_ == "AUX"
+    is_aux_lemma = word.lemma_.lower() in AUXILIARY_VERBS
+    is_aux_verb = word.pos_ == "AUX"
+
+    return is_aux_verb or is_aux_lemma
 
 
 def is_adj(word: Token):
     """
-    Determine if the input word is an adjective
+    Determine if the input word is an adjective.
 
-    :param word: The target token
+    :param word: The target token.
     :return: True/False
     """
 
@@ -335,9 +234,9 @@ def is_adj(word: Token):
 
 def is_adj_comparative(word: Token):
     """
-    Determine if the input word is a comparative adjective
+    Determine if the input word is a comparative adjective.
 
-    :param word: The target token
+    :param word: The target token.
     :return: True/False
     """
 
@@ -349,9 +248,9 @@ def is_adj_comparative(word: Token):
 
 def is_adj_complement(word: Token):
     """
-    Determine if the input word is an adjectival complement
+    Determine if the input word is an adjectival complement.
 
-    :param word: The target token
+    :param word: The target token.
     :return: True/False
     """
 
@@ -363,23 +262,23 @@ def is_adj_complement(word: Token):
 
 def is_adj_modifier(word: Token):
     """
-    Determine if the input word is an adjectival modifier
+    Determine if the input word is an adjectival modifier.
 
-    :param word: The target token
+    :param word: The target token.
     :return: True/False
     """
 
     if not isinstance(word, Token):
         return False
 
-    return is_adj(word) and word.dep_ == "amod"
+    return is_adj(word) and word.tag_ == "JJ" and word.dep_ == "amod"
 
 
 def is_adv(word: Token):
     """
-    Determine if the input word is an adverb
+    Determine if the input word is an adverb.
 
-    :param word: The target token
+    :param word: The target token.
     :return: True/False
     """
 
@@ -391,9 +290,9 @@ def is_adv(word: Token):
 
 def is_common_det(word: Token):
     """
-    Determine if the input word is a common determiner ("a", "the")
+    Determine if the input word is a common determiner ("a", "the").
 
-    :param word: The target token
+    :param word: The target token.
     :return: True/False
     """
 
@@ -416,7 +315,7 @@ def is_wh_adverb(word: Token):
     - https://grammar.collinsdictionary.com/easy-learning/wh-words\n
     - https://www.ling.upenn.edu/hist-corpora/annotation/pos-wh.htm
 
-    :param word: The target token
+    :param word: The target token.
     :return: True/False
     """
 
@@ -428,9 +327,9 @@ def is_wh_adverb(word: Token):
 
 def is_wh_det(word: Token):
     """
-    Determine if the input word is wh-determiner ("which", etc.)
+    Determine if the input word is wh-determiner ("which", etc.).
 
-    :param word: The target token
+    :param word: The target token.
     :return: True/False
     """
 
@@ -444,7 +343,7 @@ def is_wh_det(word: Token):
 
 def is_wh_word(word: Token):
     """
-    Check if the input word is one of the WH-words\n
+    Check if the input word is one of the WH-words:\n
     - when, where, why\n
     - whence, whereby, wherein, whereupon\n
     - how\n
@@ -455,7 +354,7 @@ def is_wh_word(word: Token):
     - https://grammar.collinsdictionary.com/easy-learning/wh-words\n
     - https://www.ling.upenn.edu/hist-corpora/annotation/pos-wh.htm
 
-    :param word: The target token
+    :param word: The target token.
     :return: True/False
     """
 
@@ -465,12 +364,88 @@ def is_wh_word(word: Token):
     return word.tag_ in ['WDT', 'WP', 'WP$', 'WRB']
 
 
-# Check if the verb is preceded by a WH-word
-# E.g.: "What are the ethnic group which start with the letter z?"
-def is_wh_related_verb(item: Token):
-    prev_word = get_prev_word(item)
+def is_followed_by_possessive(word: Token):
+    """
+    Check if the input word is followed by a possessive.
 
-    if is_verb(item) and is_wh_word(prev_word) and prev_word.i == 0:
-        return True
+    E.g.:
+        - question: "Who is the person whose successor was Le Hong Phong?"
+
+    :param word: The target token.
+    :return: True/False
+    """
+
+    if not isinstance(word, Token):
+        return False
+
+    for right in word.sent:
+        if right.i > word.i and right.dep_ == "poss":
+            return True
 
     return False
+
+
+def is_followed_by_prep(word: Token):
+    """
+    Determine if the input word is followed by a preposition.
+
+    E.g.:
+        - question: "Which soccer players were born on Malta?"
+
+    :param word: The target token.
+    :return: True/False
+    """
+
+    if not isinstance(word, Token):
+        return None
+
+    next_word = get_next_word(word)
+
+    if next_word is None:
+        return False
+
+    return next_word.dep_ == "prep"
+
+
+def is_preceded_by_adj_modifier(word: Token):
+    """
+    Determine if the input word is preceded by an adjective modifier.
+
+    E.g.:
+        - question: "Give me all Swedish holidays."
+
+    :param word: The target token.
+    :return: True/False
+    """
+
+    if not isinstance(word, Token):
+        return None
+
+    prev_word = get_prev_word(word)
+
+    if prev_word is None:
+        return False
+
+    return is_adj_modifier(prev_word)
+
+
+def is_preceded_by_pass(word: Token):
+    """
+    Determine if the input word is preceded by a passive auxiliary.
+
+    E.g.:
+        - question: ### "where was the person who won the oscar born?"
+
+    :param word: The target token.
+    :return: True/False
+    """
+
+    if not isinstance(word, Token):
+        return False
+
+    for left in list(word.lefts):
+        if left.dep_ == "auxpass":
+            return True
+
+    return False
+

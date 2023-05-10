@@ -6,8 +6,10 @@ import requests
 from spacy.tokens import Span, Token
 
 from ro.webdata.oniq.common.text_utils import WORD_SEPARATOR
+from ro.webdata.oniq.endpoint.common.CSVService import CSVService
 from ro.webdata.oniq.endpoint.common.match.PropertiesMatcher import PropertiesMatcher
 from ro.webdata.oniq.endpoint.common.match.PropertyMatcher import PropertyMatcher
+from ro.webdata.oniq.endpoint.common.path_utils import get_dbpedia_file_path
 from ro.webdata.oniq.endpoint.common.translator.CSVTranslator import CSVTranslator
 from ro.webdata.oniq.endpoint.common.translator.URITranslator import URITranslator
 from ro.webdata.oniq.endpoint.dbpedia.constants import DBPEDIA_CLASS_TYPES
@@ -159,6 +161,33 @@ class LookupService:
             resource_type = DBpediaQueryService.run_resource_query(resource_name, DBP_RESOURCE_QUERY)
 
         return resource_type
+
+    @staticmethod
+    def local_resource_lookup(resource_name):
+        """
+        Lookup for a specific resource in local files.
+
+        E.g.:
+            - question: Who is the tallest basketball player?
+            - result: "basketball player" => dbo:BasketballPlayer
+
+        Args:
+            resource_name (str): Resource name.
+
+        Returns:
+            str: Identified resource.
+        """
+
+        filepath = get_dbpedia_file_path("class_list", "csv")
+        lines = CSVService.read_lines(filepath)
+
+        for line in lines:
+            ns_label, res_label, ns, res, parent_uri = line.split('|')
+            # TODO: lookup for similarities
+            if res_label.lower() == resource_name.lower():
+                return res.replace(ns, ns_label + ":")
+
+        return None
 
 
 def _generate_lookup_params(types, output_format, noun_chunk):

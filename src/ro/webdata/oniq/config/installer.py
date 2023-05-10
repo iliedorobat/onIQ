@@ -34,7 +34,9 @@ class Installer:
         Install dependencies.
         """
 
+        # TODO: textacy?
         os.system("pip3 install pip-autoremove")
+        os.system("pip3 install gensim")
         os.system("pip3 install --user -U numpy")
         os.system("pip3 install --user parse")
         os.system("pip3 install --user langdetect")

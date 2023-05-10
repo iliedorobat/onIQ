@@ -1,0 +1,70 @@
+namespace label|resource label|namespace|resource uri|parent uri
+dbo|activity|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Activity|http://www.w3.org/2002/07/owl#Thing
+dbo|agent|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Agent|http://www.w3.org/2002/07/owl#Thing
+dbo|algorithm|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Algorithm|http://www.w3.org/2002/07/owl#Thing
+dbo|altitude|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Altitude|http://www.w3.org/2002/07/owl#Thing
+dbo|anatomical structure|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/AnatomicalStructure|http://www.w3.org/2002/07/owl#Thing
+dbo|architectural structure|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/ArchitecturalStructure|http://www.w3.org/2002/07/owl#Thing
+dbo|area|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Area|http://www.w3.org/2002/07/owl#Thing
+dbo|award|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Award|http://www.w3.org/2002/07/owl#Thing
+dbo|biomolecule|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Biomolecule|http://www.w3.org/2002/07/owl#Thing
+dbo|blazon|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Blazon|http://www.w3.org/2002/07/owl#Thing
+dbo|browser|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Browser|http://www.w3.org/2002/07/owl#Thing
+dbo|Place in the Music Charts|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/ChartsPlacements|http://www.w3.org/2002/07/owl#Thing
+dbo|chemical substance|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/ChemicalSubstance|http://www.w3.org/2002/07/owl#Thing
+dbo|cipher|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Cipher|http://www.w3.org/2002/07/owl#Thing
+dbo|colour|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Colour|http://www.w3.org/2002/07/owl#Thing
+dbo|COVID-19 pandemic|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Covid19|http://www.w3.org/2002/07/owl#Thing
+dbo|currency|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Currency|http://www.w3.org/2002/07/owl#Thing
+dbo|demographics|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Demographics|http://www.w3.org/2002/07/owl#Thing
+dbo|depth|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Depth|http://www.w3.org/2002/07/owl#Thing
+dbo|device|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Device|http://www.w3.org/2002/07/owl#Thing
+dbo|diploma|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Diploma|http://www.w3.org/2002/07/owl#Thing
+dbo|disease|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Disease|http://www.w3.org/2002/07/owl#Thing
+dbo|Election Diagram|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/ElectionDiagram|http://www.w3.org/2002/07/owl#Thing
+dbo|ethnic group|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/EthnicGroup|http://www.w3.org/2002/07/owl#Thing
+dbo|event|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Event|http://www.w3.org/2002/07/owl#Thing
+dbo|File system|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/FileSystem|http://www.w3.org/2002/07/owl#Thing
+dbo|flag|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Flag|http://www.w3.org/2002/07/owl#Thing
+dbo|food|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Food|http://www.w3.org/2002/07/owl#Thing
+dbo|gene location|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/GeneLocation|http://www.w3.org/2002/07/owl#Thing
+dbo|gross domestic product|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/GrossDomesticProduct|http://www.w3.org/2002/07/owl#Thing
+dbo|gross domestic product per capita|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/GrossDomesticProductPerCapita|http://www.w3.org/2002/07/owl#Thing
+dbo|identifier|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Identifier|http://www.w3.org/2002/07/owl#Thing
+dbo|language|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Language|http://www.w3.org/2002/07/owl#Thing
+dbo|list|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/List|http://www.w3.org/2002/07/owl#Thing
+dbo|mean of transportation|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/MeanOfTransportation|http://www.w3.org/2002/07/owl#Thing
+dbo|media|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Media|http://www.w3.org/2002/07/owl#Thing
+dbo|medical specialty|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/MedicalSpecialty|http://www.w3.org/2002/07/owl#Thing
+dbo|medicine|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Medicine|http://www.w3.org/2002/07/owl#Thing
+dbo|name|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Name|http://www.w3.org/2002/07/owl#Thing
+dbo|pandemic|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Pandemic|http://www.w3.org/2002/07/owl#Thing
+dbo|person function|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/PersonFunction|http://www.w3.org/2002/07/owl#Thing
+dbo|place|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Place|http://www.w3.org/2002/07/owl#Thing
+dbo|population|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Population|http://www.w3.org/2002/07/owl#Thing
+dbo|protocol|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Protocol|http://www.w3.org/2002/07/owl#Thing
+dbo|public service|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/PublicService|http://www.w3.org/2002/07/owl#Thing
+dbo|relationship|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Relationship|http://www.w3.org/2002/07/owl#Thing
+dbo|species|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Species|http://www.w3.org/2002/07/owl#Thing
+dbo|results of a sport competition|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/SportCompetitionResult|http://www.w3.org/2002/07/owl#Thing
+dbo|sports season|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/SportsSeason|http://www.w3.org/2002/07/owl#Thing
+dbo|spreadsheet|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Spreadsheet|http://www.w3.org/2002/07/owl#Thing
+dbo|Star сluster|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/StarCluster|http://www.w3.org/2002/07/owl#Thing
+dbo|statistic|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Statistic|http://www.w3.org/2002/07/owl#Thing
+dbo|tank|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Tank|http://www.w3.org/2002/07/owl#Thing
+dbo|time period|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/TimePeriod|http://www.w3.org/2002/07/owl#Thing
+dbo|topical concept|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/TopicalConcept|http://www.w3.org/2002/07/owl#Thing
+dbo|unit of work|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/UnitOfWork|http://www.w3.org/2002/07/owl#Thing
+dbo|unknown|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Unknown|http://www.w3.org/2002/07/owl#Thing
+dbo|work|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/Work|http://www.w3.org/2002/07/owl#Thing
+dbo|altitude|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/بلندی|http://www.w3.org/2002/07/owl#Thing
+dbo|Blazon|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/بلیزن|http://www.w3.org/2002/07/owl#Thing
+dbo|Historical region|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/تاریخی_علاقہ|http://www.w3.org/2002/07/owl#Thing
+dbo||http://dbpedia.org/ontology/|http://dbpedia.org/ontology/جھنڈا|http://www.w3.org/2002/07/owl#Thing
+dbo|Algorithm|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/حساب_و_شمار|http://www.w3.org/2002/07/owl#Thing
+dbo|Cipher|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/سائفر|http://www.w3.org/2002/07/owl#Thing
+dbo|identifier|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/شناخت_کنندہ|http://www.w3.org/2002/07/owl#Thing
+dbo|medical specialty|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/طبی_خصوصیت|http://www.w3.org/2002/07/owl#Thing
+dbo|spatial thing|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/مقامی_تھنگ|http://www.w3.org/2002/07/owl#Thing
+dbo|mean of transportation|http://dbpedia.org/ontology/|http://dbpedia.org/ontology/نقل_و_حمل_کے_ذرائع|http://www.w3.org/2002/07/owl#Thing
+owl|thing|http://www.w3.org/2002/07/owl#|http://www.w3.org/2002/07/owl#Thing|http://www.w3.org/2002/07/owl#Class
