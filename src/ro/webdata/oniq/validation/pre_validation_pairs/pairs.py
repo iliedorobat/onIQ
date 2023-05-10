@@ -67,6 +67,7 @@ QUERY_0PAIRS = [
 """
     },
     {
+        # TODO: check with QUERY_14
         "query": QUERY_05,
         "result": """
 [
@@ -77,6 +78,7 @@ QUERY_0PAIRS = [
 """
     },
     {
+        # TODO: order by
         "query": QUERY_08,
         "result": """
 [
@@ -153,6 +155,7 @@ QUERY_0PAIRS = [
 """
     },
     {
+        # TODO: SR class 3Sub
         "query": QUERY_18,
         "result": """
 [
@@ -174,6 +177,7 @@ TEST_PAIRS = [
 """
     },
     {
+        # TODO: order by
         "query": TEST_5,
         "result": """
 [

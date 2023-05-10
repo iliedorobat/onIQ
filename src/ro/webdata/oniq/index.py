@@ -1,8 +1,8 @@
 from ro.webdata.oniq.common.constants import GLOBAL_ENV, TEST_MODES
 from ro.webdata.oniq.sparql.builder import SPARQLBuilder
-from ro.webdata.oniq.validation.validation.pairs import PAIRS
-from ro.webdata.oniq.validation.validation.pairs_qald_5_test import PAIRS_QALD
-from ro.webdata.oniq.validation.validation.test import question_test, questions_test
+from ro.webdata.oniq.validation.pre_validation_pairs.pairs import PAIRS
+from ro.webdata.oniq.validation.pre_validation_pairs.pairs_qald_5_test import PAIRS_QALD
+from ro.webdata.oniq.validation.validation import question_test, questions_test
 
 
 ENDPOINT = "http://localhost:7200/repositories/TESTING_BCU_CLUJ"
