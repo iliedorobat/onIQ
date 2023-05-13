@@ -1,11 +1,11 @@
 from typing import List, Union
 
-from spacy.tokens import Span
-from spacy.tokens import Token
+from spacy.tokens import Span, Token
 
-from ro.webdata.oniq.common.nlp.word_utils import is_noun
+from ro.webdata.oniq.sparql.model.NLQuestion import NLQuestion
 from ro.webdata.oniq.sparql.model.NounEntity import NounEntity
 from ro.webdata.oniq.sparql.model.raw_triples.RawTriple import RawTriple
+from ro.webdata.oniq.sparql.model.raw_triples.raw_target_utils import RawTargetUtils
 
 
 class RawQuery:
@@ -23,15 +23,20 @@ class RawQuery:
     def __getitem__(self, item):
         return self.raw_triples[item]
 
-    def __str__(self):
-        output = "[\n"
-        for elem in self.raw_triples:
-            output += f"\t<{elem}>\n"
+    def __str__(self, include_targets: bool = False):
+        output = "target_nouns = [\n"
+        for target_noun in self.target_nouns:
+            output += f"\t{target_noun.to_var()}\n"
+        output += "]\n"
+
+        output += "raw_triples = [\n"
+        for raw_triple in self.raw_triples:
+            output += f"\t<{raw_triple}>\n"
         output += "]"
 
         return output
 
-    def append_raw_triple(self, subject: Union[NounEntity, Token], predicate: Union[str, Span], obj: Union[str, Token, NounEntity]):
+    def append_raw_triple(self, nl_question: NLQuestion, subject: Union[NounEntity, Token], predicate: Union[str, Span], obj: Union[str, Token, NounEntity]):
         raw_triple = RawTriple(subject, predicate, obj)
 
         if not raw_triple.is_valid():
@@ -39,7 +44,7 @@ class RawQuery:
             return None
 
         self.raw_triples.append(raw_triple)
-        _update_target_nouns(self.target_nouns, self.sentence, raw_triple)
+        RawTargetUtils.update_target_nouns(nl_question, self.target_nouns, self.sentence, raw_triple)
         return raw_triple
 
     # # TODO: check
@@ -65,23 +70,3 @@ class RawQuery:
     #         return filtered_props[0]
     #
     #     return None
-
-
-def _update_target_nouns(target_nouns: List[NounEntity], sentence: Span, raw_triple: RawTriple):
-    new_target_nouns = _get_target_nouns(sentence)
-    
-    for target_noun in new_target_nouns:
-        if raw_triple.s.noun == target_noun:
-            target_nouns.append(raw_triple.s)
-        if raw_triple.o.noun == target_noun:
-            target_nouns.append(raw_triple.o)
-
-
-def _get_target_nouns(sentence: Span):
-    target_nouns = []
-    
-    for token in sentence:
-        if is_noun(token) and token.head == sentence.root:
-            target_nouns.append(token)
-
-    return target_nouns

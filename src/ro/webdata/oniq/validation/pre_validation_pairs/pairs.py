@@ -34,7 +34,10 @@ QUERY_0PAIRS = [
     {
         "query": QUERY_01,
         "result": """
-[
+target_nouns = [
+	?location
+]
+raw_triples = [
 	<?person   born   ?location>
 	<?person   rdf:type   dbo:Person>
 	<?person   successor   res:Le_Hong_Phong>
@@ -44,7 +47,10 @@ QUERY_0PAIRS = [
     {
         "query": QUERY_02,
         "result": """
-[
+target_nouns = [
+	?person
+]
+raw_triples = [
 	<?person   successor   res:Le_Hong_Phong>
 ]
 """
@@ -52,7 +58,10 @@ QUERY_0PAIRS = [
     {
         "query": QUERY_03,
         "result": """
-[
+target_nouns = [
+	?location
+]
+raw_triples = [
 	<res:New_York_Times   published   ?location>
 ]
 """
@@ -60,7 +69,10 @@ QUERY_0PAIRS = [
     {
         "query": QUERY_04,
         "result": """
-[
+target_nouns = [
+	?location
+]
+raw_triples = [
 	<?father   die   ?location>
 	<res:Mashhur_bin_Abdulaziz_Al_Saud   father   ?father>
 ]
@@ -70,7 +82,10 @@ QUERY_0PAIRS = [
         # TODO: check with QUERY_14
         "query": QUERY_05,
         "result": """
-[
+target_nouns = [
+	?leader
+]
+raw_triples = [
 	<?town   leader   ?leader>
 	<?town   rdf:type   dbo:Town>
 	<res:Myntdu_river   originates   ?town>
@@ -79,9 +94,13 @@ QUERY_0PAIRS = [
     },
     {
         # TODO: order by
+        # TODO: and area
         "query": QUERY_08,
         "result": """
-[
+target_nouns = [
+	?population
+]
+raw_triples = [
 	<?populated_state   population   ?population>
 	<?populated_state   rdf:type   dbo:State>
 ]
@@ -90,7 +109,10 @@ QUERY_0PAIRS = [
     {
         "query": QUERY_09,
         "result": """
-[
+target_nouns = [
+	?location
+]
+raw_triples = [
 	<res:Fort_Knox   located   ?location>
 ]
 """
@@ -98,7 +120,10 @@ QUERY_0PAIRS = [
     {
         "query": QUERY_10,
         "result": """
-[
+target_nouns = [
+	?builder
+]
+raw_triples = [
 	<res:Kerkichi_Bridge   builder   ?builder>
 ]
 """
@@ -106,7 +131,10 @@ QUERY_0PAIRS = [
     {
         "query": QUERY_11,
         "result": """
-[
+target_nouns = [
+	?nationality
+]
+raw_triples = [
 	<res:Aishath_Saffa   nationality   ?nationality>
 ]
 """
@@ -114,7 +142,10 @@ QUERY_0PAIRS = [
     {
         "query": QUERY_12,
         "result": """
-[
+target_nouns = [
+	?denomination
+]
+raw_triples = [
 	<res:S._H._Kapadia   denomination   ?denomination>
 ]
 """
@@ -122,7 +153,10 @@ QUERY_0PAIRS = [
     {
         "query": QUERY_13,
         "result": """
-[
+target_nouns = [
+	?city
+]
+raw_triples = [
 	<?city   mayor   res:Anne_Hidalgo>
 ]
 """
@@ -130,7 +164,10 @@ QUERY_0PAIRS = [
     {
         "query": QUERY_14,
         "result": """
-[
+target_nouns = [
+	?religion
+]
+raw_triples = [
 	<?person   religion   ?religion>
 	<?person   rdf:type   dbo:Person>
 	<res:Emel_magazine   founded   ?person>
@@ -140,7 +177,10 @@ QUERY_0PAIRS = [
     {
         "query": QUERY_15,
         "result": """
-[
+target_nouns = [
+	?spouse
+]
+raw_triples = [
 	<res:Daniel_Gibson   spouse   ?spouse>
 ]
 """
@@ -148,7 +188,10 @@ QUERY_0PAIRS = [
     {
         "query": QUERY_17,
         "result": """
-[
+target_nouns = [
+	?location
+]
+raw_triples = [
 	<?designer   born   ?location>
 	<?designer   designer   res:REP_Parasol>
 ]
@@ -158,18 +201,24 @@ QUERY_0PAIRS = [
         # TODO: SR class 3Sub
         "query": QUERY_18,
         "result": """
-[
+target_nouns = [
+	?operator
+]
+raw_triples = [
 	<res:SR_class   operator   ?operator>
 ]
 """
     },
 ]
 
-TEST_PAIRS = [
+TEST_PAIRS = raw_triples = [
     {
         "query": TEST_3,
         "result": """
-[
+target_nouns = [
+	?location
+]
+raw_triples = [
 	<?person   location   ?location>
 	<?person   successor   ?successor>
 	<?successor   studied   ?law>
@@ -180,7 +229,10 @@ TEST_PAIRS = [
         # TODO: order by
         "query": TEST_5,
         "result": """
-[
+target_nouns = [
+	?building
+]
+raw_triples = [
 	<?building   location   res:Romania>
 	<?building   rdf:type   dbo:Building>
 ]
@@ -189,7 +241,10 @@ TEST_PAIRS = [
     {
         "query": TEST_6,
         "result": """
-[
+target_nouns = [
+	?location
+]
+raw_triples = [
 	<?person   born   ?location>
 	<?person   rdf:type   dbo:Person>
 	<?person   won   ?oscar>
@@ -199,7 +254,10 @@ TEST_PAIRS = [
     {
         "query": TEST_7,
         "result": """
-[
+target_nouns = [
+	?leader
+]
+raw_triples = [
 	<res:USA   leader   ?leader>
 ]
 """
@@ -207,7 +265,10 @@ TEST_PAIRS = [
     {
         "query": TEST_8,
         "result": """
-[
+target_nouns = [
+	?person
+]
+raw_triples = [
 	<?person   successor   res:Le_Hong_Phong>
 	<?person   rdf:type   dbo:Person>
 ]

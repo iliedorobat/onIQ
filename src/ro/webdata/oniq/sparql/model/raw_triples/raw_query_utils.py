@@ -13,11 +13,11 @@ from ro.webdata.oniq.sparql.model.raw_triples.raw_triple_utils import get_relate
 
 class RawQueryUtils:
     @staticmethod
-    def aux_processing(raw_query: RawQuery, root: Token, nl_question: NLQuestion):
+    def aux_processing(nl_question: NLQuestion, raw_query: RawQuery, root: Token):
         # E.g.: "Who is the leader of the town where the Myntdu river originates?"
     
         sentence = root.sent  # TODO: remove
-        triple = _append_root_aux_triple(raw_query, sentence, root, nl_question.target)
+        triple = _append_root_aux_triple(nl_question, raw_query, sentence, root, nl_question.target)
         # <(town)   (leader)   (leader)>
     
         if triple is None:
@@ -26,7 +26,7 @@ class RawQueryUtils:
             obj = NounEntity(
                 get_child_noun(root, sentence)
             )
-            triple = _append_rdf_type_triple(raw_query, subject, obj)
+            triple = _append_rdf_type_triple(nl_question, raw_query, subject, obj)
     
         if triple is None:
             # E.g.: "Who is the youngest Pulitzer Prize winner?"
@@ -37,17 +37,17 @@ class RawQueryUtils:
             )
             if obj.noun.dep_ == "attr":
                 predicate = obj.to_span()
-            triple = raw_query.append_raw_triple(subject, predicate, obj)
+            triple = raw_query.append_raw_triple(nl_question, subject, predicate, obj)
     
         if triple is not None:
-            _append_rdf_type_triple(raw_query, triple.s, triple.s)
+            _append_rdf_type_triple(nl_question, raw_query, triple.s, triple.s)
             related_verb = get_related_verb(triple.s.noun, sentence)
 
             if related_verb is not None:
                 subject = get_child_noun(related_verb, sentence)
                 predicate = related_verb
                 obj = triple.s
-                triple = raw_query.append_raw_triple(subject, token_to_span(predicate), obj)
+                triple = raw_query.append_raw_triple(nl_question, subject, token_to_span(predicate), obj)
                 # <("Myntdu river")   (originates)   (town)>
             else:
                 # E.g.: "What is the population and area of the most populated state?"
@@ -69,38 +69,38 @@ class RawQueryUtils:
                 for noun in rights:
                     if triple.s.token != noun:
                         # triple.s.token == noun => E.g.: "What is the tallest building in Romania?"
-                        triple = raw_query.append_raw_triple(triple.s, token_to_span(noun), noun)
+                        triple = raw_query.append_raw_triple(nl_question, triple.s, token_to_span(noun), noun)
     
         pass
 
     @staticmethod
-    def aux_ask_processing(raw_query: RawQuery, root: Token):
+    def aux_ask_processing(nl_question: NLQuestion, raw_query: RawQuery, root: Token):
         # E.g.: "Did Arnold Schwarzenegger attend a university?"
     
         sentence = root.sent  # TODO: remove
-        triple = _append_root_aux_ask_triple(raw_query, sentence, root)
+        triple = _append_root_aux_ask_triple(nl_question, raw_query, sentence, root)
         # <subject of the root (Schwarzenegger)   predicate (attend)   object (university)>
     
-        _append_rdf_type_triple(raw_query, triple.o, triple.o)
+        _append_rdf_type_triple(nl_question, raw_query, triple.o, triple.o)
         # <(university)   (rdf:type)   (dbo:University)>
     
         pass
 
     @staticmethod
-    def main_processing(raw_query: RawQuery, root: Token, nl_question: NLQuestion):
+    def main_processing(nl_question: NLQuestion, raw_query: RawQuery, root: Token):
         # FIXME: "Who won the Pulitzer Prize?"
     
         # ends with a verb
         # E.g.: [1] "Where is the New York Times published?"
         # E.g.: [2] "Where did Mashhur bin Abdulaziz Al Saud's father die?"
     
-        triple = _append_root_target_triple(raw_query, root, nl_question.target)
+        triple = _append_root_target_triple(nl_question, raw_query, root, nl_question.target)
         # [1] <subject of the predicate ("New York Times")   predicate (published)>   target (location)> (NER)
         # [2] <subject of the predicate (father)             predicate (die)          target (location)>
     
         if not triple.o.is_text:
             # E.g.: "Which musician wrote the most books?"
-            _append_rdf_type_triple(raw_query, triple.o, triple.o)
+            _append_rdf_type_triple(nl_question, raw_query, triple.o, triple.o)
     
         subject = get_child_noun(triple.s.compound_noun[0], root.sent)
 
@@ -111,13 +111,13 @@ class RawQueryUtils:
             if len(pos) > 0:
                 predicate = triple.s.to_span()
                 obj = triple.s
-                triple = raw_query.append_raw_triple(subject, predicate, obj)
+                triple = raw_query.append_raw_triple(nl_question, subject, predicate, obj)
                 # [2] <subject ("Mashhur bin Abdulaziz Al Saud")   subject.head (father)   subject.head (father)> (NER)
     
         pass
 
     @staticmethod
-    def passive_processing(raw_query: RawQuery, root: Token, nl_question: NLQuestion):
+    def passive_processing(nl_question: NLQuestion, raw_query: RawQuery, root: Token):
         # ends with a verb which has a passive verb attached
         # E.g.: [1] "Where is Fort Knox located?"
         # E.g.: [2] "Where was the person who won the oscar born?" [passive attachment]
@@ -125,15 +125,15 @@ class RawQueryUtils:
         # E.g.: [4] "Where was the designer of REP Parasol born?"
     
         sentence = root.sent  # TODO: remove
-        triple = _append_root_target_triple(raw_query, root, nl_question.target)
+        triple = _append_root_target_triple(nl_question, raw_query, root, nl_question.target)
         # [1] <subject of root ("Fort Knox")   predicate (located)   target (location)> (NER)
         # [2] <subject of root (person)        predicate (born)      target (location)>
         # [3] <subject of root (person)        predicate (born)      target (location)>
         # [4] <subject of root (designer)      predicate (born)      target (location)>
-        _append_rdf_type_triple(raw_query, triple.s, triple.s)
+        _append_rdf_type_triple(nl_question, raw_query, triple.s, triple.s)
     
         if contains_multiple_wh_words(sentence):
-            triple = _append_passive_triple(raw_query, sentence, triple.s, triple.p.root)
+            triple = _append_passive_triple(nl_question, raw_query, sentence, triple.s, triple.p.root)
             # [2] <subject of root (person)    predicate (won)        object (oscar)>
             # [3] <subject of root (person)    predicate (successor)  object ("Le Hong Phong")>
     
@@ -143,27 +143,27 @@ class RawQueryUtils:
             subject = get_child_noun(triple.p.root, sentence)
             predicate = subject
             obj = get_child_noun(subject, sentence)
-            triple = raw_query.append_raw_triple(subject, token_to_span(predicate), obj)
+            triple = raw_query.append_raw_triple(nl_question, subject, token_to_span(predicate), obj)
             # [4] <subject of root (designer)   subject of root (designer)  pobj ("REP Parasol")
     
         pass
 
     @staticmethod
-    def possessive_processing(raw_query: RawQuery, root: Token, nl_question: NLQuestion):
+    def possessive_processing(nl_question: NLQuestion, raw_query: RawQuery, root: Token):
         # E.g.: "Whose successor is Le Hong Phong?"  ## made by me
 
         sentence = root.sent  # TODO: remove
         subject = nl_question.target
         predicate = get_child_noun(root, sentence)
         obj = get_child_noun(root, sentence[root.i + 1:])
-        triple = raw_query.append_raw_triple(subject, token_to_span(predicate), obj)
+        triple = raw_query.append_raw_triple(nl_question, subject, token_to_span(predicate), obj)
 
-        _append_rdf_type_triple(raw_query, triple.s, triple.s)
+        _append_rdf_type_triple(nl_question, raw_query, triple.s, triple.s)
     
         pass
 
     @staticmethod
-    def possessive_complex_processing(raw_query: RawQuery, root: Token, nl_question: NLQuestion):
+    def possessive_complex_processing(nl_question: NLQuestion, raw_query: RawQuery, root: Token):
         sentence = root.sent  # TODO: remove
     
         if ends_with_verb(sentence):
@@ -173,7 +173,7 @@ class RawQueryUtils:
             predicate = nl_question.target
             obj = nl_question.target
             # triple = append_root_target_triple(self.triples, root, nl_question.target)
-            triple = raw_query.append_raw_triple(subject, predicate, obj)
+            triple = raw_query.append_raw_triple(nl_question, subject, predicate, obj)
 
             related_verb = get_related_verb(triple.s.noun, sentence[subject.i + 1:])
             child_noun = get_child_noun(related_verb, sentence)
@@ -181,12 +181,12 @@ class RawQueryUtils:
             subject = triple.s
             predicate = child_noun
             obj = child_noun
-            triple = raw_query.append_raw_triple(subject, token_to_span(predicate), obj)
+            triple = raw_query.append_raw_triple(nl_question, subject, token_to_span(predicate), obj)
 
             subject = child_noun
             predicate = related_verb
             obj = get_child_noun(related_verb, sentence[related_verb.i + 1:])
-            triple = raw_query.append_raw_triple(subject, token_to_span(predicate), obj)
+            triple = raw_query.append_raw_triple(nl_question, subject, token_to_span(predicate), obj)
     
             pass
         else:
@@ -195,12 +195,12 @@ class RawQueryUtils:
             subject = get_child_noun(root, sentence)
             predicate = get_child_noun(subject, sentence)
             obj = get_child_noun(predicate.head, sentence[predicate.i + 1:])
-            triple = raw_query.append_raw_triple(subject, token_to_span(predicate), obj)
+            triple = raw_query.append_raw_triple(nl_question, subject, token_to_span(predicate), obj)
     
         pass
 
     @staticmethod
-    def verb_ask(raw_query: RawQuery, root: Token):
+    def verb_ask(nl_question: NLQuestion, raw_query: RawQuery, root: Token):
         sentence = root.sent  # TODO: remove
         child_noun = get_child_noun(root, sentence)
     
@@ -210,46 +210,44 @@ class RawQueryUtils:
                 get_child_noun(child_noun, sentence)
             )
             predicate = child_noun
-            obj = NounEntity(predicate.lemma_)
+            obj = NounEntity(child_noun.lemma_, child_noun)
     
-            raw_query.append_raw_triple(subject, token_to_span(predicate), obj)
+            raw_query.append_raw_triple(nl_question, subject, token_to_span(predicate), obj)
     
         elif is_preceded_by_adj_modifier(child_noun):
             # E.g.: "Give me all Swedish holidays."
-    
             adj_modifier = get_prev_word(child_noun)
-            rdf_type = NounEntity(child_noun.lemma_)
-            triple = _append_rdf_type_triple(raw_query, rdf_type, rdf_type)
+            rdf_type = NounEntity(child_noun.lemma_, child_noun)
+            triple = _append_rdf_type_triple(nl_question, raw_query, rdf_type, rdf_type)
     
             obj = NounEntity(adj_modifier)
-            triple = raw_query.append_raw_triple(triple.s, "country", obj)
+            triple = raw_query.append_raw_triple(nl_question, triple.s, "country", obj)
     
         else:
             # E.g.: "Give me all ESA astronauts."
-    
             prev_word = get_prev_word(child_noun)
     
             if prev_word.dep_ == "compound":
-                rdf_type = NounEntity(child_noun.lemma_)
-                triple = _append_rdf_type_triple(raw_query, rdf_type, rdf_type)
+                rdf_type = NounEntity(child_noun.lemma_, child_noun)
+                triple = _append_rdf_type_triple(nl_question, raw_query, rdf_type, rdf_type)
     
                 obj = NounEntity(prev_word)
-                triple = raw_query.append_raw_triple(triple.s, "prop", obj)
+                triple = raw_query.append_raw_triple(nl_question, triple.s, "prop", obj)
     
         pass
 
     @staticmethod
-    def prep_ask_processing(raw_query: RawQuery, root: Token):
+    def prep_ask_processing(nl_question: NLQuestion, raw_query: RawQuery, root: Token):
         # E.g.: [1] "In which country is Mecca located?"
         # E.g.: [2] "At what distance does the earth curve?"  # TODO:
     
-        triple = _append_root_target_prep_triple(raw_query, root)
+        triple = _append_root_target_prep_triple(nl_question, raw_query, root)
         # <subject of the root (Mecca)   object (country)   object (country)>
     
         pass
 
 
-def _append_rdf_type_triple(raw_query: RawQuery, subject, entity: NounEntity):
+def _append_rdf_type_triple(nl_question: NLQuestion, raw_query: RawQuery, subject, entity: NounEntity):
     for triple in raw_query.raw_triples:
         if triple.s == subject and str(triple.p) == "rdf:type":
             # E.g.: "Who is the tallest basketball player?"
@@ -257,12 +255,12 @@ def _append_rdf_type_triple(raw_query: RawQuery, subject, entity: NounEntity):
 
     if not entity.is_named_entity:
         resource = LookupService.local_resource_lookup(entity.text)
-        return raw_query.append_raw_triple(subject, "rdf:type", NounEntity(resource, entity.token))
+        return raw_query.append_raw_triple(nl_question, subject, "rdf:type", NounEntity(resource, entity.token))
 
     return None
 
 
-def _append_root_aux_ask_triple(raw_query: RawQuery, sentence: Span, root: Token):
+def _append_root_aux_ask_triple(nl_question: NLQuestion, raw_query: RawQuery, sentence: Span, root: Token):
     subject = get_child_noun(root, sentence)
     obj = get_child_noun(subject, sentence[subject.i + 1:])
 
@@ -274,10 +272,10 @@ def _append_root_aux_ask_triple(raw_query: RawQuery, sentence: Span, root: Token
     if obj is None:
         return None
 
-    return raw_query.append_raw_triple(subject, token_to_span(root), obj)
+    return raw_query.append_raw_triple(nl_question, subject, token_to_span(root), obj)
 
 
-def _append_root_aux_triple(raw_query: RawQuery, sentence: Span, root: Token, target: str):
+def _append_root_aux_triple(nl_question: NLQuestion, raw_query: RawQuery, sentence: Span, root: Token, target: str):
     child_noun = NounEntity(
         get_child_noun(root, sentence)
     )
@@ -306,10 +304,10 @@ def _append_root_aux_triple(raw_query: RawQuery, sentence: Span, root: Token, ta
             predicate = child_noun.to_span()
             obj = child_noun  # leader
 
-    return raw_query.append_raw_triple(subject, predicate, obj)
+    return raw_query.append_raw_triple(nl_question, subject, predicate, obj)
 
 
-def _append_root_target_triple(raw_query: RawQuery, root: Token, question_target: str):
+def _append_root_target_triple(nl_question: NLQuestion, raw_query: RawQuery, root: Token, question_target: str):
     # E.g.: [1] "Where is Fort Knox located?"
     # E.g.: [2] "Where is the New York Times published?"
     # E.g.: [3] "Where did Mashhur bin Abdulaziz Al Saud's father die?"
@@ -336,10 +334,10 @@ def _append_root_target_triple(raw_query: RawQuery, root: Token, question_target
             if len(rights) > 0:
                 obj = NounEntity(rights[0])
 
-    return raw_query.append_raw_triple(subject, token_to_span(root), obj)
+    return raw_query.append_raw_triple(nl_question, subject, token_to_span(root), obj)
 
 
-def _append_root_target_prep_triple(raw_query: RawQuery, root: Token):
+def _append_root_target_prep_triple(nl_question: NLQuestion, raw_query: RawQuery, root: Token):
     # E.g.: [1] "In which country is Mecca located?"
     # E.g.: [2] "At what distance does the earth curve?"
 
@@ -347,10 +345,10 @@ def _append_root_target_prep_triple(raw_query: RawQuery, root: Token):
     obj = get_child_noun(root.sent[0], root.sent)
     predicate = obj
 
-    return raw_query.append_raw_triple(subject, token_to_span(predicate), obj)
+    return raw_query.append_raw_triple(nl_question, subject, token_to_span(predicate), obj)
 
 
-def _append_passive_triple(raw_query: RawQuery, sentence: Span, subject: NounEntity, predicate: Token):
+def _append_passive_triple(nl_question: NLQuestion, raw_query: RawQuery, sentence: Span, subject: NounEntity, predicate: Token):
     triple = None
 
     if ends_with_verb(sentence):
@@ -358,13 +356,13 @@ def _append_passive_triple(raw_query: RawQuery, sentence: Span, subject: NounEnt
 
         predicate = get_related_verb(subject.noun, sentence)
         obj = get_child_noun(predicate, sentence[predicate.i + 1:])
-        triple = raw_query.append_raw_triple(subject, token_to_span(predicate), obj)
+        triple = raw_query.append_raw_triple(nl_question, subject, token_to_span(predicate), obj)
     else:
         # E.g.: "Where was the person born whose successor was Le Hong Phong?"
 
         next_verb = get_related_verb(predicate, sentence[predicate.i + 1:])
         predicate = get_child_noun(next_verb, sentence)
         obj = get_child_noun(next_verb, sentence[next_verb.i + 1:])
-        triple = raw_query.append_raw_triple(subject, token_to_span(predicate), obj)
+        triple = raw_query.append_raw_triple(nl_question, subject, token_to_span(predicate), obj)
 
     return triple

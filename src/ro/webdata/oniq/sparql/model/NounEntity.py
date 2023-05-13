@@ -22,6 +22,7 @@ class NounEntity:
 
         if isinstance(token, Token):
             # E.g.: "Who is the tallest basketball player?"
+            # E.g.: "Give me all ESA astronauts."
             self.token = token
         elif isinstance(word, Token):
             self.token = word
@@ -64,6 +65,9 @@ class NounEntity:
 
     def is_null(self):
         return str(self) == "NULL"
+
+    def is_var(self):
+        return "?" in self.to_var()
 
     def to_span(self):
         compound_noun = _get_noun_entity(self.noun)

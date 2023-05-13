@@ -13,7 +13,7 @@ from ro.webdata.oniq.sparql.model.raw_triples.raw_query_utils import RawQueryUti
 
 
 class SPARQLBuilder:
-    def __init__(self, endpoint, input_question, print_deps=True, print_result=False):
+    def __init__(self, endpoint, input_question, print_deps=True, print_result=False, include_targets=False):
         self.raw_query = _prepare_raw_query(input_question, print_deps)
         # self.triples = Triples(self.raw_query.raw_triples)
 
@@ -53,21 +53,21 @@ def _prepare_raw_query(input_question: str, print_deps: bool):
         raw_query = RawQuery(sentence)
 
         if root_type == ROOT_TYPES.AUX_ASK:
-            RawQueryUtils.aux_ask_processing(raw_query, root)
+            RawQueryUtils.aux_ask_processing(nl_question, raw_query, root)
         if root_type == ROOT_TYPES.VERB_ASK:
-            RawQueryUtils.verb_ask(raw_query, root)
+            RawQueryUtils.verb_ask(nl_question, raw_query, root)
         elif root_type == ROOT_TYPES.PREP_ASK:
-            RawQueryUtils.prep_ask_processing(raw_query, root)
+            RawQueryUtils.prep_ask_processing(nl_question, raw_query, root)
         elif root_type == ROOT_TYPES.PASSIVE:
-            RawQueryUtils.passive_processing(raw_query, root, nl_question)
+            RawQueryUtils.passive_processing(nl_question, raw_query, root)
         elif root_type == ROOT_TYPES.POSSESSIVE:
-            RawQueryUtils.possessive_processing(raw_query, root, nl_question)
+            RawQueryUtils.possessive_processing(nl_question, raw_query, root)
         elif root_type == ROOT_TYPES.POSSESSIVE_COMPLEX:
-            RawQueryUtils.possessive_complex_processing(raw_query, root, nl_question)
+            RawQueryUtils.possessive_complex_processing(nl_question, raw_query, root)
         elif root_type == ROOT_TYPES.AUX:
-            RawQueryUtils.aux_processing(raw_query, root, nl_question)
+            RawQueryUtils.aux_processing(nl_question, raw_query, root)
         elif root_type == ROOT_TYPES.MAIN:
-            RawQueryUtils.main_processing(raw_query, root, nl_question)
+            RawQueryUtils.main_processing(nl_question, raw_query, root)
         else:
             # subject = root
             # predicate = get_related_verb(subject, sentence[subject.i + 1:])

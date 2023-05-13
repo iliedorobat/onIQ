@@ -19,7 +19,10 @@ PAIRS_QALD = [
         "onlydbo": True,
         "query": "Did Arnold Schwarzenegger attend a university?",
         "result": """
-[
+target_nouns = [
+	?university
+]
+raw_triples = [
 	<res:Arnold_Schwarzenegger   attend   ?university>
 	<?university   rdf:type   dbo:University>
 ]
@@ -32,7 +35,9 @@ PAIRS_QALD = [
         "onlydbo": True,
         "query": "Is Barack Obama a democrat?",
         "result": """
-[
+target_nouns = [
+]
+raw_triples = [
 	<res:Barack_Obama   Is   res:democrat>
 ]
 """
@@ -64,7 +69,10 @@ PAIRS_QALD = [
         "onlydbo": True,
         "query": "In which country is Mecca located?",
         "result": """
-[
+target_nouns = [
+	?country
+]
+raw_triples = [
 	<res:Mecca   country   ?country>
 ]
 """
@@ -76,7 +84,10 @@ PAIRS_QALD = [
         "onlydbo": True,
         "query": "Give me all ESA astronauts.",
         "result": """
-[
+target_nouns = [
+	?astronaut
+]
+raw_triples = [
 	<?astronaut   rdf:type   dbo:Astronaut>
 	<?astronaut   prop   res:ESA>
 ]
@@ -89,7 +100,10 @@ PAIRS_QALD = [
         "onlydbo": True,
         "query": "Give me all Swedish holidays.",
         "result": """
-[
+target_nouns = [
+	?holiday
+]
+raw_triples = [
 	<?holiday   rdf:type   dbo:Holiday>
 	<?holiday   country   res:Sweden>
 ]
@@ -102,7 +116,10 @@ PAIRS_QALD = [
         "onlydbo": True,
         "query": "Give me the currency of China.",
         "result": """
-[
+target_nouns = [
+	?currency
+]
+raw_triples = [
 	<res:China   currency   ?currency>
 ]
 """
@@ -124,7 +141,10 @@ PAIRS_QALD = [
         "onlydbo": True,
         "query": "When did the Ming dynasty dissolve?",
         "result": """
-[
+target_nouns = [
+	?time
+]
+raw_triples = [
 	<res:Ming_dynasty   dissolve   ?time>
 ]
 """
@@ -146,7 +166,10 @@ PAIRS_QALD = [
         "onlydbo": True,
         "query": "Who is the manager of Real Madrid?",
         "result": """
-[
+target_nouns = [
+	?manager
+]
+raw_triples = [
 	<res:Real_Madrid   manager   ?manager>
 ]
 """
@@ -158,7 +181,10 @@ PAIRS_QALD = [
         "onlydbo": True,
         "query": "Who were the parents of Queen Victoria?",
         "result": """
-[
+target_nouns = [
+	?parents
+]
+raw_triples = [
 	<res:Queen_Victoria   parents   ?parents>
 ]
 """
@@ -172,7 +198,7 @@ PAIRS_QALD = [
 #         "onlydbo": True,
 #         "query": "Who killed John Lennon?",
 #         "result": """
-# [
+# raw_triples = [
 # 	<res:John_Lennon   killed   ?person>
 # ]
 # """
@@ -186,7 +212,10 @@ PAIRS_QALD = [
         "onlydbo": True,
         "query": "Who is the youngest Pulitzer Prize winner?",
         "result": """
-[
+target_nouns = [
+	?person
+]
+raw_triples = [
 	<?person   winner   res:Pulitzer_Prize>
 	<?person   rdf:type   dbo:Person>
 ]
@@ -200,7 +229,10 @@ PAIRS_QALD = [
         "onlydbo": True,
         "query": "Who is the oldest child of Meryl Streep?",
         "result": """
-[
+target_nouns = [
+	?child
+]
+raw_triples = [
 	<res:Meryl_Streep   child   ?child>
 ]
 """
@@ -222,7 +254,10 @@ PAIRS_QALD = [
         "onlydbo": True,
         "query": "Who is the tallest basketball player?",
         "result": """
-[
+target_nouns = [
+	?person
+]
+raw_triples = [
 	<?person   rdf:type   dbo:BasketballPlayer>
 ]
 """
@@ -244,7 +279,10 @@ PAIRS_QALD = [
         "onlydbo": True,
         "query": "What is the net income of Apple?",
         "result": """
-[
+target_nouns = [
+	?net_income
+]
+raw_triples = [
 	<res:Apple_Inc.   net_income   ?net_income>
 ]
 """
@@ -257,7 +295,10 @@ PAIRS_QALD = [
         "onlydbo": True,
         "query": "What is the highest mountain in Italy?",
         "result": """
-[
+target_nouns = [
+	?mountain
+]
+raw_triples = [
 	<?mountain   location   res:Italy>
 	<?mountain   rdf:type   dbo:Mountain>
 ]
@@ -337,7 +378,10 @@ PAIRS_QALD = [
         "onlydbo": True,
         "query": "How many ethnic groups live in Slovenia?",
         "result": """
-[
+target_nouns = [
+	?ethnic_groups
+]
+raw_triples = [
 	<?ethnic_groups   live   res:Slovenia>
 ]
 """
@@ -359,7 +403,10 @@ PAIRS_QALD = [
         "onlydbo": True,
         "query": "Which soccer players were born on Malta?",
         "result": """
-[
+target_nouns = [
+	?players
+]
+raw_triples = [
 	<?players   born   res:Malta>
 	<?players   rdf:type   dbo:SoccerPlayer>
 ]
@@ -427,7 +474,10 @@ PAIRS_QALD = [
         "onlydbo": True,
         "query": "Which museum in New York has the most visitors?",
         "result": """
-[
+target_nouns = [
+	?museum
+]
+raw_triples = [
 	<?museum   location   res:New_York>
 	<?museum   rdf:type   dbo:Museum>
 	<?museum   visitors   ?visitors>
