@@ -420,6 +420,7 @@ PAIRS_QALD = [
 # """
 #     },
     {
+        # TODO: count
         "aggregation": True,
         "answertype": "resource",
         "hybrid": False,

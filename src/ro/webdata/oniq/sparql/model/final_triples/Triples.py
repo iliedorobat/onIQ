@@ -1,16 +1,14 @@
-from typing import List, Union
+from typing import List
 
-from spacy.tokens import Token
-
-from ro.webdata.oniq.sparql.model.NounEntity import NounEntity
-from ro.webdata.oniq.sparql.model.Triple import Triple
+from ro.webdata.oniq.sparql.model.final_triples.Triple import Triple
+from ro.webdata.oniq.sparql.model.raw_triples.RawTriple import RawTriple
 
 
 class Triples:
     elements: List[Triple]
 
-    def __init__(self, elements: List[Triple]):
-        self.elements = elements
+    def __init__(self, raw_triples: List[RawTriple]):
+        self.elements = _init_triples(raw_triples)
 
     def __len__(self):
         return len(self.elements)
@@ -28,16 +26,6 @@ class Triples:
 
     def append(self, triple: Triple):
         self.elements.append(triple)
-
-    def append_triple(self, subject: Union[NounEntity, Token], predicate: Union[str, Token], obj: Union[str, Token, NounEntity]):
-        triple = Triple(subject, predicate, obj)
-
-        if not triple.is_valid():
-            # E.g.: "Where is Fort Knox located?"
-            return None
-
-        self.elements.append(triple)
-        return triple
 
     # # TODO: check
     # def unique(self):
@@ -62,3 +50,13 @@ class Triples:
     #         return filtered_props[0]
     #
     #     return None
+
+
+def _init_triples(raw_triples: List[RawTriple]):
+    triples = []
+
+    for raw_triple in raw_triples:
+        triple = Triple(raw_triple)
+        triples.append(triple)
+
+    return triples

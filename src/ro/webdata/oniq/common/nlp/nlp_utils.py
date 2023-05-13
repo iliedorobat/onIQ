@@ -208,6 +208,17 @@ def retokenize(document: Union[Doc, Span], sentence: Span):
                 retokenizer.merge(entity)
 
 
+def token_to_span(word: Token):
+    """
+    Convert a Token to a Span entity
+
+    :param word: The target token
+    :return: Span
+    """
+
+    return Span(word.doc, word.i, word.i + 1, label=word.ent_type)
+
+
 def _prepare_compound_entity(named_entity: Span):
     """
     Join two or more words which have a "compound" dependency.

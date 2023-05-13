@@ -128,13 +128,13 @@ def _calculate_word_similarity_score(rdf_prop, word, result_type):
     prop_tokens = rdf_prop.label_to_non_stop_tokens()
 
     for index, prop_token in list(enumerate(prop_tokens)):
-        word_1 = nlp_model(word.text)[0]
-        word_2 = nlp_model(prop_token.text)[0]
+        word_1 = nlp_model(word.lemma_)[0]
+        word_2 = nlp_model(prop_token.lemma_)[0]
 
         if not word_1.has_vector:
-            console.warning(SYSTEM_MESSAGES.VECTORS_NOT_AVAILABLE % word_1.text)
+            console.warning(SYSTEM_MESSAGES.VECTORS_NOT_AVAILABLE % word_1.lemma_)
         if not word_2.has_vector:
-            console.warning(SYSTEM_MESSAGES.VECTORS_NOT_AVAILABLE % word_2.text)
+            console.warning(SYSTEM_MESSAGES.VECTORS_NOT_AVAILABLE % word_2.lemma_)
 
         similarity_score *= (word_1.similarity(word_2) + SCORE_BUFFER)
 

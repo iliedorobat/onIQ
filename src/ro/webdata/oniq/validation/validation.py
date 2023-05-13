@@ -56,7 +56,7 @@ def question_test(pairs, question: str, print_summary, print_deps, print_result)
     for pair in pairs:
         if question.lower() == pair["query"].lower():
             exists = True
-            is_equal = str(sparql.triples).strip().lower() == pair["result"].strip().lower()
+            is_equal = str(sparql.raw_query).strip().lower() == pair["result"].strip().lower()
             break
 
     if exists:

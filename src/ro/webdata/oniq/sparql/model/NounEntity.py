@@ -3,6 +3,7 @@ from typing import List, Union
 
 from spacy.tokens import Span, Token
 
+from ro.webdata.oniq.common.nlp.nlp_utils import token_to_span
 from ro.webdata.oniq.common.nlp.utils import WordnetUtils
 from ro.webdata.oniq.common.nlp.word_utils import get_prev_word, is_noun, is_adj_modifier
 
@@ -12,7 +13,6 @@ VARNAME_SEPARATOR = "_"
 class NounEntity:
     def __init__(self, word: Union[str, Token], token: Token = None, is_dbpedia_type: bool = False):
         self.noun = None
-        self.complete_noun = None  # ADJ + compound noun
         self.compound_noun = None
         self.is_named_entity = False
         self.is_text = True
@@ -29,7 +29,6 @@ class NounEntity:
         if isinstance(word, Token):
             if is_noun(word):
                 self.noun = word
-                self.complete_noun = _prepare_complete_noun(word)
                 self.compound_noun = _get_noun_entity(word)
                 self.is_named_entity = _is_known_named_entity(word) or _is_known_compound_named_entity(self.compound_noun)
                 self.is_text = False
@@ -37,7 +36,6 @@ class NounEntity:
             elif is_adj_modifier(word):
                 # E.g.: "Give me all Swedish holidays."
 
-                self.complete_noun = _prepare_complete_noun(word)
                 self.compound_noun = _get_noun_entity(word)
                 self.is_named_entity = _is_known_named_entity(word) or _is_known_compound_named_entity(self.compound_noun)
                 self.is_text = True
@@ -51,12 +49,10 @@ class NounEntity:
         return self.noun == other.noun
 
     def __str__(self):
-        if self.complete_noun is not None:
-            return self.complete_noun.text
-        elif self.compound_noun is not None:
+        if self.compound_noun is not None:
             return self.compound_noun.text
         elif self.noun is not None:
-            return self.noun.text
+            return self.to_span()
         elif self.text is not None:
             return self.text
         else:
@@ -68,6 +64,18 @@ class NounEntity:
 
     def is_null(self):
         return str(self) == "NULL"
+
+    def to_span(self):
+        compound_noun = _get_noun_entity(self.noun)
+        first_noun = compound_noun[0]
+        last_noun = compound_noun[len(compound_noun) - 1]
+        prev_word = get_prev_word(first_noun)
+
+        if is_adj_modifier(prev_word):
+            # ADJ + compound noun
+            return Span(self.noun.doc, prev_word.i, last_noun.i + 1, label=compound_noun.root.ent_type)
+
+        return token_to_span(self.noun)
 
     def to_var(self):
         if isinstance(self.compound_noun, Span):
@@ -84,12 +92,9 @@ class NounEntity:
                     text += "_Inc."
                 return "res:" + re.sub(r"\s", VARNAME_SEPARATOR, text)
 
-        if self.complete_noun is not None:
-            text = re.sub(r"\s", VARNAME_SEPARATOR, self.complete_noun.text)
-            return f"?{text}"
-
         if self.noun is not None:
-            return f"?{self.noun}"
+            text = re.sub(r"\s", VARNAME_SEPARATOR, self.to_span().text)
+            return f"?{text}"
 
         if self.text is not None:
             if self.is_dbpedia_type:
@@ -199,16 +204,6 @@ def _get_compound_noun_parts(noun, noun_list):
         return _get_compound_noun_parts(prev_word, updated_noun_list)
 
     return noun_list
-
-
-def _prepare_complete_noun(word: Token):
-    compound_noun = _get_noun_entity(word)
-    first_noun = compound_noun[0]
-    last_noun = compound_noun[len(compound_noun) - 1]
-    prev_word = get_prev_word(first_noun)
-
-    if is_adj_modifier(prev_word):
-        return Span(word.doc, prev_word.i, last_noun.i + 1, label=compound_noun.root.ent_type)
 
 
 def _prepare_text(compound_noun: Span):
