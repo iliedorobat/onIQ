@@ -11,7 +11,7 @@ from ro.webdata.oniq.sparql.model.raw_triples.RawTriple import RawTriple
 class RawTargetUtils:
     @staticmethod
     def update_target_nouns(nl_question: NLQuestion, target_nouns: List[NounEntity], sentence: Span, raw_triple: RawTriple):
-        new_target_tokens = _get_target_tokens(sentence)
+        new_target_tokens = _get_target_tokens(nl_question, sentence)
 
         # ORDER IS CRUCIAL
 
@@ -79,14 +79,18 @@ class _TargetProcessing:
             target_nouns.append(raw_triple.o)
 
 
-def _get_target_tokens(sentence: Span):
+def _get_target_tokens(nl_question: NLQuestion, sentence: Span):
     target_nouns = []
 
-    lefts = list(sentence.root.lefts)
-    rights = list(sentence.root.rights)
+    lefts = [token for token in list(sentence.root.lefts) if is_noun(token)]
+    rights = [token for token in list(sentence.root.rights) if is_noun(token)]
 
     for token in sentence:
         if is_noun(token) and token.head == sentence.root:
-            target_nouns.append(token)
+            if nl_question.root_type != ROOT_TYPES.AUX_ASK and len(lefts) > 0 and len(rights) > 0:
+                if token in lefts:
+                    target_nouns.append(token)
+            else:
+                target_nouns.append(token)
 
     return target_nouns
