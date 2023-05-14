@@ -87,7 +87,8 @@ def _get_target_tokens(nl_question: NLQuestion, sentence: Span):
 
     for token in sentence:
         if is_noun(token) and token.head == sentence.root:
-            if nl_question.root_type != ROOT_TYPES.AUX_ASK and len(lefts) > 0 and len(rights) > 0:
+            if nl_question.starts_with_wh(sentence) and len(lefts) > 0 and len(rights) > 0:
+                # E.g.: "Which museum in New York has the most visitors?"
                 if token in lefts:
                     target_nouns.append(token)
             else:
