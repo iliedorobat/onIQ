@@ -10,8 +10,8 @@ from ro.webdata.oniq.sparql.model.raw_triples.RawTriple import RawTriple
 
 class RawTargetUtils:
     @staticmethod
-    def update_target_nouns(nl_question: NLQuestion, target_nouns: List[NounEntity], sentence: Span, raw_triple: RawTriple):
-        new_target_tokens = _get_target_tokens(nl_question, sentence)
+    def update_target_nouns(nl_question: NLQuestion, target_nouns: List[NounEntity], raw_triple: RawTriple):
+        new_target_tokens = _get_target_tokens(nl_question, nl_question.question)
 
         # ORDER IS CRUCIAL
 
@@ -20,7 +20,7 @@ class RawTargetUtils:
         #     return None
 
         if nl_question.main_type == QUESTION_TYPES.PREP_ASK:
-            _TargetProcessing.prep_ask_type(target_nouns, sentence, raw_triple)
+            _TargetProcessing.prep_ask_type(target_nouns, nl_question.question, raw_triple)
 
         if nl_question.target in [QUESTION_TARGET.LOCATION, QUESTION_TARGET.TIME]:
             _TargetProcessing.loc_time_target(nl_question, target_nouns)

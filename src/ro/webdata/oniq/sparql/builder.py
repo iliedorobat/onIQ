@@ -1,24 +1,42 @@
 import json
+from typing import List
 
 import requests
 
 from ro.webdata.oniq.common.nlp.sentence_utils import get_root
 from ro.webdata.oniq.common.print_utils import echo
 from ro.webdata.oniq.service.query_const import ACCESSORS, PATHS
-from ro.webdata.oniq.spacy_model import nlp_model
 from ro.webdata.oniq.sparql.model.NLQuestion import NLQuestion, ROOT_TYPES
 from ro.webdata.oniq.sparql.model.final_triples.Triples import Triples
-from ro.webdata.oniq.sparql.model.raw_triples.RawQuery import RawQuery
-from ro.webdata.oniq.sparql.model.raw_triples.raw_query_utils import RawQueryUtils
+from ro.webdata.oniq.sparql.model.raw_triples.RawTriple import RawTriple
+from ro.webdata.oniq.sparql.model.raw_triples.raw_triple_utils import RawTripleUtils
+from ro.webdata.oniq.sparql.model.raw_triples.raw_target_utils import RawTargetUtils
 
 
 class SPARQLBuilder:
-    def __init__(self, endpoint, input_question, print_deps=True, print_result=False, include_targets=False):
-        self.raw_query = _prepare_raw_query(input_question, print_deps)
+    def __init__(self, endpoint, input_question, print_deps=True, print_result=False):
         # self.triples = Triples(self.raw_query.raw_triples)
 
-        if print_result is True:
-            print(self.raw_query)
+        nl_question = NLQuestion(input_question)
+        self.raw_triples = _prepare_raw_triples(nl_question)
+        self.target_nouns = _prepare_target_nouns(nl_question, self.raw_triples)
+
+        if print_deps:
+            echo.deps_list(nl_question.question)
+            print(self.to_raw_query_str())
+
+    def to_raw_query_str(self):
+        output = "target_nouns = [\n"
+        for target_noun in self.target_nouns:
+            output += f"\t{target_noun.to_var()}\n"
+        output += "]\n"
+
+        output += "raw_triples = [\n"
+        for raw_triple in self.raw_triples:
+            output += f"\t<{str(raw_triple)}>\n"
+        output += "]"
+
+        return output
 
 
 def _get_entities(question: str):
@@ -27,53 +45,41 @@ def _get_entities(question: str):
     return json.loads(entities_response.content)
 
 
-def _prepare_raw_query(input_question: str, print_deps: bool):
-    document = nlp_model(input_question)
-    raw_query = None
+def _prepare_raw_triples(nl_question: NLQuestion):
+    root = get_root(nl_question.question)
+    root_type = nl_question.root_type
+    raw_triples = []
 
-    # document = nlp_model("Who is the woman whose successor was Le Hong Phong?")  # FIXME
-    # document = nlp_model("who is the one who baptized Ion's father?")  # FIXME
-    # document = nlp_model("who is the son of Ion who died last year?")
-    # document = nlp_model("Where did Ion's father reborn?")
+    if root_type == ROOT_TYPES.AUX_ASK:
+        RawTripleUtils.aux_ask_processing(nl_question, raw_triples, root)
+    if root_type == ROOT_TYPES.VERB_ASK:
+        RawTripleUtils.verb_ask(nl_question, raw_triples, root)
+    elif root_type == ROOT_TYPES.PREP_ASK:
+        RawTripleUtils.prep_ask_processing(nl_question, raw_triples, root)
+    elif root_type == ROOT_TYPES.PASSIVE:
+        RawTripleUtils.passive_processing(nl_question, raw_triples, root)
+    elif root_type == ROOT_TYPES.POSSESSIVE:
+        RawTripleUtils.possessive_processing(nl_question, raw_triples, root)
+    elif root_type == ROOT_TYPES.POSSESSIVE_COMPLEX:
+        RawTripleUtils.possessive_complex_processing(nl_question, raw_triples, root)
+    elif root_type == ROOT_TYPES.AUX:
+        RawTripleUtils.aux_processing(nl_question, raw_triples, root)
+    elif root_type == ROOT_TYPES.MAIN:
+        RawTripleUtils.main_processing(nl_question, raw_triples, root)
+    else:
+        # subject = root
+        # predicate = get_related_verb(subject, sentence[subject.i + 1:])
+        # obj = get_child_noun(predicate, sentence[predicate.i:])
+        # triple = self.triples.append_triple(subject, predicate, obj)
+        pass
 
-    # document = nlp_model("What devices are used to treat heart failure?.")
-    # document = nlp_model("Heart failure can be treated by what devices?")
-    # document = nlp_model("Find me the devices to treat heart failure.")
-    #
-    # document = nlp_model("Which programming languages were influenced by Perl?")
-    # document = nlp_model("When was Alberta admitted as province?")
+    return raw_triples
 
-    if print_deps:
-        echo.deps_list(document)
 
-    for sentence in document.sents:
-        nl_question = NLQuestion(sentence)
-        root = get_root(nl_question.value)
-        root_type = nl_question.root_type
-        raw_query = RawQuery(sentence)
+def _prepare_target_nouns(nl_question: NLQuestion, raw_triples: List[RawTriple]):
+    target_nouns = []
 
-        if root_type == ROOT_TYPES.AUX_ASK:
-            RawQueryUtils.aux_ask_processing(nl_question, raw_query, root)
-        if root_type == ROOT_TYPES.VERB_ASK:
-            RawQueryUtils.verb_ask(nl_question, raw_query, root)
-        elif root_type == ROOT_TYPES.PREP_ASK:
-            RawQueryUtils.prep_ask_processing(nl_question, raw_query, root)
-        elif root_type == ROOT_TYPES.PASSIVE:
-            RawQueryUtils.passive_processing(nl_question, raw_query, root)
-        elif root_type == ROOT_TYPES.POSSESSIVE:
-            RawQueryUtils.possessive_processing(nl_question, raw_query, root)
-        elif root_type == ROOT_TYPES.POSSESSIVE_COMPLEX:
-            RawQueryUtils.possessive_complex_processing(nl_question, raw_query, root)
-        elif root_type == ROOT_TYPES.AUX:
-            RawQueryUtils.aux_processing(nl_question, raw_query, root)
-        elif root_type == ROOT_TYPES.MAIN:
-            RawQueryUtils.main_processing(nl_question, raw_query, root)
-        else:
-            # subject = root
-            # predicate = get_related_verb(subject, sentence[subject.i + 1:])
-            # obj = get_child_noun(predicate, sentence[predicate.i:])
-            # triple = self.triples.append_triple(subject, predicate, obj)
-            print()
-            pass
+    for raw_triple in raw_triples:
+        RawTargetUtils.update_target_nouns(nl_question, target_nouns, raw_triple)
 
-    return raw_query
+    return target_nouns

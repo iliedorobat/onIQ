@@ -216,8 +216,8 @@ target_nouns = [
 	?person
 ]
 raw_triples = [
-	<?person   winner   res:Pulitzer_Prize>
 	<?person   rdf:type   dbo:Person>
+	<?person   winner   res:Pulitzer_Prize>
 ]
 """
     },
