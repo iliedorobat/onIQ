@@ -23,12 +23,29 @@ class SPARQLBuilder:
 
         if print_deps:
             echo.deps_list(nl_question.question)
-            print(self.to_raw_query_str())
+
+        if print_result:
+            # print(self.to_raw_query_str())
+            print(self.to_sparql_query())
+
+    def to_sparql_query(self):
+        output = "SELECT"
+
+        for target in self.target_nouns:
+            output += f" {target.to_var()}"
+
+        output += "\nWHERE {"
+        # TODO: replace raw_triples with self.triples
+        for triple in self.raw_triples:
+            output += f"\n\t{str(triple)} ."
+        output += "\n}"
+
+        return output
 
     def to_raw_query_str(self):
         output = "target_nouns = [\n"
-        for target_noun in self.target_nouns:
-            output += f"\t{target_noun.to_var()}\n"
+        for target in self.target_nouns:
+            output += f"\t{target.to_var()}\n"
         output += "]\n"
 
         output += "raw_triples = [\n"

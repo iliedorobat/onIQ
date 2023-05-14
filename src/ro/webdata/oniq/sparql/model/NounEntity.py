@@ -94,7 +94,7 @@ class NounEntity:
                 if is_org:
                     # E.g.: "What is the net income of Apple?"
                     text += "_Inc."
-                return "res:" + re.sub(r"\s", VARNAME_SEPARATOR, text)
+                return "dbr:" + re.sub(r"\s", VARNAME_SEPARATOR, text)
 
         if self.noun is not None:
             text = re.sub(r"\s", VARNAME_SEPARATOR, self.to_span().text)

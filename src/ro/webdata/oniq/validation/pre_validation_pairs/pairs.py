@@ -40,7 +40,7 @@ target_nouns = [
 raw_triples = [
 	<?person   born   ?location>
 	<?person   rdf:type   dbo:Person>
-	<?person   successor   res:Le_Hong_Phong>
+	<?person   successor   dbr:Le_Hong_Phong>
 ]
 """
     },
@@ -51,7 +51,7 @@ target_nouns = [
 	?person
 ]
 raw_triples = [
-	<?person   successor   res:Le_Hong_Phong>
+	<?person   successor   dbr:Le_Hong_Phong>
 ]
 """
     },
@@ -62,7 +62,7 @@ target_nouns = [
 	?location
 ]
 raw_triples = [
-	<res:New_York_Times   published   ?location>
+	<dbr:New_York_Times   published   ?location>
 ]
 """
     },
@@ -74,7 +74,7 @@ target_nouns = [
 ]
 raw_triples = [
 	<?father   die   ?location>
-	<res:Mashhur_bin_Abdulaziz_Al_Saud   father   ?father>
+	<dbr:Mashhur_bin_Abdulaziz_Al_Saud   father   ?father>
 ]
 """
     },
@@ -88,7 +88,7 @@ target_nouns = [
 raw_triples = [
 	<?town   leader   ?leader>
 	<?town   rdf:type   dbo:Town>
-	<res:Myntdu_river   originates   ?town>
+	<dbr:Myntdu_river   originates   ?town>
 ]
 """
     },
@@ -113,7 +113,7 @@ target_nouns = [
 	?location
 ]
 raw_triples = [
-	<res:Fort_Knox   located   ?location>
+	<dbr:Fort_Knox   located   ?location>
 ]
 """
     },
@@ -124,7 +124,7 @@ target_nouns = [
 	?builder
 ]
 raw_triples = [
-	<res:Kerkichi_Bridge   builder   ?builder>
+	<dbr:Kerkichi_Bridge   builder   ?builder>
 ]
 """
     },
@@ -135,7 +135,7 @@ target_nouns = [
 	?nationality
 ]
 raw_triples = [
-	<res:Aishath_Saffa   nationality   ?nationality>
+	<dbr:Aishath_Saffa   nationality   ?nationality>
 ]
 """
     },
@@ -146,7 +146,7 @@ target_nouns = [
 	?denomination
 ]
 raw_triples = [
-	<res:S._H._Kapadia   denomination   ?denomination>
+	<dbr:S._H._Kapadia   denomination   ?denomination>
 ]
 """
     },
@@ -157,7 +157,7 @@ target_nouns = [
 	?city
 ]
 raw_triples = [
-	<?city   mayor   res:Anne_Hidalgo>
+	<?city   mayor   dbr:Anne_Hidalgo>
 ]
 """
     },
@@ -170,7 +170,7 @@ target_nouns = [
 raw_triples = [
 	<?person   religion   ?religion>
 	<?person   rdf:type   dbo:Person>
-	<res:Emel_magazine   founded   ?person>
+	<dbr:Emel_magazine   founded   ?person>
 ]
 """
     },
@@ -181,7 +181,7 @@ target_nouns = [
 	?spouse
 ]
 raw_triples = [
-	<res:Daniel_Gibson   spouse   ?spouse>
+	<dbr:Daniel_Gibson   spouse   ?spouse>
 ]
 """
     },
@@ -193,7 +193,7 @@ target_nouns = [
 ]
 raw_triples = [
 	<?designer   born   ?location>
-	<?designer   designer   res:REP_Parasol>
+	<?designer   designer   dbr:REP_Parasol>
 ]
 """
     },
@@ -205,7 +205,7 @@ target_nouns = [
 	?operator
 ]
 raw_triples = [
-	<res:SR_class   operator   ?operator>
+	<dbr:SR_class   operator   ?operator>
 ]
 """
     },
@@ -233,7 +233,7 @@ target_nouns = [
 	?building
 ]
 raw_triples = [
-	<?building   location   res:Romania>
+	<?building   location   dbr:Romania>
 	<?building   rdf:type   dbo:Building>
 ]
 """
@@ -258,7 +258,7 @@ target_nouns = [
 	?leader
 ]
 raw_triples = [
-	<res:USA   leader   ?leader>
+	<dbr:USA   leader   ?leader>
 ]
 """
     },
@@ -269,7 +269,7 @@ target_nouns = [
 	?person
 ]
 raw_triples = [
-	<?person   successor   res:Le_Hong_Phong>
+	<?person   successor   dbr:Le_Hong_Phong>
 	<?person   rdf:type   dbo:Person>
 ]
 """

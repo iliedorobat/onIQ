@@ -33,7 +33,7 @@ class RawTargetUtils:
                         if raw_triple.s not in target_nouns:
                             if raw_triple.s.is_var():
                                 # E.g.: "Did Arnold Schwarzenegger attend a university?"
-                                # res:Arnold_Schwarzenegger is NOT var
+                                # dbr:Arnold_Schwarzenegger is NOT a var
                                 target_nouns.append(raw_triple.s)
                     if raw_triple.o.token == token:
                         if raw_triple.o not in target_nouns:

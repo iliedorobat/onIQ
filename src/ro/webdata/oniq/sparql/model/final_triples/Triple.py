@@ -59,7 +59,7 @@ class Node:
 def _node_lookup(noun_entity: NounEntity):
     subject = noun_entity.to_var()
 
-    if subject.startswith("res:"):
+    if subject.startswith("dbr:"):
         target = noun_entity.compound_noun
 
         if noun_entity.is_named_entity:

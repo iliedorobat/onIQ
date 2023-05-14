@@ -23,7 +23,7 @@ target_nouns = [
 	?university
 ]
 raw_triples = [
-	<res:Arnold_Schwarzenegger   attend   ?university>
+	<dbr:Arnold_Schwarzenegger   attend   ?university>
 	<?university   rdf:type   dbo:University>
 ]
 """
@@ -38,7 +38,7 @@ raw_triples = [
 target_nouns = [
 ]
 raw_triples = [
-	<res:Barack_Obama   Is   res:democrat>
+	<dbr:Barack_Obama   Is   dbr:democrat>
 ]
 """
     },
@@ -73,7 +73,7 @@ target_nouns = [
 	?country
 ]
 raw_triples = [
-	<res:Mecca   country   ?country>
+	<dbr:Mecca   country   ?country>
 ]
 """
     },
@@ -89,7 +89,7 @@ target_nouns = [
 ]
 raw_triples = [
 	<?astronaut   rdf:type   dbo:Astronaut>
-	<?astronaut   prop   res:ESA>
+	<?astronaut   prop   dbr:ESA>
 ]
 """
     },
@@ -105,7 +105,7 @@ target_nouns = [
 ]
 raw_triples = [
 	<?holiday   rdf:type   dbo:Holiday>
-	<?holiday   country   res:Sweden>
+	<?holiday   country   dbr:Sweden>
 ]
 """
     },
@@ -120,7 +120,7 @@ target_nouns = [
 	?currency
 ]
 raw_triples = [
-	<res:China   currency   ?currency>
+	<dbr:China   currency   ?currency>
 ]
 """
     },
@@ -145,7 +145,7 @@ target_nouns = [
 	?time
 ]
 raw_triples = [
-	<res:Ming_dynasty   dissolve   ?time>
+	<dbr:Ming_dynasty   dissolve   ?time>
 ]
 """
     },
@@ -170,7 +170,7 @@ target_nouns = [
 	?manager
 ]
 raw_triples = [
-	<res:Real_Madrid   manager   ?manager>
+	<dbr:Real_Madrid   manager   ?manager>
 ]
 """
     },
@@ -185,13 +185,13 @@ target_nouns = [
 	?parents
 ]
 raw_triples = [
-	<res:Queen_Victoria   parents   ?parents>
+	<dbr:Queen_Victoria   parents   ?parents>
 ]
 """
     },
     ### WHO + verb ###
 #     {
-#         # FIXME: res:Death_of_John_Lennon instead of res:John_Lennon
+#         # FIXME: dbr:Death_of_John_Lennon instead of dbr:John_Lennon
 #         "aggregation": False,
 #         "answertype": "resource",
 #         "hybrid": False,
@@ -199,7 +199,7 @@ raw_triples = [
 #         "query": "Who killed John Lennon?",
 #         "result": """
 # raw_triples = [
-# 	<res:John_Lennon   killed   ?person>
+# 	<dbr:John_Lennon   killed   ?person>
 # ]
 # """
 #     },
@@ -217,7 +217,7 @@ target_nouns = [
 ]
 raw_triples = [
 	<?person   rdf:type   dbo:Person>
-	<?person   winner   res:Pulitzer_Prize>
+	<?person   winner   dbr:Pulitzer_Prize>
 ]
 """
     },
@@ -233,7 +233,7 @@ target_nouns = [
 	?child
 ]
 raw_triples = [
-	<res:Meryl_Streep   child   ?child>
+	<dbr:Meryl_Streep   child   ?child>
 ]
 """
     },
@@ -283,7 +283,7 @@ target_nouns = [
 	?net_income
 ]
 raw_triples = [
-	<res:Apple_Inc.   net_income   ?net_income>
+	<dbr:Apple_Inc.   net_income   ?net_income>
 ]
 """
     },
@@ -299,7 +299,7 @@ target_nouns = [
 	?mountain
 ]
 raw_triples = [
-	<?mountain   location   res:Italy>
+	<?mountain   location   dbr:Italy>
 	<?mountain   rdf:type   dbo:Mountain>
 ]
 """
@@ -370,7 +370,7 @@ raw_triples = [
 # """
 #     },
     {
-        # FIXME: <res:Slovenia ethnic_groups ?ethnic_groups>
+        # FIXME: <dbr:Slovenia ethnic_groups ?ethnic_groups>
         # TODO: count
         "aggregation": True,
         "answertype": "number",
@@ -382,7 +382,7 @@ target_nouns = [
 	?ethnic_groups
 ]
 raw_triples = [
-	<?ethnic_groups   live   res:Slovenia>
+	<?ethnic_groups   live   dbr:Slovenia>
 ]
 """
     },
@@ -407,7 +407,7 @@ target_nouns = [
 	?players
 ]
 raw_triples = [
-	<?players   born   res:Malta>
+	<?players   born   dbr:Malta>
 	<?players   rdf:type   dbo:SoccerPlayer>
 ]
 """
@@ -478,7 +478,7 @@ target_nouns = [
 	?museum
 ]
 raw_triples = [
-	<?museum   location   res:New_York>
+	<?museum   location   dbr:New_York>
 	<?museum   rdf:type   dbo:Museum>
 	<?museum   visitors   ?visitors>
 ]
