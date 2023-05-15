@@ -302,29 +302,34 @@ def get_child_noun(word: Token, span: Span):
             # E.g.: "Who is the leader of the town where the Myntdu river originates?"
             return get_child_noun(token, token.sent[token.i + 1:])
 
-        # "Where was the designer of REP Parasol born?"
-        is_auxpass = is_aux(token.head) and token.head.head == word
+        if token != word:
+            # "Where was the designer of REP Parasol born?"
+            is_auxpass = token.head.dep_ == "auxpass"
 
-        if token.head == word or is_auxpass:
-            if token.dep_ == "auxpass":
-                if contains_multiple_wh_words(word.sent):
-                    if ends_with_verb(span):
-                        # E.g.: ### "Where was the person who won the oscar born?"
-                        return get_child_noun(token, token.sent[token.i + 1:])
+            # "Who is the person whose successor was Le Hong Phong?"
+            prev_word = get_prev_word(token)
+            is_poss = prev_word.dep_ == "poss" if isinstance(prev_word, Token) else False
+
+            if token.head == word or is_auxpass or is_poss:
+                if token.dep_ == "auxpass":
+                    if contains_multiple_wh_words(word.sent):
+                        if ends_with_verb(span):
+                            # E.g.: ### "Where was the person who won the oscar born?"
+                            return get_child_noun(token, token.sent[token.i + 1:])
+                        else:
+                            # E.g.: "Where was the person born whose successor was Le Hong Phong?"
+                            pass
                     else:
-                        # E.g.: "Where was the person born whose successor was Le Hong Phong?"
-                        pass
-                else:
-                    # E.g.: "Where is Fort Knox located?"
-                    pass  # nothing to do
+                        # E.g.: "Where is Fort Knox located?"
+                        pass  # nothing to do
 
-            if is_noun(token) and token.dep_ != "conj":
-                # E.g.: token.dep_ != "conj" => "What is the population and area of the most populated state?"
-                return token
+                if is_noun(token) and token.dep_ != "conj":
+                    # E.g.: token.dep_ != "conj" => "What is the population and area of the most populated state?"
+                    return token
 
-            if token.pos_ == "NUM":
-                # E.g.: "who is the one who baptized Ion's father?"
-                return token
+                if token.pos_ == "NUM":
+                    # E.g.: "who is the one who baptized Ion's father?"
+                    return token
 
     return None
 
@@ -396,10 +401,13 @@ def _append_root_aux_triple(nl_question: NLQuestion, raw_triples: List[RawTriple
         if grandchild_noun.noun.head.text.lower() == "in":
             # E.g.: "What is the highest mountain in Italy?"
             # E.g.: "What is the tallest building in Romania?"
+            # E.g.: "What is the highest mountain in the Bavarian Alps?"
             subject = child_noun
             predicate = child_noun.to_span()
             obj = grandchild_noun
-            if obj.noun.ent_type_ == "GPE":
+            if obj.noun.ent_type_ in ["GPE", "LOC"]:
+                # GPE Countries, cities, states
+                # LOC Non-GPE locations, mountain ranges, bodies of water
                 predicate = QUESTION_TARGET.LOCATION
         else:
             # E.g.: "Who is the manager of Real Madrid?"

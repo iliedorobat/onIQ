@@ -92,6 +92,7 @@ def _prepare_predicate(subject: Union[str, RDFClass], raw_predicate:  Union[str,
 
     if isinstance(subject, RDFClass) and isinstance(raw_predicate, Token):
         resource = str(subject)
+        # TODO:
         return LookupService.property_lookup("Queen_Victoria", raw_predicate, None)
 
     return predicate

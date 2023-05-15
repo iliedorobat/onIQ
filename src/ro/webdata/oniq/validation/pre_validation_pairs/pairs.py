@@ -23,6 +23,9 @@ QUERY_14 = "What is the religion of the person who founded the Emel magazine?"
 QUERY_15 = "Who is the spouse of Daniel Gibson? "
 QUERY_17 = "Where was the designer of REP Parasol born?"
 QUERY_18 = "What is the operator of SR class 3Sub ?"
+QUERY_19 = "Which species does an elephant belong?"
+QUERY_20 = "What is the highest mountain in the Bavarian Alps?"
+QUERY_21 = "What is the largest city in america?"
 TEST_3 = "Where was the person whose successor studied law born?"  # poss
 TEST_5 = "What is the tallest building in Romania?"
 TEST_6 = "Where was the person who won the oscar born?"
@@ -206,6 +209,43 @@ target_nouns = [
 ]
 raw_triples = [
 	<dbr:SR_class   operator   ?operator>
+]
+"""
+    },
+    {
+        "query": QUERY_19,
+        "result": """
+target_nouns = [
+	?elephant
+]
+raw_triples = [
+	<?elephant   belong   ?thing>
+]
+"""
+    },
+    {
+        # TODO: order by
+        "query": QUERY_20,
+        "result": """
+target_nouns = [
+	?mountain
+]
+raw_triples = [
+	<?mountain   location   dbr:Bavarian_Alps>
+	<?mountain   rdf:type   dbo:Mountain>
+]
+"""
+    },
+    {
+        # TODO: order by
+        "query": QUERY_21,
+        "result": """
+target_nouns = [
+	?city
+]
+raw_triples = [
+	<?city   location   dbr:america>
+	<?city   rdf:type   dbo:City>
 ]
 """
     },
