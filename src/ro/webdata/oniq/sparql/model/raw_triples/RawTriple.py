@@ -3,9 +3,8 @@ from typing import Union
 
 from spacy.tokens import Span, Token
 
+from ro.webdata.oniq.sparql.constants import SPARQL_STR_SEPARATOR
 from ro.webdata.oniq.sparql.model.NounEntity import NounEntity
-
-VARNAME_SEPARATOR = "_"
 
 
 class RawTriple:
@@ -48,7 +47,7 @@ class RawTriple:
 
 def _get_p_var(predicate: Union[str, Token]):
     p = predicate if isinstance(predicate, str) else str(predicate)
-    return re.sub(r"\s", VARNAME_SEPARATOR, p)
+    return re.sub(r"\s", SPARQL_STR_SEPARATOR, p)
 
 
 def _prepare_object(predicate: Union[str, Span], obj: Union[str, NounEntity, Token]):

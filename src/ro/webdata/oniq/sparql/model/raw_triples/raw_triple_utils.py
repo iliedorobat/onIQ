@@ -5,7 +5,7 @@ from spacy.tokens import Span, Token
 from ro.webdata.oniq.common.nlp.nlp_utils import token_to_span
 from ro.webdata.oniq.common.nlp.sentence_utils import ends_with_verb, contains_multiple_wh_words
 from ro.webdata.oniq.common.nlp.word_utils import is_noun, is_followed_by_prep, is_preceded_by_adj_modifier, \
-    get_prev_word, is_verb, is_aux
+    get_prev_word, is_verb
 from ro.webdata.oniq.endpoint.dbpedia.lookup import LookupService
 from ro.webdata.oniq.sparql.model.NLQuestion import QUESTION_TARGET, NLQuestion
 from ro.webdata.oniq.sparql.model.NounEntity import NounEntity

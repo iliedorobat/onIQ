@@ -19,6 +19,7 @@ from ro.webdata.oniq.endpoint.dbpedia.sparql_query import DBP_RESOURCE_QUERY, DB
 from ro.webdata.oniq.endpoint.models.RDFElement import RDFClass, RDFProperty, ROOT_CLASS_URI
 from ro.webdata.oniq.endpoint.namespace import NAMESPACE
 from ro.webdata.oniq.service.query_const import ACCESSORS, PATHS
+from ro.webdata.oniq.sparql.constants import SPARQL_STR_SEPARATOR
 
 _MAX_LOOKUP_RESULTS = 10
 _NAME_TYPE_SEPARATOR = ','
@@ -231,7 +232,7 @@ def _get_noun_chunk_types(noun_chunk):
 
     # E.g.: "when was barda mausoleum built?"
     #   => resource_name: "Barda_Mausoleum"
-    resource_name = noun_chunk.text.title().replace(WORD_SEPARATOR, "_")
+    resource_name = noun_chunk.text.title().replace(WORD_SEPARATOR, SPARQL_STR_SEPARATOR)
     resource = LookupService.resource_lookup(resource_name)
 
     if resource is not None:
@@ -244,15 +245,6 @@ def _get_noun_chunk_types(noun_chunk):
 
         resource_types.reverse()
         types += resource_types
-
-    # E.g.: "when was barda mausoleum built?"
-    #   => word: "barda", "mausoleum"
-    for word in noun_chunk:
-        resource_name = word.text.strip().capitalize()
-        resource = LookupService.resource_lookup(resource_name)
-    
-        if resource is not None:
-            types.append(resource)
 
     return list(set(types))
 

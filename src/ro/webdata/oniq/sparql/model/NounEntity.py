@@ -6,8 +6,7 @@ from spacy.tokens import Span, Token
 from ro.webdata.oniq.common.nlp.nlp_utils import token_to_span
 from ro.webdata.oniq.common.nlp.utils import WordnetUtils
 from ro.webdata.oniq.common.nlp.word_utils import get_prev_word, is_noun, is_adj_modifier
-
-VARNAME_SEPARATOR = "_"
+from ro.webdata.oniq.sparql.constants import SPARQL_VAR_PREFIX, SPARQL_STR_SEPARATOR
 
 
 class NounEntity:
@@ -67,7 +66,7 @@ class NounEntity:
         return str(self) == "NULL"
 
     def is_var(self):
-        return "?" in self.to_var()
+        return SPARQL_VAR_PREFIX in self.to_var()
 
     def to_span(self):
         compound_noun = _get_noun_entity(self.noun)
@@ -94,18 +93,18 @@ class NounEntity:
                 if is_org:
                     # E.g.: "What is the net income of Apple?"
                     text += "_Inc."
-                return "dbr:" + re.sub(r"\s", VARNAME_SEPARATOR, text)
+                return "dbr:" + re.sub(r"\s", SPARQL_STR_SEPARATOR, text)
 
         if self.noun is not None:
-            text = re.sub(r"\s", VARNAME_SEPARATOR, self.to_span().text)
-            return f"?{text}"
+            text = re.sub(r"\s", SPARQL_STR_SEPARATOR, self.to_span().text)
+            return f"{SPARQL_VAR_PREFIX}{text}"
 
         if self.text is not None:
             if self.is_dbpedia_type:
                 return self.text
 
-            text = re.sub(r"\s", VARNAME_SEPARATOR, self.text)
-            return f"?{text}"
+            text = re.sub(r"\s", SPARQL_STR_SEPARATOR, self.text)
+            return f"{SPARQL_VAR_PREFIX}{text}"
 
         return "NULL"
 

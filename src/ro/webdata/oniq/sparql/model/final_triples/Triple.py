@@ -6,6 +6,7 @@ from spacy.tokens import Token
 from ro.webdata.oniq.common.text_utils import WORD_SEPARATOR
 from ro.webdata.oniq.endpoint.dbpedia.lookup import LookupService
 from ro.webdata.oniq.endpoint.models.RDFElement import RDFClass
+from ro.webdata.oniq.sparql.constants import SPARQL_STR_SEPARATOR
 from ro.webdata.oniq.sparql.model.NounEntity import NounEntity
 from ro.webdata.oniq.sparql.model.raw_triples.RawTriple import RawTriple
 
@@ -70,7 +71,7 @@ def _node_lookup(noun_entity: NounEntity):
                 pydash.get(result, ["0", "label", "0"], None)
             )
         else:
-            resource_name = target.text.title().replace(WORD_SEPARATOR, "_")
+            resource_name = target.text.title().replace(WORD_SEPARATOR, SPARQL_STR_SEPARATOR)
             # E.g.: "Where is Fort Knox located?"
             resource = LookupService.resource_lookup(resource_name)
 

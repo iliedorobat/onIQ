@@ -1,5 +1,7 @@
 import re
 
+from ro.webdata.oniq.sparql.constants import SPARQL_STR_SEPARATOR
+
 HTTP_PREFIX = "http://"
 NAMESPACE_SEPARATOR = ":"
 
@@ -101,7 +103,7 @@ class NamespaceService:
             return namespace
         else:
             ns_chunk = namespace[len(HTTP_PREFIX):]
-            return re.sub("[^0-9a-zA-z]", "_", ns_chunk)
+            return re.sub("[^0-9a-zA-z]", SPARQL_STR_SEPARATOR, ns_chunk)
 
     @staticmethod
     def get_namespace(uri):

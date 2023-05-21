@@ -9,6 +9,7 @@ from ro.webdata.oniq.common.print_utils import console, SYSTEM_MESSAGES
 from ro.webdata.oniq.endpoint.common.CSVService import CSV_COLUMN_SEPARATOR
 from ro.webdata.oniq.endpoint.models.RDFElement import RDFProperty
 from ro.webdata.oniq.spacy_model import nlp_model
+from ro.webdata.oniq.sparql.constants import SPARQL_STR_SEPARATOR
 
 SCORE_BUFFER = 1
 
@@ -58,7 +59,7 @@ class PropertyMatcher:
         self.detachment_score = _calculate_detachment_score(rdf_prop, action)
 
     def __hash__(self):
-        return hash(f'{self.property.uri}_{self.score}')
+        return hash(f'{self.property.uri}{SPARQL_STR_SEPARATOR}{self.score}')
 
     def __eq__(self, other):
         return self.property == other.property and self.score == other.score
