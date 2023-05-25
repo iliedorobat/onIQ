@@ -25,6 +25,7 @@ class Configurator:
 
         os.system("python3 -m spacy download en_core_web_sm")
         os.system("python3 -m spacy download en_core_web_md")
+        os.system("python3 -m spacy download en_core_web_lg")
         os.system("python3 -m spacy download en_core_web_trf")
 
 

@@ -19,12 +19,12 @@ SCORE_BUFFER = 1
 
 class PropertyMatcher:
     """
-    Representation of the similarity score calculated for a specific verb
-    against an individual property.
+    Representation of the similarity score calculated for a specific word
+    or sequences of words (an expression) against an individual property.
 
     Attributes:
-        action (Token):
-            Word against the similarity is calculated.
+        target_expression (Span):
+            Word/expression against the similarity is calculated.
         detachment_score (float):
             Aggregated similarity calculated based on the Jaccard Distance
             and Edit Distance.
@@ -41,22 +41,22 @@ class PropertyMatcher:
             Prepare the CSV entry.
     """
 
-    def __init__(self, rdf_prop, action, result_type):
+    def __init__(self, rdf_prop, target_expression, result_type):
         """
         Args:
-            action (Token):
-                Word against the similarity is calculated.
+            target_expression (Span):
+                Word/expression against the similarity is calculated.
             rdf_prop (RDFProperty):
                 Property against which the similarity is calculated.
             result_type (str|None):
                 Type of the expected result.
                 E.g.: "place", "person", etc. (check DBPEDIA_CLASS_TYPES).
         """
-        self.action = action
+        self.target_expression = target_expression
         self.property = rdf_prop
         self.result_type = result_type
-        self.score = _calculate_similarity_score(rdf_prop, action, result_type)
-        self.detachment_score = _calculate_detachment_score(rdf_prop, action)
+        self.score = _calculate_similarity_score(rdf_prop, target_expression, result_type)
+        self.detachment_score = _calculate_detachment_score(rdf_prop, target_expression)
 
     def __hash__(self):
         return hash(f'{self.property.uri}{SPARQL_STR_SEPARATOR}{self.score}')
@@ -79,20 +79,21 @@ class PropertyMatcher:
         """
 
         return separator.join([
-            self.action.text,
+            self.target_expression.text,
             self.property.uri,
             str(self.score),
             str(self.detachment_score)
         ])
 
 
-def _calculate_similarity_score(rdf_prop, action, result_type):
+def _calculate_similarity_score(rdf_prop, target_expression, result_type):
     """
-    Determine the similarity between the action and the words that make up
-    the label of the property.
+    Determine the similarity between the target word/expression and the words
+    that make up the label of the property.
 
     Args:
-        action (Token): Word against the similarity is calculated.
+        target_expression (Span): Word/expression against the similarity
+            is calculated.
         rdf_prop (RDFProperty): Property against which the similarity is
             calculated.
         result_type (str|None):
@@ -100,13 +101,14 @@ def _calculate_similarity_score(rdf_prop, action, result_type):
             E.g.: "place", "person", etc. (check DBPEDIA_CLASS_TYPES).
 
     Returns:
-        float: The score which defines how close the action is to the property.
+        float: The score which defines how close the target word/expression
+            is to the property.
     """
 
-    return _calculate_word_similarity_score(rdf_prop, action, result_type) + SCORE_BUFFER
+    return _calculate_word_similarity_score(rdf_prop, target_expression, result_type) + SCORE_BUFFER
 
 
-def _calculate_word_similarity_score(rdf_prop, word, result_type):
+def _calculate_word_similarity_score(rdf_prop, target_expression, result_type):
     """
     Determine the similarity between a specific word and the words that
     make up the label of an individual property.
@@ -117,7 +119,8 @@ def _calculate_word_similarity_score(rdf_prop, word, result_type):
         result_type (str|None):
             Type of the expected result.
             E.g.: "place", "person", etc. (check DBPEDIA_CLASS_TYPES).
-        word (Token): Token for which the similarity is calculated.
+        target_expression (Span): Word/expression against the similarity
+            is calculated.
 
     Returns:
         float: The score which defines how close the property is to word.
@@ -129,7 +132,7 @@ def _calculate_word_similarity_score(rdf_prop, word, result_type):
     prop_tokens = rdf_prop.label_to_non_stop_tokens()
 
     for index, prop_token in list(enumerate(prop_tokens)):
-        word_1 = nlp_model(word.lemma_)[0]
+        word_1 = nlp_model(target_expression.lemma_)[0]
         word_2 = nlp_model(prop_token.lemma_)[0]
 
         if not word_1.has_vector:
@@ -160,11 +163,11 @@ def _calculate_word_similarity_score(rdf_prop, word, result_type):
     return 0
 
 
-def _calculate_detachment_score(rdf_prop, action):
+def _calculate_detachment_score(rdf_prop, target_expression):
     """
-    Determine the similarity between the action and the words that make up
-    the label of the property by aggregating the Jaccard Distance and Edit
-    Distance metrics.
+    Determine the similarity between the target word/expression and the words
+    that make up the label of the property by aggregating the Jaccard Distance
+    and Edit Distance metrics.
 
     Use case:
         - The default similarity value used by <b>spacy</b> generates the
@@ -173,7 +176,8 @@ def _calculate_detachment_score(rdf_prop, action):
             * "successor".similarity("predecessor") = 1   | bad result
 
     Args:
-        action (Token): Word against the similarity is calculated.
+        target_expression (Span):
+            Word/expression against the similarity is calculated.
         rdf_prop (RDFProperty):
             Property against which the similarity is calculated.
 
@@ -183,10 +187,10 @@ def _calculate_detachment_score(rdf_prop, action):
     """
 
     prop_name = rdf_prop.name
-    action_name = action.text
+    target_text = target_expression.text
 
-    jaccard_distance = nltk.jaccard_distance(frozenset(prop_name), frozenset(action_name))
-    edit_distance = nltk.edit_distance(prop_name, action_name)
+    jaccard_distance = nltk.jaccard_distance(frozenset(prop_name), frozenset(target_text))
+    edit_distance = nltk.edit_distance(prop_name, target_text)
 
     reversed_jaccard = 1 - jaccard_distance
     # square order "edit_distance + 1" because:

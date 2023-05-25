@@ -95,15 +95,16 @@ class LookupService:
         return response.json().get("docs")
 
     @staticmethod
-    def property_lookup(resource_name, action, result_type):
+    def property_lookup(resource_name, target_expression, result_type):
         """
-        Lookup for the property which has the highest similarity degree with the verb.
+        Lookup for the property which has the highest similarity degree with the target
+        word/sequences of word (an expression).
 
         Args:
             resource_name (str):
                 Name of the resource (E.g.: "Barda_Mausoleum").
-            action (Token):
-                Target word used for looking up for a property.
+            target_expression (Span):
+                Target word/expression used for looking up for a property.
             result_type (str|None):
                 Type of the expected result.
                 E.g.: "place", "person", etc. (check DBPEDIA_CLASS_TYPES).
@@ -119,14 +120,15 @@ class LookupService:
         if resource_name is not None:
             sparql_query = DBP_PROPERTIES_OF_RESOURCE_QUERY % resource_name
             props = DBpediaQueryService.run_properties_query(sparql_query)
-            best_matched = PropertiesMatcher.get_best_matched(props, action, result_type)
+            best_matched = PropertiesMatcher.get_best_matched(props, target_expression, result_type)
 
         # E.g.: "Where was the person born whose successor was Le Hong Phong?"
         #   => "person"
         else:
             matcher_uri = f'http://localhost:8200/{PATHS.MATCHER}?' \
-                          f'{ACCESSORS.QUESTION}={action.sent}&' \
-                          f'{ACCESSORS.ACTION_INDEX}={action.i}&' \
+                          f'{ACCESSORS.QUESTION}={target_expression.sent}&' \
+                          f'{ACCESSORS.START_I}={target_expression.start}&' \
+                          f'{ACCESSORS.END_I}={target_expression.end}&' \
                           f'{ACCESSORS.RESULT_TYPE}={result_type}'
             entities_response = requests.get(matcher_uri)
             response = json.loads(entities_response.content)
@@ -140,7 +142,7 @@ class LookupService:
                 prop_json["res_domain"],
                 prop_json["res_range"]
             )
-            best_matched = PropertyMatcher(prop, action, result_type)
+            best_matched = PropertyMatcher(prop, target_expression, result_type)
 
         return pydash.get(best_matched, "property")
 

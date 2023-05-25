@@ -22,16 +22,15 @@ class SPARQLBuilder:
             echo.deps_list(nl_question.question)
 
         self.raw_triples = _prepare_raw_triples(nl_question)
-        # self.triples = _init_triples(self.raw_triples)
         self.targets = _prepare_target_nouns(nl_question, self.raw_triples)
+        self.triples = _init_triples(self.raw_triples)
 
         if print_result:
             # print(self.to_raw_query_str())
             print(self.to_sparql_query())
 
     def to_sparql_query(self):
-        # TODO: replace raw_triples with self.triples
-        query = SPARQLQuery(self.targets, self.raw_triples)
+        query = SPARQLQuery(self.targets, self.triples)
         return str(query)
 
     def to_raw_query_str(self):

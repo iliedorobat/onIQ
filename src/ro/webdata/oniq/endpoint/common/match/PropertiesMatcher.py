@@ -11,33 +11,33 @@ CACHED_MATCHES = CachedMatches()
 
 class PropertiesMatcher:
     """
-    Representation of the similarity score calculated for a specific action
-    (verb) against each property in the target list.
+    Representation of the similarity score calculated for a specific word or
+    sequences of words (an expression) against each property in the property list.
 
     Attributes:
         matches (RDFElements[RDFProperty]):
             List of PropertyMatcher elements representing the properties
-            that match the action (verb).
+            that match the target word/expression.
 
     Methods:
-        get_best_matched(props, action, result_type):
+        get_best_matched(props, target_expression, result_type):
             Retrieve the PropertyMatcher element containing the property with the
             highest score from the list of matched properties.
     """
 
-    def __init__(self, props, action, result_type):
+    def __init__(self, props, target_expression, result_type):
         """
         Args:
             props (List[RDFProperty]):
                 List of properties against which the similarity is calculated.
-            action (Token):
-                Target verb for which the similarity is calculated.
+            target_expression (Span):
+                Word/expression for which the similarity is calculated.
             result_type (str|None):
                 Type of the expected result.
                 E.g.: "place", "person", etc. (check DBPEDIA_CLASS_TYPES).
         """
 
-        self.matches = _get_matched_props(props, action, result_type)
+        self.matches = _get_matched_props(props, target_expression, result_type)
 
     def __hash__(self):
         hash_value = "##".join(
@@ -59,7 +59,7 @@ class PropertiesMatcher:
         return True
 
     @staticmethod
-    def get_best_matched(props, action, result_type):
+    def get_best_matched(props, target_expression, result_type):
         """
         Retrieve the PropertyMatcher element containing the property with the
         highest score from the list of matched properties.
@@ -67,8 +67,8 @@ class PropertiesMatcher:
         Args:
             props (RDFElements[RDFProperty]):
                 List of properties against which the similarity is calculated.
-            action (Token):
-                Target verb for which the similarity is calculated.
+            target_expression (Span):
+                Word/expression for which the similarity is calculated.
             result_type (str|None):
                 Type of the expected result.
                 E.g.: "place", "person", etc. (check DBPEDIA_CLASS_TYPES).
@@ -78,14 +78,14 @@ class PropertiesMatcher:
         """
 
         # Get <b>best matched</b> from disk if it has already been cached.
-        if CACHED_MATCHES.exists(action.text):
-            matched = CACHED_MATCHES.find(action.text)
+        if CACHED_MATCHES.exists(target_expression.text):
+            matched = CACHED_MATCHES.find(target_expression.text)
             rdf_prop = props.find(matched.prop_uri)
-            best_match = PropertyMatcher(rdf_prop, action, result_type)
+            best_match = PropertyMatcher(rdf_prop, target_expression, result_type)
 
             return best_match
 
-        matcher = PropertiesMatcher(props, action, result_type)
+        matcher = PropertiesMatcher(props, target_expression, result_type)
         matches = matcher.matches
         best_match = pydash.get(matcher.matches, '0')
 
@@ -108,16 +108,19 @@ class PropertiesMatcher:
         return best_match
 
 
-def _get_matched_props(props, action, result_type):
+def _get_matched_props(props, target_expression, result_type):
     """
     Determine the similarity between the input verb and the label of each
     property.
 
     Args:
-        action (Token):
-            Word against the similarity is calculated.
-        props (List[RDFProperty]):
+        props (RDFElements[RDFProperty]):
             List of properties against which the similarity is calculated.
+        target_expression (Span):
+            Word/expression for which the similarity is calculated.
+        result_type (str|None):
+            Type of the expected result.
+            E.g.: "place", "person", etc. (check DBPEDIA_CLASS_TYPES).
 
     Returns:
         List[PropertyMatcher]:
@@ -125,7 +128,7 @@ def _get_matched_props(props, action, result_type):
     """
 
     matched_props = [
-        PropertyMatcher(rdf_prop, action, result_type)
+        PropertyMatcher(rdf_prop, target_expression, result_type)
         for rdf_prop in props
     ]
 

@@ -21,7 +21,9 @@ def entities_handler(parsed):
 
 
 def matcher_handler(parsed):
-    action = None
+    start_i = -1
+    end_i = -1
+    target_expression = None
     result_type = None
     document = None
     question = None
@@ -32,17 +34,29 @@ def matcher_handler(parsed):
         if key == ACCESSORS.QUESTION:
             question = unquote(value)
             document = nlp_model(question)
-        elif key == ACCESSORS.ACTION_INDEX:
-            index = int(value)
-            action = document[index]
+        elif key == ACCESSORS.START_I:
+            start_i = int(value)
+        elif key == ACCESSORS.END_I:
+            end_i = int(value)
         elif key == ACCESSORS.RESULT_TYPE:
             result_type = value
 
-    best_matched = PropertiesMatcher.get_best_matched(props, action, result_type)
+    if start_i == -1 or end_i == -1:
+        return {
+            ACCESSORS.QUESTION: question,
+            ACCESSORS.START_I: start_i,
+            ACCESSORS.END_I: end_i,
+            ACCESSORS.PROPERTY: None,
+            ACCESSORS.SCORE: -1
+        }
+
+    target_expression = document[start_i, end_i]
+    best_matched = PropertiesMatcher.get_best_matched(props, target_expression, result_type)
 
     return {
         ACCESSORS.QUESTION: question,
-        ACCESSORS.ACTION_INDEX: action.i,
+        ACCESSORS.START_I: start_i,
+        ACCESSORS.END_I: end_i,
         ACCESSORS.PROPERTY: best_matched.property.serialize(),
         ACCESSORS.SCORE: best_matched.score
     }

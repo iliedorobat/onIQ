@@ -3,12 +3,13 @@ PAIR_SEPARATOR = "="
 
 
 class ACCESSORS:
-    ACTION_INDEX = "action_index"
+    END_I = "endIndex"
     ENTITIES = "entities"
     PROPERTY = "property"
     QUESTION = "question"
     RESULT_TYPE = "result_type"
     SCORE = "score"
+    START_I = "startIndex"
 
 
 class PATHS:
