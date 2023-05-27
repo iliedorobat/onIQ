@@ -11,7 +11,7 @@ class SPARQLQuery:
         self.triples = triples
 
     def __str__(self):
-        output = "SELECT"
+        output = "SELECT DISTINCT"
         for target in self.targets:
             output += f" {target.to_var()}"
 

@@ -8,10 +8,11 @@ from ro.webdata.oniq.sparql.model.NounEntity import NounEntity
 
 
 class RawTriple:
-    def __init__(self, s: Union[NounEntity, Token], p: Union[str, Span], o: Union[str, NounEntity, Token]):
+    def __init__(self, s: Union[NounEntity, Token], p: Union[str, Span], o: Union[str, NounEntity, Token], question: Span):
         self.s = s if isinstance(s, NounEntity) else NounEntity(s)
         self.p = p
         self.o = _prepare_object(self.p, o)
+        self.question = question
 
     def __eq__(self, other):
         # only equality tests to other 'RawTriple' instances are supported

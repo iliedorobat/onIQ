@@ -1,8 +1,11 @@
-from urllib.parse import unquote
+from urllib.parse import unquote, ParseResult
+
+from spacy.tokens import Doc
 
 from ro.webdata.oniq.endpoint.common.match.PropertiesMatcher import PropertiesMatcher
 from ro.webdata.oniq.endpoint.common.translator.CSVTranslator import CSVTranslator
-from ro.webdata.oniq.service.query_const import ACCESSORS, JOIN_OPERATOR, PAIR_SEPARATOR
+from ro.webdata.oniq.service.MatcherHandler import SpanMatcherHandler, StringMatcherHandler
+from ro.webdata.oniq.service.query_const import ACCESSORS, JOIN_OPERATOR, PAIR_SEPARATOR, VALUES
 from ro.webdata.oniq.spacy_model import nlp_model
 
 props = CSVTranslator.to_props()
@@ -20,46 +23,25 @@ def entities_handler(parsed):
             output[ACCESSORS.ENTITIES] = _get_json_entities(question)
 
 
-def matcher_handler(parsed):
-    start_i = -1
-    end_i = -1
-    target_expression = None
-    result_type = None
-    document = None
-    question = None
+def matcher_handler(parsed_url: ParseResult):
+    target_type = _get_target_type(parsed_url)
 
-    for query in parsed.query.split(JOIN_OPERATOR):
+    if target_type == VALUES.SPAN:
+        matcher = SpanMatcherHandler(parsed_url)
+        return matcher.matcher_finder(props)
+    elif target_type == VALUES.STRING:
+        matcher = StringMatcherHandler(parsed_url)
+        return matcher.matcher_finder(props)
+
+
+def _get_target_type(parsed_url: ParseResult):
+    for query in parsed_url.query.split(JOIN_OPERATOR):
         [key, value] = query.split(PAIR_SEPARATOR)
 
-        if key == ACCESSORS.QUESTION:
-            question = unquote(value)
-            document = nlp_model(question)
-        elif key == ACCESSORS.START_I:
-            start_i = int(value)
-        elif key == ACCESSORS.END_I:
-            end_i = int(value)
-        elif key == ACCESSORS.RESULT_TYPE:
-            result_type = value
+        if key == ACCESSORS.TARGET_TYPE:
+            return value
 
-    if start_i == -1 or end_i == -1:
-        return {
-            ACCESSORS.QUESTION: question,
-            ACCESSORS.START_I: start_i,
-            ACCESSORS.END_I: end_i,
-            ACCESSORS.PROPERTY: None,
-            ACCESSORS.SCORE: -1
-        }
-
-    target_expression = document[start_i, end_i]
-    best_matched = PropertiesMatcher.get_best_matched(props, target_expression, result_type)
-
-    return {
-        ACCESSORS.QUESTION: question,
-        ACCESSORS.START_I: start_i,
-        ACCESSORS.END_I: end_i,
-        ACCESSORS.PROPERTY: best_matched.property.serialize(),
-        ACCESSORS.SCORE: best_matched.score
-    }
+    return None
 
 
 # TODO: remove

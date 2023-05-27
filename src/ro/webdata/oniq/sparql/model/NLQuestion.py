@@ -1,10 +1,10 @@
 import pydash
 from spacy.tokens import Span
 
+from ro.webdata.oniq.common.nlp.nlp_utils import text_to_span
 from ro.webdata.oniq.common.nlp.sentence_utils import get_root
 from ro.webdata.oniq.common.nlp.word_utils import is_aux, is_preceded_by_pass, is_wh_word, is_followed_by_possessive, \
     is_verb
-from ro.webdata.oniq.spacy_model import nlp_model
 
 
 class QUESTION_TARGET:
@@ -45,8 +45,7 @@ class ROOT_TYPES:
 
 class NLQuestion:
     def __init__(self, input_question: str):
-        document = nlp_model(input_question)
-        question = Span(document, 0, len(document))
+        question = text_to_span(input_question)
 
         self.main_type = _get_question_type(question)
         self.target = _get_question_target(question)

@@ -7,6 +7,7 @@ from ro.webdata.oniq.common.nlp.utils import is_doc_or_span
 from ro.webdata.oniq.common.nlp.word_utils import get_prev_word, is_wh_word, get_next_word
 from ro.webdata.oniq.common.print_utils import SYSTEM_MESSAGES
 from ro.webdata.oniq.common.text_utils import MONTHS, array_exists_in_text, remove_determiner
+from ro.webdata.oniq.spacy_model import nlp_model
 
 
 def get_cardinals(sentence: Span):
@@ -206,6 +207,18 @@ def retokenize(document: Union[Doc, Span], sentence: Span):
             # E.g.: "Was the statue created during the day of April 10 Tiananmen Square protests?"
             if not array_exists_in_text(MONTHS, entity.text.lower()):
                 retokenizer.merge(entity)
+
+
+def text_to_span(text: str):
+    """
+    Convert a text to a Span entity
+
+    :param text: The target text
+    :return: Span
+    """
+
+    document = nlp_model(text)
+    return Span(document, 0, len(document))
 
 
 def token_to_span(word: Token):

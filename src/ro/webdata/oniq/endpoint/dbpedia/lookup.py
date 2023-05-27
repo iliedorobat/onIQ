@@ -3,7 +3,7 @@ from typing import List
 
 import pydash
 import requests
-from spacy.tokens import Span, Token
+from spacy.tokens import Span
 
 from ro.webdata.oniq.common.text_utils import WORD_SEPARATOR
 from ro.webdata.oniq.endpoint.common.CSVService import CSVService

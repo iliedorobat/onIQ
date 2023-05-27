@@ -37,7 +37,12 @@ class RawTripleUtils:
             if obj.noun.dep_ == "attr":
                 predicate = obj.to_span()
 
-            raw_triple = RawTriple(subject, predicate, obj)
+            raw_triple = RawTriple(
+                s=subject,
+                p=predicate,
+                o=obj,
+                question=nl_question.question
+            )
             _append_raw_triple(raw_triples, raw_triple)
 
         if triple is not None:
@@ -48,7 +53,8 @@ class RawTripleUtils:
                 raw_triple = RawTriple(
                     s=get_child_noun(related_verb, nl_question.question),
                     p=token_to_span(related_verb),
-                    o=triple.s
+                    o=triple.s,
+                    question=nl_question.question
                 )
                 _append_raw_triple(raw_triples, raw_triple)
                 # <("Myntdu river")   (originates)   (town)>
@@ -75,7 +81,8 @@ class RawTripleUtils:
                         raw_triple = RawTriple(
                             s=triple.s,
                             p=token_to_span(noun),
-                            o=noun
+                            o=noun,
+                            question=nl_question.question
                         )
                         _append_raw_triple(raw_triples, raw_triple)
 
@@ -118,7 +125,8 @@ class RawTripleUtils:
                 raw_triple = RawTriple(
                     s=subject,
                     p=triple.s.to_span(),
-                    o=triple.s
+                    o=triple.s,
+                    question=nl_question.question
                 )
                 _append_raw_triple(raw_triples, raw_triple)
                 # [2] <subject ("Mashhur bin Abdulaziz Al Saud")   subject.head (father)   subject.head (father)> (NER)
@@ -152,7 +160,8 @@ class RawTripleUtils:
             raw_triple = RawTriple(
                 s=subject,
                 p=token_to_span(subject),
-                o=get_child_noun(subject, nl_question.question)
+                o=get_child_noun(subject, nl_question.question),
+                question=nl_question.question
             )
             _append_raw_triple(raw_triples, raw_triple)
             # [4] <subject of root (designer)   subject of root (designer)  pobj ("REP Parasol")
@@ -167,7 +176,8 @@ class RawTripleUtils:
         raw_triple = RawTriple(
             s=nl_question.target,
             p=token_to_span(predicate),
-            o=get_child_noun(root, nl_question.question[root.i + 1:])
+            o=get_child_noun(root, nl_question.question[root.i + 1:]),
+            question=nl_question.question
         )
         _append_raw_triple(raw_triples, raw_triple)
 
@@ -184,7 +194,8 @@ class RawTripleUtils:
             raw_triple = RawTriple(
                 s=subject,
                 p=nl_question.target,
-                o=nl_question.target
+                o=nl_question.target,
+                question=nl_question.question
             )
             _append_raw_triple(raw_triples, raw_triple)
 
@@ -194,14 +205,16 @@ class RawTripleUtils:
             raw_triple = RawTriple(
                 s=raw_triple.s,
                 p=token_to_span(child_noun),
-                o=child_noun
+                o=child_noun,
+                question=nl_question.question
             )
             _append_raw_triple(raw_triples, raw_triple)
 
             raw_triple = RawTriple(
                 s=child_noun,
                 p=token_to_span(related_verb),
-                o=get_child_noun(related_verb, nl_question.question[related_verb.i + 1:])
+                o=get_child_noun(related_verb, nl_question.question[related_verb.i + 1:]),
+                question=nl_question.question
             )
             _append_raw_triple(raw_triples, raw_triple)
 
@@ -213,7 +226,8 @@ class RawTripleUtils:
             raw_triple = RawTriple(
                 s=subject,
                 p=token_to_span(predicate),
-                o=get_child_noun(predicate.head, nl_question.question[predicate.i + 1:])
+                o=get_child_noun(predicate.head, nl_question.question[predicate.i + 1:]),
+                question=nl_question.question
             )
             _append_raw_triple(raw_triples, raw_triple)
 
@@ -233,7 +247,8 @@ class RawTripleUtils:
             raw_triple = RawTriple(
                 s=subject,
                 p=token_to_span(child_noun),
-                o=NounEntity(child_noun.lemma_, child_noun)
+                o=NounEntity(child_noun.lemma_, child_noun),
+                question=nl_question.question
             )
             _append_raw_triple(raw_triples, raw_triple)
 
@@ -247,7 +262,8 @@ class RawTripleUtils:
             raw_triple = RawTriple(
                 s=triple.s,
                 p="country",
-                o=NounEntity(adj_modifier)
+                o=NounEntity(adj_modifier),
+                question=nl_question.question
             )
             _append_raw_triple(raw_triples, raw_triple)
 
@@ -263,7 +279,8 @@ class RawTripleUtils:
                 raw_triple = RawTriple(
                     s=triple.s,
                     p="prop",
-                    o=NounEntity(prev_word)
+                    o=NounEntity(prev_word),
+                    question=nl_question.question
                 )
                 _append_raw_triple(raw_triples, raw_triple)
 
@@ -354,7 +371,8 @@ def _append_rdf_type_triple(nl_question: NLQuestion, raw_triples: List[RawTriple
     raw_triple = RawTriple(
         s=subject,
         p="rdf:type",
-        o=NounEntity(resource, entity.token)
+        o=NounEntity(resource, entity.token),
+        question=nl_question.question
     )
     _append_raw_triple(raw_triples, raw_triple)
 
@@ -377,7 +395,8 @@ def _append_root_aux_ask_triple(nl_question: NLQuestion, raw_triples: List[RawTr
     raw_triple = RawTriple(
         s=subject,
         p=token_to_span(root),
-        o=obj
+        o=obj,
+        question=nl_question.question
     )
     _append_raw_triple(raw_triples, raw_triple)
 
@@ -419,7 +438,8 @@ def _append_root_aux_triple(nl_question: NLQuestion, raw_triples: List[RawTriple
     raw_triple = RawTriple(
         s=subject,
         p=predicate,
-        o=obj
+        o=obj,
+        question=nl_question.question
     )
     _append_raw_triple(raw_triples, raw_triple)
 
@@ -456,7 +476,8 @@ def _append_root_target_triple(nl_question: NLQuestion, raw_triples: List[RawTri
     raw_triple = RawTriple(
         s=subject,
         p=token_to_span(root),
-        o=obj
+        o=obj,
+        question=nl_question.question
     )
     _append_raw_triple(raw_triples, raw_triple)
 
@@ -474,7 +495,8 @@ def _append_root_target_prep_triple(nl_question: NLQuestion, raw_triples: List[R
     raw_triple = RawTriple(
         s=subject,
         p=token_to_span(predicate),
-        o=obj
+        o=obj,
+        question=nl_question.question
     )
     _append_raw_triple(raw_triples, raw_triple)
 
@@ -491,7 +513,8 @@ def _append_passive_triple(nl_question: NLQuestion, raw_triples: List[RawTriple]
         raw_triple = RawTriple(
             s=subject,
             p=token_to_span(predicate),
-            o=get_child_noun(predicate, sentence[predicate.i + 1:])
+            o=get_child_noun(predicate, sentence[predicate.i + 1:]),
+            question=nl_question.question
         )
         _append_raw_triple(raw_triples, raw_triple)
     else:
@@ -501,7 +524,8 @@ def _append_passive_triple(nl_question: NLQuestion, raw_triples: List[RawTriple]
         raw_triple = RawTriple(
             s=subject,
             p=token_to_span(predicate),
-            o=get_child_noun(next_verb, sentence[next_verb.i + 1:])
+            o=get_child_noun(next_verb, sentence[next_verb.i + 1:]),
+            question=nl_question.question
         )
         _append_raw_triple(raw_triples, raw_triple)
 
