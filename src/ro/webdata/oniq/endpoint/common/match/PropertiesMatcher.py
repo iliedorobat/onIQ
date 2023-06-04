@@ -25,7 +25,7 @@ class PropertiesMatcher:
             highest score from the list of matched properties.
     """
 
-    def __init__(self, props, target_expression, result_type):
+    def __init__(self, props, target_expression, result_type=None, subject_uri=None, object_uri=None):
         """
         Args:
             props (List[RDFProperty]):
@@ -35,9 +35,13 @@ class PropertiesMatcher:
             result_type (str|None):
                 Type of the expected result.
                 E.g.: "place", "person", etc. (check DBPEDIA_CLASS_TYPES).
+            subject_uri (str):
+                [OPTIONAL] The subject to which the property applies.
+            object_uri (str):
+                [OPTIONAL] The object to which the property applies.
         """
 
-        self.matches = _get_matched_props(props, target_expression, result_type)
+        self.matches = _get_matched_props(props, target_expression, result_type, subject_uri, object_uri)
 
     def __hash__(self):
         hash_value = "##".join(
@@ -59,7 +63,7 @@ class PropertiesMatcher:
         return True
 
     @staticmethod
-    def get_best_matched(props, target_expression, result_type):
+    def get_best_matched(props, target_expression, result_type=None, subject_uri=None, object_uri=None):
         """
         Retrieve the PropertyMatcher element containing the property with the
         highest score from the list of matched properties.
@@ -72,20 +76,24 @@ class PropertiesMatcher:
             result_type (str|None):
                 Type of the expected result.
                 E.g.: "place", "person", etc. (check DBPEDIA_CLASS_TYPES).
+            subject_uri (str):
+                [OPTIONAL] The subject to which the property applies.
+            object_uri (str):
+                [OPTIONAL] The object to which the property applies.
 
         Returns:
             PropertyMatcher: Property having the highest score.
         """
 
         # Get <b>best matched</b> from disk if it has already been cached.
-        if CACHED_MATCHES.exists(target_expression.text):
-            matched = CACHED_MATCHES.find(target_expression.text)
+        if CACHED_MATCHES.exists(target_expression.text, subject_uri, object_uri):
+            matched = CACHED_MATCHES.find(target_expression.text, subject_uri, object_uri)
             rdf_prop = props.find(matched.prop_uri)
-            best_match = PropertyMatcher(rdf_prop, target_expression, result_type)
+            best_match = PropertyMatcher(rdf_prop, target_expression, result_type, subject_uri, object_uri)
 
             return best_match
 
-        matcher = PropertiesMatcher(props, target_expression, result_type)
+        matcher = PropertiesMatcher(props, target_expression, result_type, subject_uri, object_uri)
         matches = matcher.matches
         best_match = pydash.get(matcher.matches, '0')
 
@@ -108,7 +116,7 @@ class PropertiesMatcher:
         return best_match
 
 
-def _get_matched_props(props, target_expression, result_type):
+def _get_matched_props(props, target_expression, result_type=None, subject_uri=None, object_uri=None):
     """
     Determine the similarity between the input verb and the label of each
     property.
@@ -121,6 +129,10 @@ def _get_matched_props(props, target_expression, result_type):
         result_type (str|None):
             Type of the expected result.
             E.g.: "place", "person", etc. (check DBPEDIA_CLASS_TYPES).
+        subject_uri (str):
+            [OPTIONAL] The subject to which the property applies.
+        object_uri (str):
+            [OPTIONAL] The object to which the property applies.
 
     Returns:
         List[PropertyMatcher]:
@@ -128,7 +140,7 @@ def _get_matched_props(props, target_expression, result_type):
     """
 
     matched_props = [
-        PropertyMatcher(rdf_prop, target_expression, result_type)
+        PropertyMatcher(rdf_prop, target_expression, result_type, subject_uri, object_uri)
         for rdf_prop in props
     ]
 

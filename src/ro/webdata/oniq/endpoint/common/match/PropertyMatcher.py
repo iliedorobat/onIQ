@@ -28,6 +28,8 @@ class PropertyMatcher:
         detachment_score (float):
             Aggregated similarity calculated based on the Jaccard Distance
             and Edit Distance.
+        object_uri (str):
+            The object to which the property applies.
         property (RDFProperty):
             Property against which the similarity is calculated.
         result_type (str|None):
@@ -35,13 +37,15 @@ class PropertyMatcher:
             E.g.: "place", "person", etc. (check DBPEDIA_CLASS_TYPES).
         score (float):
             Calculated similarity score.
+        subject_uri (str):
+            The subject to which the property applies.
 
     Methods:
         to_csv():
             Prepare the CSV entry.
     """
 
-    def __init__(self, rdf_prop, target_expression, result_type):
+    def __init__(self, rdf_prop, target_expression, result_type, subject_uri, object_uri):
         """
         Args:
             target_expression (Span):
@@ -51,12 +55,19 @@ class PropertyMatcher:
             result_type (str|None):
                 Type of the expected result.
                 E.g.: "place", "person", etc. (check DBPEDIA_CLASS_TYPES).
+            subject_uri (str):
+                [OPTIONAL] The subject to which the property applies.
+            object_uri (str):
+                [OPTIONAL] The object to which the property applies.
         """
+
         self.target_expression = target_expression
         self.property = rdf_prop
         self.result_type = result_type
         self.score = _calculate_similarity_score(rdf_prop, target_expression, result_type)
         self.detachment_score = _calculate_detachment_score(rdf_prop, target_expression)
+        self.subject_uri = subject_uri
+        self.object_uri = object_uri
 
     def __hash__(self):
         return hash(f'{self.property.uri}{SPARQL_STR_SEPARATOR}{self.score}')
@@ -78,11 +89,16 @@ class PropertyMatcher:
             str: CSV entry.
         """
 
+        subject_uri = self.subject_uri if self.subject_uri is not None else ""
+        object_uri = self.object_uri if self.object_uri is not None else ""
+
         return separator.join([
             self.target_expression.text,
             self.property.uri,
             str(self.score),
-            str(self.detachment_score)
+            str(self.detachment_score),
+            subject_uri,
+            object_uri
         ])
 
 
@@ -132,7 +148,7 @@ def _calculate_word_similarity_score(rdf_prop, target_expression, result_type):
     prop_tokens = rdf_prop.label_to_non_stop_tokens()
 
     for index, prop_token in list(enumerate(prop_tokens)):
-        # FIXME: workaround because "born".lemma_ == "bear"
+        # FIXME: workaround for "born".lemma_ == "bear"
         workaround_word_1 = "birth" if target_expression.text == "born" else target_expression.lemma_
 
         word_1 = nlp_model(workaround_word_1)[0]

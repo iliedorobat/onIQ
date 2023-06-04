@@ -6,11 +6,15 @@ CSV_VALUE_SEPARATOR = " && "
 
 class CSVService:
     """
-    Service used for common operations with CSV files.
+    Service used for common operations on CSV files.
 
     Methods:
+        append_line(path, filename, csv_line, header, separator=CSV_COLUMN_SEPARATOR):
+            Add a line to the target CSV file.
         read_lines(filepath, exclude_header=True):
             Read the content of a CSV file.
+        get_string(value):
+            Prepare the value read from a CSV file.
     """
 
     @staticmethod
@@ -77,3 +81,21 @@ class CSVService:
         file.close()
 
         return lines
+
+    @staticmethod
+    def get_string(value):
+        """
+        Prepare the value read from a CSV file.
+
+        Args:
+            value (str): Input value.
+
+        Returns:
+            None if the input value is an empty string, otherwise return
+            the value.
+        """
+
+        if isinstance(value, str) and len(value.strip()) == 0:
+            return None
+
+        return value

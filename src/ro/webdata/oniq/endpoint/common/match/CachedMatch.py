@@ -25,7 +25,7 @@ class CachedMatch:
             Word against the similarity is calculated.
 
     Methods:
-        cache_match(target_word, prop_uri, score, detachment_score):
+        cache_match(target_word, prop_uri, score, detachment_score, subject_uri, object_uri):
             Cache to disk the result of a similarity check.
         get_csv_headers():
             Get the list of column names.
@@ -35,7 +35,7 @@ class CachedMatch:
             Prepare the CSV entry.
     """
 
-    def __init__(self, target_word, prop_uri, score, detachment_score):
+    def __init__(self, target_word, prop_uri, score, detachment_score, subject_uri, object_uri):
         """
         Args:
             target_word (str):
@@ -48,12 +48,18 @@ class CachedMatch:
             detachment_score (str):
                 Aggregated similarity calculated based on the Jaccard Distance
                 and Edit Distance.
+            subject_uri (str):
+                [OPTIONAL] The subject to which the property applies.
+            object_uri (str):
+                [OPTIONAL] The object to which the property applies.
         """
 
         self.target_word = target_word
         self.prop_uri = prop_uri
         self.score = float(score)
         self.detachment_score = float(detachment_score)
+        self.subject_uri = subject_uri
+        self.object_uri = object_uri
 
     def __hash__(self):
         return hash(self.to_csv())
@@ -68,7 +74,7 @@ class CachedMatch:
         return self.to_csv()
 
     @staticmethod
-    def cache_match(target_word, prop_uri, score, detachment_score):
+    def cache_match(target_word, prop_uri, score, detachment_score, subject_uri, object_uri):
         """
         Cache to disk the result of a similarity check.
 
@@ -83,9 +89,13 @@ class CachedMatch:
             detachment_score (str):
                 Aggregated similarity calculated based on the Jaccard Distance
                 and Edit Distance.
+            subject_uri (str):
+                [OPTIONAL] The subject to which the property applies.
+            object_uri (str):
+                [OPTIONAL] The object to which the property applies.
         """
 
-        matched_entry = CachedMatch(target_word, prop_uri, score, detachment_score)
+        matched_entry = CachedMatch(target_word, prop_uri, score, detachment_score, subject_uri, object_uri)
         CSVService.append_line(
             MATCHED_ENTRIES_PATH,
             MATCHED_ENTRIES_FILENAME,
@@ -99,7 +109,7 @@ class CachedMatch:
         Get the list of column names.
         """
 
-        return ['target_word', 'prop_uri', 'score', 'detachment_score']
+        return ['target_word', 'prop_uri', 'score', 'detachment_score', 'subject_uri', 'object_uri']
 
     def serialize(self):
         """
@@ -119,9 +129,14 @@ class CachedMatch:
             str: CSV entry.
         """
 
+        subject_uri = self.subject_uri if self.subject_uri is not None else ""
+        object_uri = self.object_uri if self.object_uri is not None else ""
+
         return separator.join([
             self.target_word,
             self.prop_uri,
             str(self.score),
-            str(self.detachment_score)
+            str(self.detachment_score),
+            subject_uri,
+            object_uri
         ])

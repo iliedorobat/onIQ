@@ -71,11 +71,13 @@ class CachedMatches:
         """
 
         csv_entry = csv_line.strip().split(separator)
-        [target_word, prop_uri, score, detachment_score] = csv_entry
+        [target_word, prop_uri, score, detachment_score, s_uri, o_uri] = csv_entry
+        subject_uri = CSVService.get_string(s_uri)
+        object_uri = CSVService.get_string(o_uri)
 
-        if not self.exists(target_word):
-            CachedMatch.cache_match(target_word, prop_uri, score, detachment_score)
-            matched_entry = CachedMatch(target_word, prop_uri, score, detachment_score)
+        if not self.exists(target_word, subject_uri, object_uri):
+            CachedMatch.cache_match(target_word, prop_uri, score, detachment_score, subject_uri, object_uri)
+            matched_entry = CachedMatch(target_word, prop_uri, score, detachment_score, subject_uri, object_uri)
 
             self.elements.append(matched_entry)
 
@@ -92,8 +94,8 @@ class CachedMatches:
 
         for csv_line in CSVService.read_lines(MATCHED_ENTRIES_FILEPATH, True):
             csv_entry = csv_line.strip().split(separator)
-            [target_word, prop_uri, score, detachment_score] = csv_entry
-            matched_entry = CachedMatch(target_word, prop_uri, score, detachment_score)
+            [target_word, prop_uri, score, detachment_score, subject_uri, object_uri] = csv_entry
+            matched_entry = CachedMatch(target_word, prop_uri, score, detachment_score, subject_uri, object_uri)
             self.elements.append(matched_entry)
 
     def append(self, element: CachedMatch):
@@ -106,41 +108,49 @@ class CachedMatches:
 
         self.elements.append(element)
 
-    def exists(self, str_word):
+    def exists(self, str_word, subject_uri, object_uri):
         """
         Check if the target word exists in the input list of cached entries.
 
         Args:
             str_word (str): Target word.
+            subject_uri (str): The subject to which the property applies.
+            object_uri (str): The object to which the property applies.
 
         Returns:
             bool: Validation result.
         """
 
-        return str_word in [
-            matched_entry.target_word for matched_entry in self.elements
-            if matched_entry.target_word == str_word
-        ]
+        for matched_entry in self.elements:
+            if matched_entry.target_word == str_word:
+                if subject_uri is not None and matched_entry.subject_uri == subject_uri:
+                    return True
+                if object_uri is not None and matched_entry.object_uri == object_uri:
+                    return True
 
-    def find(self, str_word):
+        return False
+
+    def find(self, str_word, subject_uri, object_uri):
         """
         Find the cached entry corresponding to the target word.
 
         Args:
             str_word (str): Target word.
+            subject_uri (str): The subject to which the property applies.
+            object_uri (str): The object to which the property applies.
 
         Returns:
             CachedMatch:
                 The cached entry which contains the target word.
         """
 
-        if self.exists(str_word):
-            filtered_props = [
-                matched_entry for matched_entry in self.elements
-                if matched_entry.target_word == str_word
-            ]
-
-            return filtered_props[0]
+        if self.exists(str_word, subject_uri, object_uri):
+            for matched_entry in self.elements:
+                if matched_entry.target_word == str_word:
+                    if subject_uri is not None and matched_entry.subject_uri == subject_uri:
+                        return matched_entry
+                    if object_uri is not None and matched_entry.object_uri == object_uri:
+                        return matched_entry
 
         return None
 

@@ -39,6 +39,8 @@ class SpanMatcherHandler:
     start_i: int = -1
     question: str = None
     result_type: str = None  # one of the attributes of DBPEDIA_CLASS_TYPES
+    subject_uri: str = None
+    object_uri: str = None
 
     def __init__(self, parsed_url: ParseResult):
         for query in parsed_url.query.split(JOIN_OPERATOR):
@@ -57,6 +59,12 @@ class SpanMatcherHandler:
             elif key == ACCESSORS.RESULT_TYPE:
                 self.result_type = value
                 continue
+            elif key == ACCESSORS.TARGET_SUBJECT:
+                self.subject_uri = value
+                continue
+            elif key == ACCESSORS.TARGET_OBJECT:
+                self.object_uri = value
+                continue
 
     def matcher_finder(self, props: RDFElements):
         failed_response = self.document is None or self.start_i == -1 or self.end_i == -1
@@ -65,7 +73,13 @@ class SpanMatcherHandler:
             return MatcherHandler.prepare_failed_response(self.question, self.start_i, self.end_i)
 
         target_expression = self.document[self.start_i: self.end_i]
-        best_matched = PropertiesMatcher.get_best_matched(props, target_expression, self.result_type)
+        best_matched = PropertiesMatcher.get_best_matched(
+            props=props,
+            target_expression=target_expression,
+            result_type=self.result_type,
+            subject_uri=self.subject_uri,
+            object_uri=self.object_uri
+        )
 
         return MatcherHandler.prepare_successful_response(self.question, self.start_i, self.end_i, best_matched)
 
@@ -75,6 +89,8 @@ class StringMatcherHandler:
     question: str = None
     result_type: str = None  # one of the attributes of DBPEDIA_CLASS_TYPES
     target_expression: Span = None
+    subject_uri: str = None
+    object_uri: str = None
 
     def __init__(self, parsed_url: ParseResult):
         for query in parsed_url.query.split(JOIN_OPERATOR):
@@ -91,6 +107,12 @@ class StringMatcherHandler:
                 nlp_value = nlp_model(value)
                 self.target_expression = Span(nlp_value, 0, len(nlp_value))
                 continue
+            elif key == ACCESSORS.TARGET_SUBJECT:
+                self.subject_uri = value
+                continue
+            elif key == ACCESSORS.TARGET_OBJECT:
+                self.object_uri = value
+                continue
 
     def matcher_finder(self, props: RDFElements):
         failed_response = self.document is None or self.target_expression is None
@@ -98,6 +120,12 @@ class StringMatcherHandler:
         if failed_response:
             return MatcherHandler.prepare_failed_response(self.question, -1, -1)
 
-        best_matched = PropertiesMatcher.get_best_matched(props, self.target_expression, self.result_type)
+        best_matched = PropertiesMatcher.get_best_matched(
+            props=props,
+            target_expression=self.target_expression,
+            result_type=self.result_type,
+            subject_uri=self.subject_uri,
+            object_uri=self.object_uri
+        )
 
         return MatcherHandler.prepare_successful_response(self.question, -1, -1, best_matched)
