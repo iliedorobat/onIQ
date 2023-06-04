@@ -14,8 +14,8 @@ from ro.webdata.oniq.endpoint.common.translator.CSVTranslator import CSVTranslat
 from ro.webdata.oniq.endpoint.common.translator.URITranslator import URITranslator
 from ro.webdata.oniq.endpoint.dbpedia.constants import DBPEDIA_CLASS_TYPES
 from ro.webdata.oniq.endpoint.dbpedia.query import DBpediaQueryService
-from ro.webdata.oniq.endpoint.dbpedia.sparql_query import DBP_PROPERTIES_OF_RESOURCE_QUERY
-from ro.webdata.oniq.endpoint.dbpedia.sparql_query import DBP_RESOURCE_QUERY, DBP_ONTOLOGY_RESOURCE_QUERY
+from ro.webdata.oniq.endpoint.dbpedia.sparql_query import DBP_PROPERTIES_OF_SUBJECT_QUERY, DBP_RESOURCE_QUERY, \
+    DBP_ONTOLOGY_RESOURCE_QUERY
 from ro.webdata.oniq.endpoint.models.RDFElement import RDFClass, RDFProperty, ROOT_CLASS_URI
 from ro.webdata.oniq.endpoint.namespace import NAMESPACE
 from ro.webdata.oniq.service.query_const import ACCESSORS, PATHS
@@ -118,7 +118,7 @@ class LookupService:
         # E.g.: "Where is Barda Mausoleum located?"
         #   => "Barda Mausoleum"
         if resource_name is not None:
-            sparql_query = DBP_PROPERTIES_OF_RESOURCE_QUERY % resource_name
+            sparql_query = DBP_PROPERTIES_OF_SUBJECT_QUERY % resource_name
             props = DBpediaQueryService.run_properties_query(sparql_query)
             best_matched = PropertiesMatcher.get_best_matched(props, target_expression, result_type)
 

@@ -134,7 +134,7 @@ SPARQL query for getting the list of properties.
 
 
 
-DBP_PROPERTIES_OF_RESOURCE_QUERY = f"""
+DBP_PROPERTIES_OF_SUBJECT_QUERY = f"""
     PREFIX rdf: <{NAMESPACE.RDF}>
     PREFIX rdfs: <{NAMESPACE.RDFS}>
     PREFIX dbr: <{NAMESPACE.DBP_RESOURCE}>
@@ -165,6 +165,41 @@ DBP_PROPERTIES_OF_RESOURCE_QUERY = f"""
 """
 SPARQL query for getting the list of properties for a specific resource.
 E.g.: dbr:%s => http://dbpedia.org/resource/Barda_Mausoleum
+"""
+
+
+
+DBP_PROPERTIES_OF_OBJECT_QUERY = f"""
+    PREFIX rdf: <{NAMESPACE.RDF}>
+    PREFIX rdfs: <{NAMESPACE.RDFS}>
+    PREFIX dbr: <{NAMESPACE.DBP_RESOURCE}>
+
+    SELECT DISTINCT ?property ?label ?subclassOf ?domain ?range
+    WHERE {{
+        ?value ?property dbr:%s .
+
+        OPTIONAL {{
+            ?property rdfs:label ?label .
+            FILTER(langMatches(lang(?label), "en"))
+        }}
+
+        OPTIONAL {{
+            ?property rdf:type ?subclassOf .
+            FILTER(?subclassOf = rdf:Property or !bound(?subclassOf))
+        }}
+
+        OPTIONAL {{ ?property rdfs:domain ?domain }}
+        OPTIONAL {{ ?property rdfs:range ?range }}
+
+        FILTER(
+            ?property NOT IN (rdf:type, rdfs:subPropertyOf, rdfs:subClassOf)
+        )
+    }}
+    ORDER BY ?property
+"""
+"""
+SPARQL query for getting the list of properties which are directly related to a specific resource.
+E.g.: dbr:%s => http://dbpedia.org/resource/Sweden
 """
 
 

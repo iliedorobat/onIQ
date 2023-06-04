@@ -11,6 +11,8 @@ class ACCESSORS:
     RESULT_TYPE = "result_type"
     SCORE = "score"
     START_I = "startIndex"
+    TARGET_OBJECT = "target_object"
+    TARGET_SUBJECT = "target_subject"
     TARGET_TYPE = "target_type"
     TARGET_EXPRESSION = "target_expression"
 

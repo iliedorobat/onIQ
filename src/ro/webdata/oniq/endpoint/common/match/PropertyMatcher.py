@@ -132,7 +132,10 @@ def _calculate_word_similarity_score(rdf_prop, target_expression, result_type):
     prop_tokens = rdf_prop.label_to_non_stop_tokens()
 
     for index, prop_token in list(enumerate(prop_tokens)):
-        word_1 = nlp_model(target_expression.lemma_)[0]
+        # FIXME: workaround because "born".lemma_ == "bear"
+        workaround_word_1 = "birth" if target_expression.text == "born" else target_expression.lemma_
+
+        word_1 = nlp_model(workaround_word_1)[0]
         word_2 = nlp_model(prop_token.lemma_)[0]
 
         if not word_1.has_vector:

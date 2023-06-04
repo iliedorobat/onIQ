@@ -8,17 +8,19 @@ from ro.webdata.oniq.common.nlp.nlp_utils import text_to_span
 from ro.webdata.oniq.common.text_utils import WORD_SEPARATOR
 from ro.webdata.oniq.endpoint.common.match.PropertyMatcher import PropertyMatcher
 from ro.webdata.oniq.endpoint.dbpedia.lookup import LookupService
+from ro.webdata.oniq.endpoint.dbpedia.query import DBpediaQueryService
 from ro.webdata.oniq.endpoint.models.RDFElement import RDFClass, RDFProperty
 from ro.webdata.oniq.service.query_const import PATHS, ACCESSORS, VALUES
 from ro.webdata.oniq.sparql.constants import SPARQL_STR_SEPARATOR
 from ro.webdata.oniq.sparql.model.NounEntity import NounEntity
+from ro.webdata.oniq.sparql.model.final_triples.predicate_utils import subject_predicate_lookup, object_predicate_lookup
 from ro.webdata.oniq.sparql.model.raw_triples.RawTriple import RawTriple
 
 
 class Triple:
     def __init__(self, raw_triple: RawTriple):
         self.s = raw_triple.s
-        self.p = _prepare_predicate(raw_triple.p, raw_triple.question)
+        self.p = _predicate_lookup(raw_triple)
         self.o = raw_triple.o
         self.question = raw_triple.question
 
@@ -49,44 +51,23 @@ class Triple:
         return f"{s}   {p}   {o}"
 
 
-def _prepare_predicate(predicate: Union[str, Span], question: Span):
-    if isinstance(predicate, Span):
-        matcher_uri = f'http://localhost:8200/{PATHS.MATCHER}?' \
-                      f'{ACCESSORS.QUESTION}={question}&' \
-                      f'{ACCESSORS.START_I}={predicate.start}&' \
-                      f'{ACCESSORS.END_I}={predicate.end}&' \
-                      f'{ACCESSORS.TARGET_TYPE}={VALUES.SPAN}'
+def _predicate_lookup(raw_triple: RawTriple):
+    subject: NounEntity = raw_triple.s
+    predicate: Union[str, Span] = raw_triple.p
+    obj: NounEntity = raw_triple.o
+    question: Span = raw_triple.question
 
-        return _prepare_span_predicate(predicate, matcher_uri)
+    if subject.is_res():
+        if obj.is_var():
+            return subject_predicate_lookup(question, subject, predicate)
 
-    elif isinstance(predicate, str):
-        if predicate not in ["rdf:type"]:
-            matcher_uri = f'http://localhost:8200/{PATHS.MATCHER}?' \
-                          f'{ACCESSORS.QUESTION}={question}&' \
-                          f'{ACCESSORS.TARGET_EXPRESSION}={predicate}&' \
-                          f'{ACCESSORS.TARGET_TYPE}={VALUES.STRING}'
+    if subject.is_var():
+        if obj.is_res():
+            return object_predicate_lookup(question, obj, predicate)
 
-            return _prepare_span_predicate(text_to_span(predicate), matcher_uri)
-
+    # E.g.: "Who is the tallest basketball player?"
+    #       <?person   rdf:type   dbo:BasketballPlayer>
     return predicate
-
-
-def _prepare_span_predicate(predicate: [str, Span], matcher_uri: str):
-    matcher_response = requests.get(matcher_uri)
-    matcher_json = json.loads(matcher_response.content)
-    prop_matcher = json.loads(matcher_json['property'])
-    prop = RDFProperty(
-        prop_matcher["uri"],
-        prop_matcher["parent_uris"],
-        prop_matcher["label"],
-        prop_matcher["ns"],
-        prop_matcher["ns_label"],
-        prop_matcher["res_domain"],
-        prop_matcher["res_range"]
-    )
-    best_matched = PropertyMatcher(prop, predicate, None)
-
-    return best_matched
 
 
 # def _node_lookup(noun_entity: NounEntity):

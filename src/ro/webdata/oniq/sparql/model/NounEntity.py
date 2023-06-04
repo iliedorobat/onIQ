@@ -65,6 +65,9 @@ class NounEntity:
     def is_null(self):
         return str(self) == "NULL"
 
+    def is_res(self):
+        return "dbr:" in self.to_var()
+
     def is_var(self):
         return SPARQL_VAR_PREFIX in self.to_var()
 

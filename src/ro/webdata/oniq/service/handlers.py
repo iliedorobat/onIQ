@@ -4,11 +4,12 @@ from spacy.tokens import Doc
 
 from ro.webdata.oniq.endpoint.common.match.PropertiesMatcher import PropertiesMatcher
 from ro.webdata.oniq.endpoint.common.translator.CSVTranslator import CSVTranslator
+from ro.webdata.oniq.endpoint.dbpedia.query import DBpediaQueryService
 from ro.webdata.oniq.service.MatcherHandler import SpanMatcherHandler, StringMatcherHandler
 from ro.webdata.oniq.service.query_const import ACCESSORS, JOIN_OPERATOR, PAIR_SEPARATOR, VALUES
 from ro.webdata.oniq.spacy_model import nlp_model
 
-props = CSVTranslator.to_props()
+all_props = CSVTranslator.to_props()
 
 
 def entities_handler(parsed):
@@ -24,7 +25,15 @@ def entities_handler(parsed):
 
 
 def matcher_handler(parsed_url: ParseResult):
+    target_subject = _get_target_resource(parsed_url, ACCESSORS.TARGET_SUBJECT)
+    target_object = _get_target_resource(parsed_url, ACCESSORS.TARGET_OBJECT)
     target_type = _get_target_type(parsed_url)
+    props = all_props
+
+    if target_subject is not None:
+        props = DBpediaQueryService.run_subject_properties_query(target_subject)
+    if target_object is not None:
+        props = DBpediaQueryService.run_object_properties_query(target_object)
 
     if target_type == VALUES.SPAN:
         matcher = SpanMatcherHandler(parsed_url)
@@ -32,6 +41,16 @@ def matcher_handler(parsed_url: ParseResult):
     elif target_type == VALUES.STRING:
         matcher = StringMatcherHandler(parsed_url)
         return matcher.matcher_finder(props)
+
+
+def _get_target_resource(parsed_url: ParseResult, accessor: str):
+    for query in parsed_url.query.split(JOIN_OPERATOR):
+        [key, value] = query.split(PAIR_SEPARATOR)
+
+        if key == accessor:
+            return value.replace("dbr:", "")
+
+    return None
 
 
 def _get_target_type(parsed_url: ParseResult):
