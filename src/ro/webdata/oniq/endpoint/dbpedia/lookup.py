@@ -95,7 +95,7 @@ class LookupService:
         return response.json().get("docs")
 
     @staticmethod
-    def property_lookup(resource_name, target_expression, result_type):
+    def property_lookup(resource_name, target_expression, result_type=None):
         """
         Lookup for the property which has the highest similarity degree with the target
         word/sequences of word (an expression).
@@ -106,7 +106,7 @@ class LookupService:
             target_expression (Span):
                 Target word/expression used for looking up for a property.
             result_type (str|None):
-                Type of the expected result.
+                [OPTIONAL] Type of the expected result.
                 E.g.: "place", "person", etc. (check DBPEDIA_CLASS_TYPES).
 
         Returns:

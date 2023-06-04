@@ -105,7 +105,6 @@ def _lookup_formatter(predicate: [str, Span], matcher_uri: str, subject_uri: str
     best_matched = PropertyMatcher(
         prop,
         predicate,
-        result_type=None,  # TODO: make it None by default
         subject_uri=subject_uri,
         object_uri=object_uri
     )

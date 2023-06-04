@@ -83,7 +83,7 @@ class CSVService:
         return lines
 
     @staticmethod
-    def get_string(value):
+    def get_csv_string(value):
         """
         Prepare the value read from a CSV file.
 
@@ -97,5 +97,22 @@ class CSVService:
 
         if isinstance(value, str) and len(value.strip()) == 0:
             return None
+
+        return value
+
+    @staticmethod
+    def to_csv_string(value):
+        """
+        Transform the input to a CSV compliant value.
+
+        Args:
+            value (str): Input value.
+
+        Returns:
+            Empty string if the value is None, otherwise return the value.
+        """
+
+        if value is None:
+            return ""
 
         return value

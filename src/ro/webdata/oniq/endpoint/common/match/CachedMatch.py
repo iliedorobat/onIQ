@@ -35,7 +35,7 @@ class CachedMatch:
             Prepare the CSV entry.
     """
 
-    def __init__(self, target_word, prop_uri, score, detachment_score, subject_uri, object_uri):
+    def __init__(self, target_word, prop_uri, score, detachment_score, subject_uri=None, object_uri=None):
         """
         Args:
             target_word (str):
@@ -74,7 +74,7 @@ class CachedMatch:
         return self.to_csv()
 
     @staticmethod
-    def cache_match(target_word, prop_uri, score, detachment_score, subject_uri, object_uri):
+    def cache_match(target_word, prop_uri, score, detachment_score, subject_uri=None, object_uri=None):
         """
         Cache to disk the result of a similarity check.
 
@@ -129,14 +129,11 @@ class CachedMatch:
             str: CSV entry.
         """
 
-        subject_uri = self.subject_uri if self.subject_uri is not None else ""
-        object_uri = self.object_uri if self.object_uri is not None else ""
-
         return separator.join([
             self.target_word,
             self.prop_uri,
             str(self.score),
             str(self.detachment_score),
-            subject_uri,
-            object_uri
+            CSVService.to_csv_string(self.subject_uri),
+            CSVService.to_csv_string(self.object_uri)
         ])

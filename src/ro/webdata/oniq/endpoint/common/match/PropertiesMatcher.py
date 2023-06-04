@@ -33,7 +33,7 @@ class PropertiesMatcher:
             target_expression (Span):
                 Word/expression for which the similarity is calculated.
             result_type (str|None):
-                Type of the expected result.
+                [OPTIONAL] Type of the expected result.
                 E.g.: "place", "person", etc. (check DBPEDIA_CLASS_TYPES).
             subject_uri (str):
                 [OPTIONAL] The subject to which the property applies.
@@ -74,7 +74,7 @@ class PropertiesMatcher:
             target_expression (Span):
                 Word/expression for which the similarity is calculated.
             result_type (str|None):
-                Type of the expected result.
+                [OPTIONAL] Type of the expected result.
                 E.g.: "place", "person", etc. (check DBPEDIA_CLASS_TYPES).
             subject_uri (str):
                 [OPTIONAL] The subject to which the property applies.
@@ -127,7 +127,7 @@ def _get_matched_props(props, target_expression, result_type=None, subject_uri=N
         target_expression (Span):
             Word/expression for which the similarity is calculated.
         result_type (str|None):
-            Type of the expected result.
+            [OPTIONAL] Type of the expected result.
             E.g.: "place", "person", etc. (check DBPEDIA_CLASS_TYPES).
         subject_uri (str):
             [OPTIONAL] The subject to which the property applies.

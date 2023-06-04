@@ -6,7 +6,7 @@ from nltk.corpus import wordnet
 from spacy.tokens import Token
 
 from ro.webdata.oniq.common.print_utils import console, SYSTEM_MESSAGES
-from ro.webdata.oniq.endpoint.common.CSVService import CSV_COLUMN_SEPARATOR
+from ro.webdata.oniq.endpoint.common.CSVService import CSV_COLUMN_SEPARATOR, CSVService
 from ro.webdata.oniq.endpoint.models.RDFElement import RDFProperty
 from ro.webdata.oniq.spacy_model import nlp_model
 from ro.webdata.oniq.sparql.constants import SPARQL_STR_SEPARATOR
@@ -45,7 +45,7 @@ class PropertyMatcher:
             Prepare the CSV entry.
     """
 
-    def __init__(self, rdf_prop, target_expression, result_type, subject_uri, object_uri):
+    def __init__(self, rdf_prop, target_expression, result_type=None, subject_uri=None, object_uri=None):
         """
         Args:
             target_expression (Span):
@@ -53,7 +53,7 @@ class PropertyMatcher:
             rdf_prop (RDFProperty):
                 Property against which the similarity is calculated.
             result_type (str|None):
-                Type of the expected result.
+                [OPTIONAL] Type of the expected result.
                 E.g.: "place", "person", etc. (check DBPEDIA_CLASS_TYPES).
             subject_uri (str):
                 [OPTIONAL] The subject to which the property applies.
@@ -89,16 +89,13 @@ class PropertyMatcher:
             str: CSV entry.
         """
 
-        subject_uri = self.subject_uri if self.subject_uri is not None else ""
-        object_uri = self.object_uri if self.object_uri is not None else ""
-
         return separator.join([
             self.target_expression.text,
             self.property.uri,
             str(self.score),
             str(self.detachment_score),
-            subject_uri,
-            object_uri
+            CSVService.to_csv_string(self.subject_uri),
+            CSVService.to_csv_string(self.object_uri)
         ])
 
 

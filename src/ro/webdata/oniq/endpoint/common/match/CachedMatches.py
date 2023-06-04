@@ -72,8 +72,8 @@ class CachedMatches:
 
         csv_entry = csv_line.strip().split(separator)
         [target_word, prop_uri, score, detachment_score, s_uri, o_uri] = csv_entry
-        subject_uri = CSVService.get_string(s_uri)
-        object_uri = CSVService.get_string(o_uri)
+        subject_uri = CSVService.get_csv_string(s_uri)
+        object_uri = CSVService.get_csv_string(o_uri)
 
         if not self.exists(target_word, subject_uri, object_uri):
             CachedMatch.cache_match(target_word, prop_uri, score, detachment_score, subject_uri, object_uri)
@@ -108,14 +108,17 @@ class CachedMatches:
 
         self.elements.append(element)
 
-    def exists(self, str_word, subject_uri, object_uri):
+    def exists(self, str_word, subject_uri=None, object_uri=None):
         """
         Check if the target word exists in the input list of cached entries.
 
         Args:
-            str_word (str): Target word.
-            subject_uri (str): The subject to which the property applies.
-            object_uri (str): The object to which the property applies.
+            str_word (str):
+                Target word.
+            subject_uri (str):
+                [OPTIONAL] The subject to which the property applies.
+            object_uri (str):
+                [OPTIONAL] The object to which the property applies.
 
         Returns:
             bool: Validation result.
@@ -130,14 +133,17 @@ class CachedMatches:
 
         return False
 
-    def find(self, str_word, subject_uri, object_uri):
+    def find(self, str_word, subject_uri=None, object_uri=None):
         """
         Find the cached entry corresponding to the target word.
 
         Args:
-            str_word (str): Target word.
-            subject_uri (str): The subject to which the property applies.
-            object_uri (str): The object to which the property applies.
+            str_word (str):
+                Target word.
+            subject_uri (str):
+                [OPTIONAL] The subject to which the property applies.
+            object_uri (str):
+                [OPTIONAL] The object to which the property applies.
 
         Returns:
             CachedMatch:

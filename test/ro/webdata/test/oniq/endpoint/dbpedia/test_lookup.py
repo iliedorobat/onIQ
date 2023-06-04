@@ -41,7 +41,7 @@ class TestLookupService:
 
         verb = document[4]
         resource_name = "Barda_Mausoleum"
-        prop = LookupService.property_lookup(resource_name, verb, None)
+        prop = LookupService.property_lookup(resource_name, verb)
 
         print(
             f'test_property_lookup():\n'

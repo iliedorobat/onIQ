@@ -107,6 +107,6 @@ def _predicate_lookup(raw_triple: RawTriple):
 #     if isinstance(subject, RDFClass) and isinstance(raw_predicate, Token):
 #         resource = str(subject)
 #         # TODO:
-#         return LookupService.property_lookup("Queen_Victoria", raw_predicate, None)
+#         return LookupService.property_lookup("Queen_Victoria", raw_predicate)
 
 #     return predicate

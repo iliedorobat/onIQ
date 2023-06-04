@@ -3,7 +3,7 @@ from typing import List
 
 from ro.webdata.oniq.common.text_utils import WORD_SEPARATOR
 from ro.webdata.oniq.common.text_utils import split_camel_case_string
-from ro.webdata.oniq.endpoint.common.CSVService import CSV_COLUMN_SEPARATOR, CSV_VALUE_SEPARATOR
+from ro.webdata.oniq.endpoint.common.CSVService import CSV_COLUMN_SEPARATOR, CSV_VALUE_SEPARATOR, CSVService
 from ro.webdata.oniq.endpoint.namespace import NAMESPACE_SEPARATOR
 from ro.webdata.oniq.endpoint.namespace import NamespaceService
 from ro.webdata.oniq.spacy_model import nlp_model
@@ -313,7 +313,7 @@ class RDFEntity(RDFElement):
         return separator.join([
             self.ns_label,
             self.label,
-            self.name if self.name is not None else "",
+            CSVService.to_csv_string(self.name),
             self.ns,
             self.uri,
             self.res_type
@@ -402,8 +402,8 @@ class RDFProperty(RDFElement):
             self.ns,
             self.uri,
             CSV_VALUE_SEPARATOR.join(self.parent_uris),
-            self.res_domain if self.res_domain is not None else "",
-            self.res_range if self.res_range is not None else ""
+            CSVService.to_csv_string(self.res_domain),
+            CSVService.to_csv_string(self.res_range)
         ])
 
 
