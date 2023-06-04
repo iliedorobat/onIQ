@@ -15,7 +15,7 @@ from ro.webdata.oniq.sparql.query import SPARQLQuery, SPARQLRawQuery
 
 
 class SPARQLBuilder:
-    def __init__(self, endpoint, input_question, print_deps=True, print_result=False):
+    def __init__(self, endpoint, input_question, raw_test=False, print_deps=True):
         nl_question = NLQuestion(input_question)
 
         if print_deps:
@@ -24,10 +24,6 @@ class SPARQLBuilder:
         self.raw_triples = _prepare_raw_triples(nl_question)
         self.targets = _prepare_target_nouns(nl_question, self.raw_triples)
         self.triples = _init_triples(self.raw_triples)
-
-        if print_result:
-            # print(self.to_raw_query_str())
-            print(self.to_sparql_query())
 
     def to_sparql_query(self):
         query = SPARQLQuery(self.targets, self.triples)

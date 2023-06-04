@@ -14,7 +14,7 @@ class RESULT_TYPES:
     NO_COMPLETED = "not_completed"
 
 
-def questions_test(pairs, print_summary, print_deps, print_result):
+def questions_test(pairs, raw_test, print_summary, print_deps):
     counter = {
         RESULT_TYPES.PASSED: 0,
         RESULT_TYPES.FAILED: 0,
@@ -22,7 +22,7 @@ def questions_test(pairs, print_summary, print_deps, print_result):
     }
 
     for pair in pairs:
-        result = question_test(pairs, pair["query"], print_summary, print_deps, print_result)
+        result = question_test(pairs, pair["query"], raw_test, print_summary, print_deps)
 
         if result == RESULT_TYPES.PASSED:
             counter[RESULT_TYPES.PASSED] += 1
@@ -48,16 +48,24 @@ def questions_test(pairs, print_summary, print_deps, print_result):
     )
 
 
-def question_test(pairs, question: str, print_summary, print_deps, print_result):
-    sparql = SPARQLBuilder(ENDPOINT, question, print_deps, print_result)
+def question_test(pairs, question: str, raw_test, print_summary, print_deps):
+    sparql = SPARQLBuilder(ENDPOINT, question, raw_test, print_deps)
     exists = False
     is_equal = False
 
     for pair in pairs:
         if question.lower() == pair["query"].lower():
             exists = True
-            is_equal = sparql.to_raw_query_str().strip().lower() == pair["result"].strip().lower()
+            if raw_test:
+                is_equal = sparql.to_raw_query_str().strip().lower() == pair["result"].strip().lower()
+            else:
+                is_equal = sparql.to_sparql_query().strip().lower() == pair["result"].strip().lower()
             break
+
+    if raw_test:
+        print(sparql.to_raw_query_str())
+    else:
+        print(sparql.to_sparql_query())
 
     if exists:
         if is_equal:
