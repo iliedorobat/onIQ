@@ -278,7 +278,7 @@ class RawTripleUtils:
                 # TODO: pass o=prev_word ???
                 raw_triple = RawTriple(
                     s=triple.s,
-                    p="prop",
+                    p="?prop",
                     o=NounEntity(prev_word),
                     question=nl_question.question
                 )

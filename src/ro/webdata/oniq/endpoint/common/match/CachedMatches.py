@@ -71,13 +71,13 @@ class CachedMatches:
         """
 
         csv_entry = csv_line.strip().split(separator)
-        [target_word, prop_uri, score, detachment_score, s_uri, o_uri] = csv_entry
-        subject_uri = CSVService.get_csv_string(s_uri)
-        object_uri = CSVService.get_csv_string(o_uri)
+        [target_word, prop_uri, score, detachment_score, raw_target_type, raw_target_value] = csv_entry
+        node_type = CSVService.get_csv_string(raw_target_type)
+        node_text_value = CSVService.get_csv_string(raw_target_value)
 
-        if not self.exists(target_word, subject_uri, object_uri):
-            CachedMatch.cache_match(target_word, prop_uri, score, detachment_score, subject_uri, object_uri)
-            matched_entry = CachedMatch(target_word, prop_uri, score, detachment_score, subject_uri, object_uri)
+        if not self.exists(target_word, node_type, node_text_value):
+            CachedMatch.cache_match(target_word, prop_uri, score, detachment_score, node_type, node_text_value)
+            matched_entry = CachedMatch(target_word, prop_uri, score, detachment_score, node_type, node_text_value)
 
             self.elements.append(matched_entry)
 
@@ -94,8 +94,8 @@ class CachedMatches:
 
         for csv_line in CSVService.read_lines(MATCHED_ENTRIES_FILEPATH, True):
             csv_entry = csv_line.strip().split(separator)
-            [target_word, prop_uri, score, detachment_score, subject_uri, object_uri] = csv_entry
-            matched_entry = CachedMatch(target_word, prop_uri, score, detachment_score, subject_uri, object_uri)
+            [target_word, prop_uri, score, detachment_score, node_type, node_text_value] = csv_entry
+            matched_entry = CachedMatch(target_word, prop_uri, score, detachment_score, node_type, node_text_value)
             self.elements.append(matched_entry)
 
     def append(self, element: CachedMatch):
@@ -108,17 +108,17 @@ class CachedMatches:
 
         self.elements.append(element)
 
-    def exists(self, str_word, subject_uri=None, object_uri=None):
+    def exists(self, str_word, node_type=None, node_text_value=None):
         """
         Check if the target word exists in the input list of cached entries.
 
         Args:
             str_word (str):
                 Target word.
-            subject_uri (str):
-                [OPTIONAL] The subject to which the property applies.
-            object_uri (str):
-                [OPTIONAL] The object to which the property applies.
+            node_type (str):
+                [OPTIONAL] Type of the triple node (NODE_TYPE.OBJECT or NODE_TYPE.SUBJECT).
+            node_text_value (str):
+                [OPTIONAL] Value of the triple node.
 
         Returns:
             bool: Validation result.
@@ -126,37 +126,35 @@ class CachedMatches:
 
         for matched_entry in self.elements:
             if matched_entry.target_word == str_word:
-                if subject_uri is not None and matched_entry.subject_uri == subject_uri:
-                    return True
-                if object_uri is not None and matched_entry.object_uri == object_uri:
-                    return True
+                if node_type is not None and matched_entry.node_type == node_type:
+                    if node_text_value is not None and matched_entry.node_text_value == node_text_value:
+                        return True
 
         return False
 
-    def find(self, str_word, subject_uri=None, object_uri=None):
+    def find(self, str_word, node_type=None, node_text_value=None):
         """
         Find the cached entry corresponding to the target word.
 
         Args:
             str_word (str):
                 Target word.
-            subject_uri (str):
-                [OPTIONAL] The subject to which the property applies.
-            object_uri (str):
-                [OPTIONAL] The object to which the property applies.
+            node_type (str):
+                [OPTIONAL] Type of the triple node (NODE_TYPE.OBJECT or NODE_TYPE.SUBJECT).
+            node_text_value (str):
+                [OPTIONAL] Value of the triple node.
 
         Returns:
             CachedMatch:
                 The cached entry which contains the target word.
         """
 
-        if self.exists(str_word, subject_uri, object_uri):
+        if self.exists(str_word, node_type, node_text_value):
             for matched_entry in self.elements:
                 if matched_entry.target_word == str_word:
-                    if subject_uri is not None and matched_entry.subject_uri == subject_uri:
-                        return matched_entry
-                    if object_uri is not None and matched_entry.object_uri == object_uri:
-                        return matched_entry
+                    if node_type is not None and matched_entry.node_type == node_type:
+                        if node_text_value is not None and matched_entry.node_text_value == node_text_value:
+                            return matched_entry
 
         return None
 

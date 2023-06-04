@@ -18,7 +18,7 @@ from ro.webdata.oniq.endpoint.dbpedia.sparql_query import DBP_PROPERTIES_OF_SUBJ
     DBP_ONTOLOGY_RESOURCE_QUERY
 from ro.webdata.oniq.endpoint.models.RDFElement import RDFClass, RDFProperty, ROOT_CLASS_URI
 from ro.webdata.oniq.endpoint.namespace import NAMESPACE
-from ro.webdata.oniq.service.query_const import ACCESSORS, PATHS
+from ro.webdata.oniq.service.query_const import ACCESSORS, PATHS, NODE_TYPE
 from ro.webdata.oniq.sparql.constants import SPARQL_STR_SEPARATOR
 
 _MAX_LOOKUP_RESULTS = 10
@@ -44,7 +44,7 @@ class LookupService:
     """
 
     @staticmethod
-    def entities_lookup(named_entity, output_format="JSON"):
+    def entities_lookup(named_entity, classes, output_format="JSON"):
         """
         Retrieve the list of DBpedia classes which best match the target
         named entity.
@@ -56,6 +56,7 @@ class LookupService:
 
         Args:
             named_entity (Span): Named entity (E.g.: "James Cagney").
+            classes (RDFElements[RDFProperty]): List of DBpedia classes.
             output_format (str): XML or JSON.
 
         Returns:
@@ -63,7 +64,7 @@ class LookupService:
                 the target named entity.
         """
 
-        types = _get_named_entity_types(named_entity)
+        types = _get_named_entity_types(named_entity, classes)
         params = _generate_lookup_params(types, output_format, named_entity)
         response = requests.get(_DBP_LOOKUP_API, params)
 
@@ -125,7 +126,8 @@ class LookupService:
                 target_expression=target_expression,
                 result_type=result_type,
                 # TODO: check
-                subject_uri=f'dbr:{resource_name}'
+                node_type=NODE_TYPE.SUBJECT,
+                node_text_value=f'dbr:{resource_name}'
             )
 
         # E.g.: "Where was the person born whose successor was Le Hong Phong?"
@@ -257,7 +259,7 @@ def _get_noun_chunk_types(noun_chunk):
     return list(set(types))
 
 
-def _get_named_entity_types(named_entity: Span):
+def _get_named_entity_types(named_entity: Span, class_list):
     """
     Retrieve the list of types extracted based on the named_entity.label_.
 
@@ -268,13 +270,19 @@ def _get_named_entity_types(named_entity: Span):
 
     Args:
         named_entity (Span): Named entity (E.g.: "James Cagney").
+        class_list (RDFElements[RDFProperty]): List of DBpedia classes.
 
     Returns:
          List[RDFClass]: List of types.
     """
 
-    classes = CSVTranslator.to_classes()
+    classes = class_list if class_list is not None else CSVTranslator.to_classes()
     label = named_entity.label_
+
+    # Exceptions: TODO: remove exceptions when training is ready
+    if "dynasty" in named_entity.text.lower():
+        # E.g.: "When did the Ming dynasty dissolve?" => "Ming dynasty" is not a date (as Spacy says), but a place
+        return [item for item in classes if item.uri == NAMESPACE.DBP_ONTOLOGY + DBPEDIA_CLASS_TYPES.PLACE]
 
     if label == "DATE" or label == "TIME":
         return [item for item in classes if item.uri == NAMESPACE.DBP_ONTOLOGY + DBPEDIA_CLASS_TYPES.TIME_PERIOD]
@@ -335,7 +343,9 @@ def _get_named_entity_types(named_entity: Span):
         return [
             item for item in classes if item.uri in [
                 NAMESPACE.DBP_ONTOLOGY + DBPEDIA_CLASS_TYPES.ARTWORK,
-                NAMESPACE.DBP_ONTOLOGY + DBPEDIA_CLASS_TYPES.MUSICAL_WORK
+                NAMESPACE.DBP_ONTOLOGY + DBPEDIA_CLASS_TYPES.MUSICAL_WORK,
+                # TODO: remove when training is ready
+                NAMESPACE.DBP_ONTOLOGY + DBPEDIA_CLASS_TYPES.AWARD
             ]
         ]
 

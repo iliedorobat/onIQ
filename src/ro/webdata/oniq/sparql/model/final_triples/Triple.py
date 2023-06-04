@@ -10,7 +10,6 @@ from ro.webdata.oniq.endpoint.common.match.PropertyMatcher import PropertyMatche
 from ro.webdata.oniq.endpoint.dbpedia.lookup import LookupService
 from ro.webdata.oniq.endpoint.dbpedia.query import DBpediaQueryService
 from ro.webdata.oniq.endpoint.models.RDFElement import RDFClass, RDFProperty
-from ro.webdata.oniq.service.query_const import PATHS, ACCESSORS, VALUES
 from ro.webdata.oniq.sparql.constants import SPARQL_STR_SEPARATOR
 from ro.webdata.oniq.sparql.model.NounEntity import NounEntity
 from ro.webdata.oniq.sparql.model.final_triples.predicate_utils import subject_predicate_lookup, object_predicate_lookup
@@ -59,7 +58,7 @@ def _predicate_lookup(raw_triple: RawTriple):
 
     if subject.is_res():
         if obj.is_var():
-            return subject_predicate_lookup(question, subject, predicate)
+            return subject_predicate_lookup(question, subject, predicate, obj)
 
     if subject.is_var():
         if obj.is_res():

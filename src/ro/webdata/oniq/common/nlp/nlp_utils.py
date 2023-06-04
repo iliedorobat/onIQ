@@ -209,16 +209,17 @@ def retokenize(document: Union[Doc, Span], sentence: Span):
                 retokenizer.merge(entity)
 
 
-def text_to_span(text: str):
+def text_to_span(text: str, label: str = ""):
     """
     Convert a text to a Span entity
 
     :param text: The target text
+    :param label: The label of the Span (E.g.: "GPE", etc.)
     :return: Span
     """
 
     document = nlp_model(text)
-    return Span(document, 0, len(document))
+    return Span(document, 0, len(document), label=label)
 
 
 def token_to_span(word: Token):

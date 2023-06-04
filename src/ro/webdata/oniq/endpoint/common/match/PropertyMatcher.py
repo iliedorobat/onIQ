@@ -28,8 +28,6 @@ class PropertyMatcher:
         detachment_score (float):
             Aggregated similarity calculated based on the Jaccard Distance
             and Edit Distance.
-        object_uri (str):
-            The object to which the property applies.
         property (RDFProperty):
             Property against which the similarity is calculated.
         result_type (str|None):
@@ -37,15 +35,17 @@ class PropertyMatcher:
             E.g.: "place", "person", etc. (check DBPEDIA_CLASS_TYPES).
         score (float):
             Calculated similarity score.
-        subject_uri (str):
-            The subject to which the property applies.
+        node_type (str):
+            Type of the triple node (NODE_TYPE.OBJECT or NODE_TYPE.SUBJECT).
+        node_text_value (str):
+            Value of the triple node.
 
     Methods:
         to_csv():
             Prepare the CSV entry.
     """
 
-    def __init__(self, rdf_prop, target_expression, result_type=None, subject_uri=None, object_uri=None):
+    def __init__(self, rdf_prop, target_expression, result_type=None, node_type=None, node_text_value=None):
         """
         Args:
             target_expression (Span):
@@ -55,10 +55,10 @@ class PropertyMatcher:
             result_type (str|None):
                 [OPTIONAL] Type of the expected result.
                 E.g.: "place", "person", etc. (check DBPEDIA_CLASS_TYPES).
-            subject_uri (str):
-                [OPTIONAL] The subject to which the property applies.
-            object_uri (str):
-                [OPTIONAL] The object to which the property applies.
+            node_type (str):
+                [OPTIONAL] Type of the triple node (NODE_TYPE.OBJECT or NODE_TYPE.SUBJECT).
+            node_text_value (str):
+                [OPTIONAL] Value of the triple node.
         """
 
         self.target_expression = target_expression
@@ -66,8 +66,8 @@ class PropertyMatcher:
         self.result_type = result_type
         self.score = _calculate_similarity_score(rdf_prop, target_expression, result_type)
         self.detachment_score = _calculate_detachment_score(rdf_prop, target_expression)
-        self.subject_uri = subject_uri
-        self.object_uri = object_uri
+        self.node_type = node_type
+        self.node_text_value = node_text_value
 
     def __hash__(self):
         return hash(f'{self.property.uri}{SPARQL_STR_SEPARATOR}{self.score}')
@@ -94,8 +94,8 @@ class PropertyMatcher:
             self.property.uri,
             str(self.score),
             str(self.detachment_score),
-            CSVService.to_csv_string(self.subject_uri),
-            CSVService.to_csv_string(self.object_uri)
+            CSVService.to_csv_string(self.node_type),
+            CSVService.to_csv_string(self.node_text_value)
         ])
 
 

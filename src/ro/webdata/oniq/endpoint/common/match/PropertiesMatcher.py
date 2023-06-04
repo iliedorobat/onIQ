@@ -20,12 +20,12 @@ class PropertiesMatcher:
             that match the target word/expression.
 
     Methods:
-        get_best_matched(props, target_expression, result_type):
+        get_best_matched(props, target_expression, result_type, node_type, node_text_value):
             Retrieve the PropertyMatcher element containing the property with the
             highest score from the list of matched properties.
     """
 
-    def __init__(self, props, target_expression, result_type=None, subject_uri=None, object_uri=None):
+    def __init__(self, props, target_expression, result_type=None, node_type=None, node_text_value=None):
         """
         Args:
             props (List[RDFProperty]):
@@ -35,13 +35,13 @@ class PropertiesMatcher:
             result_type (str|None):
                 [OPTIONAL] Type of the expected result.
                 E.g.: "place", "person", etc. (check DBPEDIA_CLASS_TYPES).
-            subject_uri (str):
-                [OPTIONAL] The subject to which the property applies.
-            object_uri (str):
-                [OPTIONAL] The object to which the property applies.
+            node_type (str):
+                [OPTIONAL] Type of the triple node (NODE_TYPE.OBJECT or NODE_TYPE.SUBJECT).
+            node_text_value (str):
+                [OPTIONAL] Value of the triple node.
         """
 
-        self.matches = _get_matched_props(props, target_expression, result_type, subject_uri, object_uri)
+        self.matches = _get_matched_props(props, target_expression, result_type, node_type, node_text_value)
 
     def __hash__(self):
         hash_value = "##".join(
@@ -63,7 +63,7 @@ class PropertiesMatcher:
         return True
 
     @staticmethod
-    def get_best_matched(props, target_expression, result_type=None, subject_uri=None, object_uri=None):
+    def get_best_matched(props, target_expression, result_type=None, node_type=None, node_text_value=None):
         """
         Retrieve the PropertyMatcher element containing the property with the
         highest score from the list of matched properties.
@@ -76,24 +76,24 @@ class PropertiesMatcher:
             result_type (str|None):
                 [OPTIONAL] Type of the expected result.
                 E.g.: "place", "person", etc. (check DBPEDIA_CLASS_TYPES).
-            subject_uri (str):
-                [OPTIONAL] The subject to which the property applies.
-            object_uri (str):
-                [OPTIONAL] The object to which the property applies.
+            node_type (str):
+                [OPTIONAL] Type of the triple node (NODE_TYPE.OBJECT or NODE_TYPE.SUBJECT).
+            node_text_value (str):
+                [OPTIONAL] Value of the triple node.
 
         Returns:
             PropertyMatcher: Property having the highest score.
         """
 
         # Get <b>best matched</b> from disk if it has already been cached.
-        if CACHED_MATCHES.exists(target_expression.text, subject_uri, object_uri):
-            matched = CACHED_MATCHES.find(target_expression.text, subject_uri, object_uri)
+        if CACHED_MATCHES.exists(target_expression.text, node_type, node_text_value):
+            matched = CACHED_MATCHES.find(target_expression.text, node_type, node_text_value)
             rdf_prop = props.find(matched.prop_uri)
-            best_match = PropertyMatcher(rdf_prop, target_expression, result_type, subject_uri, object_uri)
+            best_match = PropertyMatcher(rdf_prop, target_expression, result_type, node_type, node_text_value)
 
             return best_match
 
-        matcher = PropertiesMatcher(props, target_expression, result_type, subject_uri, object_uri)
+        matcher = PropertiesMatcher(props, target_expression, result_type, node_type, node_text_value)
         matches = matcher.matches
         best_match = pydash.get(matcher.matches, '0')
 
@@ -116,7 +116,7 @@ class PropertiesMatcher:
         return best_match
 
 
-def _get_matched_props(props, target_expression, result_type=None, subject_uri=None, object_uri=None):
+def _get_matched_props(props, target_expression, result_type=None, node_type=None, node_text_value=None):
     """
     Determine the similarity between the input verb and the label of each
     property.
@@ -129,10 +129,10 @@ def _get_matched_props(props, target_expression, result_type=None, subject_uri=N
         result_type (str|None):
             [OPTIONAL] Type of the expected result.
             E.g.: "place", "person", etc. (check DBPEDIA_CLASS_TYPES).
-        subject_uri (str):
-            [OPTIONAL] The subject to which the property applies.
-        object_uri (str):
-            [OPTIONAL] The object to which the property applies.
+        node_type (str):
+            [OPTIONAL] Type of the triple node (NODE_TYPE.OBJECT or NODE_TYPE.SUBJECT).
+        node_text_value (str):
+            [OPTIONAL] Value of the triple node.
 
     Returns:
         List[PropertyMatcher]:
@@ -140,7 +140,7 @@ def _get_matched_props(props, target_expression, result_type=None, subject_uri=N
     """
 
     matched_props = [
-        PropertyMatcher(rdf_prop, target_expression, result_type, subject_uri, object_uri)
+        PropertyMatcher(rdf_prop, target_expression, result_type, node_type, node_text_value)
         for rdf_prop in props
     ]
 

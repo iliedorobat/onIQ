@@ -72,16 +72,15 @@ class NounEntity:
         return SPARQL_VAR_PREFIX in self.to_var()
 
     def to_span(self):
-        compound_noun = _get_noun_entity(self.noun)
-        first_noun = compound_noun[0]
-        last_noun = compound_noun[len(compound_noun) - 1]
+        first_noun = self.compound_noun[0]
+        last_noun = self.compound_noun[len(self.compound_noun) - 1]
         prev_word = get_prev_word(first_noun)
 
         if is_adj_modifier(prev_word):
             # ADJ + compound noun
-            return Span(self.noun.doc, prev_word.i, last_noun.i + 1, label=compound_noun.root.ent_type)
+            return Span(self.noun.doc, prev_word.i, last_noun.i + 1, label=self.compound_noun.root.ent_type)
 
-        return token_to_span(self.noun)
+        return self.compound_noun
 
     def to_var(self):
         if isinstance(self.compound_noun, Span):

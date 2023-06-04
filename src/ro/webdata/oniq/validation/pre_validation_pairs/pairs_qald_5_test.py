@@ -89,7 +89,7 @@ target_nouns = [
 ]
 raw_triples = [
 	<?astronaut   rdf:type   dbo:Astronaut>
-	<?astronaut   prop   dbr:ESA>
+	<?astronaut   ?prop   dbr:ESA>
 ]
 """
     },
@@ -404,11 +404,11 @@ raw_triples = [
         "query": "Which soccer players were born on Malta?",
         "result": """
 target_nouns = [
-	?players
+	?soccer_players
 ]
 raw_triples = [
-	<?players   born   dbr:Malta>
-	<?players   rdf:type   dbo:SoccerPlayer>
+	<?soccer_players   born   dbr:Malta>
+	<?soccer_players   rdf:type   dbo:SoccerPlayer>
 ]
 """
     },

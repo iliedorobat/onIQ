@@ -25,7 +25,7 @@ class CachedMatch:
             Word against the similarity is calculated.
 
     Methods:
-        cache_match(target_word, prop_uri, score, detachment_score, subject_uri, object_uri):
+        cache_match(target_word, prop_uri, score, detachment_score, node_type, node_text_value):
             Cache to disk the result of a similarity check.
         get_csv_headers():
             Get the list of column names.
@@ -35,7 +35,7 @@ class CachedMatch:
             Prepare the CSV entry.
     """
 
-    def __init__(self, target_word, prop_uri, score, detachment_score, subject_uri=None, object_uri=None):
+    def __init__(self, target_word, prop_uri, score, detachment_score, node_type=None, node_text_value=None):
         """
         Args:
             target_word (str):
@@ -48,18 +48,18 @@ class CachedMatch:
             detachment_score (str):
                 Aggregated similarity calculated based on the Jaccard Distance
                 and Edit Distance.
-            subject_uri (str):
-                [OPTIONAL] The subject to which the property applies.
-            object_uri (str):
-                [OPTIONAL] The object to which the property applies.
+            node_type (str):
+                [OPTIONAL] Type of the triple node (NODE_TYPE.OBJECT or NODE_TYPE.SUBJECT).
+            node_text_value (str):
+                [OPTIONAL] Value of the triple node.
         """
 
         self.target_word = target_word
         self.prop_uri = prop_uri
         self.score = float(score)
         self.detachment_score = float(detachment_score)
-        self.subject_uri = subject_uri
-        self.object_uri = object_uri
+        self.node_type = node_type
+        self.node_text_value = node_text_value
 
     def __hash__(self):
         return hash(self.to_csv())
@@ -74,7 +74,7 @@ class CachedMatch:
         return self.to_csv()
 
     @staticmethod
-    def cache_match(target_word, prop_uri, score, detachment_score, subject_uri=None, object_uri=None):
+    def cache_match(target_word, prop_uri, score, detachment_score, node_type=None, node_text_value=None):
         """
         Cache to disk the result of a similarity check.
 
@@ -89,13 +89,13 @@ class CachedMatch:
             detachment_score (str):
                 Aggregated similarity calculated based on the Jaccard Distance
                 and Edit Distance.
-            subject_uri (str):
-                [OPTIONAL] The subject to which the property applies.
-            object_uri (str):
-                [OPTIONAL] The object to which the property applies.
+            node_type (str):
+                [OPTIONAL] Type of the triple node (NODE_TYPE.OBJECT or NODE_TYPE.SUBJECT).
+            node_text_value (str):
+                [OPTIONAL] Value of the triple node.
         """
 
-        matched_entry = CachedMatch(target_word, prop_uri, score, detachment_score, subject_uri, object_uri)
+        matched_entry = CachedMatch(target_word, prop_uri, score, detachment_score, node_type, node_text_value)
         CSVService.append_line(
             MATCHED_ENTRIES_PATH,
             MATCHED_ENTRIES_FILENAME,
@@ -109,7 +109,7 @@ class CachedMatch:
         Get the list of column names.
         """
 
-        return ['target_word', 'prop_uri', 'score', 'detachment_score', 'subject_uri', 'object_uri']
+        return ['target_word', 'prop_uri', 'score', 'detachment_score', 'node_type', 'node_text_value']
 
     def serialize(self):
         """
@@ -134,6 +134,6 @@ class CachedMatch:
             self.prop_uri,
             str(self.score),
             str(self.detachment_score),
-            CSVService.to_csv_string(self.subject_uri),
-            CSVService.to_csv_string(self.object_uri)
+            CSVService.to_csv_string(self.node_type),
+            CSVService.to_csv_string(self.node_text_value)
         ])

@@ -1,14 +1,19 @@
 from urllib.parse import unquote, ParseResult
 
-from spacy.tokens import Doc
+import pydash
 
-from ro.webdata.oniq.endpoint.common.match.PropertiesMatcher import PropertiesMatcher
 from ro.webdata.oniq.endpoint.common.translator.CSVTranslator import CSVTranslator
+from ro.webdata.oniq.endpoint.dbpedia.lookup import LookupService
 from ro.webdata.oniq.endpoint.dbpedia.query import DBpediaQueryService
+from ro.webdata.oniq.endpoint.namespace import NAMESPACE
 from ro.webdata.oniq.service.MatcherHandler import SpanMatcherHandler, StringMatcherHandler
-from ro.webdata.oniq.service.query_const import ACCESSORS, JOIN_OPERATOR, PAIR_SEPARATOR, VALUES
+from ro.webdata.oniq.service.query_const import ACCESSORS, JOIN_OPERATOR, PAIR_SEPARATOR, DATA_TYPE, NODE_TYPE
 from ro.webdata.oniq.spacy_model import nlp_model
 
+print("Loading DBpedia classes...")
+all_classes = CSVTranslator.to_classes()
+
+print("Loading DBpedia properties...")
 all_props = CSVTranslator.to_props()
 
 
@@ -25,40 +30,51 @@ def entities_handler(parsed):
 
 
 def matcher_handler(parsed_url: ParseResult):
-    target_subject = _get_target_resource(parsed_url, ACCESSORS.TARGET_SUBJECT)
-    target_object = _get_target_resource(parsed_url, ACCESSORS.TARGET_OBJECT)
-    target_type = _get_target_type(parsed_url)
+    matcher = _get_matcher(parsed_url)
     props = all_props
 
-    if target_subject is not None:
-        props = DBpediaQueryService.run_subject_properties_query(target_subject)
-    if target_object is not None:
-        props = DBpediaQueryService.run_object_properties_query(target_object)
+    if matcher is not None:
+        node_type = _get_param_value(parsed_url, ACCESSORS.NODE_TYPE)
+        node_text_value = _get_param_value(parsed_url, ACCESSORS.NODE_VALUE, True)
 
-    if target_type == VALUES.SPAN:
-        matcher = SpanMatcherHandler(parsed_url)
+        named_entity = matcher.node_value
+        lookup_result = LookupService.entities_lookup(named_entity, all_classes)
+        resource_name = pydash.get(lookup_result, [0, "resource", 0], node_text_value)
+        res_name = resource_name.replace(NAMESPACE.DBP_RESOURCE, "")
+        res_name = res_name.replace(" ", "_")  # E.g.: "Pulitzer Prize" => "Pulitzer_Prize"
+        res_name = res_name.replace(".", "\.")  # E.g.: "Apple_Inc." => "Apple_Inc\."
+
+        if node_type == NODE_TYPE.SUBJECT:
+            props = DBpediaQueryService.run_subject_properties_query(res_name)
+
+        if node_type == NODE_TYPE.OBJECT:
+            props = DBpediaQueryService.run_object_properties_query(res_name)
+
         return matcher.matcher_finder(props)
-    elif target_type == VALUES.STRING:
-        matcher = StringMatcherHandler(parsed_url)
-        return matcher.matcher_finder(props)
 
 
-def _get_target_resource(parsed_url: ParseResult, accessor: str):
-    for query in parsed_url.query.split(JOIN_OPERATOR):
-        [key, value] = query.split(PAIR_SEPARATOR)
+def _get_matcher(parsed_url):
+    target_data_type = _get_param_value(parsed_url, ACCESSORS.TARGET_DATA_TYPE)
 
-        if key == accessor:
-            return value.replace("dbr:", "")
+    if target_data_type == DATA_TYPE.SPAN:
+        return SpanMatcherHandler(parsed_url)
+    elif target_data_type == DATA_TYPE.STRING:
+        return StringMatcherHandler(parsed_url)
 
     return None
 
 
-def _get_target_type(parsed_url: ParseResult):
+def _get_param_value(parsed_url: ParseResult, accessor: str, is_dbr: bool = False):
     for query in parsed_url.query.split(JOIN_OPERATOR):
         [key, value] = query.split(PAIR_SEPARATOR)
 
-        if key == ACCESSORS.TARGET_TYPE:
-            return value
+        if key == accessor:
+            output = value
+
+            if is_dbr:
+                output = value.replace("dbr:", "")
+
+            return unquote(output)
 
     return None
 
