@@ -19,9 +19,8 @@ PAIRS_QALD = [
         "onlydbo": True,
         "query": "Did Arnold Schwarzenegger attend a university?",
         "result": """
-target_nouns = [
-	?university
-]
+query_type = ASK
+target_nouns = []
 raw_triples = [
 	<dbr:Arnold_Schwarzenegger   attend   ?university>
 	<?university   rdf:type   dbo:University>
@@ -35,8 +34,8 @@ raw_triples = [
         "onlydbo": True,
         "query": "Is Barack Obama a democrat?",
         "result": """
-target_nouns = [
-]
+query_type = ASK
+target_nouns = []
 raw_triples = [
 	<dbr:Barack_Obama   Is   dbr:democrat>
 ]
@@ -69,6 +68,7 @@ raw_triples = [
         "onlydbo": True,
         "query": "In which country is Mecca located?",
         "result": """
+query_type = SELECT
 target_nouns = [
 	?country
 ]
@@ -84,6 +84,7 @@ raw_triples = [
         "onlydbo": True,
         "query": "Give me all ESA astronauts.",
         "result": """
+query_type = SELECT
 target_nouns = [
 	?astronaut
 ]
@@ -100,6 +101,7 @@ raw_triples = [
         "onlydbo": True,
         "query": "Give me all Swedish holidays.",
         "result": """
+query_type = SELECT
 target_nouns = [
 	?holiday
 ]
@@ -116,6 +118,7 @@ raw_triples = [
         "onlydbo": True,
         "query": "Give me the currency of China.",
         "result": """
+query_type = SELECT
 target_nouns = [
 	?currency
 ]
@@ -141,6 +144,7 @@ raw_triples = [
         "onlydbo": True,
         "query": "When did the Ming dynasty dissolve?",
         "result": """
+query_type = SELECT
 target_nouns = [
 	?time
 ]
@@ -166,6 +170,7 @@ raw_triples = [
         "onlydbo": True,
         "query": "Who is the manager of Real Madrid?",
         "result": """
+query_type = SELECT
 target_nouns = [
 	?manager
 ]
@@ -181,6 +186,7 @@ raw_triples = [
         "onlydbo": True,
         "query": "Who were the parents of Queen Victoria?",
         "result": """
+query_type = SELECT
 target_nouns = [
 	?parents
 ]
@@ -212,6 +218,7 @@ raw_triples = [
         "onlydbo": True,
         "query": "Who is the youngest Pulitzer Prize winner?",
         "result": """
+query_type = SELECT
 target_nouns = [
 	?person
 ]
@@ -229,6 +236,7 @@ raw_triples = [
         "onlydbo": True,
         "query": "Who is the oldest child of Meryl Streep?",
         "result": """
+query_type = SELECT
 target_nouns = [
 	?child
 ]
@@ -254,6 +262,7 @@ raw_triples = [
         "onlydbo": True,
         "query": "Who is the tallest basketball player?",
         "result": """
+query_type = SELECT
 target_nouns = [
 	?person
 ]
@@ -279,6 +288,7 @@ raw_triples = [
         "onlydbo": True,
         "query": "What is the net income of Apple?",
         "result": """
+query_type = SELECT
 target_nouns = [
 	?net_income
 ]
@@ -295,6 +305,7 @@ raw_triples = [
         "onlydbo": True,
         "query": "What is the highest mountain in Italy?",
         "result": """
+query_type = SELECT
 target_nouns = [
 	?mountain
 ]
@@ -378,6 +389,7 @@ raw_triples = [
         "onlydbo": True,
         "query": "How many ethnic groups live in Slovenia?",
         "result": """
+query_type = COUNT
 target_nouns = [
 	?ethnic_groups
 ]
@@ -403,6 +415,7 @@ raw_triples = [
         "onlydbo": True,
         "query": "Which soccer players were born on Malta?",
         "result": """
+query_type = SELECT
 target_nouns = [
 	?soccer_players
 ]
@@ -474,6 +487,7 @@ raw_triples = [
         "onlydbo": True,
         "query": "Which museum in New York has the most visitors?",
         "result": """
+query_type = SELECT
 target_nouns = [
 	?museum
 ]

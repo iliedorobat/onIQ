@@ -37,6 +37,7 @@ QUERY_0PAIRS = [
     {
         "query": QUERY_01,
         "result": """
+query_type = SELECT
 target_nouns = [
 	?location
 ]
@@ -50,6 +51,7 @@ raw_triples = [
     {
         "query": QUERY_02,
         "result": """
+query_type = SELECT
 target_nouns = [
 	?person
 ]
@@ -61,6 +63,7 @@ raw_triples = [
     {
         "query": QUERY_03,
         "result": """
+query_type = SELECT
 target_nouns = [
 	?location
 ]
@@ -72,6 +75,7 @@ raw_triples = [
     {
         "query": QUERY_04,
         "result": """
+query_type = SELECT
 target_nouns = [
 	?location
 ]
@@ -85,6 +89,7 @@ raw_triples = [
         # TODO: check with QUERY_14
         "query": QUERY_05,
         "result": """
+query_type = SELECT
 target_nouns = [
 	?leader
 ]
@@ -100,6 +105,7 @@ raw_triples = [
         # TODO: and area
         "query": QUERY_08,
         "result": """
+query_type = SELECT
 target_nouns = [
 	?population
 ]
@@ -112,6 +118,7 @@ raw_triples = [
     {
         "query": QUERY_09,
         "result": """
+query_type = SELECT
 target_nouns = [
 	?location
 ]
@@ -123,6 +130,7 @@ raw_triples = [
     {
         "query": QUERY_10,
         "result": """
+query_type = SELECT
 target_nouns = [
 	?builder
 ]
@@ -134,6 +142,7 @@ raw_triples = [
     {
         "query": QUERY_11,
         "result": """
+query_type = SELECT
 target_nouns = [
 	?nationality
 ]
@@ -145,6 +154,7 @@ raw_triples = [
     {
         "query": QUERY_12,
         "result": """
+query_type = SELECT
 target_nouns = [
 	?denomination
 ]
@@ -156,6 +166,7 @@ raw_triples = [
     {
         "query": QUERY_13,
         "result": """
+query_type = SELECT
 target_nouns = [
 	?city
 ]
@@ -167,6 +178,7 @@ raw_triples = [
     {
         "query": QUERY_14,
         "result": """
+query_type = SELECT
 target_nouns = [
 	?religion
 ]
@@ -180,6 +192,7 @@ raw_triples = [
     {
         "query": QUERY_15,
         "result": """
+query_type = SELECT
 target_nouns = [
 	?spouse
 ]
@@ -191,6 +204,7 @@ raw_triples = [
     {
         "query": QUERY_17,
         "result": """
+query_type = SELECT
 target_nouns = [
 	?location
 ]
@@ -204,6 +218,7 @@ raw_triples = [
         # TODO: SR class 3Sub
         "query": QUERY_18,
         "result": """
+query_type = SELECT
 target_nouns = [
 	?operator
 ]
@@ -215,6 +230,7 @@ raw_triples = [
     {
         "query": QUERY_19,
         "result": """
+query_type = SELECT
 target_nouns = [
 	?elephant
 ]
@@ -227,6 +243,7 @@ raw_triples = [
         # TODO: order by
         "query": QUERY_20,
         "result": """
+query_type = SELECT
 target_nouns = [
 	?mountain
 ]
@@ -240,6 +257,7 @@ raw_triples = [
         # TODO: order by
         "query": QUERY_21,
         "result": """
+query_type = SELECT
 target_nouns = [
 	?city
 ]
@@ -255,6 +273,7 @@ TEST_PAIRS = raw_triples = [
     {
         "query": TEST_3,
         "result": """
+query_type = SELECT
 target_nouns = [
 	?location
 ]
@@ -269,6 +288,7 @@ raw_triples = [
         # TODO: order by
         "query": TEST_5,
         "result": """
+query_type = SELECT
 target_nouns = [
 	?building
 ]
@@ -281,6 +301,7 @@ raw_triples = [
     {
         "query": TEST_6,
         "result": """
+query_type = SELECT
 target_nouns = [
 	?location
 ]
@@ -294,6 +315,7 @@ raw_triples = [
     {
         "query": TEST_7,
         "result": """
+query_type = SELECT
 target_nouns = [
 	?leader
 ]
@@ -305,6 +327,7 @@ raw_triples = [
     {
         "query": TEST_8,
         "result": """
+query_type = SELECT
 target_nouns = [
 	?person
 ]

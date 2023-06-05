@@ -1,8 +1,7 @@
 from ro.webdata.oniq.common.constants import GLOBAL_ENV
 from ro.webdata.oniq.common.print_utils import COLORS
 
-from ro.webdata.oniq.sparql.builder import SPARQLBuilder
-
+from ro.webdata.oniq.sparql.builder import SPARQLBuilder, SPARQLRawBuilder
 
 ENDPOINT = "http://localhost:7200/repositories/TESTING_BCU_CLUJ"
 ENDPOINT = "http://localhost:7200/repositories/eCHO"
@@ -49,22 +48,19 @@ def questions_test(pairs, raw_test, print_summary, print_deps):
 
 
 def question_test(pairs, question: str, raw_test, print_summary, print_deps):
-    sparql = SPARQLBuilder(ENDPOINT, question, raw_test, print_deps)
+    sparql = SPARQLRawBuilder(ENDPOINT, question, print_deps) \
+        if raw_test \
+        else SPARQLBuilder(ENDPOINT, question, print_deps)
     exists = False
     is_equal = False
 
     for pair in pairs:
         if question.lower() == pair["query"].lower():
             exists = True
-            if raw_test:
-                is_equal = sparql.to_raw_query_str().strip().lower() == pair["result"].strip().lower()
-            else:
-                is_equal = sparql.to_sparql_query().strip().lower() == pair["result"].strip().lower()
+            is_equal = sparql.to_sparql_query().strip().lower() == pair["result"].strip().lower()
             break
 
-    if raw_test:
-        print(sparql.to_raw_query_str())
-    else:
+    if print_summary:
         print(sparql.to_sparql_query())
 
     if exists:

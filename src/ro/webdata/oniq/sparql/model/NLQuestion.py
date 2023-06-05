@@ -15,11 +15,11 @@ class QUESTION_TARGET:
 
 
 # TODO: complete the list
+# TODO: merge with QUERY_TYPES
 class QUESTION_TYPES:
     AUX_ASK = "aux_ask"  # E.g.: "Is rizal monument a place?"
     PREP_ASK = "prep_ask"  # E.g.: "In which country is Mecca located?"
-    # COUNT = "count"  # how many, how much, how often
-    HOW = "how"
+    HOW = "count"  # how many, how much, how often
     WHAT = "what"
     WHEN = "when"
     WHERE = "where"

@@ -14,24 +14,28 @@ from ro.webdata.oniq.sparql.model.raw_triples.raw_triple_utils import RawTripleU
 from ro.webdata.oniq.sparql.query import SPARQLQuery, SPARQLRawQuery
 
 
-class SPARQLBuilder:
-    def __init__(self, endpoint, input_question, raw_test=False, print_deps=True):
-        nl_question = NLQuestion(input_question)
+class SPARQLRawBuilder:
+    def __init__(self, endpoint, input_question, print_deps):
+        self.nl_question = NLQuestion(input_question)
+        self.raw_triples = _prepare_raw_triples(self.nl_question)
+        self.targets = _prepare_target_nouns(self.nl_question, self.raw_triples)
 
         if print_deps:
-            echo.deps_list(nl_question.question)
+            echo.deps_list(self.nl_question.question)
 
-        self.raw_triples = _prepare_raw_triples(nl_question)
-        self.targets = _prepare_target_nouns(nl_question, self.raw_triples)
+    def to_sparql_query(self):
+        query = SPARQLRawQuery(self.nl_question, self.targets, self.raw_triples)
+        return query.generate_query()
+
+
+class SPARQLBuilder(SPARQLRawBuilder):
+    def __init__(self, endpoint, input_question, print_deps):
+        super().__init__(endpoint, input_question, print_deps)
         self.triples = _init_triples(self.raw_triples)
 
     def to_sparql_query(self):
-        query = SPARQLQuery(self.targets, self.triples)
-        return str(query)
-
-    def to_raw_query_str(self):
-        query = SPARQLRawQuery(self.targets, self.raw_triples)
-        return str(query)
+        query = SPARQLQuery(self.nl_question, self.targets, self.triples)
+        return query.generate_query()
 
 
 def _get_entities(question: str):

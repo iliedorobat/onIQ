@@ -91,6 +91,7 @@ class NounEntity:
                     text = self.text
 
                 # FIXME: workaround => lookup for "Public company"
+                # replace with LookupService.entities_lookup(named_entity, all_classes)
                 is_org = self.compound_noun.root.ent_type_ == "ORG" and text.lower().__contains__("apple")
                 if is_org:
                     # E.g.: "What is the net income of Apple?"
