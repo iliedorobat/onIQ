@@ -86,7 +86,7 @@ class SpanMatcherHandler:
             failed_node_construct = self.node_start_i == -1 or self.node_end_i == -1
             if not failed_node_construct:
                 node_value = self.document[self.node_start_i: self.node_end_i]
-                self.node_value = text_to_span(self.str_node_value, node_value.root.ent_type)
+                self.node_value = text_to_span(self.str_node_value, node_value.root.ent_type_)
 
     def matcher_finder(self, props: RDFElements):
         if self.target_expression is None:
@@ -165,7 +165,11 @@ class StringMatcherHandler:
             failed_node_construct = self.node_start_i == -1 or self.node_end_i == -1
             if not failed_node_construct:
                 node_value = self.document[self.node_start_i: self.node_end_i]
-                self.node_value = text_to_span(self.str_node_value, node_value.root.ent_type)
+                ent_type = node_value.root.ent_type_
+                if self.target_expression.text.lower() == "country":
+                    # E.g.: "Give me all Swedish holidays."
+                    ent_type = "GPE"
+                self.node_value = text_to_span(self.str_node_value, ent_type)
 
     def matcher_finder(self, props: RDFElements):
         if self.target_expression is None:
