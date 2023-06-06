@@ -25,7 +25,7 @@ DBO_CATEGORIES_QUERY = f"""
     OFFSET %d
 """
 """
-SPARQL query for getting categories
+SPARQL query for getting categories.
 DBpedia restricts up to 5000 items (DBP_LIMIT) from a single query.
 
 # https://stackoverflow.com/questions/50526921/10000-row-dbpedia-query-result-set-size-limit
@@ -279,7 +279,7 @@ DBP_ONTOLOGY_RESOURCE_QUERY = f"""
     ORDER BY ?subclassOf
 """
 """
-SPARQL query for getting main key-value pairs related to a particular class
+SPARQL query for getting main key-value pairs related to a particular class.
 E.g.: dbo:%s => http://dbpedia.org/ontology/Museum
 """
 
@@ -300,6 +300,21 @@ DBP_RESOURCE_QUERY = f"""
     ORDER BY ?subclassOf
 """
 """
-SPARQL query for getting main key-value pairs related to a particular resource
+SPARQL query for getting main key-value pairs related to a particular resource.
 E.g.: dbr:%s => http://dbpedia.org/resource/Barda_Mausoleum
+"""
+
+
+DBP_RESOURCE_TYPE_QUERY = f"""
+    PREFIX dbr: <{NAMESPACE.DBP_RESOURCE}>
+    PREFIX rdf: <{NAMESPACE.RDF}>
+
+    SELECT ?class
+    WHERE {{
+        dbr:%s rdf:type ?class .
+    }}
+"""
+"""
+SPARQL query for getting the type of a particular resource.
+E.g.: dbr:%s => http://dbpedia.org/resource/Pulitzer_Prize
 """

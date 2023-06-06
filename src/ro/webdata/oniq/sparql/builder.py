@@ -3,12 +3,18 @@ from typing import List
 
 import pydash
 import requests
+from spacy.tokens import Span
 
 from ro.webdata.oniq.common.nlp.sentence_utils import get_root
+from ro.webdata.oniq.common.nlp.word_utils import get_prev_word, is_adj
 from ro.webdata.oniq.common.print_utils import echo
-from ro.webdata.oniq.endpoint.models.RDFElement import URI_TYPE
+from ro.webdata.oniq.endpoint.dbpedia.query import DBpediaQueryService
+from ro.webdata.oniq.endpoint.dbpedia.sparql_query import DBP_RESOURCE_TYPE_QUERY, DBP_ENDPOINT
+from ro.webdata.oniq.endpoint.models.RDFElement import URI, URI_TYPE
+from ro.webdata.oniq.endpoint.query import QueryService
 from ro.webdata.oniq.service.query_const import ACCESSORS, PATHS
 from ro.webdata.oniq.sparql.model.NLQuestion import NLQuestion, ROOT_TYPES, QUESTION_TARGET
+from ro.webdata.oniq.sparql.model.NounEntity import NounEntity
 from ro.webdata.oniq.sparql.model.final_triples.Triple import Triple
 from ro.webdata.oniq.sparql.model.raw_triples.RawTriple import RawTriple
 from ro.webdata.oniq.sparql.model.raw_triples.raw_target_utils import RawTargetUtils
@@ -85,6 +91,8 @@ def _prepare_raw_triples(nl_question: NLQuestion):
         pass
 
     _update_location_triple(raw_triples)
+    _update_awards_triple(raw_triples)
+
     return raw_triples
 
 
@@ -97,9 +105,26 @@ def _prepare_target_nouns(nl_question: NLQuestion, raw_triples: List[RawTriple])
     return target_nouns
 
 
+def _update_awards_triple(raw_triples: List[RawTriple]):
+    # Change the triple predicate with "award" predicate if the triple list
+    # contains an Award triple object
+    # E.g.: "Who is the youngest Pulitzer Prize winner?"
+
+    for triple in raw_triples:
+        if triple.o.is_res():
+            obj_var = triple.o.to_var()
+            resource_name = obj_var.replace("dbr:", "")
+
+            parent_classes = QueryService.run_resource_type_query(DBP_ENDPOINT, resource_name, DBP_RESOURCE_TYPE_QUERY)
+            is_award = URI.AWARD_CLASS in parent_classes
+
+            if is_award:
+                triple.p = "award"
+
+
 def _update_location_triple(raw_triples: List[RawTriple]):
     # Change the "location" predicate with "locatedInArea" if the triple list
-    # contains a Place-related triple
+    # contains a Natural Place triple object
     # E.g.: "What is the highest mountain in Italy?"
 
     loc_triples: List[RawTriple] = [

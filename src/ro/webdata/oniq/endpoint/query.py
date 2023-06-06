@@ -6,6 +6,7 @@ from SPARQLWrapper import SPARQLWrapper, JSON
 
 from ro.webdata.oniq.endpoint.common.CSVService import CSV_COLUMN_SEPARATOR
 from ro.webdata.oniq.endpoint.common.translator.URITranslator import URITranslator
+from ro.webdata.oniq.endpoint.dbpedia.sparql_query import DBP_RESOURCE_TYPE_QUERY
 from ro.webdata.oniq.endpoint.models.RDFElement import RDFCategory, RDFClass, RDFEntity, RDFProperty
 from ro.webdata.oniq.endpoint.models.RDFElements import RDFElements
 from ro.webdata.oniq.endpoint.namespace import NAMESPACE
@@ -28,6 +29,8 @@ class QueryService:
             Query the target endpoint to get the list of classes.
         run_properties_query(endpoint, sparql_query=PROPERTIES_QUERY):
             Query the target endpoint to get the list of properties.
+        run_resource_type_query(endpoint, resource_name=None, sparql_query=DBP_RESOURCE_TYPE_QUERY):
+            Query the target endpoint to get the list of parent classes of a specific resource.
         run_resources_query(endpoint, sparql_query=CLASSES_QUERY):
             Query the target endpoint to get the list of matched resources
         run_resource_query(endpoint, resource_name=None, sparql_query=RESOURCE_QUERY):
@@ -211,6 +214,34 @@ class QueryService:
         properties.sort()
 
         return properties
+
+    @staticmethod
+    def run_resource_type_query(endpoint, resource_name=None, sparql_query=DBP_RESOURCE_TYPE_QUERY):
+        """
+        Query the target endpoint to get the list of parent classes of a specific resource.
+
+        Args:
+            endpoint (str): Communication channel.
+            resource_name (str): Name of the resource (E.g.: "Pulitzer_Prize").
+            sparql_query (str): SPARQL query.
+
+        Returns:
+            List[str]: List of parent classes.
+        """
+
+        if resource_name is None or len(resource_name) == 0:
+            return None
+
+        # TODO: classes = RDFElements([])
+        classes = []
+        query = sparql_query % resource_name
+        response = QueryService.run_query(endpoint, query)
+
+        for result in response["results"]["bindings"]:
+            rdf_class = pydash.get(result, ["class", "value"])
+            classes.append(rdf_class)
+
+        return classes
 
     @staticmethod
     def run_resources_query(endpoint, sparql_query=CLASSES_QUERY):

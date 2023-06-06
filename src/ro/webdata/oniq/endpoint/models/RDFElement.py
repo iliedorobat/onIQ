@@ -15,12 +15,14 @@ ROOT_PROPERTY_CLASS_URI = "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"
 
 class URI:
     ROOT_CLASS = "http://www.w3.org/2002/07/owl#Thing"
+    AWARD_CLASS = "http://dbpedia.org/ontology/Award"
     NATURAL_PLACE_CLASS = "http://dbpedia.org/ontology/NaturalPlace"
     PLACE_CLASS = "http://dbpedia.org/ontology/Place"
     POPULATED_PLACE = "http://dbpedia.org/ontology/PopulatedPlace"
 
 
 class URI_TYPE:
+    AWARD = "AWARD"
     NATURAL_PLACE = "NATURAL_PLACE"
     PLACE = "PLACE"
     POPULATED_PLACE = "POPULATED_PLACE"
