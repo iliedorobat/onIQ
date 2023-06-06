@@ -248,7 +248,7 @@ target_nouns = [
 	?mountain
 ]
 raw_triples = [
-	<?mountain   location   dbr:Bavarian_Alps>
+	<?mountain   locatedInArea   dbr:Bavarian_Alps>
 	<?mountain   rdf:type   dbo:Mountain>
 ]
 """

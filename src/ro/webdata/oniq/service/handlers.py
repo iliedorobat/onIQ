@@ -5,6 +5,7 @@ import pydash
 from ro.webdata.oniq.endpoint.common.translator.CSVTranslator import CSVTranslator
 from ro.webdata.oniq.endpoint.dbpedia.lookup import LookupService
 from ro.webdata.oniq.endpoint.dbpedia.query import DBpediaQueryService
+from ro.webdata.oniq.endpoint.models.RDFElement import URI, URI_TYPE
 from ro.webdata.oniq.endpoint.namespace import NAMESPACE
 from ro.webdata.oniq.service.MatcherHandler import SpanMatcherHandler, StringMatcherHandler
 from ro.webdata.oniq.service.query_const import ACCESSORS, JOIN_OPERATOR, PAIR_SEPARATOR, DATA_TYPE, NODE_TYPE
@@ -51,6 +52,22 @@ def matcher_handler(parsed_url: ParseResult):
             props = DBpediaQueryService.run_object_properties_query(res_name)
 
         return matcher.matcher_finder(props)
+
+
+def resource_type_handler(parsed_url: ParseResult):
+    # E.g.: resource_name == "dbo:Mountain"
+    resource_name = _get_param_value(parsed_url, ACCESSORS.RESOURCE_NAME)
+
+    rdf_classes = [rdf_class for rdf_class in all_classes if str(rdf_class) == resource_name]
+    obj_parent_uris: str = pydash.get(rdf_classes, ["0", "parent_uris"])
+
+    if URI.PLACE_CLASS in obj_parent_uris:
+        if URI.NATURAL_PLACE_CLASS in obj_parent_uris:
+            return URI_TYPE.NATURAL_PLACE
+
+        return URI_TYPE.PLACE
+
+    return None
 
 
 def _get_matcher(parsed_url):

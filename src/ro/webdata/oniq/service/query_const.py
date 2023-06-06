@@ -17,6 +17,7 @@ class ACCESSORS:
     NODE_VALUE = "node_value"
     NODE_START_I = "node_start_index"
     NODE_END_I = "node_end_index"
+    RESOURCE_NAME = "resource_name"
 
 
 class DATA_TYPE:
@@ -32,3 +33,4 @@ class NODE_TYPE:
 class PATHS:
     ENTITIES = "entities"
     MATCHER = "matcher"
+    RESOURCE_TYPE = "resource_type"

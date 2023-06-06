@@ -1,6 +1,6 @@
 from typing import List
 
-from ro.webdata.oniq.sparql.model.NLQuestion import NLQuestion, ROOT_TYPES, QUESTION_TYPES
+from ro.webdata.oniq.sparql.model.NLQuestion import NLQuestion, QUESTION_TYPES
 from ro.webdata.oniq.sparql.model.NounEntity import NounEntity
 from ro.webdata.oniq.sparql.model.final_triples.Triple import Triple
 from ro.webdata.oniq.sparql.model.raw_triples.RawTriple import RawTriple

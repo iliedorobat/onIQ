@@ -1,12 +1,14 @@
 import json
 from typing import List
 
+import pydash
 import requests
 
 from ro.webdata.oniq.common.nlp.sentence_utils import get_root
 from ro.webdata.oniq.common.print_utils import echo
+from ro.webdata.oniq.endpoint.models.RDFElement import URI_TYPE
 from ro.webdata.oniq.service.query_const import ACCESSORS, PATHS
-from ro.webdata.oniq.sparql.model.NLQuestion import NLQuestion, ROOT_TYPES
+from ro.webdata.oniq.sparql.model.NLQuestion import NLQuestion, ROOT_TYPES, QUESTION_TARGET
 from ro.webdata.oniq.sparql.model.final_triples.Triple import Triple
 from ro.webdata.oniq.sparql.model.raw_triples.RawTriple import RawTriple
 from ro.webdata.oniq.sparql.model.raw_triples.raw_target_utils import RawTargetUtils
@@ -82,6 +84,7 @@ def _prepare_raw_triples(nl_question: NLQuestion):
         # triple = self.triples.append_triple(subject, predicate, obj)
         pass
 
+    _update_location_triple(raw_triples)
     return raw_triples
 
 
@@ -92,3 +95,33 @@ def _prepare_target_nouns(nl_question: NLQuestion, raw_triples: List[RawTriple])
         RawTargetUtils.update_target_nouns(nl_question, target_nouns, raw_triple)
 
     return target_nouns
+
+
+def _update_location_triple(raw_triples: List[RawTriple]):
+    # Change the "location" predicate with "locatedInArea" if the triple list
+    # contains a Place-related triple
+    # E.g.: "What is the highest mountain in Italy?"
+
+    loc_triples: List[RawTriple] = [
+        triple for triple in raw_triples
+        if isinstance(triple.p, str) and triple.p == QUESTION_TARGET.LOCATION
+    ]
+    rdf_type_triples: List[RawTriple] = [
+        triple for triple in raw_triples
+        if isinstance(triple.p, str) and triple.p == "rdf:type"
+    ]
+
+    # E.g.: <?mountain   location   dbr:Italy>
+    loc_triple: RawTriple = pydash.get(loc_triples, "0")
+    # E.g.: <?mountain   rdf:type   dbo:Mountain>
+    rdf_type_triple: RawTriple = pydash.get(rdf_type_triples, "0")
+
+    if loc_triple is not None and rdf_type_triple is not None:
+        obj_var = rdf_type_triple.o.to_var()
+        resource_type_uri = f'http://localhost:8200/{PATHS.RESOURCE_TYPE}?{ACCESSORS.RESOURCE_NAME}={obj_var}'
+
+        resource_type_response = requests.get(resource_type_uri)
+        resource_type: str = json.loads(resource_type_response.content)
+
+        if resource_type == URI_TYPE.NATURAL_PLACE:
+            loc_triple.p = "locatedInArea"

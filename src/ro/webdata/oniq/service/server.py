@@ -2,7 +2,7 @@ import json
 from http.server import HTTPServer, BaseHTTPRequestHandler
 from urllib.parse import urlparse
 
-from ro.webdata.oniq.service.handlers import entities_handler, matcher_handler
+from ro.webdata.oniq.service.handlers import entities_handler, matcher_handler, resource_type_handler
 from ro.webdata.oniq.service.query_const import PATHS
 
 
@@ -17,6 +17,9 @@ class Handler(BaseHTTPRequestHandler):
 
         if parsed.path == "/" + PATHS.MATCHER:
             output = matcher_handler(parsed)
+
+        elif parsed.path == "/" + PATHS.RESOURCE_TYPE:
+            output = resource_type_handler(parsed)
 
         # TODO: remove
         elif parsed.path == "/" + PATHS.ENTITIES:

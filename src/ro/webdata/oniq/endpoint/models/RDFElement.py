@@ -8,8 +8,22 @@ from ro.webdata.oniq.endpoint.namespace import NAMESPACE_SEPARATOR
 from ro.webdata.oniq.endpoint.namespace import NamespaceService
 from ro.webdata.oniq.spacy_model import nlp_model
 
+# TODO: replace with URI.ROOT_CLASS
 ROOT_CLASS_URI = "http://www.w3.org/2002/07/owl#Thing"
 ROOT_PROPERTY_CLASS_URI = "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"
+
+
+class URI:
+    ROOT_CLASS = "http://www.w3.org/2002/07/owl#Thing"
+    NATURAL_PLACE_CLASS = "http://dbpedia.org/ontology/NaturalPlace"
+    PLACE_CLASS = "http://dbpedia.org/ontology/Place"
+    POPULATED_PLACE = "http://dbpedia.org/ontology/PopulatedPlace"
+
+
+class URI_TYPE:
+    NATURAL_PLACE = "NATURAL_PLACE"
+    PLACE = "PLACE"
+    POPULATED_PLACE = "POPULATED_PLACE"
 
 
 class RDFElement:

@@ -3,7 +3,6 @@ from typing import List, Union
 
 from spacy.tokens import Span, Token
 
-from ro.webdata.oniq.common.nlp.nlp_utils import token_to_span
 from ro.webdata.oniq.common.nlp.utils import WordnetUtils
 from ro.webdata.oniq.common.nlp.word_utils import get_prev_word, is_noun, is_adj_modifier
 from ro.webdata.oniq.sparql.constants import SPARQL_VAR_PREFIX, SPARQL_STR_SEPARATOR
