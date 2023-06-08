@@ -5,6 +5,7 @@ from spacy.tokens import Span, Token
 
 from ro.webdata.oniq.common.nlp.utils import WordnetUtils
 from ro.webdata.oniq.common.nlp.word_utils import get_prev_word, is_noun, is_adj_modifier
+from ro.webdata.oniq.endpoint.query import escape_resource_name
 from ro.webdata.oniq.sparql.constants import SPARQL_VAR_PREFIX, SPARQL_STR_SEPARATOR
 
 
@@ -101,18 +102,24 @@ class NounEntity:
                 if is_org:
                     # E.g.: "What is the net income of Apple?"
                     text += "_Inc."
-                return "dbr:" + re.sub(r"\s", SPARQL_STR_SEPARATOR, text)
+                return escape_resource_name(
+                    "dbr:" + re.sub(r"\s", SPARQL_STR_SEPARATOR, text)
+                )
 
         if self.noun is not None:
             text = re.sub(r"\s", SPARQL_STR_SEPARATOR, self.to_span().text)
-            return f"{SPARQL_VAR_PREFIX}{text}"
+            return escape_resource_name(
+                f"{SPARQL_VAR_PREFIX}{text}"
+            )
 
         if self.text is not None:
             if self.is_dbpedia_type:
                 return self.text
 
             text = re.sub(r"\s", SPARQL_STR_SEPARATOR, self.text)
-            return f"{SPARQL_VAR_PREFIX}{text}"
+            return escape_resource_name(
+                f"{SPARQL_VAR_PREFIX}{text}"
+            )
 
         return "NULL"
 

@@ -42,8 +42,6 @@ def matcher_handler(parsed_url: ParseResult):
         lookup_result = LookupService.entities_lookup(named_entity, all_classes)
         resource_name = pydash.get(lookup_result, [0, "resource", 0], node_text_value)
         res_name = resource_name.replace(NAMESPACE.DBP_RESOURCE, "")
-        res_name = res_name.replace(" ", "_")  # E.g.: "Pulitzer Prize" => "Pulitzer_Prize"
-        res_name = res_name.replace(".", "\.")  # E.g.: "Apple_Inc." => "Apple_Inc\."
 
         if node_type == NODE_TYPE.SUBJECT:
             props = DBpediaQueryService.run_subject_properties_query(res_name)
@@ -60,6 +58,9 @@ def resource_type_handler(parsed_url: ParseResult):
 
     rdf_classes = [rdf_class for rdf_class in all_classes if str(rdf_class) == resource_name]
     obj_parent_uris: str = pydash.get(rdf_classes, ["0", "parent_uris"])
+
+    if obj_parent_uris is None:
+        return None
 
     if URI.PLACE_CLASS in obj_parent_uris:
         if URI.NATURAL_PLACE_CLASS in obj_parent_uris:

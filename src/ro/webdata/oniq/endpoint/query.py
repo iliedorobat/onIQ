@@ -234,7 +234,7 @@ class QueryService:
 
         # TODO: classes = RDFElements([])
         classes = []
-        query = sparql_query % resource_name
+        query = sparql_query % escape_resource_name(resource_name)
         response = QueryService.run_query(endpoint, query)
 
         for result in response["results"]["bindings"]:
@@ -313,7 +313,7 @@ class QueryService:
         if resource_name is None or len(resource_name) == 0:
             return None
 
-        query = sparql_query % resource_name
+        query = sparql_query % escape_resource_name(resource_name)
         result = QueryService.run_resources_query(endpoint, query)
 
         if len(result) == 1:
@@ -339,7 +339,7 @@ class QueryService:
             return None
 
         props = RDFElements([])
-        query = sparql_query % resource_name
+        query = sparql_query % escape_resource_name(resource_name)
         response = QueryService.run_query(endpoint, query)
         results = pydash.get(response, ["results", "bindings"], [])
 
@@ -380,3 +380,16 @@ class QueryService:
             file.write(resource.to_csv() + "\n")
 
         file.close()
+
+
+def escape_resource_name(resource_name: str):
+    # E.g.: "New_York_(state)" => "New_York_\(state\)"
+    res_name = resource_name.replace("(", "\(").replace(")", "\)")
+
+    # E.g.: "Pulitzer Prize" => "Pulitzer_Prize"
+    res_name = res_name.replace(" ", "_")
+
+    # E.g.: "Apple_Inc." => "Apple_Inc\."
+    res_name = res_name.replace(".", "\.")
+
+    return res_name

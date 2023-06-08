@@ -159,7 +159,7 @@ target_nouns = [
 	?denomination
 ]
 raw_triples = [
-	<dbr:S._H._Kapadia   denomination   ?denomination>
+	<dbr:S\._H\._Kapadia   denomination   ?denomination>
 ]
 """
     },

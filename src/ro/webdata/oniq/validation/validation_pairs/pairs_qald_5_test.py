@@ -247,7 +247,7 @@ WHERE {
         "result": """
 SELECT DISTINCT ?net_income
 WHERE {
-	dbr:Apple_Inc.   dbo:netIncome   ?net_income .
+	dbr:Apple_Inc\.   dbo:netIncome   ?net_income .
 }
 """
     },

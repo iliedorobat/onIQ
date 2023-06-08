@@ -305,7 +305,7 @@ target_nouns = [
 	?net_income
 ]
 raw_triples = [
-	<dbr:Apple_Inc.   net_income   ?net_income>
+	<dbr:Apple_Inc\.   net_income   ?net_income>
 ]
 """
     },
