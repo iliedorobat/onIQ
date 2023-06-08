@@ -1,15 +1,11 @@
-import json
-from typing import Union, List
+from typing import Union
 
-import requests
 from spacy.tokens import Span, Token
 
-from ro.webdata.oniq.common.nlp.nlp_utils import text_to_span
 from ro.webdata.oniq.common.text_utils import WORD_SEPARATOR
 from ro.webdata.oniq.endpoint.common.match.PropertyMatcher import PropertyMatcher
 from ro.webdata.oniq.endpoint.dbpedia.lookup import LookupService
-from ro.webdata.oniq.endpoint.dbpedia.query import DBpediaQueryService
-from ro.webdata.oniq.endpoint.models.RDFElement import RDFClass, RDFProperty
+from ro.webdata.oniq.endpoint.models.RDFElement import RDFClass
 from ro.webdata.oniq.endpoint.models.RDFElements import RDFElements
 from ro.webdata.oniq.sparql.constants import SPARQL_STR_SEPARATOR
 from ro.webdata.oniq.sparql.model.AdjectiveEntity import AdjectiveEntity
@@ -22,13 +18,10 @@ from ro.webdata.oniq.sparql.model.raw_triples.RawTriple import RawTriple
 class Triple:
     def __init__(self, raw_triple: RawTriple, properties: RDFElements):
         self.s = raw_triple.s
-        self.p = _predicate_lookup(raw_triple, raw_triple.is_ordering, properties)
+        self.p = _predicate_lookup(raw_triple, properties)
         self.o = raw_triple.o
         self.question = raw_triple.question
-        self.is_ordering = raw_triple.is_ordering
-
-        self.aggr = None
-        self.order = None
+        self.order_modifier = raw_triple.order_modifier
 
     def __eq__(self, other):
         # only equality tests to other 'Triple' instances are supported
@@ -53,14 +46,17 @@ class Triple:
 
         return f"{s}   {p}   {o}"
 
+    def is_ordering_triple(self):
+        return self.order_modifier is not None
 
-def _predicate_lookup(raw_triple: RawTriple, is_ordering: bool, properties: RDFElements):
+
+def _predicate_lookup(raw_triple: RawTriple, properties: RDFElements):
     subject: NounEntity = raw_triple.s
     predicate: Union[str, Span] = raw_triple.p
     obj: Union[AdjectiveEntity, NounEntity] = raw_triple.o
     question: Span = raw_triple.question
 
-    if is_ordering:
+    if raw_triple.is_ordering_triple():
         return adjective_property_lookup(predicate, properties)
 
     if subject.is_res():

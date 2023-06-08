@@ -9,12 +9,12 @@ from ro.webdata.oniq.sparql.model.NounEntity import NounEntity
 
 
 class RawTriple:
-    def __init__(self, s: Union[NounEntity, Token], p: Union[str, Span], o: Union[str, AdjectiveEntity, NounEntity, Token], question: Span, is_ordering: bool = False):
+    def __init__(self, s: Union[NounEntity, Token], p: Union[str, Span], o: Union[str, AdjectiveEntity, NounEntity, Token], question: Span, order_modifier: str = None):
         self.s = s if isinstance(s, NounEntity) else NounEntity(s)
         self.p = p
         self.o = _prepare_object(self.p, o)
+        self.order_modifier = order_modifier
         self.question = question
-        self.is_ordering = is_ordering
 
     def __eq__(self, other):
         # only equality tests to other 'RawTriple' instances are supported
@@ -31,6 +31,9 @@ class RawTriple:
         o = self.o.to_var()
 
         return f"{s}   {p}   {o}"
+
+    def is_ordering_triple(self):
+        return self.order_modifier is not None
 
     def is_valid(self):
         validation = True

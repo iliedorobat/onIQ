@@ -15,6 +15,7 @@ from ro.webdata.oniq.service.query_const import ACCESSORS, PATHS
 from ro.webdata.oniq.sparql.model.AdjectiveEntity import AdjectiveEntity
 from ro.webdata.oniq.sparql.model.NLQuestion import NLQuestion, ROOT_TYPES, QUESTION_TARGET
 from ro.webdata.oniq.sparql.model.NounEntity import NounEntity
+from ro.webdata.oniq.sparql.model.order_by_utils import get_order_modifier
 from ro.webdata.oniq.sparql.model.raw_triples.RawTriple import RawTriple
 from ro.webdata.oniq.sparql.model.raw_triples.raw_target_utils import RawTargetUtils
 from ro.webdata.oniq.sparql.model.raw_triples.raw_triple_utils import RawTripleUtils
@@ -24,19 +25,27 @@ from ro.webdata.oniq.sparql.query import SPARQLRawQuery
 class SPARQLRawBuilder:
     def __init__(self, endpoint, input_question, print_deps):
         self.nl_question = NLQuestion(input_question)
-        initial_triples = _init_raw_triples(self.nl_question)
-
-        self.order_by_triples = _prepare_ordering_raw_triples(self.nl_question, initial_triples)
-        self.main_triples = _get_main_raw_triples(initial_triples, self.order_by_triples)
-        self.all_triples = self.main_triples + self.order_by_triples
-        self.targets = _prepare_target_nouns(self.nl_question, self.all_triples)
+        self.raw_triples = _prepare_raw_triples(self.nl_question)
+        self.targets = _prepare_target_nouns(self.nl_question, self.raw_triples)
 
         if print_deps:
             echo.deps_list(self.nl_question.question)
 
     def to_sparql_query(self):
-        query = SPARQLRawQuery(self.nl_question, self.targets, self.main_triples, self.order_by_triples)
+        query = SPARQLRawQuery(self.nl_question, self.targets, self.raw_triples)
         return query.generate_query()
+
+
+def _prepare_raw_triples(nl_question: NLQuestion):
+    initial_triples = _init_raw_triples(nl_question)
+
+    order_by_triples = _prepare_ordering_raw_triples(nl_question, initial_triples)
+    # Exclude the triples used in the ORDER BY statement.
+    # Using "set" will change the order or elements.
+    # E.g.: "Which museum in New York has the most visitors?"
+    main_triples = [raw_triple for raw_triple in initial_triples if raw_triple not in order_by_triples]
+
+    return main_triples + order_by_triples
 
 
 def _init_raw_triples(nl_question: NLQuestion):
@@ -120,14 +129,6 @@ def _update_location_triple(raw_triples: List[RawTriple]):
             loc_triple.p = "locatedInArea"
 
 
-def _get_main_raw_triples(init_raw_triples: List[RawTriple], order_by_raw_triples: List[RawTriple]):
-    # Exclude the triples used in the ORDER BY statement.
-    # Using "set" will change the order or elements.
-    # E.g.: "Which museum in New York has the most visitors?"
-
-    return [raw_triple for raw_triple in init_raw_triples if raw_triple not in order_by_raw_triples]
-
-
 def _prepare_target_nouns(nl_question: NLQuestion, raw_triples: List[RawTriple]):
     target_nouns = []
 
@@ -149,7 +150,7 @@ def _prepare_ordering_raw_triples(nl_question: NLQuestion, raw_triples: List[Raw
             if raw_triple.s.is_var():
                 if prev_word.text.lower() in ["most", "least"]:
                     # E.g.: "Which museum in New York has the most visitors?"
-                    raw_triple.is_ordering = True
+                    raw_triple.order_modifier = get_order_modifier(prev_word)
                     order_by.append(raw_triple)
 
                 elif is_adj(prev_word):
@@ -160,7 +161,7 @@ def _prepare_ordering_raw_triples(nl_question: NLQuestion, raw_triples: List[Raw
                             p=token_to_span(prev_word),
                             o=AdjectiveEntity(prev_word),
                             question=nl_question.question,
-                            is_ordering=True
+                            order_modifier=get_order_modifier(prev_word)
                         )
                         order_by.append(new_raw_triple)
                     else:
@@ -176,7 +177,7 @@ def _prepare_ordering_raw_triples(nl_question: NLQuestion, raw_triples: List[Raw
                                     p=token_to_span(prev_word),
                                     o=AdjectiveEntity(prev_word),
                                     question=nl_question.question,
-                                    is_ordering=True
+                                    order_modifier=get_order_modifier(prev_word)
                                 )
                                 order_by.append(new_raw_triple)
 
@@ -189,7 +190,7 @@ def _prepare_ordering_raw_triples(nl_question: NLQuestion, raw_triples: List[Raw
                         p=token_to_span(prev_word),
                         o=AdjectiveEntity(prev_word),
                         question=nl_question.question,
-                        is_ordering=True
+                        order_modifier=get_order_modifier(prev_word)
                     )
                     order_by.append(new_raw_triple)
 

@@ -22,7 +22,7 @@ PAIRS_QALD = [
 ASK
 WHERE {
 	dbr:Arnold_Schwarzenegger   dbo:almaMater   ?university .
-	?university   rdf:type   dbo:University .
+	?university   rdf:type   dbo:University
 }
 """
     },
@@ -64,7 +64,7 @@ WHERE {
         "result": """
 SELECT DISTINCT ?country
 WHERE {
-	dbr:Mecca   dbo:country   ?country .
+	dbr:Mecca   dbo:country   ?country
 }
 """
     },
@@ -78,7 +78,7 @@ WHERE {
 SELECT DISTINCT ?astronaut
 WHERE {
 	?astronaut   rdf:type   dbo:Astronaut .
-	?astronaut   ?prop   dbr:ESA .
+	?astronaut   ?prop   dbr:ESA
 }
 """
     },
@@ -92,7 +92,7 @@ WHERE {
 SELECT DISTINCT ?holiday
 WHERE {
 	?holiday   rdf:type   dbo:Holiday .
-	?holiday   dbo:country   dbr:Sweden .
+	?holiday   dbo:country   dbr:Sweden
 }
 """
     },
@@ -105,7 +105,7 @@ WHERE {
         "result": """
 SELECT DISTINCT ?currency
 WHERE {
-	dbr:China   dbo:currency   ?currency .
+	dbr:China   dbo:currency   ?currency
 }
 """
     },
@@ -128,7 +128,7 @@ WHERE {
         "result": """
 SELECT DISTINCT ?time
 WHERE {
-	dbr:Ming_dynasty   dbp:dateEnd   ?time .
+	dbr:Ming_dynasty   dbp:dateEnd   ?time
 }
 """
     },
@@ -151,7 +151,7 @@ WHERE {
         "result": """
 SELECT DISTINCT ?manager
 WHERE {
-	dbr:Real_Madrid   dbo:manager   ?manager .
+	dbr:Real_Madrid   dbo:manager   ?manager
 }
 """
     },
@@ -164,7 +164,7 @@ WHERE {
         "result": """
 SELECT DISTINCT ?parents
 WHERE {
-	dbr:Queen_Victoria   dbo:parent   ?parents .
+	dbr:Queen_Victoria   dbo:parent   ?parents
 }
 """
     },
@@ -191,7 +191,7 @@ WHERE {
 SELECT DISTINCT ?person
 WHERE {
 	?person   rdf:type   dbo:Person .
-	?person   dbo:award   dbr:Pulitzer_Prize .
+	?person   dbo:award   dbr:Pulitzer_Prize
 }
 """
     },
@@ -224,7 +224,7 @@ WHERE {
         "result": """
 SELECT DISTINCT ?person
 WHERE {
-	?person   rdf:type   dbo:BasketballPlayer .
+	?person   rdf:type   dbo:BasketballPlayer
 }
 """
     },
@@ -247,7 +247,7 @@ WHERE {
         "result": """
 SELECT DISTINCT ?net_income
 WHERE {
-	dbr:Apple_Inc\.   dbo:netIncome   ?net_income .
+	dbr:Apple_Inc\.   dbo:netIncome   ?net_income
 }
 """
     },
@@ -262,7 +262,7 @@ WHERE {
 SELECT DISTINCT ?mountain
 WHERE {
 	?mountain   dbo:locatedInArea   dbr:Italy .
-	?mountain   rdf:type   dbo:Mountain .
+	?mountain   rdf:type   dbo:Mountain
 }
 """
     },
@@ -362,7 +362,7 @@ WHERE {
 SELECT DISTINCT ?soccer_players
 WHERE {
 	?soccer_players   dbo:birthPlace   dbr:Malta .
-	?soccer_players   rdf:type   dbo:SoccerPlayer .
+	?soccer_players   rdf:type   dbo:SoccerPlayer
 }
 """
     },

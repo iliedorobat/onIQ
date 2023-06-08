@@ -251,9 +251,8 @@ raw_triples = [
 	<?mountain   rdf:type   dbo:Mountain>
 	<?mountain   highest   ?highest>
 ]
-order_modifier = DESC
-order_items = [
-	?highest
+order_by = [
+	DESC(?highest)
 ]
 """
     },
@@ -269,9 +268,8 @@ raw_triples = [
 	<?city   rdf:type   dbo:City>
 	<?city   largest   ?largest>
 ]
-order_modifier = DESC
-order_items = [
-	?largest
+order_by = [
+	DESC(?largest)
 ]
 """
     },
@@ -304,9 +302,8 @@ raw_triples = [
 	<?building   rdf:type   dbo:Building>
 	<?building   tallest   ?tallest>
 ]
-order_modifier = DESC
-order_items = [
-	?tallest
+order_by = [
+	DESC(?tallest)
 ]
 """
     },

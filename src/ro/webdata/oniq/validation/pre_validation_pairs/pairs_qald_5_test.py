@@ -226,9 +226,8 @@ raw_triples = [
 	<?person   award   dbr:Pulitzer_Prize>
 	<?person   youngest   ?youngest>
 ]
-order_modifier = ASC
-order_items = [
-	?youngest
+order_by = [
+	ASC(?youngest)
 ]
 """
     },
@@ -247,9 +246,8 @@ raw_triples = [
 	<dbr:Meryl_Streep   child   ?child>
 	<?child   oldest   ?oldest>
 ]
-order_modifier = DESC
-order_items = [
-	?oldest
+order_by = [
+	DESC(?oldest)
 ]
 """
     },
@@ -277,9 +275,8 @@ raw_triples = [
 	<?person   rdf:type   dbo:BasketballPlayer>
 	<?person   tallest   ?tallest>
 ]
-order_modifier = DESC
-order_items = [
-	?tallest
+order_by = [
+	DESC(?tallest)
 ]
 """
     },
@@ -325,9 +322,8 @@ raw_triples = [
 	<?mountain   rdf:type   dbo:Mountain>
 	<?mountain   highest   ?highest>
 ]
-order_modifier = DESC
-order_items = [
-	?highest
+order_by = [
+	DESC(?highest)
 ]
 """
     },
@@ -511,9 +507,8 @@ raw_triples = [
 	<?museum   rdf:type   dbo:Museum>
 	<?museum   visitors   ?visitors>
 ]
-order_modifier = ASC
-order_items = [
-	?visitors
+order_by = [
+	ASC(?visitors)
 ]
 """
     },

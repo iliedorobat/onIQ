@@ -22,13 +22,24 @@ class SPARQLBuilder:
 
         self.nl_question = raw_builder.nl_question
         self.targets = raw_builder.targets
-        self.main_triples = _init_triples(raw_builder.main_triples, RDFElements([]))
-        properties = _get_properties(DBP_ENDPOINT, self.main_triples)
-        self.order_by_triples = _init_triples(raw_builder.order_by_triples, properties)
+        self.triples = _prepare_raw_triples(raw_builder.raw_triples)
 
     def to_sparql_query(self):
-        query = SPARQLQuery(self.nl_question, self.targets, self.main_triples, self.order_by_triples)
+        query = SPARQLQuery(self.nl_question, self.targets, self.triples)
         return query.generate_query()
+
+
+def _prepare_raw_triples(raw_triples: List[RawTriple]):
+    main_raw_triples = [raw_triple for raw_triple in raw_triples if not raw_triple.is_ordering_triple()]
+    ordering_raw_triples = [raw_triple for raw_triple in raw_triples if raw_triple.is_ordering_triple()]
+
+    main_triples = _init_triples(main_raw_triples, RDFElements([]))
+    properties = _get_properties(DBP_ENDPOINT, main_triples)
+    order_by_triples = _init_triples(ordering_raw_triples, properties)
+
+    # TODO:
+    # return main_triples + order_by_triples
+    return main_triples
 
 
 def _init_triples(raw_triples: List[RawTriple], properties: RDFElements):
