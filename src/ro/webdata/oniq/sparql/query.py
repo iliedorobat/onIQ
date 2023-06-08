@@ -22,10 +22,10 @@ class ORDER_BY_MODIFIER:
 
 
 class SPARQLQuery:
-    def __init__(self, nl_question: NLQuestion, targets: List[NounEntity], triples: List[Triple]):
+    def __init__(self, nl_question: NLQuestion, targets: List[NounEntity], main_triples: List[Triple], order_by_triples: List[Triple]):
         self.nl_question = nl_question
         self.targets = targets
-        self.triples = triples
+        self.main_triples = main_triples
         self.query_type = _get_query_type(self.nl_question)
 
     def generate_query(self):
@@ -39,7 +39,7 @@ class SPARQLQuery:
                 output += f" {target.to_var()}"
 
         output += "\nWHERE {"
-        for triple in self.triples:
+        for triple in self.main_triples:
             output += f"\n\t{str(triple)} ."
         output += "\n}"
 
@@ -47,14 +47,16 @@ class SPARQLQuery:
 
 
 class SPARQLRawQuery:
-    def __init__(self, nl_question: NLQuestion, targets: List[NounEntity], raw_triples: List[RawTriple], order_by_items: List[RawTriple]):
+    def __init__(self, nl_question: NLQuestion, targets: List[NounEntity], main_triples: List[RawTriple], order_by_triples: List[RawTriple]):
         self.nl_question = nl_question
         self.targets = targets
-        self.raw_triples = raw_triples
+        self.main_triples = main_triples
         self.query_type = _get_query_type(self.nl_question)
-        self.order_by = OrderByClause(order_by_items)
+        self.order_by = OrderByClause(order_by_triples)
 
     def generate_query(self):
+        triple_list = self.main_triples + self.order_by.items
+
         output = f'query_type = {self.query_type}\n'
 
         if self.query_type == QUERY_TYPES.ASK:
@@ -64,12 +66,6 @@ class SPARQLRawQuery:
             for target in self.targets:
                 output += f"\t{target.to_var()}\n"
             output += "]\n"
-
-        # Filter order_by.items to remove the items that already exists in
-        # self.raw_triples. Using "set" will change the order or elements.
-        # E.g.: "Which museum in New York has the most visitors?"
-        order_by_items = [item for item in self.order_by.items if item not in self.raw_triples]
-        triple_list = self.raw_triples + order_by_items
 
         output += "raw_triples = [\n"
         for raw_triple in triple_list:
@@ -88,12 +84,11 @@ class SPARQLRawQuery:
 
 
 class OrderByClause:
-    def __init__(self, order_by_items: List[RawTriple]):
-        self.items = order_by_items
+    def __init__(self, order_by_triples: List[RawTriple]):
+        self.items = order_by_triples
         self.modifier = self._get_modifier()
 
     def _get_modifier(self):
-        print()
         for item in self.items:
             predicate = None
 
@@ -107,9 +102,10 @@ class OrderByClause:
                     # E.g.: "What is the highest mountain in Italy?"
                     return _get_order_modifier(predicate)
                 else:
-                    prev_word = get_prev_word(predicate)
                     # E.g.: "Which museum in New York has the fewest visitors?"
+                    prev_word = get_prev_word(predicate)
                     return _get_order_modifier(prev_word)
+
         return ORDER_BY_MODIFIER.ASC
 
 

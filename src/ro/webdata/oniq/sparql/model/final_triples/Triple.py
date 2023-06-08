@@ -10,19 +10,22 @@ from ro.webdata.oniq.endpoint.common.match.PropertyMatcher import PropertyMatche
 from ro.webdata.oniq.endpoint.dbpedia.lookup import LookupService
 from ro.webdata.oniq.endpoint.dbpedia.query import DBpediaQueryService
 from ro.webdata.oniq.endpoint.models.RDFElement import RDFClass, RDFProperty
+from ro.webdata.oniq.endpoint.models.RDFElements import RDFElements
 from ro.webdata.oniq.sparql.constants import SPARQL_STR_SEPARATOR
+from ro.webdata.oniq.sparql.model.AdjectiveEntity import AdjectiveEntity
 from ro.webdata.oniq.sparql.model.NounEntity import NounEntity
-from ro.webdata.oniq.sparql.model.final_triples.predicate_utils import subject_predicate_lookup, object_predicate_lookup
+from ro.webdata.oniq.sparql.model.final_triples.predicate_utils import subject_predicate_lookup, \
+    object_predicate_lookup, adjective_property_lookup
 from ro.webdata.oniq.sparql.model.raw_triples.RawTriple import RawTriple
 
 
 class Triple:
-    def __init__(self, base_raw_triples: List[RawTriple], raw_triple: RawTriple, is_order_by: bool):
+    def __init__(self, raw_triple: RawTriple, properties: RDFElements):
         self.s = raw_triple.s
-        self.p = _predicate_lookup(base_raw_triples, raw_triple, is_order_by)
+        self.p = _predicate_lookup(raw_triple, raw_triple.is_ordering, properties)
         self.o = raw_triple.o
         self.question = raw_triple.question
-        self.is_order_by = is_order_by
+        self.is_ordering = raw_triple.is_ordering
 
         self.aggr = None
         self.order = None
@@ -51,22 +54,14 @@ class Triple:
         return f"{s}   {p}   {o}"
 
 
-class OrderClause:
-    def __init__(self, subject: NounEntity, predicate: str, obj: NounEntity):
-        pass
-
-
-def _predicate_lookup(base_raw_triples: List[RawTriple], raw_triple: RawTriple, is_ordering: bool):
+def _predicate_lookup(raw_triple: RawTriple, is_ordering: bool, properties: RDFElements):
     subject: NounEntity = raw_triple.s
     predicate: Union[str, Span] = raw_triple.p
-    obj: NounEntity = raw_triple.o
+    obj: Union[AdjectiveEntity, NounEntity] = raw_triple.o
     question: Span = raw_triple.question
 
     if is_ordering:
-        # E.g.: "What is the highest mountain in Italy?"
-        #       <?mountain   highest   ?highest>
-        if raw_triple not in base_raw_triples:
-            print()
+        return adjective_property_lookup(predicate, properties)
 
     if subject.is_res():
         if obj.is_var():

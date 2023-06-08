@@ -5,10 +5,24 @@ import requests
 from spacy.tokens import Span
 
 from ro.webdata.oniq.common.nlp.nlp_utils import text_to_span
+from ro.webdata.oniq.endpoint.common.match.PropertiesMatcher import PropertiesMatcher
 from ro.webdata.oniq.endpoint.common.match.PropertyMatcher import PropertyMatcher
 from ro.webdata.oniq.endpoint.models.RDFElement import RDFProperty
+from ro.webdata.oniq.endpoint.models.RDFElements import RDFElements
 from ro.webdata.oniq.service.query_const import PATHS, ACCESSORS, DATA_TYPE, NODE_TYPE
 from ro.webdata.oniq.sparql.model.NounEntity import NounEntity
+
+
+def adjective_property_lookup(predicate: Span, props: RDFElements):
+    # E.g.: "What is the highest mountain in Italy?"
+    #       <?mountain   highest   ?highest>
+
+    best_matched = PropertiesMatcher.get_best_matched(
+        props=props,
+        target_expression=predicate
+    )
+
+    return best_matched
 
 
 def object_predicate_lookup(question: Span, obj: NounEntity, predicate: Span):

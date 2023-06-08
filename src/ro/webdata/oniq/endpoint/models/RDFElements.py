@@ -105,3 +105,27 @@ class RDFElements:
             return filtered_props[0]
 
         return None
+
+    def filter(self, uri):
+        """
+        Exclude the element corresponding to the provided URI from
+        the elements list and return a new RDFElements instance.
+
+        Args:
+            uri (str): Target URI.
+
+        Returns:
+            RDFElements[RDFElement, RDFCategory, RDFClass, RDFProperty]:
+                The new RDFElements instance which contains
+                filtered elements.
+        """
+
+        if self.exists(uri):
+            elements = [
+                rdf_prop for rdf_prop in self.elements
+                if rdf_prop.uri != uri
+            ]
+
+            return RDFElements(elements)
+
+        return self
