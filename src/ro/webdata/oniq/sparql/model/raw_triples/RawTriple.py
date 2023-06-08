@@ -4,15 +4,17 @@ from typing import Union
 from spacy.tokens import Span, Token
 
 from ro.webdata.oniq.sparql.constants import SPARQL_STR_SEPARATOR
+from ro.webdata.oniq.sparql.model.AdjectiveEntity import AdjectiveEntity
 from ro.webdata.oniq.sparql.model.NounEntity import NounEntity
 
 
 class RawTriple:
-    def __init__(self, s: Union[NounEntity, Token], p: Union[str, Span], o: Union[str, NounEntity, Token], question: Span):
+    def __init__(self, s: Union[NounEntity, Token], p: Union[str, Span], o: Union[str, AdjectiveEntity, NounEntity, Token], question: Span, is_ordering: bool = False):
         self.s = s if isinstance(s, NounEntity) else NounEntity(s)
         self.p = p
         self.o = _prepare_object(self.p, o)
         self.question = question
+        self.is_ordering = is_ordering
 
     def __eq__(self, other):
         # only equality tests to other 'RawTriple' instances are supported
@@ -51,11 +53,14 @@ def _get_p_var(predicate: Union[str, Token]):
     return re.sub(r"\s", SPARQL_STR_SEPARATOR, p)
 
 
-def _prepare_object(predicate: Union[str, Span], obj: Union[str, NounEntity, Token]):
+def _prepare_object(predicate: Union[str, Span], obj: Union[str, AdjectiveEntity, NounEntity, Token]):
     if isinstance(predicate, str) and predicate == "rdf:type":
         return NounEntity(obj.text, obj.token, True)
 
     if isinstance(obj, NounEntity):
+        return obj
+
+    if isinstance(obj, AdjectiveEntity):
         return obj
 
     return NounEntity(obj)

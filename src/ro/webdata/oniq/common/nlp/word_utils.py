@@ -260,6 +260,20 @@ def is_adj_complement(word: Token):
     return is_adj(word) and word.dep_ == "acomp"
 
 
+def is_adj_superlative(word: Token):
+    """
+    Determine if the input word is a superlative adjective.
+
+    :param word: The target token.
+    :return: True/False
+    """
+
+    if not isinstance(word, Token):
+        return False
+
+    return is_adj(word) and word.tag_ == "JJS"
+
+
 def is_adj_modifier(word: Token):
     """
     Determine if the input word is an adjectival modifier.

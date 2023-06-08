@@ -1,7 +1,7 @@
 from ro.webdata.oniq.common.constants import GLOBAL_ENV
 from ro.webdata.oniq.common.print_utils import COLORS
-
-from ro.webdata.oniq.sparql.builder import SPARQLBuilder, SPARQLRawBuilder
+from ro.webdata.oniq.sparql.builder import SPARQLBuilder
+from ro.webdata.oniq.sparql.builder_raw import SPARQLRawBuilder
 
 ENDPOINT = "http://localhost:7200/repositories/TESTING_BCU_CLUJ"
 ENDPOINT = "http://localhost:7200/repositories/eCHO"

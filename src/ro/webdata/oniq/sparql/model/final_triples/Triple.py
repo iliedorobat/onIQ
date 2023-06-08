@@ -1,5 +1,5 @@
 import json
-from typing import Union
+from typing import Union, List
 
 import requests
 from spacy.tokens import Span, Token
@@ -17,11 +17,12 @@ from ro.webdata.oniq.sparql.model.raw_triples.RawTriple import RawTriple
 
 
 class Triple:
-    def __init__(self, raw_triple: RawTriple):
+    def __init__(self, base_raw_triples: List[RawTriple], raw_triple: RawTriple, is_order_by: bool):
         self.s = raw_triple.s
-        self.p = _predicate_lookup(raw_triple)
+        self.p = _predicate_lookup(base_raw_triples, raw_triple, is_order_by)
         self.o = raw_triple.o
         self.question = raw_triple.question
+        self.is_order_by = is_order_by
 
         self.aggr = None
         self.order = None
@@ -50,11 +51,22 @@ class Triple:
         return f"{s}   {p}   {o}"
 
 
-def _predicate_lookup(raw_triple: RawTriple):
+class OrderClause:
+    def __init__(self, subject: NounEntity, predicate: str, obj: NounEntity):
+        pass
+
+
+def _predicate_lookup(base_raw_triples: List[RawTriple], raw_triple: RawTriple, is_ordering: bool):
     subject: NounEntity = raw_triple.s
     predicate: Union[str, Span] = raw_triple.p
     obj: NounEntity = raw_triple.o
     question: Span = raw_triple.question
+
+    if is_ordering:
+        # E.g.: "What is the highest mountain in Italy?"
+        #       <?mountain   highest   ?highest>
+        if raw_triple not in base_raw_triples:
+            print()
 
     if subject.is_res():
         if obj.is_var():

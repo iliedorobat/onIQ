@@ -1,6 +1,7 @@
 # https://github.com/SmartDataAnalytics/ARCANA/blob/master/ARCANA%20Questions/Test_Data_Set/q4000.txt
 
 # FIXME:
+QUERY_08 = "What is the population and area of the most populated state?"
 QUERY_06 = "Where did William Jones from the British Raj die?"  # NER
 QUERY_07 = "Which is the longest river that flows through the states neighbouring Mississippi?"
 TEST_1 = "Where does Shirley Chisholm work that is bordered by Arlington County?"  # TODO: work - is a NOUN!?!?!
@@ -13,7 +14,6 @@ QUERY_02 = "Who is the person whose successor was Le Hong Phong?"  # poss
 QUERY_03 = "Where is the New York Times published?"
 QUERY_04 = "Where did Mashhur bin Abdulaziz Al Saud's father die?"
 QUERY_05 = "Who is the leader of the town where the Myntdu river originates?"
-QUERY_08 = "What is the population and area of the most populated state?"
 QUERY_09 = "Where is Fort Knox located?"
 QUERY_10 = "Who is the builder of Atamurat-Kerkichi Bridge ?"
 QUERY_11 = "What is the nationality of Aishath Saffa ?"
@@ -100,21 +100,21 @@ raw_triples = [
 ]
 """
     },
-    {
-        # TODO: order by
-        # TODO: and area
-        "query": QUERY_08,
-        "result": """
-query_type = SELECT
-target_nouns = [
-	?population
-]
-raw_triples = [
-	<?populated_state   population   ?population>
-	<?populated_state   rdf:type   dbo:State>
-]
-"""
-    },
+#     {
+#         # TODO: order by
+#         # TODO: and area
+#         "query": QUERY_08,
+#         "result": """
+# query_type = SELECT
+# target_nouns = [
+# 	?population
+# ]
+# raw_triples = [
+# 	<?populated_state   population   ?population>
+# 	<?populated_state   rdf:type   dbo:State>
+# ]
+# """
+#     },
     {
         "query": QUERY_09,
         "result": """
@@ -240,7 +240,6 @@ raw_triples = [
 """
     },
     {
-        # TODO: order by
         "query": QUERY_20,
         "result": """
 query_type = SELECT
@@ -250,11 +249,15 @@ target_nouns = [
 raw_triples = [
 	<?mountain   locatedInArea   dbr:Bavarian_Alps>
 	<?mountain   rdf:type   dbo:Mountain>
+	<?mountain   highest   ?highest>
+]
+order_modifier = DESC
+order_items = [
+	?highest
 ]
 """
     },
     {
-        # TODO: order by
         "query": QUERY_21,
         "result": """
 query_type = SELECT
@@ -264,6 +267,11 @@ target_nouns = [
 raw_triples = [
 	<?city   location   dbr:america>
 	<?city   rdf:type   dbo:City>
+	<?city   largest   ?largest>
+]
+order_modifier = DESC
+order_items = [
+	?largest
 ]
 """
     },
@@ -285,7 +293,6 @@ raw_triples = [
 """
     },
     {
-        # TODO: order by
         "query": TEST_5,
         "result": """
 query_type = SELECT
@@ -295,6 +302,11 @@ target_nouns = [
 raw_triples = [
 	<?building   location   dbr:Romania>
 	<?building   rdf:type   dbo:Building>
+	<?building   tallest   ?tallest>
+]
+order_modifier = DESC
+order_items = [
+	?tallest
 ]
 """
     },

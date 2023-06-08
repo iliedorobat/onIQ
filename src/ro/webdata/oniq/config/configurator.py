@@ -16,6 +16,7 @@ class Configurator:
 
         nltk.download('wordnet')
         nltk.download('punkt')
+        nltk.download('sentiwordnet')
 
     @staticmethod
     def download_spacy_models():

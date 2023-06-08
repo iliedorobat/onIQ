@@ -211,7 +211,6 @@ raw_triples = [
 #     },
     ### WHO + aux verb ###
     {
-        # TODO: order by birth date
         "aggregation": True,
         "answertype": "resource",
         "hybrid": False,
@@ -225,11 +224,15 @@ target_nouns = [
 raw_triples = [
 	<?person   rdf:type   dbo:Person>
 	<?person   award   dbr:Pulitzer_Prize>
+	<?person   youngest   ?youngest>
+]
+order_modifier = ASC
+order_items = [
+	?youngest
 ]
 """
     },
     {
-        # TODO: order by birth date
         "aggregation": True,
         "answertype": "resource",
         "hybrid": False,
@@ -242,6 +245,11 @@ target_nouns = [
 ]
 raw_triples = [
 	<dbr:Meryl_Streep   child   ?child>
+	<?child   oldest   ?oldest>
+]
+order_modifier = DESC
+order_items = [
+	?oldest
 ]
 """
     },
@@ -255,7 +263,6 @@ raw_triples = [
 # """
 #     },
     {
-        # TODO: order by height
         "aggregation": True,
         "answertype": "resource",
         "hybrid": False,
@@ -268,6 +275,11 @@ target_nouns = [
 ]
 raw_triples = [
 	<?person   rdf:type   dbo:BasketballPlayer>
+	<?person   tallest   ?tallest>
+]
+order_modifier = DESC
+order_items = [
+	?tallest
 ]
 """
     },
@@ -298,7 +310,6 @@ raw_triples = [
 """
     },
     {
-        # TODO: order by elevation
         "aggregation": False,
         "answertype": "resource",
         "hybrid": False,
@@ -312,6 +323,11 @@ target_nouns = [
 raw_triples = [
 	<?mountain   locatedInArea   dbr:Italy>
 	<?mountain   rdf:type   dbo:Mountain>
+	<?mountain   highest   ?highest>
+]
+order_modifier = DESC
+order_items = [
+	?highest
 ]
 """
     },
@@ -480,7 +496,6 @@ raw_triples = [
 # """
 #     },
     {
-        # TODO: count
         "aggregation": True,
         "answertype": "resource",
         "hybrid": False,
@@ -495,6 +510,10 @@ raw_triples = [
 	<?museum   location   dbr:New_York>
 	<?museum   rdf:type   dbo:Museum>
 	<?museum   visitors   ?visitors>
+]
+order_modifier = ASC
+order_items = [
+	?visitors
 ]
 """
     },

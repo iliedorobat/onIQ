@@ -40,6 +40,7 @@ class NounEntity:
                 self.is_text = True
                 self.text = WordnetUtils.find_country_by_nationality(word.text)
         else:
+            self.compound_noun = _get_noun_entity(self.token)
             self.text = word
 
     def __eq__(self, other):
@@ -71,12 +72,17 @@ class NounEntity:
         return SPARQL_VAR_PREFIX in self.to_var()
 
     def to_span(self):
+        if self.compound_noun is None:
+            return None
+
         first_noun = self.compound_noun[0]
         last_noun = self.compound_noun[len(self.compound_noun) - 1]
         prev_word = get_prev_word(first_noun)
 
-        if is_adj_modifier(prev_word):
+        if self.noun is not None and is_adj_modifier(prev_word):
             # ADJ + compound noun
+            # E.g.: "What is the net income of Apple?" => "net" + "income"
+            # self.noun is None => "Give me all Swedish holidays."
             return Span(self.noun.doc, prev_word.i, last_noun.i + 1, label=self.compound_noun.root.ent_type)
 
         return self.compound_noun

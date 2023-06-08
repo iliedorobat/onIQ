@@ -1,7 +1,15 @@
 from typing import Union
 
+import pydash
+from nltk.corpus import sentiwordnet as swn
 from nltk.corpus import wordnet as wn
 from spacy.tokens import Doc, Span
+
+
+class SENTI_WORD_TYPE:
+    NEGATIVE = "negative"
+    NEUTRAL = "neutral"
+    POSITIVE = "positive"
 
 
 def is_doc_or_span(phrase: Union[Doc, Span]):
@@ -89,4 +97,32 @@ class WordnetUtils:
         :return: The country name.
         """
 
-        return wn.lemmas(nationality, pos=wn.ADJ)[0].pertainyms()[0]._name
+        lemmas = wn.lemmas(nationality, pos=wn.ADJ)
+        lemma = pydash.get(lemmas, "0")
+
+        pertainyms = lemma.pertainyms()
+        pertainym = pydash.get(pertainyms, "0")
+
+        return pydash.get(pertainym, "_name")
+
+    @staticmethod
+    def senti_word_analysis(word: str):
+        if isinstance(word, str):
+            sent_list = list(swn.senti_synsets(word, 'a'))
+            sent_item = pydash.get(sent_list, "0")
+
+            if sent_item is not None and sent_item.synset.definition() == "greater than normal in degree or intensity or amount":
+                # E.g.: "What is the highest mountain in the Bavarian Alps?"
+                sent_item = sent_item = pydash.get(sent_list, "1")
+
+            pos_score = sent_item.pos_score()
+            neg_score = sent_item.neg_score()
+
+            if neg_score > pos_score:
+                return SENTI_WORD_TYPE.NEGATIVE
+            elif neg_score == pos_score:
+                return SENTI_WORD_TYPE.NEUTRAL
+            else:
+                return SENTI_WORD_TYPE.POSITIVE
+
+        return None
