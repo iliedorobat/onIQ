@@ -26,15 +26,19 @@ WHERE {
 }
 """
     },
-    #     {
-    #         "aggregation": False,
-    #         "answertype": bool,
-    #         "hybrid": False,
-    #         "onlydbo": True,
-    #         "query": "Is Barack Obama a democrat?",
-    #         "result": """
-    # """
-    #     },
+    {
+        "aggregation": False,
+        "answertype": bool,
+        "hybrid": False,
+        "onlydbo": True,
+        "query": "Is Barack Obama a democrat?",
+        "result": """
+ASK
+WHERE {
+	dbr:Barack_Obama   ?prop   dbr:Democratic_Party_(United_States)
+}
+"""
+    },
     #     {
     #         # TODO: order by
     #         "aggregation": False,
@@ -75,10 +79,10 @@ WHERE {
         "onlydbo": True,
         "query": "Give me all ESA astronauts.",
         "result": """
-SELECT DISTINCT ?astronaut
+SELECT DISTINCT ?astronauts
 WHERE {
-	?astronaut   rdf:type   dbo:Astronaut .
-	?astronaut   ?prop   dbr:ESA
+	?astronauts   rdf:type   dbo:Astronaut .
+	?astronauts   ?prop   dbr:ESA_(company)
 }
 """
     },

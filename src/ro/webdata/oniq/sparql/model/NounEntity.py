@@ -50,6 +50,11 @@ class NounEntity:
         return self.noun == other.noun
 
     def __str__(self):
+        if self.is_dbpedia_type:
+            if self.text is not None:
+                # E.g.: "Give me all ESA astronauts."
+                return self.text
+
         if self.compound_noun is not None:
             return self.compound_noun.text
         elif self.noun is not None:
@@ -89,6 +94,10 @@ class NounEntity:
         return self.compound_noun
 
     def to_var(self):
+        if self.is_dbpedia_type:
+            if self.text is not None:
+                return self.text
+
         if self.resource is not None:
             return f"dbr:{self.resource[ACCESSORS.RESOURCE_NAME]}"
 
@@ -97,9 +106,6 @@ class NounEntity:
             return f"{SPARQL_VAR_PREFIX}{text}"
 
         if self.text is not None:
-            if self.is_dbpedia_type:
-                return self.text
-
             text = re.sub(r"\s", SPARQL_STR_SEPARATOR, self.text)
             return f"{SPARQL_VAR_PREFIX}{text}"
 

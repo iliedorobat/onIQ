@@ -37,7 +37,7 @@ raw_triples = [
 query_type = ASK
 target_nouns = []
 raw_triples = [
-	<dbr:Barack_Obama   Is   dbr:democrat>
+	<dbr:Barack_Obama   ?prop   dbr:Democratic_Party_(United_States)>
 ]
 """
     },
@@ -86,11 +86,11 @@ raw_triples = [
         "result": """
 query_type = SELECT
 target_nouns = [
-	?astronaut
+	?astronauts
 ]
 raw_triples = [
-	<?astronaut   rdf:type   dbo:Astronaut>
-	<?astronaut   ?prop   dbr:ESA>
+	<?astronauts   rdf:type   dbo:Astronaut>
+	<?astronauts   ?prop   dbr:ESA_(company)>
 ]
 """
     },
@@ -175,7 +175,7 @@ target_nouns = [
 	?manager
 ]
 raw_triples = [
-	<dbr:Real_Madrid   manager   ?manager>
+	<dbr:Real_Madrid_CF   manager   ?manager>
 ]
 """
     },
@@ -222,9 +222,8 @@ target_nouns = [
 	?person
 ]
 raw_triples = [
-	<?person   rdf:type   dbo:Person>
 	<?person   award   dbr:Pulitzer_Prize>
-	<?person   youngest   ?youngest>
+	<?person   dbo:birthDate   ?youngest>
 ]
 order_by = [
 	ASC(?youngest)
@@ -244,7 +243,7 @@ target_nouns = [
 ]
 raw_triples = [
 	<dbr:Meryl_Streep   child   ?child>
-	<?child   oldest   ?oldest>
+	<?child   dbo:birthDate   ?oldest>
 ]
 order_by = [
 	DESC(?oldest)
@@ -302,7 +301,7 @@ target_nouns = [
 	?net_income
 ]
 raw_triples = [
-	<dbr:Apple_Inc\.   net_income   ?net_income>
+	<dbr:Apple_Inc.   net_income   ?net_income>
 ]
 """
     },
@@ -320,7 +319,7 @@ target_nouns = [
 raw_triples = [
 	<?mountain   locatedInArea   dbr:Italy>
 	<?mountain   rdf:type   dbo:Mountain>
-	<?mountain   highest   ?highest>
+	<?mountain   dbo:elevation   ?highest>
 ]
 order_by = [
 	DESC(?highest)
@@ -503,7 +502,7 @@ target_nouns = [
 	?museum
 ]
 raw_triples = [
-	<?museum   location   dbr:New_York>
+	<?museum   location   dbr:New_York_(state)>
 	<?museum   rdf:type   dbo:Museum>
 	<?museum   visitors   ?visitors>
 ]

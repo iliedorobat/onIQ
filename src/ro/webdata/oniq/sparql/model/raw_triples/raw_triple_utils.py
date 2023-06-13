@@ -1,11 +1,11 @@
-from typing import List
+from typing import List, Union
 
 from spacy.tokens import Span, Token
 
 from ro.webdata.oniq.common.nlp.nlp_utils import token_to_span
 from ro.webdata.oniq.common.nlp.sentence_utils import ends_with_verb, contains_multiple_wh_words
 from ro.webdata.oniq.common.nlp.word_utils import is_noun, is_followed_by_prep, is_preceded_by_adj_modifier, \
-    get_prev_word, is_verb
+    get_prev_word, is_verb, is_aux
 from ro.webdata.oniq.endpoint.dbpedia.lookup import LookupService
 from ro.webdata.oniq.sparql.model.NLQuestion import QUESTION_TARGET, NLQuestion
 from ro.webdata.oniq.sparql.model.NounEntity import NounEntity
@@ -271,7 +271,13 @@ class RawTripleUtils:
 
             if prev_word.dep_ == "compound":
                 rdf_type = NounEntity(child_noun.lemma_, child_noun)
-                triple = _append_rdf_type_triple(nl_question, raw_triples, rdf_type, rdf_type)
+
+                # TODO: workaround to handle targets
+                # E.g.: "Give me all ESA astronauts."
+                triple_subject = NounEntity(rdf_type.token.text)
+                triple_subject.token = rdf_type.token
+
+                triple = _append_rdf_type_triple(nl_question, raw_triples, triple_subject, rdf_type)
 
                 # TODO: pass o=prev_word ???
                 raw_triple = RawTriple(
@@ -359,7 +365,7 @@ def _append_raw_triple(raw_triples: List[RawTriple], raw_triple: RawTriple):
     return raw_triple
 
 
-def _append_rdf_type_triple(nl_question: NLQuestion, raw_triples: List[RawTriple], subject: [str, NounEntity], entity: NounEntity):
+def _append_rdf_type_triple(nl_question: NLQuestion, raw_triples: List[RawTriple], subject: Union[str, NounEntity], entity: NounEntity):
     for triple in raw_triples:
         if triple.s == subject and triple.is_rdf_type():
             # E.g.: "Who is the tallest basketball player?"
@@ -390,11 +396,16 @@ def _append_rdf_type_triple(nl_question: NLQuestion, raw_triples: List[RawTriple
 def _append_root_aux_ask_triple(nl_question: NLQuestion, raw_triples: List[RawTriple], root: Token):
     subject = get_child_noun(root, nl_question.question)
     obj = get_child_noun(subject, nl_question.question[subject.i + 1:])
+    prop = token_to_span(root)
 
     if obj is None:
         # E.g.: "Did Arnold Schwarzenegger attend a university?"
         noun_list = [token for token in list(root.rights) if token.pos_ == "NOUN"]
         obj = noun_list[0] if len(noun_list) > 0 else None
+
+    if is_aux(root):
+        # E.g.: "Is Barack Obama a democrat?"
+        prop = "?prop"
 
     # TODO: remove ???
     if obj is None:
@@ -402,7 +413,7 @@ def _append_root_aux_ask_triple(nl_question: NLQuestion, raw_triples: List[RawTr
 
     raw_triple = RawTriple(
         s=subject,
-        p=token_to_span(root),
+        p=prop,
         o=obj,
         question=nl_question.question
     )
