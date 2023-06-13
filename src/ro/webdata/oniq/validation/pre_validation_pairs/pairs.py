@@ -44,7 +44,7 @@ target_nouns = [
 raw_triples = [
 	<?person   born   ?location>
 	<?person   rdf:type   dbo:Person>
-	<?person   successor   dbr:Le_Hong_Phong>
+	<?person   successor   dbr:Lê_Hồng_Phong>
 ]
 """
     },
@@ -56,7 +56,7 @@ target_nouns = [
 	?person
 ]
 raw_triples = [
-	<?person   successor   dbr:Le_Hong_Phong>
+	<?person   successor   dbr:Lê_Hồng_Phong>
 ]
 """
     },
@@ -123,7 +123,7 @@ target_nouns = [
 	?location
 ]
 raw_triples = [
-	<dbr:Fort_Knox   located   ?location>
+	<dbr:Fort_Knox_(Maine)   located   ?location>
 ]
 """
     },
@@ -159,7 +159,7 @@ target_nouns = [
 	?denomination
 ]
 raw_triples = [
-	<dbr:S\._H\._Kapadia   denomination   ?denomination>
+	<dbr:S._H._Kapadia   denomination   ?denomination>
 ]
 """
     },
@@ -185,7 +185,7 @@ target_nouns = [
 raw_triples = [
 	<?person   religion   ?religion>
 	<?person   rdf:type   dbo:Person>
-	<dbr:Emel_magazine   founded   ?person>
+	<dbr:Emel_(magazine)   founded   ?person>
 ]
 """
     },
@@ -264,7 +264,7 @@ target_nouns = [
 	?city
 ]
 raw_triples = [
-	<?city   location   dbr:america>
+	<?city   location   dbr:United_States>
 	<?city   rdf:type   dbo:City>
 	<?city   largest   ?largest>
 ]
@@ -329,7 +329,7 @@ target_nouns = [
 	?leader
 ]
 raw_triples = [
-	<dbr:USA   leader   ?leader>
+	<dbr:United_States   leader   ?leader>
 ]
 """
     },
@@ -341,7 +341,7 @@ target_nouns = [
 	?person
 ]
 raw_triples = [
-	<?person   successor   dbr:Le_Hong_Phong>
+	<?person   successor   dbr:Lê_Hồng_Phong>
 	<?person   rdf:type   dbo:Person>
 ]
 """

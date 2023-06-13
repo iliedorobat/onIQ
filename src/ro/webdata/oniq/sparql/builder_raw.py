@@ -5,7 +5,7 @@ import pydash
 import requests
 from spacy.tokens import Span
 
-from ro.webdata.oniq.common.nlp.nlp_utils import token_to_span, text_to_span
+from ro.webdata.oniq.common.nlp.nlp_utils import token_to_span
 from ro.webdata.oniq.common.nlp.sentence_utils import get_root
 from ro.webdata.oniq.common.nlp.word_utils import get_prev_word, is_adj
 from ro.webdata.oniq.common.print_utils import echo
@@ -14,7 +14,7 @@ from ro.webdata.oniq.endpoint.models.RDFElement import URI, URI_TYPE
 from ro.webdata.oniq.endpoint.query import QueryService
 from ro.webdata.oniq.service.query_const import ACCESSORS, PATHS
 from ro.webdata.oniq.sparql.model.AdjectiveEntity import AdjectiveEntity
-from ro.webdata.oniq.sparql.model.NLQuestion import NLQuestion, ROOT_TYPES, QUESTION_TARGET
+from ro.webdata.oniq.sparql.model.NLQuestion import NLQuestion, ROOT_TYPES
 from ro.webdata.oniq.sparql.model.NounEntity import NounEntity
 from ro.webdata.oniq.sparql.model.order_by_utils import get_order_modifier
 from ro.webdata.oniq.sparql.model.raw_triples.RawTriple import RawTriple

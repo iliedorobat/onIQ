@@ -242,6 +242,9 @@ def _get_compound_noun_parts(noun, noun_list):
         updated_noun_list = [prev_word] + noun_list
 
         return _get_compound_noun_parts(prev_word, updated_noun_list)
+    elif prev_word.tag_ == "HYPH":
+        # E.g.: "Who is the builder of Atamurat-Kerkichi Bridge ?"
+        return _get_compound_noun_parts(prev_word, noun_list)
 
     return noun_list
 
