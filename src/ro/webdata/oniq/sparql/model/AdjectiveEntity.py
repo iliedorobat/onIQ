@@ -1,14 +1,12 @@
 from spacy.tokens import Token
 
 from ro.webdata.oniq.common.nlp.word_utils import is_adj, get_prev_word, is_adv
-from ro.webdata.oniq.endpoint.query import escape_resource_name
 from ro.webdata.oniq.sparql.constants import SPARQL_VAR_PREFIX
 
 
 class AdjectiveEntity:
     def __init__(self, word: Token):
         self.adj = None
-        self.is_text = False
         self.prev_adv = None
         self.text = None
         self.token = None
@@ -16,7 +14,6 @@ class AdjectiveEntity:
         if is_adj(word):
             self.adj = word
             self.prev_adv = _get_prev_adv(word)
-            self.is_text = False
             self.text = word.text
             self.token = word
 
@@ -44,9 +41,7 @@ class AdjectiveEntity:
 
     def to_var(self):
         if self.adj is not None:
-            return escape_resource_name(
-                f"{SPARQL_VAR_PREFIX}{self.text}"
-            )
+            return f"{SPARQL_VAR_PREFIX}{self.text}"
 
 
 def _get_prev_adv(word: Token):

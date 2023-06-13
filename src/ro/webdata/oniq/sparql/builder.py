@@ -8,7 +8,7 @@ from ro.webdata.oniq.endpoint.dbpedia.sparql_query import DBP_ENDPOINT
 from ro.webdata.oniq.endpoint.models.RDFElement import URI_TYPE
 from ro.webdata.oniq.endpoint.models.RDFElements import RDFElements
 from ro.webdata.oniq.endpoint.namespace import NAMESPACE
-from ro.webdata.oniq.endpoint.query import QueryService
+from ro.webdata.oniq.endpoint.query import QueryService, escape_resource_name
 from ro.webdata.oniq.service.query_const import ACCESSORS, PATHS
 from ro.webdata.oniq.sparql.builder_raw import SPARQLRawBuilder
 from ro.webdata.oniq.sparql.model.final_triples.Triple import Triple
@@ -37,9 +37,7 @@ def _prepare_raw_triples(raw_triples: List[RawTriple]):
     properties = _get_properties(DBP_ENDPOINT, main_triples)
     order_by_triples = _init_triples(ordering_raw_triples, properties)
 
-    # TODO:
-    # return main_triples + order_by_triples
-    return main_triples
+    return main_triples + order_by_triples
 
 
 def _init_triples(raw_triples: List[RawTriple], properties: RDFElements):
@@ -70,16 +68,15 @@ def _get_resource_type(main_triples: List[Triple]):
 
 
 def _get_properties(endpoint: str, main_triples: List[Triple]):
-    # Exclude dbo:highest property if the queried resource is a Natural Place.
-    # E.g.: What is the highest mountain in Italy?
-    #       - dbo:highest will break the result because it doesn't point to
-    #           the elevation of the resource, but to the highest mountain of
-    #           a mountain range
-
     properties = _run_properties_query(endpoint, main_triples)
     resource_type = _get_resource_type(main_triples)
 
     if resource_type == URI_TYPE.NATURAL_PLACE:
+        # Exclude dbo:highest property if the queried resource is a Natural Place.
+        # E.g.: What is the highest mountain in Italy?
+        #       - dbo:highest will break the result because it doesn't point to
+        #           the elevation of the resource, but to the highest mountain of
+        #           a mountain range
         return properties.filter(f"{NAMESPACE.DBP_ONTOLOGY}highest")
 
     return properties
@@ -90,7 +87,9 @@ def _run_properties_query(endpoint: str, triples: List[Triple]):
         return RDFElements([])
 
     first_triple = triples[0]
-    subject = first_triple.s.to_var()
+    subject = escape_resource_name(
+        first_triple.s.to_var()
+    )
 
     sparql_query = f"""
     PREFIX dbo: <{NAMESPACE.DBP_ONTOLOGY}>
@@ -103,7 +102,7 @@ def _run_properties_query(endpoint: str, triples: List[Triple]):
 """
 
     for index, triple in enumerate(triples):
-        sparql_query += f"\t\t{str(triple)} ."
+        sparql_query += f"\t\t{triple.to_escaped_str()} ."
 
         if index < len(triples) - 1:
             sparql_query += "\n"
@@ -112,7 +111,7 @@ def _run_properties_query(endpoint: str, triples: List[Triple]):
         {subject}   ?property   ?value .
         ?property   rdf:type   ?subclassOf .
         ?property   rdfs:label   ?label .
-        ?property rdfs:domain ?domain .
+        OPTIONAL {{ ?property   rdfs:domain   ?domain }} .
         OPTIONAL {{ ?property rdfs:range ?range }} .
         FILTER(
             ?property NOT IN (rdf:type, rdfs:subPropertyOf, rdfs:subClassOf) &&

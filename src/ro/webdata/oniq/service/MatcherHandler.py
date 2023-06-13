@@ -3,6 +3,7 @@ from urllib.parse import unquote, ParseResult
 from spacy.tokens import Doc, Span
 
 from ro.webdata.oniq.common.nlp.nlp_utils import text_to_span
+from ro.webdata.oniq.common.nlp.utils import WordnetUtils
 from ro.webdata.oniq.endpoint.common.match.PropertiesMatcher import PropertiesMatcher
 from ro.webdata.oniq.endpoint.common.match.PropertyMatcher import PropertyMatcher
 from ro.webdata.oniq.endpoint.models.RDFElements import RDFElements
@@ -10,9 +11,9 @@ from ro.webdata.oniq.service.query_const import ACCESSORS, PAIR_SEPARATOR, JOIN_
 from ro.webdata.oniq.spacy_model import nlp_model
 
 
-class MatcherHandler:
+class _ResponseFormatter:
     @staticmethod
-    def prepare_successful_response(question: str, start_i: int, end_i: int, best_matched: PropertyMatcher):
+    def successful(question: str, start_i: int, end_i: int, best_matched: PropertyMatcher):
         return {
             ACCESSORS.QUESTION: question,
             ACCESSORS.START_I: start_i,
@@ -24,7 +25,7 @@ class MatcherHandler:
         }
 
     @staticmethod
-    def prepare_failed_response(question: str, start_i: int, end_i: int):
+    def failed(question: str, start_i: int, end_i: int):
         return {
             ACCESSORS.QUESTION: question,
             ACCESSORS.START_I: start_i,
@@ -90,7 +91,7 @@ class SpanMatcherHandler:
 
     def matcher_finder(self, props: RDFElements):
         if self.target_expression is None:
-            return MatcherHandler.prepare_failed_response(self.question, self.start_i, self.end_i)
+            return _ResponseFormatter.failed(self.question, self.start_i, self.end_i)
 
         best_matched = PropertiesMatcher.get_best_matched(
             props=props,
@@ -116,9 +117,9 @@ class SpanMatcherHandler:
         #     )
         #
         #     if new_best_matched.score > best_matched.score:
-        #         return MatcherHandler.prepare_successful_response(self.question, self.start_i, self.end_i, new_best_matched)
+        #         return _ResponseFormatter.prepare_successful_response(self.question, self.start_i, self.end_i, new_best_matched)
 
-        return MatcherHandler.prepare_successful_response(self.question, self.start_i, self.end_i, best_matched)
+        return _ResponseFormatter.successful(self.question, self.start_i, self.end_i, best_matched)
 
 
 class StringMatcherHandler:
@@ -163,17 +164,21 @@ class StringMatcherHandler:
 
         if isinstance(self.document, Doc):
             failed_node_construct = self.node_start_i == -1 or self.node_end_i == -1
+
             if not failed_node_construct:
                 node_value = self.document[self.node_start_i: self.node_end_i]
                 ent_type = node_value.root.ent_type_
+
                 if self.target_expression.text.lower() == "country":
                     # E.g.: "Give me all Swedish holidays."
+                    self.str_node_value = WordnetUtils.find_country_by_nationality(node_value.text)
                     ent_type = "GPE"
+
                 self.node_value = text_to_span(self.str_node_value, ent_type)
 
     def matcher_finder(self, props: RDFElements):
         if self.target_expression is None:
-            return MatcherHandler.prepare_failed_response(self.question, -1, -1)
+            return _ResponseFormatter.failed(self.question, -1, -1)
 
         best_matched = PropertiesMatcher.get_best_matched(
             props=props,
@@ -183,4 +188,4 @@ class StringMatcherHandler:
             node_text_value=self.str_node_value
         )
 
-        return MatcherHandler.prepare_successful_response(self.question, -1, -1, best_matched)
+        return _ResponseFormatter.successful(self.question, -1, -1, best_matched)

@@ -1,11 +1,14 @@
+import json
 import re
 from typing import List, Union
 
+import requests
 from spacy.tokens import Span, Token
 
+from ro.webdata.oniq.common.nlp.nlp_utils import text_to_span
 from ro.webdata.oniq.common.nlp.utils import WordnetUtils
 from ro.webdata.oniq.common.nlp.word_utils import get_prev_word, is_noun, is_adj_modifier
-from ro.webdata.oniq.endpoint.query import escape_resource_name
+from ro.webdata.oniq.service.query_const import ACCESSORS, DATA_TYPE, PATHS
 from ro.webdata.oniq.sparql.constants import SPARQL_VAR_PREFIX, SPARQL_STR_SEPARATOR
 
 
@@ -13,9 +16,8 @@ class NounEntity:
     def __init__(self, word: Union[str, Token], token: Token = None, is_dbpedia_type: bool = False):
         self.noun = None
         self.compound_noun = None
-        self.is_named_entity = False
-        self.is_text = True
         self.is_dbpedia_type = is_dbpedia_type
+        self.resource = None
         self.text = None
         self.token = None
 
@@ -30,19 +32,17 @@ class NounEntity:
             if is_noun(word):
                 self.noun = word
                 self.compound_noun = _get_noun_entity(word)
-                self.is_named_entity = _is_known_named_entity(word) or _is_known_compound_named_entity(self.compound_noun)
-                self.is_text = False
                 self.text = _prepare_text(self.compound_noun)
             elif is_adj_modifier(word):
                 # E.g.: "Give me all Swedish holidays."
 
                 self.compound_noun = _get_noun_entity(word)
-                self.is_named_entity = _is_known_named_entity(word) or _is_known_compound_named_entity(self.compound_noun)
-                self.is_text = True
-                self.text = WordnetUtils.find_country_by_nationality(word.text)
+                self.text = _prepare_text(self.compound_noun)
         else:
             self.compound_noun = _get_noun_entity(self.token)
             self.text = word
+
+        self.resource = _get_resource(self.compound_noun, self.token)
 
     def __eq__(self, other):
         if not isinstance(other, NounEntity):
@@ -89,39 +89,55 @@ class NounEntity:
         return self.compound_noun
 
     def to_var(self):
-        if isinstance(self.compound_noun, Span):
-            if self.is_named_entity:
-                text = self.compound_noun.text
-                if self.is_text:
-                    # E.g.: "Give me all Swedish holidays."
-                    text = self.text
-
-                # FIXME: workaround => lookup for "Public company"
-                # replace with LookupService.entities_lookup(named_entity, all_classes)
-                is_org = self.compound_noun.root.ent_type_ == "ORG" and text.lower().__contains__("apple")
-                if is_org:
-                    # E.g.: "What is the net income of Apple?"
-                    text += "_Inc."
-                return escape_resource_name(
-                    "dbr:" + re.sub(r"\s", SPARQL_STR_SEPARATOR, text)
-                )
+        if self.resource is not None:
+            return f"dbr:{self.resource[ACCESSORS.RESOURCE_NAME]}"
 
         if self.noun is not None:
             text = re.sub(r"\s", SPARQL_STR_SEPARATOR, self.to_span().text)
-            return escape_resource_name(
-                f"{SPARQL_VAR_PREFIX}{text}"
-            )
+            return f"{SPARQL_VAR_PREFIX}{text}"
 
         if self.text is not None:
             if self.is_dbpedia_type:
                 return self.text
 
             text = re.sub(r"\s", SPARQL_STR_SEPARATOR, self.text)
-            return escape_resource_name(
-                f"{SPARQL_VAR_PREFIX}{text}"
-            )
+            return f"{SPARQL_VAR_PREFIX}{text}"
 
         return "NULL"
+
+
+def _get_resource(compound_noun: Span, main_word: Token):
+    if is_adj_modifier(main_word):
+        # E.g.: "Give me all Swedish holidays."
+        country = WordnetUtils.find_country_by_nationality(main_word.text)
+        country_span = text_to_span(country, 'GPE')
+
+        query_params = [
+            f'{ACCESSORS.QUESTION}={country_span.text}',
+            f'{ACCESSORS.TARGET_DATA_TYPE}={DATA_TYPE.SPAN}',
+            f'{ACCESSORS.START_I}={country_span.start}',
+            f'{ACCESSORS.END_I}={country_span.end}'
+        ]
+
+        res_name_uri = f'http://localhost:8200/{PATHS.ENTITIES}?{"&".join(query_params)}'
+        res_name_response = requests.get(res_name_uri)
+        res_name: str = json.loads(res_name_response.content)
+
+        return res_name
+
+    if _is_known_compound_named_entity(compound_noun):
+        query_params = [
+            f'{ACCESSORS.QUESTION}={compound_noun.doc.text}',
+            f'{ACCESSORS.TARGET_DATA_TYPE}={DATA_TYPE.SPAN}',
+            f'{ACCESSORS.START_I}={compound_noun.start}',
+            f'{ACCESSORS.END_I}={compound_noun.end}'
+        ]
+
+        res_name_uri = f'http://localhost:8200/{PATHS.ENTITIES}?{"&".join(query_params)}'
+        res_name_response = requests.get(res_name_uri)
+        res_name: str = json.loads(res_name_response.content)
+
+        return res_name
 
 
 def _is_known_compound_named_entity(compound_noun: Span):

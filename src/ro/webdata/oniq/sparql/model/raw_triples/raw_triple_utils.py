@@ -111,9 +111,7 @@ class RawTripleUtils:
         # [1] <subject of the predicate ("New York Times")   predicate (published)>   target (location)> (NER)
         # [2] <subject of the predicate (father)             predicate (die)          target (location)>
 
-        if not triple.o.is_text:
-            # E.g.: "Which musician wrote the most books?"
-            _append_rdf_type_triple(nl_question, raw_triples, triple.o, triple.o)
+        _append_rdf_type_triple(nl_question, raw_triples, triple.o, triple.o)
 
         subject = get_child_noun(triple.s.compound_noun[0], root.sent)
 
@@ -363,20 +361,30 @@ def _append_raw_triple(raw_triples: List[RawTriple], raw_triple: RawTriple):
 
 def _append_rdf_type_triple(nl_question: NLQuestion, raw_triples: List[RawTriple], subject: [str, NounEntity], entity: NounEntity):
     for triple in raw_triples:
-        if triple.s == subject and str(triple.p) == "rdf:type":
+        if triple.s == subject and triple.is_rdf_type():
             # E.g.: "Who is the tallest basketball player?"
             return None
 
-    resource = LookupService.local_resource_lookup(entity.text)
-    raw_triple = RawTriple(
-        s=subject,
-        p="rdf:type",
-        o=NounEntity(resource, entity.token),
-        question=nl_question.question
-    )
-    _append_raw_triple(raw_triples, raw_triple)
+    if isinstance(subject, str) or subject.is_var():
+        # E.g.: isinstance(subject, str) => "Who is the tallest basketball player?"
+        # E.g.: not subject.is_var() => "Who is the manager of Real Madrid?"
 
-    return raw_triple
+        resource = LookupService.local_resource_lookup(entity.text)
+        if resource is None:
+            # E.g.: "What is the net income of Apple?"
+            return None
+
+        raw_triple = RawTriple(
+            s=subject,
+            p="rdf:type",
+            o=NounEntity(resource, entity.token),
+            question=nl_question.question
+        )
+        _append_raw_triple(raw_triples, raw_triple)
+
+        return raw_triple
+
+    return None
 
 
 def _append_root_aux_ask_triple(nl_question: NLQuestion, raw_triples: List[RawTriple], root: Token):

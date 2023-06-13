@@ -151,7 +151,7 @@ WHERE {
         "result": """
 SELECT DISTINCT ?manager
 WHERE {
-	dbr:Real_Madrid   dbo:manager   ?manager
+	dbr:Real_Madrid_CF   dbo:manager   ?manager
 }
 """
     },
@@ -181,7 +181,6 @@ WHERE {
     #     },
     ### WHO + aux verb ###
     {
-        # TODO: order by birth date
         "aggregation": True,
         "answertype": "resource",
         "hybrid": False,
@@ -190,19 +189,25 @@ WHERE {
         "result": """
 SELECT DISTINCT ?person
 WHERE {
-	?person   rdf:type   dbo:Person .
-	?person   dbo:award   dbr:Pulitzer_Prize
+	?person   dbo:award   dbr:Pulitzer_Prize .
+	?person   dbo:birthDate   ?youngest
 }
+ORDER BY ASC(?youngest)
 """
     },
     #     {
-    #         # TODO: order by birth date
     #         "aggregation": True,
     #         "answertype": "resource",
     #         "hybrid": False,
     #         "onlydbo": True,
     #         "query": "Who is the oldest child of Meryl Streep?",
     #         "result": """
+    # SELECT DISTINCT ?child
+    # WHERE {
+    #     dbr:Meryl_Streep   ???   ?child .
+    #     ?child   dbo:birthDate   ?oldest
+    # }
+    # ORDER BY DESC(?oldest)
     # """
     #     },
     #     {
@@ -215,7 +220,6 @@ WHERE {
     # """
     #     },
     {
-        # TODO: order by height
         "aggregation": True,
         "answertype": "resource",
         "hybrid": False,
@@ -224,8 +228,10 @@ WHERE {
         "result": """
 SELECT DISTINCT ?person
 WHERE {
-	?person   rdf:type   dbo:BasketballPlayer
+	?person   rdf:type   dbo:BasketballPlayer .
+	?person   dbo:height   ?tallest
 }
+ORDER BY DESC(?tallest)
 """
     },
     #     {
@@ -247,12 +253,11 @@ WHERE {
         "result": """
 SELECT DISTINCT ?net_income
 WHERE {
-	dbr:Apple_Inc\.   dbo:netIncome   ?net_income
+	dbr:Apple_Inc.   dbo:netIncome   ?net_income
 }
 """
     },
     {
-        # TODO: order by elevation
         "aggregation": False,
         "answertype": "resource",
         "hybrid": False,
@@ -262,8 +267,10 @@ WHERE {
 SELECT DISTINCT ?mountain
 WHERE {
 	?mountain   dbo:locatedInArea   dbr:Italy .
-	?mountain   rdf:type   dbo:Mountain
+	?mountain   rdf:type   dbo:Mountain .
+	?mountain   dbo:elevation   ?highest
 }
+ORDER BY DESC(?highest)
 """
     },
     #     {
@@ -420,16 +427,23 @@ WHERE {
     #         "result": """
     # """
     #     },
-    #     {
-    #         # TODO: count
-    #         "aggregation": True,
-    #         "answertype": "resource",
-    #         "hybrid": False,
-    #         "onlydbo": True,
-    #         "query": "Which museum in New York has the most visitors?",
-    #         "result": """
-    # """
-    #     },
+    {
+        # TODO: New_York_City insted of New_York_(state) and dbo:numberOfVisitors instead of dbp:visitors
+        "aggregation": True,
+        "answertype": "resource",
+        "hybrid": False,
+        "onlydbo": True,
+        "query": "Which museum in New York has the most visitors?",
+        "result": """
+SELECT DISTINCT ?museum
+WHERE {
+	?museum   dbo:location   dbr:New_York_(state) .
+	?museum   rdf:type   dbo:Museum .
+	?museum   dbp:visitors   ?visitors
+}
+ORDER BY ASC(?visitors)
+"""
+    },
     #     {
     #         "aggregation": False,
     #         "answertype": "resource",

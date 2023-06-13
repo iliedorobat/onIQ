@@ -21,7 +21,6 @@ class Handler(BaseHTTPRequestHandler):
         elif parsed.path == "/" + PATHS.RESOURCE_TYPE:
             output = resource_type_handler(parsed)
 
-        # TODO: remove
         elif parsed.path == "/" + PATHS.ENTITIES:
             output = entities_handler(parsed)
 

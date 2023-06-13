@@ -3,8 +3,9 @@ from typing import List
 
 import pydash
 import requests
+from spacy.tokens import Span
 
-from ro.webdata.oniq.common.nlp.nlp_utils import token_to_span
+from ro.webdata.oniq.common.nlp.nlp_utils import token_to_span, text_to_span
 from ro.webdata.oniq.common.nlp.sentence_utils import get_root
 from ro.webdata.oniq.common.nlp.word_utils import get_prev_word, is_adj
 from ro.webdata.oniq.common.print_utils import echo
@@ -106,11 +107,11 @@ def _update_location_triple(raw_triples: List[RawTriple]):
 
     loc_triples: List[RawTriple] = [
         triple for triple in raw_triples
-        if isinstance(triple.p, str) and triple.p == QUESTION_TARGET.LOCATION
+        if triple.is_location()
     ]
     rdf_type_triples: List[RawTriple] = [
         triple for triple in raw_triples
-        if isinstance(triple.p, str) and triple.p == "rdf:type"
+        if triple.is_rdf_type()
     ]
 
     # E.g.: <?mountain   location   dbr:Italy>
@@ -172,6 +173,7 @@ def _prepare_ordering_raw_triples(nl_question: NLQuestion, raw_triples: List[Raw
                                 pass
                             else:
                                 # E.g.: "Which museum in New York has the fewest visitors?"
+                                # E.g.: "What is the highest mountain in Italy?"
                                 new_raw_triple = RawTriple(
                                     s=raw_triple.s,
                                     p=token_to_span(prev_word),
@@ -194,4 +196,28 @@ def _prepare_ordering_raw_triples(nl_question: NLQuestion, raw_triples: List[Raw
                     )
                     order_by.append(new_raw_triple)
 
+    _update_mountain_triple(order_by, raw_triples)
+    _update_age_triple(order_by)
+
     return order_by
+
+
+def _update_mountain_triple(order_by_triples: List[RawTriple], main_triples: List[RawTriple]):
+    is_mountain: bool = len([
+        triple for triple in main_triples
+        if triple.is_dbo_mountain_type()
+    ]) > 0
+
+    if is_mountain:
+        for triple in order_by_triples:
+            if isinstance(triple.p, Span) and triple.p.root.lemma_ == "high":
+                # E.g.: "What is the highest mountain in Italy?"
+                triple.p = "dbo:elevation"
+
+
+def _update_age_triple(order_by_triples: List[RawTriple]):
+    for triple in order_by_triples:
+        if isinstance(triple.p, Span):
+            if triple.p.root.lemma_ in ["old", "young"]:
+                # E.g.: "Who is the youngest Pulitzer Prize winner?"
+                triple.p = "dbo:birthDate"

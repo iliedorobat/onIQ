@@ -39,6 +39,16 @@ class SPARQLQuery:
         output += " .\n".join(str_triples) + "\n"
         output += "}"
 
+        str_ordering_triples = [
+            f"{item.order_modifier}({item.o.to_var()})"
+            for item in self.triples
+            if item.is_ordering_triple()
+        ]
+
+        if len(str_ordering_triples) > 0:
+            output += "\n"
+            output += f"ORDER BY {' '.join(str_ordering_triples)}"
+
         return output
 
 

@@ -13,16 +13,21 @@ from ro.webdata.oniq.service.query_const import PATHS, ACCESSORS, DATA_TYPE, NOD
 from ro.webdata.oniq.sparql.model.NounEntity import NounEntity
 
 
-def adjective_property_lookup(predicate: Span, props: RDFElements):
+def adjective_property_lookup(predicate: Union[str, Span], props: RDFElements):
+    if isinstance(predicate, Span):
+        # E.g.: "What is the highest mountain in Italy?"
+        #       <?mountain   highest   ?highest>
+
+        best_matched = PropertiesMatcher.get_best_matched(
+            props=props,
+            target_expression=predicate
+        )
+
+        return best_matched
+
+    # E.g.: "Who is the youngest Pulitzer Prize winner?"
     # E.g.: "What is the highest mountain in Italy?"
-    #       <?mountain   highest   ?highest>
-
-    best_matched = PropertiesMatcher.get_best_matched(
-        props=props,
-        target_expression=predicate
-    )
-
-    return best_matched
+    return predicate
 
 
 def object_predicate_lookup(question: Span, obj: NounEntity, predicate: Span):

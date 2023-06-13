@@ -6,10 +6,11 @@ from ro.webdata.oniq.endpoint.common.translator.CSVTranslator import CSVTranslat
 from ro.webdata.oniq.endpoint.dbpedia.lookup import LookupService
 from ro.webdata.oniq.endpoint.dbpedia.query import DBpediaQueryService
 from ro.webdata.oniq.endpoint.models.RDFElement import URI, URI_TYPE
+from ro.webdata.oniq.endpoint.models.RDFElements import RDFElements
 from ro.webdata.oniq.endpoint.namespace import NAMESPACE
+from ro.webdata.oniq.service.EntityHandler import SpanEntityHandler
 from ro.webdata.oniq.service.MatcherHandler import SpanMatcherHandler, StringMatcherHandler
 from ro.webdata.oniq.service.query_const import ACCESSORS, JOIN_OPERATOR, PAIR_SEPARATOR, DATA_TYPE, NODE_TYPE
-from ro.webdata.oniq.spacy_model import nlp_model
 
 print("Loading DBpedia classes...")
 all_classes = CSVTranslator.to_classes()
@@ -19,26 +20,23 @@ all_props = CSVTranslator.to_props()
 
 
 def entities_handler(parsed):
-    output = {}
+    handler = _get_entity_handler(parsed, all_classes)
 
-    for query in parsed.query.split(JOIN_OPERATOR):
-        [key, value] = query.split(PAIR_SEPARATOR)
-        question = unquote(value)
+    if handler is not None:
+        return handler.entity_finder()
 
-        if key == ACCESSORS.QUESTION:
-            output[ACCESSORS.QUESTION] = question
-            output[ACCESSORS.ENTITIES] = _get_json_entities(question)
+    return None
 
 
 def matcher_handler(parsed_url: ParseResult):
-    matcher = _get_matcher(parsed_url)
+    handler = _get_matcher_handler(parsed_url)
     props = all_props
 
-    if matcher is not None:
+    if handler is not None:
         node_type = _get_param_value(parsed_url, ACCESSORS.NODE_TYPE)
         node_text_value = _get_param_value(parsed_url, ACCESSORS.NODE_VALUE, True)
 
-        named_entity = matcher.node_value
+        named_entity = handler.node_value
         lookup_result = LookupService.entities_lookup(named_entity, all_classes)
         resource_name = pydash.get(lookup_result, [0, "resource", 0], node_text_value)
         res_name = resource_name.replace(NAMESPACE.DBP_RESOURCE, "")
@@ -49,7 +47,9 @@ def matcher_handler(parsed_url: ParseResult):
         if node_type == NODE_TYPE.OBJECT:
             props = DBpediaQueryService.run_object_properties_query(res_name)
 
-        return matcher.matcher_finder(props)
+        return handler.matcher_finder(props)
+
+    return None
 
 
 def resource_type_handler(parsed_url: ParseResult):
@@ -71,7 +71,16 @@ def resource_type_handler(parsed_url: ParseResult):
     return None
 
 
-def _get_matcher(parsed_url):
+def _get_entity_handler(parsed_url, classes: RDFElements):
+    target_data_type = _get_param_value(parsed_url, ACCESSORS.TARGET_DATA_TYPE)
+
+    if target_data_type == DATA_TYPE.SPAN:
+        return SpanEntityHandler(parsed_url, classes)
+
+    return None
+
+
+def _get_matcher_handler(parsed_url):
     target_data_type = _get_param_value(parsed_url, ACCESSORS.TARGET_DATA_TYPE)
 
     if target_data_type == DATA_TYPE.SPAN:
@@ -95,38 +104,3 @@ def _get_param_value(parsed_url: ParseResult, accessor: str, is_dbr: bool = Fals
             return unquote(output)
 
     return None
-
-
-# TODO: remove
-def _get_json_entities(question: str):
-    entities = []
-    doc = nlp_model(question)
-
-    for entity in doc.ents:
-        root = entity.root
-        json_entity = {
-            "end": entity.end,
-            "end_char": entity.end_char,
-            "label": entity.label,
-            "label_": entity.label_,
-            "lemma_": entity.lemma_,
-            "root": {
-                "dep": root.dep,
-                "dep_": root.dep_,
-                "ent_type": root.ent_type,
-                "idx": root.idx,
-                "lemma": root.lemma,
-                "lemma_": root.lemma_,
-                "pos:": root.pos,
-                "pos_": root.pos_,
-                "tag": root.tag,
-                "tag_": root.tag_,
-                "text": root.text
-            },
-            "start": entity.start,
-            "start_char": entity.start_char,
-            "text": entity.text
-        }
-        entities.append(json_entity)
-
-    return entities

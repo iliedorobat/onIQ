@@ -95,7 +95,14 @@ class CachedMatches:
         for csv_line in CSVService.read_lines(MATCHED_ENTRIES_FILEPATH, True):
             csv_entry = csv_line.strip().split(separator)
             [target_word, prop_uri, score, detachment_score, node_type, node_text_value] = csv_entry
-            matched_entry = CachedMatch(target_word, prop_uri, score, detachment_score, node_type, node_text_value)
+            matched_entry = CachedMatch(
+                target_word,
+                prop_uri,
+                score,
+                detachment_score,
+                CSVService.get_csv_string(node_type),
+                CSVService.get_csv_string(node_text_value)
+            )
             self.elements.append(matched_entry)
 
     def append(self, element: CachedMatch):
@@ -126,8 +133,8 @@ class CachedMatches:
 
         for matched_entry in self.elements:
             if matched_entry.target_word == str_word:
-                if node_type is not None and matched_entry.node_type == node_type:
-                    if node_text_value is not None and matched_entry.node_text_value == node_text_value:
+                if matched_entry.node_type == node_type:
+                    if matched_entry.node_text_value == node_text_value:
                         return True
 
         return False
@@ -152,8 +159,8 @@ class CachedMatches:
         if self.exists(str_word, node_type, node_text_value):
             for matched_entry in self.elements:
                 if matched_entry.target_word == str_word:
-                    if node_type is not None and matched_entry.node_type == node_type:
-                        if node_text_value is not None and matched_entry.node_text_value == node_text_value:
+                    if matched_entry.node_type == node_type:
+                        if matched_entry.node_text_value == node_text_value:
                             return matched_entry
 
         return None

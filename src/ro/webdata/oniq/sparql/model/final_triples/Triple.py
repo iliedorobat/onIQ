@@ -7,6 +7,7 @@ from ro.webdata.oniq.endpoint.common.match.PropertyMatcher import PropertyMatche
 from ro.webdata.oniq.endpoint.dbpedia.lookup import LookupService
 from ro.webdata.oniq.endpoint.models.RDFElement import RDFClass
 from ro.webdata.oniq.endpoint.models.RDFElements import RDFElements
+from ro.webdata.oniq.endpoint.query import escape_resource_name
 from ro.webdata.oniq.sparql.constants import SPARQL_STR_SEPARATOR
 from ro.webdata.oniq.sparql.model.AdjectiveEntity import AdjectiveEntity
 from ro.webdata.oniq.sparql.model.NounEntity import NounEntity
@@ -49,6 +50,24 @@ class Triple:
     def is_ordering_triple(self):
         return self.order_modifier is not None
 
+    def to_escaped_str(self):
+        if self.p is None:
+            return None
+
+        if isinstance(self.p, PropertyMatcher):
+            p = str(self.p.property)
+        else:
+            p = self.p
+
+        s = escape_resource_name(
+            self.s.to_var()
+        )
+        o = escape_resource_name(
+            self.o.to_var()
+        )
+
+        return f"{s}   {p}   {o}"
+
 
 def _predicate_lookup(raw_triple: RawTriple, properties: RDFElements):
     subject: NounEntity = raw_triple.s
@@ -64,8 +83,7 @@ def _predicate_lookup(raw_triple: RawTriple, properties: RDFElements):
             return subject_predicate_lookup(question, subject, predicate, obj)
 
     if subject.is_var():
-        if obj.is_res():
-            return object_predicate_lookup(question, obj, predicate)
+        return object_predicate_lookup(question, obj, predicate)
 
     # E.g.: "Who is the tallest basketball player?"
     #       <?person   rdf:type   dbo:BasketballPlayer>

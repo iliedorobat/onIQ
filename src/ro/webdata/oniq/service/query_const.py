@@ -6,6 +6,7 @@ class ACCESSORS:
     DETACHMENT_SCORE = "detachment_score"
     END_I = "end_index"
     ENTITIES = "entities"
+    NAMED_ENTITY = "named_entity"
     PROPERTY = "property"
     QUESTION = "question"
     RESULT_TYPE = "result_type"
@@ -18,6 +19,7 @@ class ACCESSORS:
     NODE_START_I = "node_start_index"
     NODE_END_I = "node_end_index"
     RESOURCE_NAME = "resource_name"
+    RESOURCE_NAMESPACE = "resource_namespace"
 
 
 class DATA_TYPE:
