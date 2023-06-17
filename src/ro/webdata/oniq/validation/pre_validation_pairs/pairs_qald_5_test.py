@@ -514,7 +514,7 @@ raw_triples = [
 	<?museum   visitors   ?visitors>
 ]
 order_by = [
-	ASC(?visitors)
+	DESC(?visitors)
 ]
 """
     },

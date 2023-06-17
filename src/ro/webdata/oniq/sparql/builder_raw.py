@@ -3,7 +3,7 @@ from typing import List
 
 import pydash
 import requests
-from spacy.tokens import Span
+from spacy.tokens import Span, Token
 
 from ro.webdata.oniq.common.nlp.nlp_utils import token_to_span
 from ro.webdata.oniq.common.nlp.sentence_utils import get_root
@@ -14,9 +14,9 @@ from ro.webdata.oniq.endpoint.models.RDFElement import URI, URI_TYPE
 from ro.webdata.oniq.endpoint.query import QueryService
 from ro.webdata.oniq.service.query_const import ACCESSORS, PATHS
 from ro.webdata.oniq.sparql.model.AdjectiveEntity import AdjectiveEntity
-from ro.webdata.oniq.sparql.model.NLQuestion import NLQuestion, ROOT_TYPES, QUESTION_TYPES
+from ro.webdata.oniq.sparql.model.NLQuestion import NLQuestion, ROOT_TYPES, QUESTION_TYPES, QUESTION_TARGET
 from ro.webdata.oniq.sparql.model.NounEntity import NounEntity
-from ro.webdata.oniq.sparql.model.order_by_utils import get_order_modifier
+from ro.webdata.oniq.sparql.model.OrderBy import OrderBy
 from ro.webdata.oniq.sparql.model.raw_triples.RawTriple import RawTriple
 from ro.webdata.oniq.sparql.model.raw_triples.raw_target_utils import RawTargetUtils
 from ro.webdata.oniq.sparql.model.raw_triples.raw_triple_utils import WRawTripleUtils, HRawTripleUtils
@@ -149,60 +149,56 @@ def _prepare_ordering_raw_triples(nl_question: NLQuestion, raw_triples: List[Raw
 
     for raw_triple in raw_triples:
         obj_span = raw_triple.o.to_span()
+        prev_word = get_prev_word(obj_span[0]) \
+            if obj_span is not None \
+            else None
 
-        if obj_span is not None:
-            prev_word = get_prev_word(obj_span[0])
-
+        if isinstance(prev_word, Token):
             if raw_triple.s.is_var():
-                if prev_word.text.lower() in ["most", "least"]:
+                if prev_word.lower_ in ["most", "least"]:
+                    # E.g.: "Which musician wrote the most books?"
                     # E.g.: "Which museum in New York has the most visitors?"
-                    raw_triple.order_modifier = get_order_modifier(prev_word)
+
+                    raw_triple.order_modifier = OrderBy(raw_triple.o, prev_word).modifier
                     order_by.append(raw_triple)
 
                 elif is_adj(prev_word):
-                    if raw_triple.o.is_res():
-                        # E.g.: "Who is the youngest Pulitzer Prize winner?"
+                    is_res = raw_triple.o.is_res()
+                    is_dbpedia_type = raw_triple.o.is_dbpedia_type
+                    prev_word_is_res = NounEntity(prev_word).is_res()
+
+                    if is_res or (is_dbpedia_type and not prev_word_is_res):
+                        # E.g.: is_res => "Who is the youngest Pulitzer Prize winner?"
+                        # E.g.: is_dbpedia_type => "Which museum in New York has the fewest visitors?"
+                        # E.g.: is_dbpedia_type => "What is the highest mountain in Italy?"
+                        # E.g.: prev_word_is_res => "Give me all Swedish holidays."
+
+                        obj = AdjectiveEntity(prev_word)
                         new_raw_triple = RawTriple(
                             s=raw_triple.s,
                             p=token_to_span(prev_word),
-                            o=AdjectiveEntity(prev_word),
+                            o=obj,
                             question=nl_question.question,
-                            order_modifier=get_order_modifier(prev_word)
+                            order_modifier=OrderBy(obj, prev_word).modifier
                         )
                         order_by.append(new_raw_triple)
-                    else:
-                        if raw_triple.o.is_dbpedia_type:
-                            if NounEntity(prev_word).is_res():
-                                # Do nothing
-                                # E.g.: "Give me all Swedish holidays."
-                                pass
-                            else:
-                                # E.g.: "Which museum in New York has the fewest visitors?"
-                                # E.g.: "What is the highest mountain in Italy?"
-                                new_raw_triple = RawTriple(
-                                    s=raw_triple.s,
-                                    p=token_to_span(prev_word),
-                                    o=AdjectiveEntity(prev_word),
-                                    question=nl_question.question,
-                                    order_modifier=get_order_modifier(prev_word)
-                                )
-                                order_by.append(new_raw_triple)
 
             elif raw_triple.o.is_var():
                 # E.g.: "Who is the oldest child of Meryl Streep?"
 
                 if is_adj(prev_word):
+                    obj = AdjectiveEntity(prev_word)
                     new_raw_triple = RawTriple(
                         s=raw_triple.o,
                         p=token_to_span(prev_word),
-                        o=AdjectiveEntity(prev_word),
+                        o=obj,
                         question=nl_question.question,
-                        order_modifier=get_order_modifier(prev_word)
+                        order_modifier=OrderBy(obj, prev_word).modifier
                     )
                     order_by.append(new_raw_triple)
 
     _update_mountain_triple(order_by, raw_triples)
-    _update_age_triple(order_by)
+    _update_age_triple(order_by, nl_question)
 
     return order_by
 
@@ -220,9 +216,11 @@ def _update_mountain_triple(order_by_triples: List[RawTriple], main_triples: Lis
                 triple.p = "dbo:elevation"
 
 
-def _update_age_triple(order_by_triples: List[RawTriple]):
-    for triple in order_by_triples:
-        if isinstance(triple.p, Span):
-            if triple.p.root.lemma_ in ["old", "young"]:
+def _update_age_triple(order_by_triples: List[RawTriple], nl_question: NLQuestion):
+    is_person = QUESTION_TARGET.PERSON
+
+    if nl_question.target == is_person:
+        for triple in order_by_triples:
+            if isinstance(triple.p, Span) and triple.p.root.lemma_ in ["old", "young"]:
                 # E.g.: "Who is the youngest Pulitzer Prize winner?"
                 triple.p = "dbo:birthDate"

@@ -12,11 +12,6 @@ class QUERY_TYPES:
     SELECT = "SELECT"
 
 
-class ORDER_BY_MODIFIER:
-    ASC = "ASC"
-    DESC = "DESC"
-
-
 class SPARQLQuery:
     def __init__(self, nl_question: NLQuestion, targets: List[NounEntity], triples: List[Triple]):
         self.nl_question = nl_question

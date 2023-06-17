@@ -230,10 +230,10 @@ ORDER BY ASC(?youngest)
         "onlydbo": True,
         "query": "Who is the tallest basketball player?",
         "result": """
-SELECT DISTINCT ?person
+SELECT DISTINCT ?basketball_player
 WHERE {
-	?person   rdf:type   dbo:BasketballPlayer .
-	?person   dbo:height   ?tallest
+	?basketball_player   rdf:type   dbo:BasketballPlayer .
+	?basketball_player   dbo:height   ?tallest
 }
 ORDER BY DESC(?tallest)
 """
@@ -449,7 +449,7 @@ WHERE {
 	?museum   rdf:type   dbo:Museum .
 	?museum   dbp:visitors   ?visitors
 }
-ORDER BY ASC(?visitors)
+ORDER BY DESC(?visitors)
 """
     },
     #     {

@@ -15,9 +15,6 @@ from ro.webdata.oniq.sparql.model.NounEntity import NounEntity
 
 def adjective_property_lookup(predicate: Union[str, Span], props: RDFElements):
     if isinstance(predicate, Span):
-        # E.g.: "What is the highest mountain in Italy?"
-        #       <?mountain   highest   ?highest>
-
         best_matched = PropertiesMatcher.get_best_matched(
             props=props,
             target_expression=predicate
@@ -26,7 +23,9 @@ def adjective_property_lookup(predicate: Union[str, Span], props: RDFElements):
         return best_matched
 
     # E.g.: "Who is the youngest Pulitzer Prize winner?"
+    #       <?person   dbo:birthDate   ?youngest>
     # E.g.: "What is the highest mountain in Italy?"
+    #       <?mountain   highest   ?highest>
     return predicate
 
 
