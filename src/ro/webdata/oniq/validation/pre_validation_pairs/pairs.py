@@ -26,6 +26,7 @@ QUERY_18 = "What is the operator of SR class 3Sub ?"
 QUERY_19 = "Which species does an elephant belong?"
 QUERY_20 = "What is the highest mountain in the Bavarian Alps?"
 QUERY_21 = "What is the largest city in america?"
+QUERY_22 = "Which is the country where New York is located?"
 TEST_3 = "Where was the person whose successor studied law born?"  # poss
 TEST_5 = "What is the tallest building in Romania?"
 TEST_6 = "Where was the person who won the oscar born?"
@@ -223,7 +224,7 @@ target_nouns = [
 	?operator
 ]
 raw_triples = [
-	<dbr:SR_class   operator   ?operator>
+	<dbr:SR_V_Schools_class   operator   ?operator>
 ]
 """
     },
@@ -270,6 +271,19 @@ raw_triples = [
 ]
 order_by = [
 	DESC(?largest)
+]
+"""
+    },
+    {
+        "query": QUERY_22,
+        "result": """
+query_type = SELECT
+target_nouns = [
+	?country
+]
+raw_triples = [
+	<?country   rdf:type   dbo:Country>
+	<dbr:New_York_(state)   located   ?country>
 ]
 """
     },

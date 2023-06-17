@@ -268,11 +268,11 @@ order_by = [
         "result": """
 query_type = SELECT
 target_nouns = [
-	?person
+	?basketball_player
 ]
 raw_triples = [
-	<?person   rdf:type   dbo:BasketballPlayer>
-	<?person   tallest   ?tallest>
+	<?basketball_player   rdf:type   dbo:BasketballPlayer>
+	<?basketball_player   tallest   ?tallest>
 ]
 order_by = [
 	DESC(?tallest)

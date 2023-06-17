@@ -20,14 +20,6 @@ class RawTripleUtils:
         # <(town)   (leader)   (leader)>
 
         if triple is None:
-            # E.g.: "Who is the tallest basketball player?"
-            subject = nl_question.target
-            obj = NounEntity(
-                get_child_noun(root, nl_question.question)
-            )
-            triple = _append_rdf_type_triple(nl_question, raw_triples, subject, obj)
-
-        if triple is None:
             # E.g.: "Who is the youngest Pulitzer Prize winner?"
             subject = nl_question.target
             predicate = nl_question.target
@@ -46,7 +38,10 @@ class RawTripleUtils:
             _append_raw_triple(raw_triples, raw_triple)
 
         if triple is not None:
-            _append_rdf_type_triple(nl_question, raw_triples, triple.s, triple.s)
+            if not triple.is_rdf_type():
+                # E.g.: triple.is_rdf_type => "Who is the tallest basketball player?"
+                _append_rdf_type_triple(nl_question, raw_triples, triple.s, triple.s)
+
             related_verb = get_related_verb(triple.s.noun, nl_question.question)
 
             if related_verb is not None:
@@ -366,14 +361,10 @@ def _append_raw_triple(raw_triples: List[RawTriple], raw_triple: RawTriple):
 
 
 def _append_rdf_type_triple(nl_question: NLQuestion, raw_triples: List[RawTriple], subject: Union[str, NounEntity], entity: NounEntity):
-    for triple in raw_triples:
-        if triple.s == subject and triple.is_rdf_type():
-            # E.g.: "Who is the tallest basketball player?"
-            return None
-
     if isinstance(subject, str) or subject.is_var():
         # E.g.: isinstance(subject, str) => "Who is the tallest basketball player?"
         # E.g.: not subject.is_var() => "Who is the manager of Real Madrid?"
+        # E.g.: not subject.is_var() => "Who is the youngest Pulitzer Prize winner?"
 
         resource = LookupService.local_resource_lookup(entity.text)
         if resource is None:
@@ -433,7 +424,13 @@ def _append_root_aux_triple(nl_question: NLQuestion, raw_triples: List[RawTriple
     if grandchild_noun.is_null():
         # E.g.: "Who is the tallest basketball player?"
         # E.g.: "Who is the youngest Pulitzer Prize winner?"
-        return None
+
+        # E.g.: "Which is the country where New York is located?"
+        obj = NounEntity(
+            get_child_noun(root, nl_question.question)
+        )
+
+        return _append_rdf_type_triple(nl_question, raw_triples, child_noun, obj)
 
     if grandchild_noun.noun.head.dep_ == "prep":
         if grandchild_noun.noun.head.text.lower() == "in":
