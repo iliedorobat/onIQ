@@ -282,7 +282,10 @@ def _get_named_entity_types(named_entity: Span, class_list):
     # Exceptions: TODO: remove exceptions when training is ready
     if "dynasty" in named_entity.text.lower():
         # E.g.: "When did the Ming dynasty dissolve?" => "Ming dynasty" is not a date (as Spacy says), but a place
-        return [item for item in classes if item.uri == NAMESPACE.DBP_ONTOLOGY + DBPEDIA_CLASS_TYPES.PLACE]
+        label = "LOC"
+    if named_entity.text.lower() == "yokohama marine tower":
+        # E.g.: "How high is the Yokohama Marine Tower?" => "Yokohama Marine Tower" is mapped by Spacy as being an ORG
+        label = "FAC"
 
     if label == "DATE" or label == "TIME":
         return [item for item in classes if item.uri == NAMESPACE.DBP_ONTOLOGY + DBPEDIA_CLASS_TYPES.TIME_PERIOD]
@@ -290,7 +293,12 @@ def _get_named_entity_types(named_entity: Span, class_list):
         return [item for item in classes if item.uri == NAMESPACE.DBP_ONTOLOGY + DBPEDIA_CLASS_TYPES.EVENT]
     elif label == "FAC":
         # FAC Buildings, airports, highways, bridges, etc
-        return [item for item in classes if item.uri == NAMESPACE.DBP_ONTOLOGY + DBPEDIA_CLASS_TYPES.ARCHITECTURAL_STRUCTURE]
+        return [
+            item for item in classes if item.uri in [
+                NAMESPACE.DBP_ONTOLOGY + DBPEDIA_CLASS_TYPES.ARCHITECTURAL_STRUCTURE,
+                NAMESPACE.DBP_ONTOLOGY + DBPEDIA_CLASS_TYPES.TOWER
+            ]
+        ]
     elif label == "GPE" or label == "LOC":
         # GPE Countries, cities, states
         # LOC Non-GPE locations, mountain ranges, bodies of water

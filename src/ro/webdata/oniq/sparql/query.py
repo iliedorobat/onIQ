@@ -93,7 +93,7 @@ class SPARQLRawQuery:
 def _get_query_type(nl_question):
     if nl_question.main_type == QUESTION_TYPES.AUX_ASK:
         return QUERY_TYPES.ASK
-    elif nl_question.main_type == QUESTION_TYPES.HOW:
+    elif nl_question.main_type == QUESTION_TYPES.HOW_COUNT:
         return QUERY_TYPES.COUNT
 
     return QUERY_TYPES.SELECT

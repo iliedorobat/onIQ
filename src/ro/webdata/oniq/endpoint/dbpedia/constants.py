@@ -40,6 +40,7 @@ class DBPEDIA_CLASS_TYPES:
     TELEVISION_SEASON = "TelevisionSeason"
     TELEVISION_SHOW = "TelevisionShow"
     TIME_PERIOD = "TimePeriod"
+    TOWER = "Tower"
     TOPICAL_CONCEPT = "TopicalConcept"
     WEBSITE = "Website"
     WRITTEN_WORK = "WrittenWork"

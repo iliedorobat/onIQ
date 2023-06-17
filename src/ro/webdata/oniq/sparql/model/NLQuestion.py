@@ -1,5 +1,5 @@
 import pydash
-from spacy.tokens import Span
+from spacy.tokens import Span, Token
 
 from ro.webdata.oniq.common.nlp.nlp_utils import text_to_span
 from ro.webdata.oniq.common.nlp.sentence_utils import get_root
@@ -19,7 +19,8 @@ class QUESTION_TARGET:
 class QUESTION_TYPES:
     AUX_ASK = "aux_ask"  # E.g.: "Is rizal monument a place?"
     PREP_ASK = "prep_ask"  # E.g.: "In which country is Mecca located?"
-    HOW = "count"  # how many, how much, how often
+    HOW = "how"  # how high, how often,
+    HOW_COUNT = "how_count"  # how many, how much
     WHAT = "what"
     WHEN = "when"
     WHERE = "where"
@@ -113,7 +114,18 @@ def _get_question_type(question: Span):
         return QUESTION_TYPES.PREP_ASK
     elif NLQuestion.starts_with_wh(question):
         first_word = pydash.get(question, "0")
-        return getattr(QUESTION_TYPES, first_word.text.upper())
+        main_type = getattr(QUESTION_TYPES, first_word.text.upper())
+
+        if main_type == QUESTION_TYPES.HOW:
+            if len(question) < 2:
+                return main_type
+
+            if question[1].text.lower() in ["many", "much"]:
+                # E.g.: "How many ethnic groups live in Slovenia?"
+                return QUESTION_TYPES.HOW_COUNT
+
+        # E.g.: "How high is the Yokohama Marine Tower?"
+        return main_type
 
     return QUESTION_TYPES.OTHERS
 

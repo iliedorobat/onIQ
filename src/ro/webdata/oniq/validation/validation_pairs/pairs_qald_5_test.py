@@ -306,15 +306,19 @@ ORDER BY DESC(?highest)
     # """
     #     },
     ### HOW + acomp/amod ###
-    #     {
-    #         "aggregation": False,
-    #         "answertype": "number",
-    #         "hybrid": False,  # True?? https://dbpedia.org/page/Yokohama_Marine_Tower
-    #         "onlydbo": True,
-    #         "query": "How high is the Yokohama Marine Tower?",
-    #         "result": """
-    # """
-    #     },
+    {
+        "aggregation": False,
+        "answertype": "number",
+        "hybrid": False,  # https://dbpedia.org/page/Yokohama_Marine_Tower
+        "onlydbo": True,
+        "query": "How high is the Yokohama Marine Tower?",
+        "result": """
+SELECT DISTINCT ?high
+WHERE {
+	dbr:Yokohama_Marine_Tower   dbo:height   ?high
+}
+"""
+    },
     #     {
     #         "aggregation": False,
     #         "answertype": "number",

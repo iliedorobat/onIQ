@@ -21,6 +21,8 @@ class RawTargetUtils:
 
         if nl_question.main_type == QUESTION_TYPES.PREP_ASK:
             _TargetProcessing.prep_ask_type(target_nouns, nl_question.question, raw_triple)
+        elif nl_question.main_type == QUESTION_TYPES.HOW:
+            _TargetProcessing.prep_how_type(target_nouns, nl_question.question, raw_triple)
 
         if nl_question.target in [QUESTION_TARGET.LOCATION, QUESTION_TARGET.TIME]:
             _TargetProcessing.loc_time_target(nl_question, target_nouns)
@@ -76,6 +78,14 @@ class _TargetProcessing:
             target_nouns.append(raw_triple.s)
 
         if raw_triple.o.token.head == first_token:
+            target_nouns.append(raw_triple.o)
+
+    @staticmethod
+    def prep_how_type(target_nouns: List[NounEntity], sentence: Span, raw_triple: RawTriple):
+        # E.g.: "How high is the Yokohama Marine Tower?"
+        root = sentence.root
+
+        if raw_triple.s.token.head == root:
             target_nouns.append(raw_triple.o)
 
 

@@ -355,15 +355,22 @@ order_by = [
 # """
 #     },
     ### HOW + acomp/amod ###
-#     {
-#         "aggregation": False,
-#         "answertype": "number",
-#         "hybrid": False,  # True?? https://dbpedia.org/page/Yokohama_Marine_Tower
-#         "onlydbo": True,
-#         "query": "How high is the Yokohama Marine Tower?",
-#         "result": """
-# """
-#     },
+    {
+        "aggregation": False,
+        "answertype": "number",
+        "hybrid": False,  # https://dbpedia.org/page/Yokohama_Marine_Tower
+        "onlydbo": True,
+        "query": "How high is the Yokohama Marine Tower?",
+        "result": """
+query_type = SELECT
+target_nouns = [
+	?high
+]
+raw_triples = [
+	<dbr:Yokohama_Marine_Tower   high   ?high>
+]
+"""
+    },
 #     {
 #         "aggregation": False,
 #         "answertype": "number",

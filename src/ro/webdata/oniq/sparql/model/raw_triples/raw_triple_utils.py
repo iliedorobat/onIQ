@@ -5,14 +5,39 @@ from spacy.tokens import Span, Token
 from ro.webdata.oniq.common.nlp.nlp_utils import token_to_span
 from ro.webdata.oniq.common.nlp.sentence_utils import ends_with_verb, contains_multiple_wh_words
 from ro.webdata.oniq.common.nlp.word_utils import is_noun, is_followed_by_prep, is_preceded_by_adj_modifier, \
-    get_prev_word, is_verb, is_aux
+    get_prev_word, is_verb, is_aux, is_adj, is_adv
 from ro.webdata.oniq.endpoint.dbpedia.lookup import LookupService
 from ro.webdata.oniq.sparql.model.NLQuestion import QUESTION_TARGET, NLQuestion
 from ro.webdata.oniq.sparql.model.NounEntity import NounEntity
 from ro.webdata.oniq.sparql.model.raw_triples.RawTriple import RawTriple
 
 
-class RawTripleUtils:
+class HRawTripleUtils:
+    @staticmethod
+    def aux_processing(nl_question: NLQuestion, raw_triples: List[RawTriple], root: Token):
+        subject = NounEntity(
+            get_child_noun(root, nl_question.question)
+        )
+        prev_word = get_prev_word(root)
+
+        if is_adj(prev_word) or is_adv(prev_word):
+            # E.g.: is_adj(prev_word) => "How high is the Yokohama Marine Tower?"
+            # E.g.: is_adv(prev_word) => "How long is the ...?"
+
+            raw_triple = RawTriple(
+                s=subject,
+                p=token_to_span(prev_word),
+                o=prev_word.text,
+                question=nl_question.question
+            )
+            _append_raw_triple(raw_triples, raw_triple)
+
+            return raw_triple
+
+        return None
+
+
+class WRawTripleUtils:
     @staticmethod
     def aux_processing(nl_question: NLQuestion, raw_triples: List[RawTriple], root: Token):
         # E.g.: "Who is the leader of the town where the Myntdu river originates?"

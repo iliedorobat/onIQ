@@ -14,12 +14,12 @@ from ro.webdata.oniq.endpoint.models.RDFElement import URI, URI_TYPE
 from ro.webdata.oniq.endpoint.query import QueryService
 from ro.webdata.oniq.service.query_const import ACCESSORS, PATHS
 from ro.webdata.oniq.sparql.model.AdjectiveEntity import AdjectiveEntity
-from ro.webdata.oniq.sparql.model.NLQuestion import NLQuestion, ROOT_TYPES
+from ro.webdata.oniq.sparql.model.NLQuestion import NLQuestion, ROOT_TYPES, QUESTION_TYPES
 from ro.webdata.oniq.sparql.model.NounEntity import NounEntity
 from ro.webdata.oniq.sparql.model.order_by_utils import get_order_modifier
 from ro.webdata.oniq.sparql.model.raw_triples.RawTriple import RawTriple
 from ro.webdata.oniq.sparql.model.raw_triples.raw_target_utils import RawTargetUtils
-from ro.webdata.oniq.sparql.model.raw_triples.raw_triple_utils import RawTripleUtils
+from ro.webdata.oniq.sparql.model.raw_triples.raw_triple_utils import WRawTripleUtils, HRawTripleUtils
 from ro.webdata.oniq.sparql.query import SPARQLRawQuery
 
 
@@ -52,30 +52,35 @@ def _prepare_raw_triples(nl_question: NLQuestion):
 def _init_raw_triples(nl_question: NLQuestion):
     root = get_root(nl_question.question)
     root_type = nl_question.root_type
+    main_type = nl_question.main_type
     raw_triples = []
 
-    if root_type == ROOT_TYPES.AUX_ASK:
-        RawTripleUtils.aux_ask_processing(nl_question, raw_triples, root)
-    if root_type == ROOT_TYPES.VERB_ASK:
-        RawTripleUtils.verb_ask(nl_question, raw_triples, root)
-    elif root_type == ROOT_TYPES.PREP_ASK:
-        RawTripleUtils.prep_ask_processing(nl_question, raw_triples, root)
-    elif root_type == ROOT_TYPES.PASSIVE:
-        RawTripleUtils.passive_processing(nl_question, raw_triples, root)
-    elif root_type == ROOT_TYPES.POSSESSIVE:
-        RawTripleUtils.possessive_processing(nl_question, raw_triples, root)
-    elif root_type == ROOT_TYPES.POSSESSIVE_COMPLEX:
-        RawTripleUtils.possessive_complex_processing(nl_question, raw_triples, root)
-    elif root_type == ROOT_TYPES.AUX:
-        RawTripleUtils.aux_processing(nl_question, raw_triples, root)
-    elif root_type == ROOT_TYPES.MAIN:
-        RawTripleUtils.main_processing(nl_question, raw_triples, root)
+    if main_type == QUESTION_TYPES.HOW:
+        # E.g.: "How high is the Yokohama Marine Tower?"
+        HRawTripleUtils.aux_processing(nl_question, raw_triples, root)
     else:
-        # subject = root
-        # predicate = get_related_verb(subject, sentence[subject.i + 1:])
-        # obj = get_child_noun(predicate, sentence[predicate.i:])
-        # triple = self.triples.append_triple(subject, predicate, obj)
-        pass
+        if root_type == ROOT_TYPES.AUX_ASK:
+            WRawTripleUtils.aux_ask_processing(nl_question, raw_triples, root)
+        if root_type == ROOT_TYPES.VERB_ASK:
+            WRawTripleUtils.verb_ask(nl_question, raw_triples, root)
+        elif root_type == ROOT_TYPES.PREP_ASK:
+            WRawTripleUtils.prep_ask_processing(nl_question, raw_triples, root)
+        elif root_type == ROOT_TYPES.PASSIVE:
+            WRawTripleUtils.passive_processing(nl_question, raw_triples, root)
+        elif root_type == ROOT_TYPES.POSSESSIVE:
+            WRawTripleUtils.possessive_processing(nl_question, raw_triples, root)
+        elif root_type == ROOT_TYPES.POSSESSIVE_COMPLEX:
+            WRawTripleUtils.possessive_complex_processing(nl_question, raw_triples, root)
+        elif root_type == ROOT_TYPES.AUX:
+            WRawTripleUtils.aux_processing(nl_question, raw_triples, root)
+        elif root_type == ROOT_TYPES.MAIN:
+            WRawTripleUtils.main_processing(nl_question, raw_triples, root)
+        else:
+            # subject = root
+            # predicate = get_related_verb(subject, sentence[subject.i + 1:])
+            # obj = get_child_noun(predicate, sentence[predicate.i:])
+            # triple = self.triples.append_triple(subject, predicate, obj)
+            pass
 
     _update_awards_triple(raw_triples)
     _update_location_triple(raw_triples)
