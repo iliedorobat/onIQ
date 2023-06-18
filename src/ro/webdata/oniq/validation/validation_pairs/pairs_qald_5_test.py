@@ -40,7 +40,6 @@ WHERE {
 """
     },
     #     {
-    #         # TODO: order by
     #         "aggregation": False,
     #         "answertype": bool,
     #         "hybrid": False,
@@ -200,6 +199,7 @@ ORDER BY ASC(?youngest)
 """
     },
     #     {
+    #         # FIXME: <?child   prop   dbr:Meryl_Streep>
     #         "aggregation": True,
     #         "answertype": "resource",
     #         "hybrid": False,
@@ -278,7 +278,6 @@ ORDER BY DESC(?highest)
 """
     },
     #     {
-    #         # TODO: order by
     #         "aggregation": True,
     #         "answertype": "number",
     #         "hybrid": False,
@@ -348,7 +347,6 @@ WHERE {
     #     },
     #     {
     #         # FIXME: <dbr:Slovenia ethnic_groups ?ethnic_groups>
-    #         # TODO: count
     #         "aggregation": True,
     #         "answertype": "number",
     #         "hybrid": False,
@@ -426,17 +424,28 @@ WHERE {
     #         "result": """
     # """
     #     },
-    #     {
-    #         "aggregation": True,
-    #         "answertype": "resource",
-    #         "hybrid": False,
-    #         "onlydbo": True,
-    #         "query": "Which musician wrote the most books?",
-    #         "result": """
-    # """
-    #     },
     {
-        # TODO: New_York_City insted of New_York_(state) and dbo:numberOfVisitors instead of dbp:visitors
+        # FIXME:
+        #  <?musician   dbo:occupation   dbr:Musician>
+        #  <?musician   dbo:author   ?books>
+        "aggregation": True,
+        "answertype": "resource",
+        "hybrid": False,
+        "onlydbo": True,
+        "query": "Which musician wrote the most books?",
+        "result": """
+SELECT DISTINCT ?musician
+WHERE {
+	?musician   dbp:write   ?books .
+	?books   rdf:type   dbo:Book
+}
+ORDER BY DESC(COUNT(?books))
+"""
+    },
+    {
+        # FIXME:
+        #  <?museum   dbo:location   New_York_City>
+        #  <?museum   dbo:numberOfVisitors   ?visitors>
         "aggregation": True,
         "answertype": "resource",
         "hybrid": False,

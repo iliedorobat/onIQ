@@ -30,12 +30,25 @@ class SPARQLBuilder:
 
 
 def _prepare_triples(raw_triples: List[RawTriple]):
-    main_raw_triples = [raw_triple for raw_triple in raw_triples if not raw_triple.is_ordering_triple()]
-    ordering_raw_triples = [raw_triple for raw_triple in raw_triples if raw_triple.is_ordering_triple()]
+    main_raw_triples = [
+        raw_triple for raw_triple in raw_triples
+        if not raw_triple.is_ordering_triple()
+    ]
+    order_by_raw_triples = [
+        raw_triple for raw_triple in raw_triples
+        if raw_triple.is_ordering_triple()
+    ]
+    rdf_type_order_by_triples = [
+        Triple(raw_triple, RDFElements([])) for raw_triple in raw_triples
+        # E.g.: "Which musician wrote the most books?"
+        if raw_triple.is_rdf_type()
+            and raw_triple not in main_raw_triples
+            and raw_triple.o.is_dbpedia_type
+    ]
 
     main_triples = _init_triples(main_raw_triples, RDFElements([]))
-    properties = _get_properties(DBP_ENDPOINT, main_triples)
-    order_by_triples = _init_triples(ordering_raw_triples, properties)
+    properties = _get_properties(DBP_ENDPOINT, main_triples + rdf_type_order_by_triples)
+    order_by_triples = _init_triples(order_by_raw_triples, properties)
 
     return main_triples + order_by_triples
 

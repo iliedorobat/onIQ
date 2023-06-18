@@ -488,15 +488,27 @@ raw_triples = [
 #         "result": """
 # """
 #     },
-#     {
-#         "aggregation": True,
-#         "answertype": "resource",
-#         "hybrid": False,
-#         "onlydbo": True,
-#         "query": "Which musician wrote the most books?",
-#         "result": """
-# """
-#     },
+    {
+        # TODO: ?musician dbo:occupation dbr:Musician
+        "aggregation": True,
+        "answertype": "resource",
+        "hybrid": False,
+        "onlydbo": True,
+        "query": "Which musician wrote the most books?",
+        "result": """
+query_type = SELECT
+target_nouns = [
+	?musician
+]
+raw_triples = [
+	<?musician   wrote   ?books>
+	<?books   rdf:type   dbo:Book>
+]
+order_by = [
+	DESC(COUNT(?books))
+]
+"""
+    },
     {
         "aggregation": True,
         "answertype": "resource",
@@ -514,7 +526,7 @@ raw_triples = [
 	<?museum   visitors   ?visitors>
 ]
 order_by = [
-	DESC(?visitors)
+	DESC(COUNT(?visitors))
 ]
 """
     },
