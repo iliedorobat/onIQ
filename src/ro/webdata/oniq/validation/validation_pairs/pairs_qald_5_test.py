@@ -195,7 +195,7 @@ WHERE {
 	?person   dbo:award   dbr:Pulitzer_Prize .
 	?person   dbo:birthDate   ?youngest
 }
-ORDER BY ASC(?youngest)
+ORDER BY DESC(?youngest)
 """
     },
     #     {
@@ -211,7 +211,7 @@ ORDER BY ASC(?youngest)
     #     dbr:Meryl_Streep   ???   ?child .
     #     ?child   dbo:birthDate   ?oldest
     # }
-    # ORDER BY DESC(?oldest)
+    # ORDER BY ASC(?oldest)
     # """
     #     },
     #     {
@@ -446,6 +446,7 @@ ORDER BY DESC(COUNT(?books))
         # FIXME:
         #  <?museum   dbo:location   New_York_City>
         #  <?museum   dbo:numberOfVisitors   ?visitors>
+        #  ORDER BY DESC(?visitors)
         "aggregation": True,
         "answertype": "resource",
         "hybrid": False,
@@ -458,7 +459,7 @@ WHERE {
 	?museum   rdf:type   dbo:Museum .
 	?museum   dbp:visitors   ?visitors
 }
-ORDER BY DESC(?visitors)
+ORDER BY DESC(COUNT(?visitors))
 """
     },
     #     {

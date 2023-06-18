@@ -226,7 +226,7 @@ raw_triples = [
 	<?person   dbo:birthDate   ?youngest>
 ]
 order_by = [
-	ASC(?youngest)
+	DESC(?youngest)
 ]
 """
     },
@@ -246,7 +246,7 @@ raw_triples = [
 	<?child   dbo:birthDate   ?oldest>
 ]
 order_by = [
-	DESC(?oldest)
+	ASC(?oldest)
 ]
 """
     },

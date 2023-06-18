@@ -44,9 +44,9 @@ class OrderBy:
 def _prepare_order_modifier(word: Token):
     if isinstance(word, Token):
         if is_adj(word):
-            if word.lower_ == "most":
+            if word.lemma_ in ["most", "young"]:
                 return ORDER_BY_MODIFIER.DESC
-            elif word.lower_ == "least":
+            elif word.lemma_ in ["least", "old"]:
                 return ORDER_BY_MODIFIER.ASC
             else:
                 senti_word_type = WordnetUtils.senti_word_analysis(word.text)
