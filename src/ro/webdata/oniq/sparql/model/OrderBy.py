@@ -18,6 +18,15 @@ class OrderBy:
         self.target = target
         self.modifier = OrderBy.get_modifier(predicate)
 
+    def __str__(self):
+        prev_word = get_prev_word(self.target.token)
+
+        if prev_word.lower_ in ["most", "least"]:
+            # E.g.: "Which musician wrote the most books?"
+            return f"{self.modifier}(COUNT({self.target.to_var()}))"
+
+        return f"{self.modifier}({self.target.to_var()})"
+
     @staticmethod
     def get_modifier(predicate: Token):
         if not isinstance(predicate, Token):

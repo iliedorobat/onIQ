@@ -34,11 +34,13 @@ class SPARQLQuery:
         output += " .\n".join(str_triples) + "\n"
         output += "}"
 
-        str_ordering_triples = [
-            f"{item.order_modifier}({item.o.to_var()})"
-            for item in self.triples
-            if item.is_ordering_triple()
-        ]
+        str_ordering_triples = list(
+            set([
+                f"{str(item.order_by)}"
+                for item in self.triples
+                if item.is_ordering_triple()
+            ])
+        )
 
         if len(str_ordering_triples) > 0:
             output += "\n"
@@ -70,16 +72,19 @@ class SPARQLRawQuery:
         output += "\n".join(str_triples) + "\n"
         output += "]"
 
-        str_ordering_triples = [
-            f"\t{item.order_modifier}({item.o.to_var()})\n"
-            for item in self.raw_triples
-            if item.is_ordering_triple()
-        ]
+        str_ordering_triples = list(
+            # E.g.: "Which musician wrote the most books?"
+            set([
+                f"\t{str(item.order_by)}\n"
+                for item in self.raw_triples
+                if item.is_ordering_triple()
+            ])
+        )
 
         if len(str_ordering_triples) > 0:
             output += "\n"
             output += f"order_by = [\n"
-            output += "\n".join(str_ordering_triples)
+            output += "".join(str_ordering_triples)
             output += "]"
 
         return output

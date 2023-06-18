@@ -7,14 +7,15 @@ from ro.webdata.oniq.sparql.constants import SPARQL_STR_SEPARATOR
 from ro.webdata.oniq.sparql.model.AdjectiveEntity import AdjectiveEntity
 from ro.webdata.oniq.sparql.model.NLQuestion import QUESTION_TARGET
 from ro.webdata.oniq.sparql.model.NounEntity import NounEntity
+from ro.webdata.oniq.sparql.model.OrderBy import OrderBy
 
 
 class RawTriple:
-    def __init__(self, s: Union[str, NounEntity, Token], p: Union[str, Span], o: Union[str, AdjectiveEntity, NounEntity, Token], question: Span, order_modifier: str = None):
+    def __init__(self, s: Union[str, NounEntity, Token], p: Union[str, Span], o: Union[str, AdjectiveEntity, NounEntity, Token], question: Span, order_by: OrderBy = None):
         self.s = s if isinstance(s, NounEntity) else NounEntity(s)
         self.p = p
         self.o = _prepare_object(self.p, o)
-        self.order_modifier = order_modifier
+        self.order_by = order_by
         self.question = question
 
     def __eq__(self, other):
@@ -34,7 +35,7 @@ class RawTriple:
         return f"{s}   {p}   {o}"
 
     def is_ordering_triple(self):
-        return self.order_modifier is not None
+        return self.order_by is not None
 
     def is_valid(self):
         validation = True

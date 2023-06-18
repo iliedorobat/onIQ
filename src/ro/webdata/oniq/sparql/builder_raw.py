@@ -156,10 +156,12 @@ def _prepare_ordering_raw_triples(nl_question: NLQuestion, raw_triples: List[Raw
         if isinstance(prev_word, Token):
             if raw_triple.s.is_var():
                 if prev_word.lower_ in ["most", "least"]:
-                    # E.g.: "Which musician wrote the most books?"
-                    # E.g.: "Which museum in New York has the most visitors?"
-
-                    raw_triple.order_modifier = OrderBy(raw_triple.o, prev_word).modifier
+                    if raw_triple.o.is_dbpedia_type:
+                        # E.g.: "Which musician wrote the most books?"
+                        raw_triple.order_by = OrderBy(raw_triple.s, prev_word)
+                    else:
+                        # E.g.: "Which museum in New York has the most visitors?"
+                        raw_triple.order_by = OrderBy(raw_triple.o, prev_word)
                     order_by.append(raw_triple)
 
                 elif is_adj(prev_word):
@@ -179,7 +181,7 @@ def _prepare_ordering_raw_triples(nl_question: NLQuestion, raw_triples: List[Raw
                             p=token_to_span(prev_word),
                             o=obj,
                             question=nl_question.question,
-                            order_modifier=OrderBy(obj, prev_word).modifier
+                            order_by=OrderBy(obj, prev_word)
                         )
                         order_by.append(new_raw_triple)
 
@@ -193,7 +195,7 @@ def _prepare_ordering_raw_triples(nl_question: NLQuestion, raw_triples: List[Raw
                         p=token_to_span(prev_word),
                         o=obj,
                         question=nl_question.question,
-                        order_modifier=OrderBy(obj, prev_word).modifier
+                        order_by=OrderBy(obj, prev_word)
                     )
                     order_by.append(new_raw_triple)
 
