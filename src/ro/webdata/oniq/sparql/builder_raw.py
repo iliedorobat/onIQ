@@ -63,6 +63,8 @@ def _init_raw_triples(nl_question: NLQuestion):
             WRawTripleUtils.aux_ask_processing(nl_question, raw_triples, root)
         if root_type == ROOT_TYPES.VERB_ASK:
             WRawTripleUtils.verb_ask(nl_question, raw_triples, root)
+        elif root_type == ROOT_TYPES.NOUN_ASK:
+            WRawTripleUtils.noun_ask(nl_question, raw_triples, root)
         elif root_type == ROOT_TYPES.PREP_ASK:
             WRawTripleUtils.prep_ask_processing(nl_question, raw_triples, root)
         elif root_type == ROOT_TYPES.PASSIVE:
@@ -76,11 +78,7 @@ def _init_raw_triples(nl_question: NLQuestion):
         elif root_type == ROOT_TYPES.MAIN:
             WRawTripleUtils.main_processing(nl_question, raw_triples, root)
         else:
-            # subject = root
-            # predicate = get_related_verb(subject, sentence[subject.i + 1:])
-            # obj = get_child_noun(predicate, sentence[predicate.i:])
-            # triple = self.triples.append_triple(subject, predicate, obj)
-            pass
+            print(f"The question \"{nl_question.question}\" cannot be parsed!")
 
     _update_awards_triple(raw_triples)
     _update_location_triple(raw_triples)

@@ -4,7 +4,7 @@ from spacy.tokens import Span, Token
 from ro.webdata.oniq.common.nlp.nlp_utils import text_to_span
 from ro.webdata.oniq.common.nlp.sentence_utils import get_root
 from ro.webdata.oniq.common.nlp.word_utils import is_aux, is_preceded_by_pass, is_wh_word, is_followed_by_possessive, \
-    is_verb
+    is_verb, is_noun
 
 
 class QUESTION_TARGET:
@@ -36,6 +36,7 @@ class ROOT_TYPES:
     AUX = "auxiliary_verb"  # The root of the question is an aux verb
     AUX_ASK = "aux_ask"  # The question starts with an aux verb
     MAIN = "main_verb"  # The question ends with a verb
+    NOUN_ASK = "noun_ask"  # The question starts with a noun
     PASSIVE = "passive"  # The question ends with a verb which has a passive verb attached
     POSSESSIVE = "possessive"
     POSSESSIVE_COMPLEX = "possessive_complex"
@@ -72,6 +73,15 @@ class NLQuestion:
         start_word = pydash.get(question, "0")
 
         return is_aux(start_word)
+
+    @staticmethod
+    def starts_with_noun(question: Span):
+        if not isinstance(question, Span):
+            return False
+
+        start_word = pydash.get(question, "0")
+
+        return is_noun(start_word)
 
     @staticmethod
     def starts_with_prep(question: Span):
@@ -140,6 +150,9 @@ def _get_root_type(question: Span):
     elif NLQuestion.starts_with_verb(question):
         # E.g.: "Give me the currency of China."
         return ROOT_TYPES.VERB_ASK
+    elif NLQuestion.starts_with_noun(question):
+        # E.g.: "Desserts from which country contain fish?"
+        return ROOT_TYPES.NOUN_ASK
     elif NLQuestion.starts_with_prep(question):
         # E.g.: "At what distance does the earth curve?"
         # E.g.: "In which country is Mecca located?"

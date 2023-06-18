@@ -7,7 +7,7 @@ from ro.webdata.oniq.common.nlp.sentence_utils import ends_with_verb, contains_m
 from ro.webdata.oniq.common.nlp.word_utils import is_noun, is_followed_by_prep, is_preceded_by_adj_modifier, \
     get_prev_word, is_verb, is_aux, is_adj, is_adv
 from ro.webdata.oniq.endpoint.dbpedia.lookup import LookupService
-from ro.webdata.oniq.sparql.model.NLQuestion import QUESTION_TARGET, NLQuestion
+from ro.webdata.oniq.sparql.model.NLQuestion import QUESTION_TARGET, NLQuestion, ROOT_TYPES
 from ro.webdata.oniq.sparql.model.NounEntity import NounEntity
 from ro.webdata.oniq.sparql.model.raw_triples.RawTriple import RawTriple
 
@@ -252,6 +252,40 @@ class WRawTripleUtils:
         pass
 
     @staticmethod
+    def noun_ask(nl_question: NLQuestion, raw_triples: List[RawTriple], root: Token):
+        subject = NounEntity(root)
+        predicate = get_related_verb(subject.token, nl_question.question[subject.token.i + 1:])
+        obj = NounEntity(
+            get_child_noun(predicate, nl_question.question[predicate.i:])
+        )
+
+        raw_triple = RawTriple(
+            s=subject,
+            p=token_to_span(predicate),
+            o=obj,
+            question=nl_question.question
+        )
+
+        _append_raw_triple(raw_triples, raw_triple)
+        _append_rdf_type_triple(nl_question, raw_triples, raw_triple.s, raw_triple.s)
+
+        if is_followed_by_prep(root):
+            # E.g.: "Desserts from which country contain fish?"
+
+            obj = NounEntity(
+                get_child_noun(root, nl_question.question, nl_question.root_type)
+            )
+
+            raw_triple = RawTriple(
+                s=subject,
+                p=obj.to_span(),
+                o=obj,
+                question=nl_question.question
+            )
+
+            _append_raw_triple(raw_triples, raw_triple)
+
+    @staticmethod
     def verb_ask(nl_question: NLQuestion, raw_triples: List[RawTriple], root: Token):
         child_noun = get_child_noun(root, nl_question.question)
 
@@ -337,26 +371,32 @@ def get_related_verb(word: Token, sentence: Span):
     return None
 
 
-def get_child_noun(word: Token, span: Span):
+# TODO: make root_type mandatory
+def get_child_noun(word: Token, span: Span, root_type: str = None):
     for token in span:
         if token.i > word.i and token.pos_ == "ADP":
             # E.g.: "Who is the leader of the town where the Myntdu river originates?"
-            return get_child_noun(token, token.sent[token.i + 1:])
+            return get_child_noun(token, token.sent[token.i + 1:], root_type)
 
         if token != word:
-            # "Where was the designer of REP Parasol born?"
+            token_equality = token.head == word
+            if root_type == ROOT_TYPES.NOUN_ASK and is_verb(token.head):
+                # E.g.: "Desserts from which country contain fish?"
+                token_equality = token.head == word.head
+
+            # E.g.: "Where was the designer of REP Parasol born?"
             is_auxpass = token.head.dep_ == "auxpass"
 
             # "Who is the person whose successor was Le Hong Phong?"
             prev_word = get_prev_word(token)
             is_poss = prev_word.dep_ == "poss" if isinstance(prev_word, Token) else False
 
-            if token.head == word or is_auxpass or is_poss:
+            if token_equality or is_auxpass or is_poss:
                 if token.dep_ == "auxpass":
                     if contains_multiple_wh_words(word.sent):
                         if ends_with_verb(span):
                             # E.g.: ### "Where was the person who won the oscar born?"
-                            return get_child_noun(token, token.sent[token.i + 1:])
+                            return get_child_noun(token, token.sent[token.i + 1:], root_type)
                         else:
                             # E.g.: "Where was the person born whose successor was Le Hong Phong?"
                             pass

@@ -238,6 +238,10 @@ def _get_compound_noun_parts(noun, noun_list):
 
     prev_word = get_prev_word(noun)
 
+    if prev_word is None:
+        # E.g.: "Desserts from which country contain fish?"
+        return noun_list
+
     if is_noun(prev_word) and prev_word.dep_ == "compound":
         updated_noun_list = [prev_word] + noun_list
 
