@@ -14,7 +14,7 @@ from ro.webdata.oniq.endpoint.models.RDFElement import URI, URI_TYPE
 from ro.webdata.oniq.endpoint.query import QueryService
 from ro.webdata.oniq.service.query_const import ACCESSORS, PATHS
 from ro.webdata.oniq.sparql.model.AdjectiveEntity import AdjectiveEntity
-from ro.webdata.oniq.sparql.model.NLQuestion import NLQuestion, ROOT_TYPES, QUESTION_TYPES, QUESTION_TARGET
+from ro.webdata.oniq.sparql.model.NLQuestion import NLQuestion, SYNTACTIC_TYPES, QUESTION_TYPES, QUESTION_TARGET
 from ro.webdata.oniq.sparql.model.NounEntity import NounEntity
 from ro.webdata.oniq.sparql.model.OrderBy import OrderBy
 from ro.webdata.oniq.sparql.model.raw_triples.RawTriple import RawTriple
@@ -51,33 +51,33 @@ def _prepare_raw_triples(nl_question: NLQuestion):
 
 def _init_raw_triples(nl_question: NLQuestion):
     root = get_root(nl_question.question)
-    root_type = nl_question.root_type
-    main_type = nl_question.main_type
+    syntactic_type = nl_question.syntactic_type
+    question_type = nl_question.question_type
     raw_triples = []
 
-    if main_type == QUESTION_TYPES.HOW:
+    if question_type == QUESTION_TYPES.HOW:
         # E.g.: "How high is the Yokohama Marine Tower?"
         HRawTripleUtils.aux_processing(nl_question, raw_triples, root)
     else:
-        if root_type == ROOT_TYPES.S_AUX:
+        if syntactic_type == SYNTACTIC_TYPES.S_AUX:
             WRawTripleUtils.aux_ask_processing(nl_question, raw_triples, root)
-        if root_type == ROOT_TYPES.S_VERB:
+        if syntactic_type == SYNTACTIC_TYPES.S_VERB:
             WRawTripleUtils.verb_ask(nl_question, raw_triples, root)
-        elif root_type == ROOT_TYPES.S_NOUN:
+        elif syntactic_type == SYNTACTIC_TYPES.S_NOUN:
             WRawTripleUtils.noun_ask(nl_question, raw_triples, root)
-        elif root_type == ROOT_TYPES.S_PREP:
+        elif syntactic_type == SYNTACTIC_TYPES.S_PREP:
             WRawTripleUtils.prep_ask_processing(nl_question, raw_triples, root)
-        elif root_type == ROOT_TYPES.PASSIVE:
+        elif syntactic_type == SYNTACTIC_TYPES.PASSIVE:
             WRawTripleUtils.passive_processing(nl_question, raw_triples, root)
-        elif root_type == ROOT_TYPES.PASSIVE_NEAR:
+        elif syntactic_type == SYNTACTIC_TYPES.PASSIVE_NEAR:
             WRawTripleUtils.passive_near_processing(nl_question, raw_triples, root)
-        elif root_type == ROOT_TYPES.POSSESSIVE:
+        elif syntactic_type == SYNTACTIC_TYPES.POSSESSIVE:
             WRawTripleUtils.possessive_processing(nl_question, raw_triples, root)
-        elif root_type == ROOT_TYPES.POSSESSIVE_COMPLEX:
+        elif syntactic_type == SYNTACTIC_TYPES.POSSESSIVE_COMPLEX:
             WRawTripleUtils.possessive_complex_processing(nl_question, raw_triples, root)
-        elif root_type == ROOT_TYPES.AUX:
+        elif syntactic_type == SYNTACTIC_TYPES.AUX:
             WRawTripleUtils.aux_processing(nl_question, raw_triples, root)
-        elif root_type == ROOT_TYPES.MAIN:
+        elif syntactic_type == SYNTACTIC_TYPES.MAIN:
             WRawTripleUtils.main_processing(nl_question, raw_triples, root)
         else:
             print(f"The question \"{nl_question.question}\" cannot be parsed!")

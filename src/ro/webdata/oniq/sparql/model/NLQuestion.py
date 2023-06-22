@@ -31,7 +31,7 @@ class QUESTION_TYPES:
     OTHERS = "others"
 
 
-class ROOT_TYPES:
+class SYNTACTIC_TYPES:
     S_AUX = QUESTION_TYPES.S_AUX
     S_NOUN = QUESTION_TYPES.S_NOUN
     S_PREP = QUESTION_TYPES.S_PREP
@@ -47,12 +47,10 @@ class ROOT_TYPES:
 
 class NLQuestion:
     def __init__(self, input_question: str):
-        question = text_to_span(input_question)
-
-        self.main_type = _get_question_type(question)
-        self.target = _get_question_target(question)
-        self.root_type = _get_root_type(question)
-        self.question = question
+        self.question = text_to_span(input_question)
+        self.question_type = _get_question_type(self.question)
+        self.syntactic_type = _get_syntactic_type(self.question)
+        self.target = _get_question_target(self.question_type)
 
     @staticmethod
     def is_poss_question(question: Span):
@@ -156,23 +154,23 @@ def _get_question_type(question: Span):
     return QUESTION_TYPES.OTHERS
 
 
-def _get_root_type(question: Span):
+def _get_syntactic_type(question: Span):
     if not isinstance(question, Span) or len(question) < 2:
         return None
 
     if NLQuestion.starts_with_aux(question):
         # E.g.: "Did Arnold Schwarzenegger attend a university?"
-        return ROOT_TYPES.S_AUX
+        return SYNTACTIC_TYPES.S_AUX
     elif NLQuestion.starts_with_verb(question):
         # E.g.: "Give me the currency of China."
-        return ROOT_TYPES.S_VERB
+        return SYNTACTIC_TYPES.S_VERB
     elif NLQuestion.starts_with_noun(question):
         # E.g.: "Desserts from which country contain fish?"
-        return ROOT_TYPES.S_NOUN
+        return SYNTACTIC_TYPES.S_NOUN
     elif NLQuestion.starts_with_prep(question):
         # E.g.: "At what distance does the earth curve?"
         # E.g.: "In which country is Mecca located?"
-        return ROOT_TYPES.S_PREP
+        return SYNTACTIC_TYPES.S_PREP
     elif NLQuestion.starts_with_wh(question):
         main_head = get_root(question)
 
@@ -180,33 +178,31 @@ def _get_root_type(question: Span):
             if NLQuestion.is_poss_question(question):
                 if is_followed_by_possessive(main_head):
                     # E.g.: "Who is the person whose successor was Le Hong Phong?"
-                    return ROOT_TYPES.POSSESSIVE_COMPLEX
+                    return SYNTACTIC_TYPES.POSSESSIVE_COMPLEX
 
                 # E.g.: ### "Whose successor is Le Hong Phong?"
-                return ROOT_TYPES.POSSESSIVE
+                return SYNTACTIC_TYPES.POSSESSIVE
 
             # E.g.: "Who is the leader of the town where the Myntdu river originates?"
-            return ROOT_TYPES.AUX
+            return SYNTACTIC_TYPES.AUX
         elif is_preceded_by_pass(main_head):
             prev_word = get_prev_word(main_head)
 
             if is_aux_pass(prev_word):
                 # E.g.: "Who was married to an actor that played in Philadelphia?"
                 # E.g.: "Which soccer players were born on Malta?"
-                return ROOT_TYPES.PASSIVE_NEAR
+                return SYNTACTIC_TYPES.PASSIVE_NEAR
 
             # E.g.: ### "where was the person who won the oscar born?"
-            return ROOT_TYPES.PASSIVE
+            return SYNTACTIC_TYPES.PASSIVE
         else:
             # E.g.: "Where did Mashhur bin Abdulaziz Al Saud's father die?"
-            return ROOT_TYPES.MAIN
+            return SYNTACTIC_TYPES.MAIN
 
-    return ROOT_TYPES.OTHERS
+    return SYNTACTIC_TYPES.OTHERS
 
 
-def _get_question_target(question: Span):
-    question_type = _get_question_type(question)
-
+def _get_question_target(question_type: str):
     if question_type == QUESTION_TYPES.WHEN:
         return QUESTION_TARGET.TIME
     elif question_type == QUESTION_TYPES.WHERE:

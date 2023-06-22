@@ -3,7 +3,7 @@ from typing import List
 from spacy.tokens import Span
 
 from ro.webdata.oniq.common.nlp.word_utils import is_noun
-from ro.webdata.oniq.sparql.model.NLQuestion import NLQuestion, ROOT_TYPES, QUESTION_TARGET, QUESTION_TYPES
+from ro.webdata.oniq.sparql.model.NLQuestion import NLQuestion, SYNTACTIC_TYPES, QUESTION_TARGET, QUESTION_TYPES
 from ro.webdata.oniq.sparql.model.NounEntity import NounEntity
 from ro.webdata.oniq.sparql.model.raw_triples.RawTriple import RawTriple
 
@@ -14,14 +14,9 @@ class RawTargetUtils:
         new_target_tokens = _get_target_tokens(nl_question, nl_question.question)
 
         # ORDER IS CRUCIAL
-
-        # if nl_question.root_type == ROOT_TYPES.S_AUX:
-        #     # E.g.: "Is Barack Obama a democrat?"
-        #     return None
-
-        if nl_question.main_type == QUESTION_TYPES.S_PREP:
+        if nl_question.question_type == QUESTION_TYPES.S_PREP:
             _TargetProcessing.prep_ask_type(target_nouns, nl_question.question, raw_triple)
-        elif nl_question.main_type == QUESTION_TYPES.HOW:
+        elif nl_question.question_type == QUESTION_TYPES.HOW:
             _TargetProcessing.prep_how_type(target_nouns, nl_question.question, raw_triple)
 
         if nl_question.target in [QUESTION_TARGET.LOCATION, QUESTION_TARGET.TIME]:
