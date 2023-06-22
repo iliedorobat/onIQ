@@ -422,7 +422,7 @@ def get_child_noun(word: Token, span: Span, root_type: str = None):
 
         if token != word:
             token_equality = token.head == word
-            if root_type == ROOT_TYPES.NOUN_ASK and is_verb(token.head):
+            if root_type == ROOT_TYPES.S_NOUN and is_verb(token.head):
                 # E.g.: "Desserts from which country contain fish?"
                 token_equality = token.head == word.head
 

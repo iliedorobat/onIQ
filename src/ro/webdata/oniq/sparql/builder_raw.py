@@ -59,13 +59,13 @@ def _init_raw_triples(nl_question: NLQuestion):
         # E.g.: "How high is the Yokohama Marine Tower?"
         HRawTripleUtils.aux_processing(nl_question, raw_triples, root)
     else:
-        if root_type == ROOT_TYPES.AUX_ASK:
+        if root_type == ROOT_TYPES.S_AUX:
             WRawTripleUtils.aux_ask_processing(nl_question, raw_triples, root)
-        if root_type == ROOT_TYPES.VERB_ASK:
+        if root_type == ROOT_TYPES.S_VERB:
             WRawTripleUtils.verb_ask(nl_question, raw_triples, root)
-        elif root_type == ROOT_TYPES.NOUN_ASK:
+        elif root_type == ROOT_TYPES.S_NOUN:
             WRawTripleUtils.noun_ask(nl_question, raw_triples, root)
-        elif root_type == ROOT_TYPES.PREP_ASK:
+        elif root_type == ROOT_TYPES.S_PREP:
             WRawTripleUtils.prep_ask_processing(nl_question, raw_triples, root)
         elif root_type == ROOT_TYPES.PASSIVE:
             WRawTripleUtils.passive_processing(nl_question, raw_triples, root)

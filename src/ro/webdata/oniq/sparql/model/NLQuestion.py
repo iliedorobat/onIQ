@@ -8,41 +8,40 @@ from ro.webdata.oniq.common.nlp.word_utils import is_aux, is_preceded_by_pass, i
 
 
 class QUESTION_TARGET:
+    BOOL = "boolean"
+    ENUM = "enumeration"
     LOCATION = "location"  # WHERE
+    NUMBER = "number"
     PERSON = "person"  # WHO, WHOM, WHOSE
     THING = "thing"  # others
     TIME = "time"  # WHEN
 
 
-# TODO: complete the list
-# TODO: merge with QUERY_TYPES
 class QUESTION_TYPES:
-    AUX_ASK = "aux_ask"  # E.g.: "Is rizal monument a place?"
-    PREP_ASK = "prep_ask"  # E.g.: "In which country is Mecca located?"
-    HOW = "how"  # how high, how often,
-    HOW_COUNT = "how_count"  # how many, how much
-    WHAT = "what"
+    S_AUX = "starts_with_aux"
+    S_NOUN = "starts_with_noun"
+    S_PREP = "starts_with_prep"
+    S_VERB = "starts_with_verb"
+    COUNT = "count"  # how many, how much
+    HOW = "how"  # how high, how often
     WHEN = "when"
     WHERE = "where"
-    WHICH = "which"
-    WHO = "who"
-    WHOM = "whom"
-    WHOSE = "whose"
-    WHY = "why"
+    WHO = "who"  # who, whom, whose
+    WH_OTHERS = "wh_others"
     OTHERS = "others"
 
 
 class ROOT_TYPES:
+    S_AUX = QUESTION_TYPES.S_AUX
+    S_NOUN = QUESTION_TYPES.S_NOUN
+    S_PREP = QUESTION_TYPES.S_PREP
+    S_VERB = QUESTION_TYPES.S_VERB
     AUX = "auxiliary_verb"  # The root of the question is an aux verb
-    AUX_ASK = "aux_ask"  # The question starts with an aux verb
     MAIN = "main_verb"  # The question ends with a verb
-    NOUN_ASK = "noun_ask"  # The question starts with a noun
     PASSIVE = "passive"  # The question ends with a verb which has a passive verb attached
     PASSIVE_NEAR = "passive_near"
     POSSESSIVE = "possessive"
     POSSESSIVE_COMPLEX = "possessive_complex"
-    PREP_ASK = "prep_ask"
-    VERB_ASK = "verb_ask"  # The question starts with a verb
     OTHERS = "others"
 
 
@@ -120,23 +119,39 @@ def _get_question_type(question: Span):
         return None
 
     if NLQuestion.starts_with_aux(question):
-        return QUESTION_TYPES.AUX_ASK
+        # E.g.: "Did Arnold Schwarzenegger attend a university?"
+        return QUESTION_TYPES.S_AUX
+    elif NLQuestion.starts_with_verb(question):
+        # E.g.: "Give me the currency of China."
+        return QUESTION_TYPES.S_VERB
+    elif NLQuestion.starts_with_noun(question):
+        # E.g.: "Desserts from which country contain fish?"
+        return QUESTION_TYPES.S_NOUN
     elif NLQuestion.starts_with_prep(question):
-        return QUESTION_TYPES.PREP_ASK
+        # E.g.: "At what distance does the earth curve?"
+        # E.g.: "In which country is Mecca located?"
+        return QUESTION_TYPES.S_PREP
     elif NLQuestion.starts_with_wh(question):
         first_word = pydash.get(question, "0")
-        main_type = getattr(QUESTION_TYPES, first_word.text.upper())
 
-        if main_type == QUESTION_TYPES.HOW:
-            if len(question) < 2:
-                return main_type
+        if isinstance(first_word, Token):
+            first_word = first_word.lower_
 
-            if question[1].text.lower() in ["many", "much"]:
-                # E.g.: "How many ethnic groups live in Slovenia?"
-                return QUESTION_TYPES.HOW_COUNT
+            if first_word in ["who", "whom", "whose"]:
+                return QUESTION_TYPES.WHO
+            elif first_word == "when":
+                return QUESTION_TYPES.WHEN
+            elif first_word == "where":
+                return QUESTION_TYPES.WHERE
+            elif first_word == "how":
+                if len(question) > 1 and question[1].lower_ in ["many", "much"]:
+                    # E.g.: "How many ethnic groups live in Slovenia?"
+                    return QUESTION_TYPES.COUNT
 
-        # E.g.: "How high is the Yokohama Marine Tower?"
-        return main_type
+                # E.g.: "How high is the Yokohama Marine Tower?"
+                return QUESTION_TYPES.HOW
+
+        return QUESTION_TYPES.WH_OTHERS
 
     return QUESTION_TYPES.OTHERS
 
@@ -147,17 +162,17 @@ def _get_root_type(question: Span):
 
     if NLQuestion.starts_with_aux(question):
         # E.g.: "Did Arnold Schwarzenegger attend a university?"
-        return ROOT_TYPES.AUX_ASK
+        return ROOT_TYPES.S_AUX
     elif NLQuestion.starts_with_verb(question):
         # E.g.: "Give me the currency of China."
-        return ROOT_TYPES.VERB_ASK
+        return ROOT_TYPES.S_VERB
     elif NLQuestion.starts_with_noun(question):
         # E.g.: "Desserts from which country contain fish?"
-        return ROOT_TYPES.NOUN_ASK
+        return ROOT_TYPES.S_NOUN
     elif NLQuestion.starts_with_prep(question):
         # E.g.: "At what distance does the earth curve?"
         # E.g.: "In which country is Mecca located?"
-        return ROOT_TYPES.PREP_ASK
+        return ROOT_TYPES.S_PREP
     elif NLQuestion.starts_with_wh(question):
         main_head = get_root(question)
 
@@ -196,6 +211,14 @@ def _get_question_target(question: Span):
         return QUESTION_TARGET.TIME
     elif question_type == QUESTION_TYPES.WHERE:
         return QUESTION_TARGET.LOCATION
-    elif question_type in [QUESTION_TYPES.WHO, QUESTION_TYPES.WHOM, QUESTION_TYPES.WHOSE]:
+    elif question_type == QUESTION_TYPES.WHO:
         return QUESTION_TARGET.PERSON
+
+    elif question_type == QUESTION_TYPES.S_AUX:
+        return QUESTION_TARGET.BOOL
+    elif question_type in [QUESTION_TYPES.S_NOUN, QUESTION_TYPES.S_VERB]:
+        return QUESTION_TARGET.ENUM
+    elif question_type == QUESTION_TYPES.COUNT:
+        return QUESTION_TARGET.NUMBER
+
     return QUESTION_TARGET.THING

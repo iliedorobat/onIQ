@@ -15,11 +15,11 @@ class RawTargetUtils:
 
         # ORDER IS CRUCIAL
 
-        # if nl_question.root_type == ROOT_TYPES.AUX_ASK:
+        # if nl_question.root_type == ROOT_TYPES.S_AUX:
         #     # E.g.: "Is Barack Obama a democrat?"
         #     return None
 
-        if nl_question.main_type == QUESTION_TYPES.PREP_ASK:
+        if nl_question.main_type == QUESTION_TYPES.S_PREP:
             _TargetProcessing.prep_ask_type(target_nouns, nl_question.question, raw_triple)
         elif nl_question.main_type == QUESTION_TYPES.HOW:
             _TargetProcessing.prep_how_type(target_nouns, nl_question.question, raw_triple)
