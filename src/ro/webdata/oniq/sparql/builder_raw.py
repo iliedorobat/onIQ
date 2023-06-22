@@ -69,6 +69,8 @@ def _init_raw_triples(nl_question: NLQuestion):
             WRawTripleUtils.prep_ask_processing(nl_question, raw_triples, root)
         elif root_type == ROOT_TYPES.PASSIVE:
             WRawTripleUtils.passive_processing(nl_question, raw_triples, root)
+        elif root_type == ROOT_TYPES.PASSIVE_NEAR:
+            WRawTripleUtils.passive_near_processing(nl_question, raw_triples, root)
         elif root_type == ROOT_TYPES.POSSESSIVE:
             WRawTripleUtils.possessive_processing(nl_question, raw_triples, root)
         elif root_type == ROOT_TYPES.POSSESSIVE_COMPLEX:

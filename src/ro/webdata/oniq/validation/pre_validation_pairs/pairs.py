@@ -8,6 +8,7 @@ TEST_1 = "Where does Shirley Chisholm work that is bordered by Arlington County?
 TEST_2 = "Where is the National Bank of Romania located?"  # "National Bank of Romania" is not identified as being an named entity
 TEST_4 = "How many paintings are on display at the Amsterdam Museum?"
 QUERY_16 = "What is the common party of the Manthena Venkata Raju and  B. Shiva Rao?"
+QUERY_23 = "Who was married to an actor that played in Philadelphia?"
 
 QUERY_01 = "Where was the person born whose successor was Le Hong Phong?"
 QUERY_02 = "Who is the person whose successor was Le Hong Phong?"  # poss

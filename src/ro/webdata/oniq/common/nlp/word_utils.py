@@ -218,6 +218,20 @@ def is_aux(word: Token):
     return is_aux_verb or is_aux_lemma
 
 
+def is_aux_pass(word: Token):
+    """
+    Determine if the input word is a passive auxiliary verb.
+
+    :param word: The target token.
+    :return: True/False
+    """
+
+    if not isinstance(word, Token):
+        return False
+
+    return is_aux(word) and word.dep_ == "auxpass"
+
+
 def is_adj(word: Token):
     """
     Determine if the input word is an adjective.
@@ -458,7 +472,7 @@ def is_preceded_by_pass(word: Token):
         return False
 
     for left in list(word.lefts):
-        if left.dep_ == "auxpass":
+        if is_aux_pass(left) is True:
             return True
 
     return False

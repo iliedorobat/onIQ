@@ -7,7 +7,7 @@ from ro.webdata.oniq.common.nlp.sentence_utils import ends_with_verb, contains_m
 from ro.webdata.oniq.common.nlp.word_utils import is_noun, is_followed_by_prep, is_preceded_by_adj_modifier, \
     get_prev_word, is_verb, is_aux, is_adj, is_adv
 from ro.webdata.oniq.endpoint.dbpedia.lookup import LookupService
-from ro.webdata.oniq.sparql.model.NLQuestion import QUESTION_TARGET, NLQuestion, ROOT_TYPES
+from ro.webdata.oniq.sparql.model.NLQuestion import QUESTION_TARGET, NLQuestion, ROOT_TYPES, QUESTION_TYPES
 from ro.webdata.oniq.sparql.model.NounEntity import NounEntity
 from ro.webdata.oniq.sparql.model.raw_triples.RawTriple import RawTriple
 
@@ -152,6 +152,48 @@ class WRawTripleUtils:
         pass
 
     @staticmethod
+    def passive_near_processing(nl_question: NLQuestion, raw_triples: List[RawTriple], root: Token):
+        # E.g.: [1] "Which soccer players were born on Malta?"
+        # E.g.: [2] "Who was married to an actor that played in Philadelphia?"
+
+        if nl_question.main_type == QUESTION_TYPES.WHO:
+            # E.g.: [1]
+            obj = NounEntity(
+                get_child_noun(root, nl_question.question)
+            )
+
+            raw_triple = RawTriple(
+                s=QUESTION_TARGET.PERSON,
+                p=token_to_span(root),
+                o=obj,
+                question=nl_question.question
+            )
+            triple = _append_raw_triple(raw_triples, raw_triple)
+
+            if not triple.o.is_res():
+                _append_rdf_type_triple(nl_question, raw_triples, triple.o, triple.o)
+
+            subject = triple.o
+            predicate = get_related_verb(subject.token, nl_question.question[subject.token.i + 1:])
+            obj = NounEntity(
+                get_child_noun(subject.token, nl_question.question)
+            )
+
+            raw_triple = RawTriple(
+                s=subject,
+                p=token_to_span(predicate),
+                o=obj,
+                question=nl_question.question
+            )
+            _append_raw_triple(raw_triples, raw_triple)
+        else:
+            # E.g.: [2]
+            triple = _append_root_target_triple(nl_question, raw_triples, root)
+            _append_rdf_type_triple(nl_question, raw_triples, triple.s, triple.s)
+
+        pass
+
+    @staticmethod
     def passive_processing(nl_question: NLQuestion, raw_triples: List[RawTriple], root: Token):
         # ends with a verb which has a passive verb attached
         # E.g.: [1] "Where is Fort Knox located?"
@@ -188,7 +230,7 @@ class WRawTripleUtils:
 
     @staticmethod
     def possessive_processing(nl_question: NLQuestion, raw_triples: List[RawTriple], root: Token):
-        # E.g.: "Whose successor is Le Hong Phong?"  ## made by me
+        # E.g.: ### "Whose successor is Le Hong Phong?"
 
         predicate = get_child_noun(root, nl_question.question)
         raw_triple = RawTriple(
@@ -532,7 +574,6 @@ def _append_root_target_triple(nl_question: NLQuestion, raw_triples: List[RawTri
     # E.g.: [2] "Where is the New York Times published?"
     # E.g.: [3] "Where did Mashhur bin Abdulaziz Al Saud's father die?"
     # E.g.: [4] "Where was the designer of REP Parasol born?"
-    # E.g.: [5] "Which soccer players were born on Malta?"
 
     subject = NounEntity(
         get_child_noun(root, root.sent)

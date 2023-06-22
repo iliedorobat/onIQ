@@ -4,7 +4,7 @@ from spacy.tokens import Span, Token
 from ro.webdata.oniq.common.nlp.nlp_utils import text_to_span
 from ro.webdata.oniq.common.nlp.sentence_utils import get_root
 from ro.webdata.oniq.common.nlp.word_utils import is_aux, is_preceded_by_pass, is_wh_word, is_followed_by_possessive, \
-    is_verb, is_noun
+    is_verb, is_noun, get_prev_word, is_aux_pass
 
 
 class QUESTION_TARGET:
@@ -38,6 +38,7 @@ class ROOT_TYPES:
     MAIN = "main_verb"  # The question ends with a verb
     NOUN_ASK = "noun_ask"  # The question starts with a noun
     PASSIVE = "passive"  # The question ends with a verb which has a passive verb attached
+    PASSIVE_NEAR = "passive_near"
     POSSESSIVE = "possessive"
     POSSESSIVE_COMPLEX = "possessive_complex"
     PREP_ASK = "prep_ask"
@@ -166,12 +167,19 @@ def _get_root_type(question: Span):
                     # E.g.: "Who is the person whose successor was Le Hong Phong?"
                     return ROOT_TYPES.POSSESSIVE_COMPLEX
 
-                # E.g.: "Whose successor is Le Hong Phong?"  ## made by me
+                # E.g.: ### "Whose successor is Le Hong Phong?"
                 return ROOT_TYPES.POSSESSIVE
 
             # E.g.: "Who is the leader of the town where the Myntdu river originates?"
             return ROOT_TYPES.AUX
         elif is_preceded_by_pass(main_head):
+            prev_word = get_prev_word(main_head)
+
+            if is_aux_pass(prev_word):
+                # E.g.: "Who was married to an actor that played in Philadelphia?"
+                # E.g.: "Which soccer players were born on Malta?"
+                return ROOT_TYPES.PASSIVE_NEAR
+
             # E.g.: ### "where was the person who won the oscar born?"
             return ROOT_TYPES.PASSIVE
         else:
