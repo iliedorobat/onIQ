@@ -52,7 +52,7 @@ class Initializer:
         Initialize spacy patterns based on the saved entities.
         """
 
-        console.info("Initializing of entities patterns started...")
+        console.info("Initialization of entity patterns has begun...")
         # TODO: complete the list of patterns as needed
         _add_ruler_patterns("FAC", DBPEDIA_CLASS_TYPES.ARCHITECTURAL_STRUCTURE)
         _add_ruler_patterns("PERSON", DBPEDIA_CLASS_TYPES.PERSON)
@@ -60,7 +60,7 @@ class Initializer:
 
 
 def _add_ruler_patterns(label, entity_type):
-    console.info(f'Initializing of {entity_type} patterns started...')
+    console.info(f'Initialization of {entity_type} patterns has begun...')
 
     nlp_model = spacy.load('en_core_web_md')
     ruler_config = {"overwrite_ents": True}
@@ -70,7 +70,7 @@ def _add_ruler_patterns(label, entity_type):
     path = get_root_path() + PATTERNS_PATH
 
     max_len = len(entity_data["labels"]) + len(entity_data["names"])
-    bar = Bar(f'Initializing {entity_type} patterns', max=max_len)
+    bar = Bar(f'Initialization {entity_type} patterns', max=max_len)
 
     for key, patterns in entity_data.items():
         ruler.add_patterns([

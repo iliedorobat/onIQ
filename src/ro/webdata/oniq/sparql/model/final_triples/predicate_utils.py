@@ -89,7 +89,6 @@ def subject_predicate_lookup(question: Span, subject: NounEntity, predicate: Uni
 
 def _span_lookup(question: Span, predicate: Union[str, Span], node_type: str, node_value: NounEntity):
     node_span_value = node_value.to_span()
-
     query_params = [
         f'{ACCESSORS.QUESTION}={question}',
         f'{ACCESSORS.START_I}={predicate.start}',
@@ -100,7 +99,6 @@ def _span_lookup(question: Span, predicate: Union[str, Span], node_type: str, no
         f'{ACCESSORS.NODE_START_I}={node_span_value.start}',
         f'{ACCESSORS.NODE_END_I}={node_span_value.end}'
     ]
-
     matcher_uri = f'http://localhost:8200/{PATHS.MATCHER}?{"&".join(query_params)}'
 
     return _lookup_formatter(predicate, matcher_uri, node_type, node_value)
@@ -111,8 +109,15 @@ def _string_lookup(question: Span, predicate: str, node_type: str, node_value: N
         # E.g.: "Give me all ESA astronauts."
         return predicate
 
-    node_span_value = node_value.to_span()
+    if predicate.startswith("dbo:"):
+        # E.g.: "What is the highest mountain in Italy?"
+        return predicate
 
+    if predicate.startswith("rdf:"):
+        # E.g.: "Who is the tallest basketball player?"
+        return predicate
+
+    node_span_value = node_value.to_span()
     query_params = [
         f'{ACCESSORS.QUESTION}={question}',
         f'{ACCESSORS.TARGET_EXPRESSION}={predicate}',
@@ -122,14 +127,10 @@ def _string_lookup(question: Span, predicate: str, node_type: str, node_value: N
         f'{ACCESSORS.NODE_START_I}={node_span_value.start}',
         f'{ACCESSORS.NODE_END_I}={node_span_value.end}'
     ]
+    matcher_uri = f'http://localhost:8200/{PATHS.MATCHER}?{"&".join(query_params)}'
+    predicate = text_to_span(predicate)
 
-    if predicate not in ["rdf:type"]:
-        matcher_uri = f'http://localhost:8200/{PATHS.MATCHER}?{"&".join(query_params)}'
-        predicate = text_to_span(predicate)
-
-        return _lookup_formatter(predicate, matcher_uri, node_type, node_value)
-
-    return predicate
+    return _lookup_formatter(predicate, matcher_uri, node_type, node_value)
 
 
 def _lookup_formatter(predicate: [str, Span], matcher_uri: str, node_type: str, node_value: NounEntity):

@@ -222,8 +222,8 @@ target_nouns = [
 	?person
 ]
 raw_triples = [
-	<?person   award   dbr:Pulitzer_Prize>
-	<?person   dbo:birthDate   ?youngest>
+	<?person   Pulitzer_Prize   dbr:Pulitzer_Prize>
+	<?person   youngest   ?youngest>
 ]
 order_by = [
 	DESC(?youngest)
@@ -243,7 +243,7 @@ target_nouns = [
 ]
 raw_triples = [
 	<dbr:Meryl_Streep   child   ?child>
-	<?child   dbo:birthDate   ?oldest>
+	<?child   oldest   ?oldest>
 ]
 order_by = [
 	ASC(?oldest)
@@ -317,9 +317,9 @@ target_nouns = [
 	?mountain
 ]
 raw_triples = [
-	<?mountain   locatedInArea   dbr:Italy>
+	<?mountain   location   dbr:Italy>
 	<?mountain   rdf:type   dbo:Mountain>
-	<?mountain   dbo:elevation   ?highest>
+	<?mountain   highest   ?highest>
 ]
 order_by = [
 	DESC(?highest)
