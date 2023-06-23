@@ -13,7 +13,7 @@ from ro.webdata.oniq.sparql.model.NLQuestion import NLQuestion, QUESTION_TARGET
 from ro.webdata.oniq.sparql.model.raw_triples.RawTriple import RawTriple
 
 
-def improve_props_accuracy(raw_triples: List[RawTriple], nl_question: NLQuestion):
+def get_improved_raw_triples(raw_triples: List[RawTriple], nl_question: NLQuestion):
     temp_p_list = []
     output = []
 

@@ -11,7 +11,7 @@ from ro.webdata.oniq.endpoint.namespace import NAMESPACE
 from ro.webdata.oniq.endpoint.query import QueryService, escape_resource_name
 from ro.webdata.oniq.service.query_const import ACCESSORS, PATHS
 from ro.webdata.oniq.sparql.builder_raw import SPARQLRawBuilder
-from ro.webdata.oniq.sparql.builder_raw_utils import improve_props_accuracy
+from ro.webdata.oniq.sparql.builder_raw_utils import get_improved_raw_triples
 from ro.webdata.oniq.sparql.model.final_triples.Triple import Triple
 from ro.webdata.oniq.sparql.model.raw_triples.RawTriple import RawTriple
 from ro.webdata.oniq.sparql.query import SPARQLQuery
@@ -20,7 +20,7 @@ from ro.webdata.oniq.sparql.query import SPARQLQuery
 class SPARQLBuilder:
     def __init__(self, endpoint, input_question, print_deps):
         raw_builder = SPARQLRawBuilder(endpoint, input_question, print_deps)
-        raw_triples = improve_props_accuracy(raw_builder.raw_triples, raw_builder.nl_question)
+        raw_triples = get_improved_raw_triples(raw_builder.raw_triples, raw_builder.nl_question)
 
         self.nl_question = raw_builder.nl_question
         self.targets = raw_builder.targets
