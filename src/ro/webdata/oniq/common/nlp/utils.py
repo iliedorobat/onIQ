@@ -100,10 +100,14 @@ class WordnetUtils:
         lemmas = wn.lemmas(nationality, pos=wn.ADJ)
         lemma = pydash.get(lemmas, "0")
 
-        pertainyms = lemma.pertainyms()
-        pertainym = pydash.get(pertainyms, "0")
+        try:
+            pertainyms = lemma.pertainyms()
+            pertainym = pydash.get(pertainyms, "0")
 
-        return pydash.get(pertainym, "_name")
+            return pydash.get(pertainym, "_name")
+        except AttributeError:
+            # E.g.: "Who is the youngest Pulitzer Prize winner?"
+            return None
 
     @staticmethod
     def senti_word_analysis(word: str):

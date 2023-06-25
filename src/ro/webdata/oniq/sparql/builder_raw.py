@@ -1,3 +1,4 @@
+import warnings
 from typing import List
 
 from spacy.tokens import Token
@@ -43,6 +44,8 @@ def _prepare_raw_triples(nl_question: NLQuestion):
 
 
 def _init_raw_triples(nl_question: NLQuestion):
+    warnings.warn("Deprecated in favour of raw_triples_test.prepare_raw_triples", DeprecationWarning)
+
     root = get_root(nl_question.question)
     syntactic_type = nl_question.syntactic_type
     question_type = nl_question.question_type

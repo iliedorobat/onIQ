@@ -74,6 +74,9 @@ class NounEntity:
     def is_res(self):
         return "dbr:" in self.to_var()
 
+    def is_text(self):
+        return self.token is None
+
     def is_var(self):
         return SPARQL_VAR_PREFIX in self.to_var()
 
@@ -235,6 +238,12 @@ def _get_compound_noun_parts(noun, noun_list):
     Returns:
         List[Token]: List of nouns that are part of a noun_entity.
     """
+
+    if noun.pos_ == "NOUN":
+        # E.g.: Who is the person whose successor was Le Hong Phong? => "Phong".pos_ == "PROPN"
+        if noun.dep_ == "attr":
+            # E.g.: "Who is the youngest Pulitzer Prize winner?"
+            return noun_list
 
     prev_word = get_prev_word(noun)
 
