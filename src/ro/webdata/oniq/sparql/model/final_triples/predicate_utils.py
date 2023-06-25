@@ -45,7 +45,7 @@ def object_predicate_lookup(question: Span, obj: NounEntity, predicate: Span):
         #       <?holiday   "country"   dbr:Sweden>
 
         # E.g.: "Give me all ESA astronauts."
-        #       <?astronaut   ?prop   dbr:ESA>
+        #       <?astronaut   ?property   dbr:ESA>
         return _string_lookup(
             question=question,
             predicate=predicate,
@@ -105,7 +105,7 @@ def _span_lookup(question: Span, predicate: Union[str, Span], node_type: str, no
 
 
 def _string_lookup(question: Span, predicate: str, node_type: str, node_value: NounEntity):
-    if predicate == "?prop":
+    if predicate == "?property":
         # E.g.: "Give me all ESA astronauts."
         return predicate
 
@@ -116,6 +116,10 @@ def _string_lookup(question: Span, predicate: str, node_type: str, node_value: N
     if predicate.startswith("rdf:"):
         # E.g.: "Who is the tallest basketball player?"
         return predicate
+
+    if predicate == "country":
+        # E.g.: "Give me all Swedish holidays."
+        return "dbo:country"
 
     node_span_value = node_value.to_span()
     query_params = [

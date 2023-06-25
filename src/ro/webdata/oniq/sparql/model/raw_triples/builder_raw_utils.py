@@ -10,7 +10,7 @@ from ro.webdata.oniq.endpoint.models.RDFElement import URI, URI_TYPE
 from ro.webdata.oniq.endpoint.query import QueryService
 from ro.webdata.oniq.service.query_const import PATHS, ACCESSORS
 from ro.webdata.oniq.sparql.model.NLQuestion import NLQuestion, QUESTION_TARGET
-from ro.webdata.oniq.sparql.model.raw_triples.RawTriple import RawTriple
+from ro.webdata.oniq.sparql.model.triples.RawTriple import RawTriple
 
 
 def get_improved_raw_triples(raw_triples: List[RawTriple], nl_question: NLQuestion):

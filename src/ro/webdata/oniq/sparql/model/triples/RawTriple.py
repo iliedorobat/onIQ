@@ -43,17 +43,18 @@ class RawTriple:
         if self.s.to_var() == "NULL":
             print("The Subject is NULL")
             validation = False
-        if self.o.to_var() == "NULL":
-            print("The Object is NULL")
-            validation = False
         if self.p is None:
             print("The Predicate is NULL")
+            validation = False
+        if self.o.to_var() == "NULL":
+            print("The Object is NULL")
             validation = False
 
         return validation
 
-    def is_location(self):
-        return str(self.p) == QUESTION_TARGET.LOCATION
+    # TODO: check
+    # def is_location(self):
+    #     return str(self.p) == QUESTION_TARGET.LOCATION
 
     def is_rdf_type(self):
         return str(self.p) == "rdf:type"
@@ -68,8 +69,9 @@ def _get_p_var(predicate: Union[str, Token]):
 
 
 def _prepare_object(predicate: Union[str, Span], obj: Union[str, AdjectiveEntity, NounEntity, Token]):
-    if isinstance(predicate, str) and predicate == "rdf:type":
-        return NounEntity(obj.text, obj.token, True)
+    # TODO: check
+    # if isinstance(predicate, str) and predicate == "rdf:type":
+    #     return NounEntity(obj.text, obj.token, True)
 
     if isinstance(obj, NounEntity):
         return obj

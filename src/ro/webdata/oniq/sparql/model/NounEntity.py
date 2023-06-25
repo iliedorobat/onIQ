@@ -49,6 +49,9 @@ class NounEntity:
             return NotImplemented
         return self.noun == other.noun
 
+    def __hash__(self):
+        return hash(self.text)
+
     def __str__(self):
         if self.is_dbpedia_type:
             if self.text is not None:
@@ -116,6 +119,10 @@ class NounEntity:
 
 
 def _get_resource(compound_noun: Span, main_word: Token):
+    if not _token_exists_in_ents(main_word):
+        # E.g.: "Who is the youngest Pulitzer Prize winner?" => "winner"
+        return None
+
     if is_adj_modifier(main_word):
         # E.g.: "Give me all Swedish holidays."
         country = WordnetUtils.find_country_by_nationality(main_word.text)
@@ -147,6 +154,19 @@ def _get_resource(compound_noun: Span, main_word: Token):
         res_name: str = json.loads(res_name_response.content)
 
         return res_name
+
+
+def _token_exists_in_ents(token: Token):
+    if not isinstance(token, Token):
+        return False
+
+    question = token.sent
+    for ent in question.ents:
+        if token in ent:
+            # E.g.: "Who is the youngest Pulitzer Prize winner?"
+            return True
+
+    return False
 
 
 def _is_known_compound_named_entity(compound_noun: Span):

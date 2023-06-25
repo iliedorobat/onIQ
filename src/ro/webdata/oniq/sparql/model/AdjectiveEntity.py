@@ -1,4 +1,4 @@
-from spacy.tokens import Token
+from spacy.tokens import Span, Token
 
 from ro.webdata.oniq.common.nlp.word_utils import is_adj, get_prev_word, is_adv
 from ro.webdata.oniq.sparql.constants import SPARQL_VAR_PREFIX
@@ -22,6 +22,9 @@ class AdjectiveEntity:
             return NotImplemented
         return self.adj == other.adj
 
+    def __hash__(self):
+        return hash(self.text)
+
     def __str__(self):
         if self.adj is not None:
             return self.text
@@ -36,8 +39,14 @@ class AdjectiveEntity:
     def is_res(self):
         return "dbr:" in self.to_var()
 
+    def is_text(self):
+        return self.token is None
+
     def is_var(self):
         return SPARQL_VAR_PREFIX in self.to_var()
+
+    def to_span(self):
+        return Span(self.adj.doc, self.adj.i, self.adj.i + 1, label=self.adj.ent_type)
 
     def to_var(self):
         if self.adj is not None:

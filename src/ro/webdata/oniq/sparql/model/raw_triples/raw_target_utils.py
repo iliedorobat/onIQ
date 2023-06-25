@@ -1,11 +1,11 @@
 from typing import List
 
-from spacy.tokens import Span
+from spacy.tokens import Span, Token
 
 from ro.webdata.oniq.common.nlp.word_utils import is_noun
-from ro.webdata.oniq.sparql.model.NLQuestion import NLQuestion, SYNTACTIC_TYPES, QUESTION_TARGET, QUESTION_TYPES
+from ro.webdata.oniq.sparql.model.NLQuestion import NLQuestion, QUESTION_TARGET, QUESTION_TYPES
 from ro.webdata.oniq.sparql.model.NounEntity import NounEntity
-from ro.webdata.oniq.sparql.model.raw_triples.RawTriple import RawTriple
+from ro.webdata.oniq.sparql.model.triples.RawTriple import RawTriple
 
 
 class RawTargetUtils:
@@ -19,24 +19,27 @@ class RawTargetUtils:
         elif nl_question.question_type == QUESTION_TYPES.HOW:
             _TargetProcessing.prep_how_type(target_nouns, nl_question.question, raw_triple)
 
-        if nl_question.target in [QUESTION_TARGET.LOCATION, QUESTION_TARGET.TIME]:
-            _TargetProcessing.loc_time_target(nl_question, target_nouns)
-        else:
-            for token in new_target_tokens:
-                target_noun = NounEntity(token)
+        # if nl_question.target in [QUESTION_TARGET.LOCATION, QUESTION_TARGET.TIME]:
+        #     _TargetProcessing.loc_time_target(nl_question, target_nouns)
+        # else:
+        for token in new_target_tokens:
+            target_noun = NounEntity(token)
 
-                if target_noun not in target_nouns:
-                    if raw_triple.s.token == token:
-                        if raw_triple.s not in target_nouns:
-                            if raw_triple.s.is_var():
-                                # E.g.: "Did Arnold Schwarzenegger attend a university?"
-                                # dbr:Arnold_Schwarzenegger is NOT a var
-                                target_nouns.append(raw_triple.s)
-                    if raw_triple.o.token == token:
-                        if raw_triple.o not in target_nouns:
-                            # E.g.: "Give me all ESA astronauts.
-                            if raw_triple.o.is_var():
-                                target_nouns.append(raw_triple.o)
+            if target_noun not in target_nouns:
+                if raw_triple.s.token == token:
+                    if raw_triple.s not in target_nouns:
+                        if raw_triple.s.is_var():
+                            # E.g.: "Did Arnold Schwarzenegger attend a university?"
+                            # dbr:Arnold_Schwarzenegger is NOT a var
+                            target_nouns.append(raw_triple.s)
+                if raw_triple.o.token == token:
+                    if raw_triple.o not in target_nouns:
+                        # E.g.: "Give me all ESA astronauts."
+                        if raw_triple.o.is_var():
+                            target_nouns.append(raw_triple.o)
+                if raw_triple.o.is_text():
+                    # E.g.: "When did the Ming dynasty dissolve?"
+                    target_nouns.append(raw_triple.o)
 
         if nl_question.target == QUESTION_TARGET.PERSON:
             _TargetProcessing.person_target(nl_question, target_nouns)
@@ -68,11 +71,14 @@ class _TargetProcessing:
     def prep_ask_type(target_nouns: List[NounEntity], sentence: Span, raw_triple: RawTriple):
         # E.g.: "In which country is Mecca located?"
         first_token = sentence[0]
+        s_token = raw_triple.s.token
+        o_token = raw_triple.o.token
 
-        if raw_triple.s.token.head == first_token:
+        if isinstance(s_token, Token) and s_token.head == first_token:
             target_nouns.append(raw_triple.s)
 
-        if raw_triple.o.token.head == first_token:
+        if isinstance(o_token, Token) and o_token.head == first_token:
+            # E.g.: "In which country is Mecca located?" => not isinstance(o_token, Token)
             target_nouns.append(raw_triple.o)
 
     @staticmethod

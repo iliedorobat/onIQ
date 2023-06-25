@@ -35,7 +35,7 @@ WHERE {
         "result": """
 ASK
 WHERE {
-	dbr:Barack_Obama   ?prop   dbr:Democratic_Party_(United_States)
+	dbr:Barack_Obama   ?property   dbr:Democratic_Party_(United_States)
 }
 """
     },
@@ -59,6 +59,7 @@ WHERE {
     # """
     #     },
     {
+        # FIXME:
         "aggregation": False,
         "answertype": "resource",
         "hybrid": False,
@@ -81,7 +82,7 @@ WHERE {
 SELECT DISTINCT ?astronauts
 WHERE {
 	?astronauts   rdf:type   dbo:Astronaut .
-	?astronauts   ?prop   dbr:ESA_(company)
+	?astronauts   ?property   dbr:ESA_(company)
 }
 """
     },
@@ -92,10 +93,10 @@ WHERE {
         "onlydbo": True,
         "query": "Give me all Swedish holidays.",
         "result": """
-SELECT DISTINCT ?holiday
+SELECT DISTINCT ?Swedish_holidays
 WHERE {
-	?holiday   rdf:type   dbo:Holiday .
-	?holiday   dbo:country   dbr:Sweden
+	?Swedish_holidays   dbo:country   dbr:Sweden .
+	?Swedish_holidays   rdf:type   dbo:Holiday
 }
 """
     },
@@ -108,7 +109,8 @@ WHERE {
         "result": """
 SELECT DISTINCT ?currency
 WHERE {
-	dbr:China   dbo:currency   ?currency
+	dbr:China   dbo:currency   ?currency .
+	?currency   rdf:type   dbo:Currency
 }
 """
     },
@@ -129,9 +131,9 @@ WHERE {
         "onlydbo": True,
         "query": "When did the Ming dynasty dissolve?",
         "result": """
-SELECT DISTINCT ?time
+SELECT DISTINCT ?dissolve
 WHERE {
-	dbr:Ming_dynasty   dbp:dateEnd   ?time
+	dbr:Ming_dynasty   dbp:dateEnd   ?dissolve
 }
 """
     },
@@ -190,10 +192,10 @@ WHERE {
         "onlydbo": True,
         "query": "Who is the youngest Pulitzer Prize winner?",
         "result": """
-SELECT DISTINCT ?person
+SELECT DISTINCT ?winner
 WHERE {
-	?person   dbo:award   dbr:Pulitzer_Prize .
-	?person   dbo:birthDate   ?youngest
+	?winner   dbo:award   dbr:Pulitzer_Prize .
+	?winner   dbo:birthDate   ?youngest
 }
 ORDER BY DESC(?youngest)
 """
@@ -316,6 +318,7 @@ SELECT DISTINCT ?high
 WHERE {
 	dbr:Yokohama_Marine_Tower   dbo:height   ?high
 }
+ORDER BY DESC(?high)
 """
     },
     #     {
@@ -425,7 +428,6 @@ WHERE {
     # """
     #     },
     {
-        # FIXME:
         #  <?musician   dbo:occupation   dbr:Musician>
         #  <?musician   dbo:author   ?books>
         "aggregation": True,
@@ -436,8 +438,8 @@ WHERE {
         "result": """
 SELECT DISTINCT ?musician
 WHERE {
-	?musician   dbp:write   ?books .
-	?books   rdf:type   dbo:Book
+	?books   rdf:type   dbo:Book .
+	?musician   dbp:write   ?books
 }
 ORDER BY DESC(COUNT(?books))
 """

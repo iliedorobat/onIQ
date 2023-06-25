@@ -19,11 +19,8 @@ PAIRS_QALD = [
         "onlydbo": True,
         "query": "Did Arnold Schwarzenegger attend a university?",
         "result": """
-query_type = ASK
-target_nouns = []
 raw_triples = [
 	<dbr:Arnold_Schwarzenegger   attend   ?university>
-	<?university   rdf:type   dbo:University>
 ]
 """
     },
@@ -34,10 +31,8 @@ raw_triples = [
         "onlydbo": True,
         "query": "Is Barack Obama a democrat?",
         "result": """
-query_type = ASK
-target_nouns = []
 raw_triples = [
-	<dbr:Barack_Obama   ?prop   dbr:Democratic_Party_(United_States)>
+	<dbr:Barack_Obama   ?property   dbr:Democratic_Party_(United_States)>
 ]
 """
     },
@@ -62,35 +57,28 @@ raw_triples = [
 # """
 #     },
     {
+        # FIXME: country instead of located
         "aggregation": False,
         "answertype": "resource",
         "hybrid": False,
         "onlydbo": True,
         "query": "In which country is Mecca located?",
         "result": """
-query_type = SELECT
-target_nouns = [
-	?country
-]
 raw_triples = [
-	<dbr:Mecca   country   ?country>
+	<dbr:Mecca   located   ?located>
 ]
 """
     },
     {
+        # FIXME:
         "aggregation": False,
         "answertype": "resource",
         "hybrid": None,  # False??
         "onlydbo": True,
         "query": "Give me all ESA astronauts.",
         "result": """
-query_type = SELECT
-target_nouns = [
-	?astronauts
-]
 raw_triples = [
-	<?astronauts   rdf:type   dbo:Astronaut>
-	<?astronauts   ?prop   dbr:ESA_(company)>
+
 ]
 """
     },
@@ -101,13 +89,8 @@ raw_triples = [
         "onlydbo": True,
         "query": "Give me all Swedish holidays.",
         "result": """
-query_type = SELECT
-target_nouns = [
-	?holiday
-]
 raw_triples = [
-	<?holiday   rdf:type   dbo:Holiday>
-	<?holiday   country   dbr:Sweden>
+	<?holiday   country   ?Sweden>
 ]
 """
     },
@@ -118,24 +101,23 @@ raw_triples = [
         "onlydbo": True,
         "query": "Give me the currency of China.",
         "result": """
-query_type = SELECT
-target_nouns = [
-	?currency
-]
 raw_triples = [
 	<dbr:China   currency   ?currency>
 ]
 """
     },
-#     {
-#         "aggregation": False,
-#         "answertype": "resource",
-#         "hybrid": False,
-#         "onlydbo": True,
-#         "query": "Give me all Swiss non-profit organizations.",
-#         "result": """
-# """
-#     },
+    {
+        "aggregation": False,
+        "answertype": "resource",
+        "hybrid": False,
+        "onlydbo": True,
+        "query": "Give me all Swiss non-profit organizations.",
+        "result": """
+raw_triples = [
+	<?organization   country   ?Switzerland>
+]
+"""
+    },
     ### WHEN + aux verb ###
     {
         "aggregation": False,
@@ -144,12 +126,8 @@ raw_triples = [
         "onlydbo": True,
         "query": "When did the Ming dynasty dissolve?",
         "result": """
-query_type = SELECT
-target_nouns = [
-	?time
-]
 raw_triples = [
-	<dbr:Ming_dynasty   dissolve   ?time>
+	<dbr:Ming_dynasty   dissolve   ?dissolve>
 ]
 """
     },
@@ -170,10 +148,6 @@ raw_triples = [
         "onlydbo": True,
         "query": "Who is the manager of Real Madrid?",
         "result": """
-query_type = SELECT
-target_nouns = [
-	?manager
-]
 raw_triples = [
 	<dbr:Real_Madrid_CF   manager   ?manager>
 ]
@@ -186,10 +160,6 @@ raw_triples = [
         "onlydbo": True,
         "query": "Who were the parents of Queen Victoria?",
         "result": """
-query_type = SELECT
-target_nouns = [
-	?parents
-]
 raw_triples = [
 	<dbr:Queen_Victoria   parents   ?parents>
 ]
@@ -217,36 +187,23 @@ raw_triples = [
         "onlydbo": True,
         "query": "Who is the youngest Pulitzer Prize winner?",
         "result": """
-query_type = SELECT
-target_nouns = [
-	?person
-]
 raw_triples = [
-	<?person   Pulitzer_Prize   dbr:Pulitzer_Prize>
-	<?person   youngest   ?youngest>
-]
-order_by = [
-	DESC(?youngest)
+	<?winner   ?property   dbr:Pulitzer_Prize>
+	<?winner   youngest   ?youngest>
 ]
 """
     },
     {
+        # FIXME:
         "aggregation": True,
         "answertype": "resource",
         "hybrid": False,
         "onlydbo": True,
         "query": "Who is the oldest child of Meryl Streep?",
         "result": """
-query_type = SELECT
-target_nouns = [
-	?child
-]
 raw_triples = [
 	<dbr:Meryl_Streep   child   ?child>
 	<?child   oldest   ?oldest>
-]
-order_by = [
-	ASC(?oldest)
 ]
 """
     },
@@ -266,16 +223,8 @@ order_by = [
         "onlydbo": True,
         "query": "Who is the tallest basketball player?",
         "result": """
-query_type = SELECT
-target_nouns = [
-	?basketball_player
-]
 raw_triples = [
-	<?basketball_player   rdf:type   dbo:BasketballPlayer>
-	<?basketball_player   tallest   ?tallest>
-]
-order_by = [
-	DESC(?tallest)
+	<?player   tallest   ?tallest>
 ]
 """
     },
@@ -296,10 +245,6 @@ order_by = [
         "onlydbo": True,
         "query": "What is the net income of Apple?",
         "result": """
-query_type = SELECT
-target_nouns = [
-	?net_income
-]
 raw_triples = [
 	<dbr:Apple_Inc.   net_income   ?net_income>
 ]
@@ -312,17 +257,9 @@ raw_triples = [
         "onlydbo": True,
         "query": "What is the highest mountain in Italy?",
         "result": """
-query_type = SELECT
-target_nouns = [
-	?mountain
-]
 raw_triples = [
-	<?mountain   location   dbr:Italy>
-	<?mountain   rdf:type   dbo:Mountain>
+	<?mountain   in   dbr:Italy>
 	<?mountain   highest   ?highest>
-]
-order_by = [
-	DESC(?highest)
 ]
 """
     },
@@ -362,10 +299,6 @@ order_by = [
         "onlydbo": True,
         "query": "How high is the Yokohama Marine Tower?",
         "result": """
-query_type = SELECT
-target_nouns = [
-	?high
-]
 raw_triples = [
 	<dbr:Yokohama_Marine_Tower   high   ?high>
 ]
@@ -380,15 +313,20 @@ raw_triples = [
 #         "result": """
 # """
 #     },
-#     {
-#         "aggregation": True,
-#         "answertype": "number",
-#         "hybrid": False,
-#         "onlydbo": True,
-#         "query": "How many companies were founded by the founder of Facebook?",
-#         "result": """
-# """
-#     },
+    {
+        # FIXME: Workplace_by_Facebook => Facebook
+        "aggregation": True,
+        "answertype": "number",
+        "hybrid": False,
+        "onlydbo": True,
+        "query": "How many companies were founded by the founder of Facebook?",
+        "result": """
+raw_triples = [
+	<?many_companies   founded   ?founder>
+	<dbr:Workplace_by_Facebook   founder   ?founder>
+]
+"""
+    },
 #     {
 #         "aggregation": True,
 #         "answertype": "number",
@@ -407,10 +345,6 @@ raw_triples = [
         "onlydbo": True,
         "query": "How many ethnic groups live in Slovenia?",
         "result": """
-query_type = COUNT
-target_nouns = [
-	?ethnic_groups
-]
 raw_triples = [
 	<?ethnic_groups   live   dbr:Slovenia>
 ]
@@ -433,13 +367,8 @@ raw_triples = [
         "onlydbo": True,
         "query": "Which soccer players were born on Malta?",
         "result": """
-query_type = SELECT
-target_nouns = [
-	?soccer_players
-]
 raw_triples = [
 	<?soccer_players   born   dbr:Malta>
-	<?soccer_players   rdf:type   dbo:SoccerPlayer>
 ]
 """
     },
@@ -496,16 +425,8 @@ raw_triples = [
         "onlydbo": True,
         "query": "Which musician wrote the most books?",
         "result": """
-query_type = SELECT
-target_nouns = [
-	?musician
-]
 raw_triples = [
 	<?musician   wrote   ?books>
-	<?books   rdf:type   dbo:Book>
-]
-order_by = [
-	DESC(COUNT(?books))
 ]
 """
     },
@@ -516,17 +437,9 @@ order_by = [
         "onlydbo": True,
         "query": "Which museum in New York has the most visitors?",
         "result": """
-query_type = SELECT
-target_nouns = [
-	?museum
-]
 raw_triples = [
-	<?museum   location   dbr:New_York_(state)>
-	<?museum   rdf:type   dbo:Museum>
-	<?museum   visitors   ?visitors>
-]
-order_by = [
-	DESC(COUNT(?visitors))
+	<?museum   has   ?visitors>
+	<?museum   in   dbr:New_York_(state)>
 ]
 """
     },
@@ -539,15 +452,19 @@ order_by = [
 #         "result": """
 # """
 #     },
-#     {
-#         "aggregation": True,  # False??
-#         "answertype": "resource",
-#         "hybrid": False,
-#         "onlydbo": True,
-#         "query": "Which volcanos in Japan erupted since 2000?",
-#         "result": """
-# """
-#     },
+    {
+        "aggregation": True,  # False??
+        "answertype": "resource",
+        "hybrid": False,
+        "onlydbo": True,
+        "query": "Which volcanos in Japan erupted since 2000?",
+        "result": """
+raw_triples = [
+	<?volcanos   erupted   ?erupted>
+	<?volcanos   in   dbr:Japan>
+]
+"""
+    },
 #     {
 #         "aggregation": False,
 #         "answertype": "resource",
