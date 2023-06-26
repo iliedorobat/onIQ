@@ -111,9 +111,9 @@ def prepare_raw_triples(sentence: Span):
                                 question=sentence
                             )
                             raw_triples.append(statement)
-                        else:
-                            # TODO: E.g.: "Give me all ESA astronauts."
-                            pass
+                        # else:
+                        #     # TODO: E.g.: "Give me all ESA astronauts."
+                        #     pass
 
                 # E.g.: "Give me all Swedish holidays."
                 # E.g.: "Who is the youngest Pulitzer Prize winner?"

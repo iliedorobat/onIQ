@@ -2,7 +2,7 @@ from typing import Union
 
 from spacy.tokens import Span
 
-from ro.webdata.oniq.common.nlp.word_utils import is_aux, is_preposition
+from ro.webdata.oniq.common.nlp.word_utils import is_aux, is_preposition, is_adj
 from ro.webdata.oniq.endpoint.common.match.PropertyMatcher import PropertyMatcher
 from ro.webdata.oniq.endpoint.models.RDFElements import RDFElements
 from ro.webdata.oniq.endpoint.query import escape_resource_name
@@ -74,20 +74,18 @@ def _predicate_lookup(raw_triple: RawTriple, properties: RDFElements):
 
     if isinstance(predicate, Span):
         if is_aux(predicate.root):
-            # E.g. "Which museum in New York has the most visitors?"
-            if subject.is_var() and obj.is_var():
-                return obj.to_var()
-            elif subject.is_res() and obj.is_var():
-                return obj.to_var()
-            elif subject.is_var() and obj.is_res():
-                return subject.to_var()
-            return "?property"
-        if is_preposition(predicate.root):
+            if predicate.root.lemma_ == "have":
+                # E.g. "Which museum in New York has the most visitors?"
+                if subject.is_var() and obj.is_var():
+                    predicate = obj.to_span()
+            else:
+                return "?property"
+        elif is_preposition(predicate.root):
             # E.g.: "Which museum in New York has the most visitors?"
             # TODO:
             pass
 
-    if raw_triple.is_ordering_triple():
+    if isinstance(predicate, Span) and is_adj(predicate.root):
         return adjective_property_lookup(predicate, properties)
 
     if subject.is_res():

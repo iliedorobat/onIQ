@@ -1,3 +1,5 @@
+import warnings
+
 import pydash
 from spacy.tokens import Span, Token
 
@@ -5,9 +7,10 @@ from ro.webdata.oniq.common.nlp.nlp_utils import text_to_span
 from ro.webdata.oniq.common.nlp.sentence_utils import get_root
 from ro.webdata.oniq.common.nlp.word_utils import is_aux, is_preceded_by_pass, is_wh_word, is_followed_by_possessive, \
     is_verb, is_noun, get_prev_word, is_aux_pass
+from ro.webdata.oniq.common.print_utils import SYSTEM_MESSAGES
 
 
-class QUESTION_TARGET:
+class ANSWER_TYPE:
     BOOL = "boolean"
     ENUM = "enumeration"
     LOCATION = "location"  # WHERE
@@ -32,6 +35,9 @@ class QUESTION_TYPES:
 
 
 class SYNTACTIC_TYPES:
+    # TODO: remove ???
+    warnings.warn(SYSTEM_MESSAGES.METHOD_NOT_USED, DeprecationWarning)
+
     S_AUX = QUESTION_TYPES.S_AUX
     S_NOUN = QUESTION_TYPES.S_NOUN
     S_PREP = QUESTION_TYPES.S_PREP
@@ -49,8 +55,8 @@ class NLQuestion:
     def __init__(self, input_question: str):
         self.question = text_to_span(input_question)
         self.question_type = _get_question_type(self.question)
-        self.syntactic_type = _get_syntactic_type(self.question)
-        self.target = _get_question_target(self.question_type)
+        self.syntactic_type = _get_syntactic_type(self.question)  # TODO: remove
+        self.answer_type = _get_answer_type(self.question_type)
 
     @staticmethod
     def is_poss_question(question: Span):
@@ -154,6 +160,24 @@ def _get_question_type(question: Span):
     return QUESTION_TYPES.OTHERS
 
 
+def _get_answer_type(question_type: str):
+    if question_type == QUESTION_TYPES.WHEN:
+        return ANSWER_TYPE.TIME
+    elif question_type == QUESTION_TYPES.WHERE:
+        return ANSWER_TYPE.LOCATION
+    elif question_type == QUESTION_TYPES.WHO:
+        return ANSWER_TYPE.PERSON
+
+    elif question_type == QUESTION_TYPES.S_AUX:
+        return ANSWER_TYPE.BOOL
+    elif question_type in [QUESTION_TYPES.S_NOUN, QUESTION_TYPES.S_VERB]:
+        return ANSWER_TYPE.ENUM
+    elif question_type == QUESTION_TYPES.COUNT:
+        return ANSWER_TYPE.NUMBER
+
+    return ANSWER_TYPE.THING
+
+
 def _get_syntactic_type(question: Span):
     if not isinstance(question, Span) or len(question) < 2:
         return None
@@ -202,19 +226,4 @@ def _get_syntactic_type(question: Span):
     return SYNTACTIC_TYPES.OTHERS
 
 
-def _get_question_target(question_type: str):
-    if question_type == QUESTION_TYPES.WHEN:
-        return QUESTION_TARGET.TIME
-    elif question_type == QUESTION_TYPES.WHERE:
-        return QUESTION_TARGET.LOCATION
-    elif question_type == QUESTION_TYPES.WHO:
-        return QUESTION_TARGET.PERSON
 
-    elif question_type == QUESTION_TYPES.S_AUX:
-        return QUESTION_TARGET.BOOL
-    elif question_type in [QUESTION_TYPES.S_NOUN, QUESTION_TYPES.S_VERB]:
-        return QUESTION_TARGET.ENUM
-    elif question_type == QUESTION_TYPES.COUNT:
-        return QUESTION_TARGET.NUMBER
-
-    return QUESTION_TARGET.THING

@@ -3,24 +3,24 @@ from typing import List
 from spacy.tokens import Span, Token
 
 from ro.webdata.oniq.common.nlp.word_utils import is_noun
-from ro.webdata.oniq.sparql.model.NLQuestion import NLQuestion, QUESTION_TARGET, QUESTION_TYPES
+from ro.webdata.oniq.sparql.model.NLQuestion import NLQuestion, QUESTION_TYPES, ANSWER_TYPE
 from ro.webdata.oniq.sparql.model.NounEntity import NounEntity
 from ro.webdata.oniq.sparql.model.triples.RawTriple import RawTriple
 
 
 class RawTargetUtils:
     @staticmethod
-    def update_target_nouns(nl_question: NLQuestion, target_nouns: List[NounEntity], raw_triple: RawTriple):
+    def update_targets(nl_question: NLQuestion, target_nouns: List[NounEntity], raw_triple: RawTriple):
         new_target_tokens = _get_target_tokens(nl_question, nl_question.question)
 
         # ORDER IS CRUCIAL
         if nl_question.question_type == QUESTION_TYPES.S_PREP:
-            _TargetProcessing.prep_ask_type(target_nouns, nl_question.question, raw_triple)
+            _TargetProcessing.prep_ask_type(nl_question, raw_triple, target_nouns)
         elif nl_question.question_type == QUESTION_TYPES.HOW:
-            _TargetProcessing.prep_how_type(target_nouns, nl_question.question, raw_triple)
+            _TargetProcessing.prep_how_type(nl_question, raw_triple, target_nouns)
 
-        # if nl_question.target in [QUESTION_TARGET.LOCATION, QUESTION_TARGET.TIME]:
-        #     _TargetProcessing.loc_time_target(nl_question, target_nouns)
+        # if target_type in [QUESTION_TARGET.LOCATION, QUESTION_TARGET.TIME]:
+        #     _TargetProcessing.loc_time_target(target_type, target_nouns)
         # else:
         for token in new_target_tokens:
             target_noun = NounEntity(token)
@@ -41,7 +41,7 @@ class RawTargetUtils:
                     # E.g.: "When did the Ming dynasty dissolve?"
                     target_nouns.append(raw_triple.o)
 
-        if nl_question.target == QUESTION_TARGET.PERSON:
+        if nl_question.answer_type == ANSWER_TYPE.PERSON:
             _TargetProcessing.person_target(nl_question, target_nouns)
 
 
@@ -49,7 +49,7 @@ class _TargetProcessing:
     @staticmethod
     def loc_time_target(nl_question: NLQuestion, target_nouns: List[NounEntity]):
         # E.g.: "When did the Ming dynasty dissolve?"
-        target_noun = NounEntity(nl_question.target)
+        target_noun = NounEntity(nl_question.answer_type)
     
         if target_noun not in target_nouns:
             target_nouns.append(target_noun)
@@ -58,7 +58,7 @@ class _TargetProcessing:
     def person_target(nl_question: NLQuestion, target_nouns: List[NounEntity]):
         if len(target_nouns) == 0:
             # E.g.: "Who is the tallest basketball player?"
-            target_noun = NounEntity(nl_question.target)
+            target_noun = NounEntity(nl_question.answer_type)
     
             if target_noun not in target_nouns:
                 target_nouns.append(target_noun)
@@ -68,9 +68,9 @@ class _TargetProcessing:
             pass
 
     @staticmethod
-    def prep_ask_type(target_nouns: List[NounEntity], sentence: Span, raw_triple: RawTriple):
+    def prep_ask_type(nl_question: NLQuestion, raw_triple: RawTriple, target_nouns: List[NounEntity]):
         # E.g.: "In which country is Mecca located?"
-        first_token = sentence[0]
+        first_token = nl_question.question[0]
         s_token = raw_triple.s.token
         o_token = raw_triple.o.token
 
@@ -82,9 +82,9 @@ class _TargetProcessing:
             target_nouns.append(raw_triple.o)
 
     @staticmethod
-    def prep_how_type(target_nouns: List[NounEntity], sentence: Span, raw_triple: RawTriple):
+    def prep_how_type(nl_question: NLQuestion, raw_triple: RawTriple, target_nouns: List[NounEntity]):
         # E.g.: "How high is the Yokohama Marine Tower?"
-        root = sentence.root
+        root = nl_question.question.root
 
         if raw_triple.s.token.head == root:
             target_nouns.append(raw_triple.o)

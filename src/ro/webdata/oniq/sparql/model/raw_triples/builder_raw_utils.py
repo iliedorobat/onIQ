@@ -9,7 +9,7 @@ from ro.webdata.oniq.endpoint.dbpedia.sparql_query import DBP_ENDPOINT, DBP_RESO
 from ro.webdata.oniq.endpoint.models.RDFElement import URI, URI_TYPE
 from ro.webdata.oniq.endpoint.query import QueryService
 from ro.webdata.oniq.service.query_const import PATHS, ACCESSORS
-from ro.webdata.oniq.sparql.model.NLQuestion import NLQuestion, QUESTION_TARGET
+from ro.webdata.oniq.sparql.model.NLQuestion import NLQuestion, ANSWER_TYPE
 from ro.webdata.oniq.sparql.model.triples.RawTriple import RawTriple
 
 
@@ -40,9 +40,7 @@ def get_improved_raw_triples(raw_triples: List[RawTriple], nl_question: NLQuesti
 
 
 def _get_age_predicate(triple: RawTriple, nl_question: NLQuestion, predicate: Union[str, Span]):
-    is_person = QUESTION_TARGET.PERSON
-
-    if nl_question.target == is_person:
+    if nl_question.answer_type == ANSWER_TYPE.PERSON:
         if isinstance(triple.p, Span) and triple.p.root.lemma_ in ["old", "young"]:
             # E.g.: "Who is the youngest Pulitzer Prize winner?"
             return "dbo:birthDate"

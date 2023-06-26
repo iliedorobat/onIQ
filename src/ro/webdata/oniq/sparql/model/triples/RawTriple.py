@@ -5,7 +5,6 @@ from spacy.tokens import Span, Token
 
 from ro.webdata.oniq.sparql.constants import SPARQL_STR_SEPARATOR
 from ro.webdata.oniq.sparql.model.AdjectiveEntity import AdjectiveEntity
-from ro.webdata.oniq.sparql.model.NLQuestion import QUESTION_TARGET
 from ro.webdata.oniq.sparql.model.NounEntity import NounEntity
 from ro.webdata.oniq.sparql.model.OrderBy import OrderBy
 

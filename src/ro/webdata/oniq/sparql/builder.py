@@ -11,19 +11,14 @@ from ro.webdata.oniq.endpoint.namespace import NAMESPACE
 from ro.webdata.oniq.endpoint.query import QueryService, escape_resource_name
 from ro.webdata.oniq.service.query_const import ACCESSORS, PATHS
 from ro.webdata.oniq.sparql.builder_raw import SPARQLRawBuilder
-from ro.webdata.oniq.sparql.model.NLQuestion import NLQuestion, QUESTION_TYPES
-from ro.webdata.oniq.sparql.model.raw_triples.builder_raw_utils import get_improved_raw_triples
-from ro.webdata.oniq.sparql.model.final_triples.Triple import Triple
-from ro.webdata.oniq.sparql.model.raw_triples.raw_target_utils import RawTargetUtils
-from ro.webdata.oniq.sparql.model.triples.RawTriple import RawTriple
-from ro.webdata.oniq.sparql.model.triples.OrderByRawTriple import OrderByRawTriple
+from ro.webdata.oniq.sparql.model.NLQuestion import NLQuestion
 from ro.webdata.oniq.sparql.model.final_triples.RDFTypeTriple import RDFTypeTriple
-
-
-class QUERY_TYPES:
-    ASK = "ASK"
-    COUNT = "COUNT"
-    SELECT = "SELECT"
+from ro.webdata.oniq.sparql.model.final_triples.Triple import Triple
+from ro.webdata.oniq.sparql.model.raw_triples.builder_raw_utils import get_improved_raw_triples
+from ro.webdata.oniq.sparql.model.raw_triples.raw_target_utils import RawTargetUtils
+from ro.webdata.oniq.sparql.model.triples.OrderByRawTriple import OrderByRawTriple
+from ro.webdata.oniq.sparql.model.triples.RawTriple import RawTriple
+from ro.webdata.oniq.sparql.quey import SPARQLQuery
 
 
 class SPARQLBuilder:
@@ -37,43 +32,8 @@ class SPARQLBuilder:
         self.triples = _prepare_triples(raw_triples)
 
     def to_sparql_query(self):
-        query_type = _get_query_type(self.nl_question)
-        output = ""
+        return SPARQLQuery.get_query(self.nl_question, self.targets, self.triples)
 
-        if query_type == QUERY_TYPES.ASK:
-            output = "ASK"
-        else:
-            str_targets = [target.to_var() for target in self.targets]
-            output = f"SELECT DISTINCT {' '.join(str_targets)}"
-
-        str_triples = [f"\t{str(triple)}" for triple in self.triples]
-        output += "\n"
-        output += "WHERE {\n"
-        output += " .\n".join(str_triples) + "\n"
-        output += "}"
-
-        str_ordering_triples = list(
-            set([
-                f"{str(item.order_by)}"
-                for item in self.triples
-                if item.is_ordering_triple()
-            ])
-        )
-
-        if len(str_ordering_triples) > 0:
-            output += "\n"
-            output += f"ORDER BY {' '.join(str_ordering_triples)}"
-
-        return output
-
-
-def _get_query_type(nl_question):
-    if nl_question.question_type == QUESTION_TYPES.S_AUX:
-        return QUERY_TYPES.ASK
-    elif nl_question.question_type == QUESTION_TYPES.COUNT:
-        return QUERY_TYPES.COUNT
-
-    return QUERY_TYPES.SELECT
 
 
 def _prepare_raw_triples(raw_builder: SPARQLRawBuilder):
@@ -90,12 +50,12 @@ def _prepare_raw_triples(raw_builder: SPARQLRawBuilder):
 
 
 def _prepare_target_nouns(nl_question: NLQuestion, raw_triples: List[RawTriple]):
-    target_nouns = []
+    targets = []
 
     for raw_triple in raw_triples:
-        RawTargetUtils.update_target_nouns(nl_question, target_nouns, raw_triple)
+        RawTargetUtils.update_targets(nl_question, targets, raw_triple)
 
-    return list(set(target_nouns))
+    return list(set(targets))
 
 
 def _prepare_triples(raw_triples: List[RawTriple]):
@@ -194,10 +154,8 @@ def _run_properties_query(endpoint: str, subject: str, triples: List[Triple]):
         if index < len(triples) - 1:
             sparql_query += "\n"
 
-    if not subject.startswith("?"):
-        sparql_query += f"{subject}   ?property   ?value ."
-
     sparql_query += f"""
+        {subject}   ?property   ?value .
         ?property   rdf:type   ?subclassOf .
         ?property   rdfs:label   ?label .
         OPTIONAL {{ ?property   rdfs:domain   ?domain }} .
