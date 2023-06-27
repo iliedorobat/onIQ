@@ -1,8 +1,13 @@
+import warnings
+
 from ro.webdata.oniq.common.constants import GLOBAL_ENV, TEST_MODES
 from ro.webdata.oniq.sparql.builder import SPARQLBuilder
 from ro.webdata.oniq.validation.pre_validation_pairs.pairs import PAIRS
 from ro.webdata.oniq.validation.validation import questions_test, question_test
 from ro.webdata.oniq.validation.validation_pairs.pairs_qald_5_test import PAIRS_QALD as V_PAIRS_QALD, PAIRS_QALD
+
+# Ignore spaCy "[W008] Evaluating Token.similarity based on empty vectors." warning message
+warnings.filterwarnings("ignore", message=r"\[W008\]", category=UserWarning)
 
 ENDPOINT = "http://localhost:7200/repositories/TESTING_BCU_CLUJ"
 ENDPOINT = "http://localhost:7200/repositories/eCHO"

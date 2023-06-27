@@ -1,13 +1,8 @@
-import warnings
-
 import pydash
 from spacy.tokens import Span, Token
 
 from ro.webdata.oniq.common.nlp.nlp_utils import text_to_span
-from ro.webdata.oniq.common.nlp.sentence_utils import get_root
-from ro.webdata.oniq.common.nlp.word_utils import is_aux, is_preceded_by_pass, is_wh_word, is_followed_by_possessive, \
-    is_verb, is_noun, get_prev_word, is_aux_pass
-from ro.webdata.oniq.common.print_utils import SYSTEM_MESSAGES
+from ro.webdata.oniq.common.nlp.word_utils import is_aux, is_wh_word, is_verb, is_noun
 
 
 class ANSWER_TYPE:
@@ -34,28 +29,10 @@ class QUESTION_TYPES:
     OTHERS = "others"
 
 
-class SYNTACTIC_TYPES:
-    # TODO: remove ???
-    warnings.warn(SYSTEM_MESSAGES.METHOD_NOT_USED, DeprecationWarning)
-
-    S_AUX = QUESTION_TYPES.S_AUX
-    S_NOUN = QUESTION_TYPES.S_NOUN
-    S_PREP = QUESTION_TYPES.S_PREP
-    S_VERB = QUESTION_TYPES.S_VERB
-    AUX = "auxiliary_verb"  # The root of the question is an aux verb
-    MAIN = "main_verb"  # The question ends with a verb
-    PASSIVE = "passive"  # The question ends with a verb which has a passive verb attached
-    PASSIVE_NEAR = "passive_near"
-    POSSESSIVE = "possessive"
-    POSSESSIVE_COMPLEX = "possessive_complex"
-    OTHERS = "others"
-
-
 class NLQuestion:
     def __init__(self, input_question: str):
         self.question = text_to_span(input_question)
         self.question_type = _get_question_type(self.question)
-        self.syntactic_type = _get_syntactic_type(self.question)  # TODO: remove
         self.answer_type = _get_answer_type(self.question_type)
 
     @staticmethod
@@ -176,54 +153,5 @@ def _get_answer_type(question_type: str):
         return ANSWER_TYPE.NUMBER
 
     return ANSWER_TYPE.THING
-
-
-def _get_syntactic_type(question: Span):
-    if not isinstance(question, Span) or len(question) < 2:
-        return None
-
-    if NLQuestion.starts_with_aux(question):
-        # E.g.: "Did Arnold Schwarzenegger attend a university?"
-        return SYNTACTIC_TYPES.S_AUX
-    elif NLQuestion.starts_with_verb(question):
-        # E.g.: "Give me the currency of China."
-        return SYNTACTIC_TYPES.S_VERB
-    elif NLQuestion.starts_with_noun(question):
-        # E.g.: "Desserts from which country contain fish?"
-        return SYNTACTIC_TYPES.S_NOUN
-    elif NLQuestion.starts_with_prep(question):
-        # E.g.: "At what distance does the earth curve?"
-        # E.g.: "In which country is Mecca located?"
-        return SYNTACTIC_TYPES.S_PREP
-    elif NLQuestion.starts_with_wh(question):
-        main_head = get_root(question)
-
-        if is_aux(main_head):
-            if NLQuestion.is_poss_question(question):
-                if is_followed_by_possessive(main_head):
-                    # E.g.: "Who is the person whose successor was Le Hong Phong?"
-                    return SYNTACTIC_TYPES.POSSESSIVE_COMPLEX
-
-                # E.g.: ### "Whose successor is Le Hong Phong?"
-                return SYNTACTIC_TYPES.POSSESSIVE
-
-            # E.g.: "Who is the leader of the town where the Myntdu river originates?"
-            return SYNTACTIC_TYPES.AUX
-        elif is_preceded_by_pass(main_head):
-            prev_word = get_prev_word(main_head)
-
-            if is_aux_pass(prev_word):
-                # E.g.: "Who was married to an actor that played in Philadelphia?"
-                # E.g.: "Which soccer players were born on Malta?"
-                return SYNTACTIC_TYPES.PASSIVE_NEAR
-
-            # E.g.: ### "where was the person who won the oscar born?"
-            return SYNTACTIC_TYPES.PASSIVE
-        else:
-            # E.g.: "Where did Mashhur bin Abdulaziz Al Saud's father die?"
-            return SYNTACTIC_TYPES.MAIN
-
-    return SYNTACTIC_TYPES.OTHERS
-
 
 
