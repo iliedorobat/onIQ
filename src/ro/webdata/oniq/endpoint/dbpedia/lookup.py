@@ -19,7 +19,7 @@ from ro.webdata.oniq.endpoint.dbpedia.sparql_query import DBP_PROPERTIES_OF_SUBJ
 from ro.webdata.oniq.endpoint.models.RDFElement import RDFClass, RDFProperty, ROOT_CLASS_URI
 from ro.webdata.oniq.endpoint.namespace import NAMESPACE
 from ro.webdata.oniq.service.query_const import ACCESSORS, PATHS, NODE_TYPE
-from ro.webdata.oniq.sparql.constants import SPARQL_STR_SEPARATOR
+from ro.webdata.oniq.sparql.common.constants import SPARQL_STR_SEPARATOR
 
 _MAX_LOOKUP_RESULTS = 10
 _NAME_TYPE_SEPARATOR = ','

@@ -10,15 +10,15 @@ from ro.webdata.oniq.endpoint.models.RDFElements import RDFElements
 from ro.webdata.oniq.endpoint.namespace import NAMESPACE
 from ro.webdata.oniq.endpoint.query import QueryService, escape_resource_name
 from ro.webdata.oniq.service.query_const import ACCESSORS, PATHS
-from ro.webdata.oniq.sparql.builder_raw import SPARQLRawBuilder
+from ro.webdata.oniq.sparql.builder.builder_raw_utils import get_improved_raw_triples
+from ro.webdata.oniq.sparql.builder.builder_raw import SPARQLRawBuilder
+from ro.webdata.oniq.sparql.builder.quey import SPARQLQuery
 from ro.webdata.oniq.sparql.model.NLQuestion import NLQuestion
 from ro.webdata.oniq.sparql.model.final_triples.RDFTypeTriple import RDFTypeTriple
 from ro.webdata.oniq.sparql.model.final_triples.Triple import Triple
-from ro.webdata.oniq.sparql.model.raw_triples.builder_raw_utils import get_improved_raw_triples
+from ro.webdata.oniq.sparql.model.raw_triples.OrderByRawTriple import OrderByRawTriple
+from ro.webdata.oniq.sparql.model.raw_triples.RawTriple import RawTriple
 from ro.webdata.oniq.sparql.model.raw_triples.raw_target_utils import RawTargetUtils
-from ro.webdata.oniq.sparql.model.triples.OrderByRawTriple import OrderByRawTriple
-from ro.webdata.oniq.sparql.model.triples.RawTriple import RawTriple
-from ro.webdata.oniq.sparql.quey import SPARQLQuery
 
 
 class SPARQLBuilder:

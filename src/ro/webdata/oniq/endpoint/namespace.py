@@ -1,6 +1,6 @@
 import re
 
-from ro.webdata.oniq.sparql.constants import SPARQL_STR_SEPARATOR
+from ro.webdata.oniq.sparql.common.constants import SPARQL_STR_SEPARATOR
 
 HTTP_PREFIX = "http://"
 NAMESPACE_SEPARATOR = ":"

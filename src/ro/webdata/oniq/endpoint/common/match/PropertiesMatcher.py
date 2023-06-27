@@ -4,7 +4,7 @@ import pydash
 
 from ro.webdata.oniq.endpoint.common.match.CachedMatches import CachedMatches
 from ro.webdata.oniq.endpoint.common.match.PropertyMatcher import PropertyMatcher
-from ro.webdata.oniq.sparql.constants import SPARQL_STR_SEPARATOR
+from ro.webdata.oniq.sparql.common.constants import SPARQL_STR_SEPARATOR
 
 CACHED_MATCHES = CachedMatches()
 

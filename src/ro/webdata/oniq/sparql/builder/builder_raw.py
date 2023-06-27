@@ -1,6 +1,6 @@
 from ro.webdata.oniq.common.print_utils import echo
 from ro.webdata.oniq.sparql.model.NLQuestion import NLQuestion
-from ro.webdata.oniq.sparql.model.triples.raw_triples_utils import prepare_base_raw_triples
+from ro.webdata.oniq.sparql.model.raw_triples.raw_triples_utils import prepare_base_raw_triples
 
 
 class SPARQLRawBuilder:

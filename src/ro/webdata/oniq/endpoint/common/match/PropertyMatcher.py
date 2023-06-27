@@ -9,7 +9,7 @@ from ro.webdata.oniq.common.print_utils import console, SYSTEM_MESSAGES
 from ro.webdata.oniq.endpoint.common.CSVService import CSV_COLUMN_SEPARATOR, CSVService
 from ro.webdata.oniq.endpoint.models.RDFElement import RDFProperty
 from ro.webdata.oniq.spacy_model import nlp_model
-from ro.webdata.oniq.sparql.constants import SPARQL_STR_SEPARATOR
+from ro.webdata.oniq.sparql.common.constants import SPARQL_STR_SEPARATOR
 
 SCORE_BUFFER = 1
 

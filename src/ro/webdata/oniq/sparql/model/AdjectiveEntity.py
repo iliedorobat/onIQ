@@ -1,7 +1,7 @@
 from spacy.tokens import Span, Token
 
 from ro.webdata.oniq.common.nlp.word_utils import is_adj, get_prev_word, is_adv
-from ro.webdata.oniq.sparql.constants import SPARQL_VAR_PREFIX
+from ro.webdata.oniq.sparql.common.constants import SPARQL_VAR_PREFIX
 
 
 class AdjectiveEntity:
@@ -37,6 +37,7 @@ class AdjectiveEntity:
         return str(self) == "NULL"
 
     def is_res(self):
+        # TODO: check if it contains ":"
         return "dbr:" in self.to_var()
 
     def is_text(self):

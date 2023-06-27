@@ -5,7 +5,7 @@ from spacy.tokens import Span, Token
 
 from ro.webdata.oniq.endpoint.common.match.PropertyMatcher import PropertyMatcher
 from ro.webdata.oniq.endpoint.query import escape_resource_name
-from ro.webdata.oniq.sparql.constants import SPARQL_STR_SEPARATOR
+from ro.webdata.oniq.sparql.common.constants import SPARQL_STR_SEPARATOR
 from ro.webdata.oniq.sparql.model.AdjectiveEntity import AdjectiveEntity
 from ro.webdata.oniq.sparql.model.NounEntity import NounEntity
 from ro.webdata.oniq.sparql.model.OrderBy import OrderBy

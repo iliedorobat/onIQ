@@ -16,7 +16,7 @@ from ro.webdata.oniq.endpoint.namespace import NAMESPACE, NamespaceService
 from ro.webdata.oniq.endpoint.query import QueryService, escape_resource_name
 from ro.webdata.oniq.service.query_const import PATHS, ACCESSORS, DATA_TYPE, NODE_TYPE
 from ro.webdata.oniq.sparql.model.NounEntity import NounEntity
-from ro.webdata.oniq.sparql.model.triples.RawTriple import RawTriple
+from ro.webdata.oniq.sparql.model.raw_triples.RawTriple import RawTriple
 
 nlp_dbpedia = spacy.load('en_core_web_md')
 nlp_dbpedia.add_pipe('dbpedia_spotlight', config={'confidence': 0.75})

@@ -1,12 +1,12 @@
 from ro.webdata.oniq.common.nlp.nlp_utils import token_to_span
 from ro.webdata.oniq.common.nlp.utils import WordnetUtils
 from ro.webdata.oniq.common.nlp.word_utils import is_adj, is_wh_word
+from ro.webdata.oniq.sparql.common.TokenHandler import TokenHandler
 from ro.webdata.oniq.sparql.model.AdjectiveEntity import AdjectiveEntity
 from ro.webdata.oniq.sparql.model.NLQuestion import NLQuestion, QUESTION_TYPES
 from ro.webdata.oniq.sparql.model.NounEntity import NounEntity
-from ro.webdata.oniq.sparql.model.triples.RawTriple import RawTriple
-from ro.webdata.oniq.sparql.model.triples.RawTripleGenerator import RawTripleGenerator
-from ro.webdata.oniq.sparql.model.triples.TokenHandler import TokenHandler
+from ro.webdata.oniq.sparql.model.raw_triples.RawTriple import RawTriple
+from ro.webdata.oniq.sparql.model.raw_triples.RawTripleGenerator import RawTripleGenerator
 
 
 def prepare_base_raw_triples(nl_question: NLQuestion):

@@ -5,7 +5,7 @@ from spacy.tokens import Span, Token
 from ro.webdata.oniq.endpoint.dbpedia.lookup import LookupService
 from ro.webdata.oniq.sparql.model.AdjectiveEntity import AdjectiveEntity
 from ro.webdata.oniq.sparql.model.NounEntity import NounEntity
-from ro.webdata.oniq.sparql.model.triples.RawTriple import RawTriple
+from ro.webdata.oniq.sparql.model.raw_triples.RawTriple import RawTriple
 
 
 class RDFTypeTriple:

@@ -10,8 +10,7 @@ from ro.webdata.oniq.common.nlp.nlp_utils import text_to_span
 from ro.webdata.oniq.common.nlp.utils import WordnetUtils, get_resource_namespace, get_resource_name
 from ro.webdata.oniq.common.nlp.word_utils import get_prev_word, is_noun, is_adj_modifier
 from ro.webdata.oniq.service.query_const import ACCESSORS, DATA_TYPE, PATHS
-from ro.webdata.oniq.sparql.constants import SPARQL_VAR_PREFIX, SPARQL_STR_SEPARATOR
-
+from ro.webdata.oniq.sparql.common.constants import SPARQL_VAR_PREFIX, SPARQL_STR_SEPARATOR
 
 nlp_dbpedia = spacy.load('en_core_web_md')
 nlp_dbpedia.add_pipe('dbpedia_spotlight', config={'confidence': 0.75})

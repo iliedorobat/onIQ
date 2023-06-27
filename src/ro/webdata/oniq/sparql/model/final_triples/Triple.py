@@ -10,7 +10,7 @@ from ro.webdata.oniq.sparql.model.AdjectiveEntity import AdjectiveEntity
 from ro.webdata.oniq.sparql.model.NounEntity import NounEntity
 from ro.webdata.oniq.sparql.model.final_triples.predicate_utils import subject_predicate_lookup, \
     object_predicate_lookup, adjective_property_lookup
-from ro.webdata.oniq.sparql.model.triples.RawTriple import RawTriple
+from ro.webdata.oniq.sparql.model.raw_triples.RawTriple import RawTriple
 
 
 class Triple:

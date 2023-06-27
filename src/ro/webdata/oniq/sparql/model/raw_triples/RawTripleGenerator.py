@@ -4,9 +4,9 @@ from spacy.tokens import Span, Token
 
 from ro.webdata.oniq.common.nlp.nlp_utils import token_to_span
 from ro.webdata.oniq.common.nlp.word_utils import is_preposition, is_wh_word, is_aux
+from ro.webdata.oniq.sparql.common.TokenHandler import TokenHandler
 from ro.webdata.oniq.sparql.model.NounEntity import NounEntity
-from ro.webdata.oniq.sparql.model.triples.RawTriple import RawTriple
-from ro.webdata.oniq.sparql.model.triples.TokenHandler import TokenHandler
+from ro.webdata.oniq.sparql.model.raw_triples.RawTriple import RawTriple
 
 
 class RawTripleGenerator:

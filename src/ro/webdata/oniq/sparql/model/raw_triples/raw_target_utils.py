@@ -5,7 +5,7 @@ from spacy.tokens import Span, Token
 from ro.webdata.oniq.common.nlp.word_utils import is_noun
 from ro.webdata.oniq.sparql.model.NLQuestion import NLQuestion, QUESTION_TYPES, ANSWER_TYPE
 from ro.webdata.oniq.sparql.model.NounEntity import NounEntity
-from ro.webdata.oniq.sparql.model.triples.RawTriple import RawTriple
+from ro.webdata.oniq.sparql.model.raw_triples.RawTriple import RawTriple
 
 
 class RawTargetUtils:
