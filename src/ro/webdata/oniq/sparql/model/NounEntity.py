@@ -3,13 +3,18 @@ import re
 from typing import List, Union
 
 import requests
+import spacy
 from spacy.tokens import Span, Token
 
 from ro.webdata.oniq.common.nlp.nlp_utils import text_to_span
-from ro.webdata.oniq.common.nlp.utils import WordnetUtils
+from ro.webdata.oniq.common.nlp.utils import WordnetUtils, get_resource_namespace, get_resource_name
 from ro.webdata.oniq.common.nlp.word_utils import get_prev_word, is_noun, is_adj_modifier
 from ro.webdata.oniq.service.query_const import ACCESSORS, DATA_TYPE, PATHS
 from ro.webdata.oniq.sparql.constants import SPARQL_VAR_PREFIX, SPARQL_STR_SEPARATOR
+
+
+nlp_dbpedia = spacy.load('en_core_web_md')
+nlp_dbpedia.add_pipe('dbpedia_spotlight', config={'confidence': 0.75})
 
 
 class NounEntity:
@@ -75,6 +80,7 @@ class NounEntity:
         return str(self) == "NULL"
 
     def is_res(self):
+        # TODO: check if it contains ":"
         return "dbr:" in self.to_var()
 
     def is_text(self):
@@ -135,13 +141,30 @@ def _get_resource(compound_noun: Span, main_word: Token):
             f'{ACCESSORS.END_I}={country_span.end}'
         ]
 
-        res_name_uri = f'http://localhost:8200/{PATHS.ENTITIES}?{"&".join(query_params)}'
-        res_name_response = requests.get(res_name_uri)
-        res_name: str = json.loads(res_name_response.content)
+        resource_uri = f'http://localhost:8200/{PATHS.ENTITIES}?{"&".join(query_params)}'
+        resource_response = requests.get(resource_uri)
 
-        return res_name
+        return json.loads(resource_response.content)
 
     if _is_known_compound_named_entity(compound_noun):
+        dbpedia_doc = nlp_dbpedia(compound_noun.text)
+        dbpedia_ents = [ent for ent in dbpedia_doc.ents if str(ent) == str(compound_noun)]
+        
+        if len(dbpedia_ents) > 0:
+            entity_span = dbpedia_ents[0]
+            namespace = get_resource_namespace(entity_span)
+
+            if entity_span.label_ == "DBPEDIA_ENT":
+                # E.g.: "What is the net income of Apple?"
+                return {
+                    ACCESSORS.QUESTION: compound_noun.doc.text,
+                    ACCESSORS.START_I: compound_noun.start,
+                    ACCESSORS.END_I: compound_noun.end,
+                    ACCESSORS.NAMED_ENTITY: entity_span.text,
+                    ACCESSORS.RESOURCE_NAME: get_resource_name(entity_span),
+                    ACCESSORS.RESOURCE_NAMESPACE: namespace
+                }
+
         query_params = [
             f'{ACCESSORS.QUESTION}={compound_noun.doc.text}',
             f'{ACCESSORS.TARGET_DATA_TYPE}={DATA_TYPE.SPAN}',
@@ -149,11 +172,10 @@ def _get_resource(compound_noun: Span, main_word: Token):
             f'{ACCESSORS.END_I}={compound_noun.end}'
         ]
 
-        res_name_uri = f'http://localhost:8200/{PATHS.ENTITIES}?{"&".join(query_params)}'
-        res_name_response = requests.get(res_name_uri)
-        res_name: str = json.loads(res_name_response.content)
+        resource_uri = f'http://localhost:8200/{PATHS.ENTITIES}?{"&".join(query_params)}'
+        resource_response = requests.get(resource_uri)
 
-        return res_name
+        return json.loads(resource_response.content)
 
 
 def _token_exists_in_ents(token: Token):

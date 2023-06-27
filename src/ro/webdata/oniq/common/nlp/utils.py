@@ -12,6 +12,23 @@ class SENTI_WORD_TYPE:
     POSITIVE = "positive"
 
 
+def get_resource_name(entity_span: Span):
+    resource_uri = entity_span.kb_id_
+    namespace = get_resource_namespace(entity_span)
+
+    return resource_uri.replace(namespace, "")
+
+
+def get_resource_namespace(entity_span: Span):
+    resource_uri = entity_span.kb_id_
+
+    last_index = resource_uri.rfind("/") + 1
+    if last_index == -1:
+        last_index = resource_uri.rfind("#") + 1
+
+    return resource_uri[0: last_index]
+
+
 def is_doc_or_span(phrase: Union[Doc, Span]):
     """
     Determine if the input phrase is an instance of Doc or Span.

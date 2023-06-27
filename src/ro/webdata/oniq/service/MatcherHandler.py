@@ -1,5 +1,6 @@
 from urllib.parse import unquote, ParseResult
 
+import spacy
 from spacy.tokens import Doc, Span
 
 from ro.webdata.oniq.common.nlp.nlp_utils import text_to_span
@@ -9,6 +10,10 @@ from ro.webdata.oniq.endpoint.common.match.PropertyMatcher import PropertyMatche
 from ro.webdata.oniq.endpoint.models.RDFElements import RDFElements
 from ro.webdata.oniq.service.query_const import ACCESSORS, PAIR_SEPARATOR, JOIN_OPERATOR
 from ro.webdata.oniq.spacy_model import nlp_model
+
+
+nlp_dbpedia = spacy.load('en_core_web_md')
+nlp_dbpedia.add_pipe('dbpedia_spotlight', config={'confidence': 0.75})
 
 
 class _ResponseFormatter:
@@ -55,7 +60,7 @@ class SpanMatcherHandler:
 
             if key == ACCESSORS.QUESTION:
                 self.question = unquote(value)
-                self.document = nlp_model(self.question)
+                self.document = nlp_dbpedia(self.question)
                 continue
             elif key == ACCESSORS.START_I:
                 self.start_i = int(value)
@@ -87,7 +92,14 @@ class SpanMatcherHandler:
             failed_node_construct = self.node_start_i == -1 or self.node_end_i == -1
             if not failed_node_construct:
                 node_value = self.document[self.node_start_i: self.node_end_i]
-                self.node_value = text_to_span(self.str_node_value, node_value.root.ent_type_)
+                ents = self.document.ents
+
+                if len(ents) > 0:
+                    for ent in ents:
+                        if ent.text == node_value.text:
+                            self.node_value = ent
+                else:
+                    self.node_value = text_to_span(self.str_node_value, node_value.root.ent_type_)
 
     def matcher_finder(self, props: RDFElements):
         if self.target_expression is None:
@@ -105,7 +117,7 @@ class SpanMatcherHandler:
         #     # Use a proper synonym for the word "dissolve"
         #     # E.g.: "When did the Ming dynasty dissolve?"
         #
-        #     nlp_value = nlp_model("end")
+        #     nlp_value = nlp_dbpedia("end")
         #     new_target_expression = Span(nlp_value, 0, len(nlp_value))
         #
         #     new_best_matched = PropertiesMatcher.get_best_matched(
@@ -140,13 +152,13 @@ class StringMatcherHandler:
 
             if key == ACCESSORS.QUESTION:
                 self.question = unquote(value)
-                self.document = nlp_model(self.question)
+                self.document = nlp_dbpedia(self.question)
                 continue
             elif key == ACCESSORS.RESULT_TYPE:
                 self.result_type = value
                 continue
             elif key == ACCESSORS.TARGET_EXPRESSION:
-                nlp_value = nlp_model(value)
+                nlp_value = nlp_dbpedia(value)
                 self.target_expression = Span(nlp_value, 0, len(nlp_value))
                 continue
             elif key == ACCESSORS.NODE_TYPE:

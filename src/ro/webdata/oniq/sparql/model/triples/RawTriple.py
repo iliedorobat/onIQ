@@ -3,6 +3,8 @@ from typing import Union
 
 from spacy.tokens import Span, Token
 
+from ro.webdata.oniq.endpoint.common.match.PropertyMatcher import PropertyMatcher
+from ro.webdata.oniq.endpoint.query import escape_resource_name
 from ro.webdata.oniq.sparql.constants import SPARQL_STR_SEPARATOR
 from ro.webdata.oniq.sparql.model.AdjectiveEntity import AdjectiveEntity
 from ro.webdata.oniq.sparql.model.NounEntity import NounEntity
@@ -51,9 +53,33 @@ class RawTriple:
 
         return validation
 
-    # TODO: check
-    # def is_location(self):
-    #     return str(self.p) == QUESTION_TARGET.LOCATION
+    def to_escaped_str(self, append_prefix: bool = False):
+        if self.p is None:
+            return None
+
+        if isinstance(self.p, PropertyMatcher):
+            p = str(self.p.property)
+        elif self.is_rdf_type() or self.is_dbpedia_prop():
+            p = self.p
+        else:
+            p = "?property"
+            if append_prefix is True:
+                p = f"?p_{self.p}"
+
+        s = escape_resource_name(
+            self.s.to_var()
+        )
+
+        o = escape_resource_name(
+            self.o.to_var()
+        )
+
+        return f"{s}   {p}   {o}"
+
+    def is_dbpedia_prop(self):
+        if not isinstance(self.p, str):
+            return False
+        return self.p.startswith("dbo:") or self.p.startswith("dbr:")
 
     def is_rdf_type(self):
         return str(self.p) == "rdf:type"

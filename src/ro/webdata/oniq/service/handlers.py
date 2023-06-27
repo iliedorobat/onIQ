@@ -2,6 +2,7 @@ from urllib.parse import unquote, ParseResult
 
 import pydash
 
+from ro.webdata.oniq.common.nlp.utils import get_resource_name
 from ro.webdata.oniq.endpoint.common.translator.CSVTranslator import CSVTranslator
 from ro.webdata.oniq.endpoint.dbpedia.lookup import LookupService
 from ro.webdata.oniq.endpoint.dbpedia.query import DBpediaQueryService
@@ -29,7 +30,7 @@ def entities_handler(parsed):
 
 
 def matcher_handler(parsed_url: ParseResult):
-    handler = _get_matcher_handler(parsed_url)
+    handler = get_matcher_handler(parsed_url)
     props = all_props
 
     if handler is not None:
@@ -37,9 +38,14 @@ def matcher_handler(parsed_url: ParseResult):
         node_text_value = _get_param_value(parsed_url, ACCESSORS.NODE_VALUE, True)
 
         named_entity = handler.node_value
-        lookup_result = LookupService.entities_lookup(named_entity, all_classes)
-        resource_name = pydash.get(lookup_result, [0, "resource", 0], node_text_value)
-        res_name = resource_name.replace(NAMESPACE.DBP_RESOURCE, "")
+        if named_entity.label_ == "DBPEDIA_ENT" and named_entity.kb_id_ != "":
+            # E.g.: "What is the net income of Apple?"
+            # E.g.: "When did the Ming dynasty dissolve?" => named_entity.kb_id_ == ""
+            res_name = get_resource_name(named_entity)
+        else:
+            lookup_result = LookupService.entities_lookup(named_entity, all_classes)
+            resource_name = pydash.get(lookup_result, [0, "resource", 0], node_text_value)
+            res_name = resource_name.replace(NAMESPACE.DBP_RESOURCE, "")
 
         if node_type == NODE_TYPE.SUBJECT:
             props = DBpediaQueryService.run_subject_properties_query(res_name)
@@ -80,7 +86,7 @@ def _get_entity_handler(parsed_url, classes: RDFElements):
     return None
 
 
-def _get_matcher_handler(parsed_url):
+def get_matcher_handler(parsed_url):
     target_data_type = _get_param_value(parsed_url, ACCESSORS.TARGET_DATA_TYPE)
 
     if target_data_type == DATA_TYPE.SPAN:

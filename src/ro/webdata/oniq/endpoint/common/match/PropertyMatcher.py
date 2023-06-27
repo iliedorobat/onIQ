@@ -143,6 +143,8 @@ def _calculate_word_similarity_score(rdf_prop, target_expression, result_type):
     count = 0
 
     prop_tokens = rdf_prop.label_to_non_stop_tokens()
+    # TODO: find a better approach
+    prop_buffer = 0.2 if rdf_prop.ns_label == "dbo" else 0
 
     for index, prop_token in list(enumerate(prop_tokens)):
         # FIXME: workaround for "born".lemma_ == "bear"
@@ -156,7 +158,7 @@ def _calculate_word_similarity_score(rdf_prop, target_expression, result_type):
         if not word_2.has_vector:
             console.warning(SYSTEM_MESSAGES.VECTORS_NOT_AVAILABLE % word_2.lemma_)
 
-        similarity_score *= (word_1.similarity(word_2) + SCORE_BUFFER)
+        similarity_score *= (word_1.similarity(word_2) + prop_buffer + SCORE_BUFFER)
 
         # E.g.: birthPlace
         if index > 0 and result_type is not None:
@@ -165,7 +167,7 @@ def _calculate_word_similarity_score(rdf_prop, target_expression, result_type):
             if not result_type_token.has_vector:
                 console.warning(SYSTEM_MESSAGES.VECTORS_NOT_AVAILABLE % result_type_token.text)
 
-            similarity_score *= (word_2.similarity(result_type_token) + SCORE_BUFFER)
+            similarity_score *= (word_2.similarity(result_type_token) +  prop_buffer + SCORE_BUFFER)
 
         count += 1
         # similarity_list += _get_word_similarity_list(word, non_stop_token, rdf_prop)
@@ -202,8 +204,13 @@ def _calculate_detachment_score(rdf_prop, target_expression):
             Aggregated similarity score.
     """
 
-    prop_name = rdf_prop.name
+    str_tokens = [token.text for token in rdf_prop.label_to_non_stop_tokens()]
+    prop_name = " ".join(str_tokens)
     target_text = target_expression.text
+
+    if len(prop_name) == 0:
+        console.warning(f"The property \"{rdf_prop.uri}\" have been excluded because contains only stopwords")
+        return 0
 
     jaccard_distance = nltk.jaccard_distance(frozenset(prop_name), frozenset(target_text))
     edit_distance = nltk.edit_distance(prop_name, target_text)

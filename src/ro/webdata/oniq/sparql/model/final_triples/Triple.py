@@ -1,4 +1,4 @@
-from typing import Union
+from typing import Union, List
 
 from spacy.tokens import Span
 
@@ -14,9 +14,9 @@ from ro.webdata.oniq.sparql.model.triples.RawTriple import RawTriple
 
 
 class Triple:
-    def __init__(self, raw_triple: RawTriple, properties: RDFElements):
+    def __init__(self, raw_triple: RawTriple, raw_triples: List[RawTriple], properties: RDFElements):
         self.s = raw_triple.s
-        self.p = _predicate_lookup(raw_triple, properties)
+        self.p = _predicate_lookup(raw_triple, raw_triples, properties)
         self.o = raw_triple.o
         self.question = raw_triple.question
         self.order_by = raw_triple.order_by
@@ -66,7 +66,7 @@ class Triple:
         return f"{s}   {p}   {o}"
 
 
-def _predicate_lookup(raw_triple: RawTriple, properties: RDFElements):
+def _predicate_lookup(raw_triple: RawTriple, raw_triples: List[RawTriple], properties: RDFElements):
     subject: NounEntity = raw_triple.s
     predicate: Union[str, Span] = raw_triple.p
     obj: Union[AdjectiveEntity, NounEntity] = raw_triple.o
@@ -90,10 +90,10 @@ def _predicate_lookup(raw_triple: RawTriple, properties: RDFElements):
 
     if subject.is_res():
         if obj.is_var():
-            return subject_predicate_lookup(question, subject, predicate, obj)
+            return subject_predicate_lookup(question, subject, predicate, raw_triples)
 
     if subject.is_var():
-        return object_predicate_lookup(question, obj, predicate)
+        return object_predicate_lookup(question, obj, predicate, raw_triples)
 
     # E.g.: "Who is the tallest basketball player?"
     #       <?person   rdf:type   dbo:BasketballPlayer>

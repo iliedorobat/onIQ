@@ -1,5 +1,5 @@
 import json
-from typing import List
+from typing import List, Union
 
 import pydash
 import requests
@@ -32,8 +32,11 @@ class SPARQLBuilder:
         self.triples = _prepare_triples(raw_triples)
 
     def to_sparql_query(self):
-        return SPARQLQuery.get_query(self.nl_question, self.targets, self.triples)
-
+        try:
+            return SPARQLQuery.get_query(self.nl_question, self.targets, self.triples)
+        except:
+            # FIXME:
+            return ""
 
 
 def _prepare_raw_triples(raw_builder: SPARQLRawBuilder):
@@ -62,6 +65,11 @@ def _prepare_triples(raw_triples: List[RawTriple]):
     if len(raw_triples) == 0:
         return []
 
+    subject = escape_resource_name(
+        raw_triples[0].s.to_var()
+    )
+    properties = _get_properties(DBP_ENDPOINT, subject, raw_triples)
+
     main_raw_triples = [
         raw_triple for raw_triple in raw_triples
         if not raw_triple.is_ordering_triple()
@@ -71,19 +79,15 @@ def _prepare_triples(raw_triples: List[RawTriple]):
         if raw_triple.is_ordering_triple()
     ]
     rdf_type_order_by_triples = [
-        Triple(raw_triple, RDFElements([])) for raw_triple in raw_triples
+        Triple(raw_triple, raw_triples, RDFElements([])) for raw_triple in raw_triples
         # E.g.: "Which musician wrote the most books?"
         if raw_triple.is_rdf_type()
             and raw_triple not in main_raw_triples
             and raw_triple.o.is_dbpedia_type
     ]
 
-    subject = escape_resource_name(
-        raw_triples[0].s.to_var()
-    )
-
-    main_triples = _init_triples(main_raw_triples, RDFElements([]))
-    properties = _get_properties(DBP_ENDPOINT, subject, main_triples + rdf_type_order_by_triples)
+    main_triples = _init_triples(main_raw_triples, properties)
+    # properties = _get_properties(DBP_ENDPOINT, subject, main_triples + rdf_type_order_by_triples)
     order_by_triples = _init_triples(order_by_raw_triples, properties)
 
     return main_triples + order_by_triples
@@ -93,7 +97,7 @@ def _init_triples(raw_triples: List[RawTriple], properties: RDFElements):
     triples = []
 
     for raw_triple in raw_triples:
-        triple = Triple(raw_triple, properties)
+        triple = Triple(raw_triple, raw_triples, properties)
         triples.append(triple)
 
     return triples
@@ -116,7 +120,7 @@ def _get_resource_type(main_triples: List[Triple]):
     return resource_type
 
 
-def _get_properties(endpoint: str, subject: str, main_triples: List[Triple]):
+def _get_properties(endpoint: str, subject: str, main_triples: List[Union[Triple, RawTriple]]):
     properties = _run_properties_query(endpoint, subject, main_triples)
     resource_type = _get_resource_type(main_triples)
 
@@ -131,7 +135,7 @@ def _get_properties(endpoint: str, subject: str, main_triples: List[Triple]):
     return properties
 
 
-def _run_properties_query(endpoint: str, subject: str, triples: List[Triple]):
+def _run_properties_query(endpoint: str, subject: str, triples: List[Union[Triple, RawTriple]]):
     if subject.startswith("?") and len(triples) == 0:
         # E.g.: "Who is the youngest Pulitzer Prize winner?"
         # => subject.startswith("?")
@@ -149,13 +153,19 @@ def _run_properties_query(endpoint: str, subject: str, triples: List[Triple]):
 """
 
     for index, triple in enumerate(triples):
-        sparql_query += f"\t\t{triple.to_escaped_str()} ."
+        triple_str = triple.to_escaped_str()
+        if triple_str is not None:
+            sparql_query += f"\t\t{triple.to_escaped_str()} ."
 
         if index < len(triples) - 1:
             sparql_query += "\n"
 
+    if not subject.startswith("?"):
+        # E.g.: "How many companies were founded by the founder of Facebook?"
+        # => subject.startswith("?")
+        sparql_query += f"\t\t{subject}   ?property   ?value ."
+
     sparql_query += f"""
-        {subject}   ?property   ?value .
         ?property   rdf:type   ?subclassOf .
         ?property   rdfs:label   ?label .
         OPTIONAL {{ ?property   rdfs:domain   ?domain }} .

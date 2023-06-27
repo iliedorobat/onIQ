@@ -19,6 +19,7 @@ class Installer:
         # TODO: to read: https://towardsdatascience.com/named-entity-recognition-with-spacy-and-the-mighty-roberta-97d879f981#c19e
         os.system("pip3 install --user spacy-transformers")
         os.system("pip3 install --user spacy-wordnet")
+        os.system("pip3 install --user spacy-dbpedia-spotlight")
 
     @staticmethod
     def init_nltk():

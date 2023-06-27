@@ -3,7 +3,7 @@ from typing import List, Union
 
 import pydash
 import requests
-from spacy.tokens import Span
+from spacy.tokens import Span, Token
 
 from ro.webdata.oniq.endpoint.dbpedia.sparql_query import DBP_ENDPOINT, DBP_RESOURCE_TYPE_QUERY
 from ro.webdata.oniq.endpoint.models.RDFElement import URI, URI_TYPE
@@ -27,7 +27,9 @@ def get_improved_raw_triples(raw_triples: List[RawTriple], nl_question: NLQuesti
         if "dbo:elevation" not in temp_p_list:
             predicate = _get_mountain_predicate(raw_triples, triple, predicate)
         if "dbo:locatedInArea" not in temp_p_list:
-            predicate = _update_location_triple(raw_triples, predicate)
+            if isinstance(triple.o.token, Token) and triple.o.token.ent_type_ in ["GPE", "LOC"]:
+                # E.g.: "Which volcanos in Japan erupted since 2000?"
+                predicate = _update_location_triple(raw_triples, predicate)
 
         temp_p_list.append(
             str(predicate)
