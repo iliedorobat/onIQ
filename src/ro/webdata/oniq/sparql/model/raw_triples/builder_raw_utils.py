@@ -5,9 +5,7 @@ import pydash
 import requests
 from spacy.tokens import Span, Token
 
-from ro.webdata.oniq.endpoint.dbpedia.sparql_query import DBP_ENDPOINT, DBP_RESOURCE_TYPE_QUERY
-from ro.webdata.oniq.endpoint.models.RDFElement import URI, URI_TYPE
-from ro.webdata.oniq.endpoint.query import QueryService
+from ro.webdata.oniq.endpoint.models.RDFElement import URI_TYPE
 from ro.webdata.oniq.service.query_const import PATHS, ACCESSORS
 from ro.webdata.oniq.sparql.model.NLQuestion import NLQuestion, ANSWER_TYPE
 from ro.webdata.oniq.sparql.model.triples.RawTriple import RawTriple
@@ -22,8 +20,6 @@ def get_improved_raw_triples(raw_triples: List[RawTriple], nl_question: NLQuesti
 
         if "dbo:birthDate" not in temp_p_list:
             predicate = _get_age_predicate(triple, nl_question, predicate)
-        if "dbo:award" not in temp_p_list:
-            predicate = _get_awards_predicate(triple, predicate)
         if "dbo:elevation" not in temp_p_list:
             predicate = _get_mountain_predicate(raw_triples, triple, predicate)
         if "dbo:locatedInArea" not in temp_p_list:
@@ -46,23 +42,6 @@ def _get_age_predicate(triple: RawTriple, nl_question: NLQuestion, predicate: Un
         if isinstance(triple.p, Span) and triple.p.root.lemma_ in ["old", "young"]:
             # E.g.: "Who is the youngest Pulitzer Prize winner?"
             return "dbo:birthDate"
-
-    return predicate
-
-
-def _get_awards_predicate(triple: RawTriple, predicate: Union[str, Span]):
-    # Get "dbo:award" predicate if the triple contains an Award triple object
-    # E.g.: "Who is the youngest Pulitzer Prize winner?"
-
-    if triple.o.is_res():
-        obj_var = triple.o.to_var()
-        resource_name = obj_var.replace("dbr:", "")
-
-        parent_classes = QueryService.run_resource_type_query(DBP_ENDPOINT, resource_name, DBP_RESOURCE_TYPE_QUERY)
-        is_award = URI.AWARD_CLASS in parent_classes
-
-        if is_award:
-            return "dbo:award"
 
     return predicate
 

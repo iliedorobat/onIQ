@@ -106,7 +106,7 @@ def prepare_raw_triples(sentence: Span):
                         if TokenHandler.noun_not_found(noun_lefts[0], head):
                             statement = RawTriple(
                                 s=head,
-                                p="?property",
+                                p=token_to_span(head),
                                 o=NounEntity(noun_lefts[0]),
                                 question=sentence
                             )

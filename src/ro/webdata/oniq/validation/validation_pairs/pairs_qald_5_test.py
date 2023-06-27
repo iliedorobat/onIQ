@@ -330,15 +330,21 @@ ORDER BY DESC(?high)
     #         "result": """
     # """
     #     },
-    #     {
-    #         "aggregation": True,
-    #         "answertype": "number",
-    #         "hybrid": False,
-    #         "onlydbo": True,
-    #         "query": "How many companies were founded by the founder of Facebook?",
-    #         "result": """
-    # """
-    #     },
+    {
+        "aggregation": True,
+        "answertype": "number",
+        "hybrid": False,
+        "onlydbo": True,
+        "query": "How many companies were founded by the founder of Facebook?",
+        "result": """
+SELECT DISTINCT COUNT(?many_companies)
+WHERE {
+	?many_companies   dbo:foundedBy   ?founder .
+	dbr:Facebook   dbp:founder   ?founder .
+	?many_companies   rdf:type   dbo:Company
+}
+"""
+    },
     #     {
     #         "aggregation": True,
     #         "answertype": "number",
@@ -473,15 +479,22 @@ ORDER BY DESC(COUNT(?visitors))
     #         "result": """
     # """
     #     },
-    #     {
-    #         "aggregation": True,  # False??
-    #         "answertype": "resource",
-    #         "hybrid": False,
-    #         "onlydbo": True,
-    #         "query": "Which volcanos in Japan erupted since 2000?",
-    #         "result": """
-    # """
-    #     },
+    {
+        # TODO: filter by
+        "aggregation": True,  # False??
+        "answertype": "resource",
+        "hybrid": False,
+        "onlydbo": True,
+        "query": "Which volcanos in Japan erupted since 2000?",
+        "result": """
+SELECT DISTINCT ?volcanos
+WHERE {
+	?volcanos   dbo:eruptionYear   ?erupted .
+	?volcanos   dbo:locatedInArea   dbr:Japan .
+	?volcanos   rdf:type   dbo:Volcano
+}
+"""
+    },
     #     {
     #         "aggregation": False,
     #         "answertype": "resource",
