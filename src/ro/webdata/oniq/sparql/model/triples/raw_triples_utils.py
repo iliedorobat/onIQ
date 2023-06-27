@@ -1,5 +1,3 @@
-from spacy.tokens import Span
-
 from ro.webdata.oniq.common.nlp.nlp_utils import token_to_span
 from ro.webdata.oniq.common.nlp.utils import WordnetUtils
 from ro.webdata.oniq.common.nlp.word_utils import is_adj, is_wh_word
@@ -11,11 +9,11 @@ from ro.webdata.oniq.sparql.model.triples.RawTripleGenerator import RawTripleGen
 from ro.webdata.oniq.sparql.model.triples.TokenHandler import TokenHandler
 
 
-# TODO: rename to prepare_raw_triples
-def prepare_raw_triples(sentence: Span):
+def prepare_base_raw_triples(nl_question: NLQuestion):
     raw_triples = []
 
-    head = sentence.root
+    question = nl_question.question
+    head = question.root
     lefts = [token for token in list(head.lefts) if not is_wh_word(token)]
     rights = [token for token in list(head.rights) if not is_wh_word(token)]
 
@@ -29,7 +27,7 @@ def prepare_raw_triples(sentence: Span):
 
         if nl_question.question_type == QUESTION_TYPES.S_PREP:
             # E.g.: "In which country is Mecca located?"
-            rights_prep = list(sentence[0].rights)
+            rights_prep = list(question[0].rights)
             noun_rights_prep = TokenHandler.get_nouns(rights_prep)
 
             if len(noun_rights_prep) > 0:
@@ -50,21 +48,21 @@ def prepare_raw_triples(sentence: Span):
             s=NounEntity(subject),
             p=p,
             o=NounEntity(obj),
-            question=sentence
+            question=question
         )
         raw_triples.append(statement)
 
         # E.g.: "Which museum in New York has the most visitors?"
-        statement = RawTripleGenerator.prep_after_noun_handler(sentence, subject)
+        statement = RawTripleGenerator.prep_after_noun_handler(question, subject)
         if statement is not None:
             raw_triples.append(statement)
 
         # E.g.: "How many companies were founded by the founder of Facebook?" => founder of Facebook
-        statement = RawTripleGenerator.prep_after_noun_handler(sentence, obj)
+        statement = RawTripleGenerator.prep_after_noun_handler(question, obj)
         if statement is not None:
             raw_triples.append(statement)
 
-        statement = RawTripleGenerator.passive_possessive_handler(sentence, head)
+        statement = RawTripleGenerator.passive_possessive_handler(question, head)
         if statement is not None:
             raw_triples.append(statement)
     else:
@@ -80,11 +78,11 @@ def prepare_raw_triples(sentence: Span):
                         s=NounEntity(noun_rights[0]),
                         p=token_to_span(adjective),
                         o=AdjectiveEntity(adjective),
-                        question=sentence
+                        question=question
                     )
                     raw_triples.append(statement)
 
-            statement = RawTripleGenerator.passive_possessive_handler(sentence, noun_rights[0])
+            statement = RawTripleGenerator.passive_possessive_handler(question, noun_rights[0])
             if statement is not None:
                 raw_triples.append(statement)
             else:
@@ -96,7 +94,7 @@ def prepare_raw_triples(sentence: Span):
                 # E.g.: "Give me the currency of China."
                 # E.g.: "Who were the parents of Queen Victoria?"
                 # E.g.: "What is the highest mountain in Romania?"
-                statement = RawTripleGenerator.prep_after_noun_handler(sentence, head)
+                statement = RawTripleGenerator.prep_after_noun_handler(question, head)
                 if statement is not None:
                     raw_triples.append(statement)
 
@@ -107,7 +105,7 @@ def prepare_raw_triples(sentence: Span):
                             s=NounEntity(head),
                             p="?property",
                             o=NounEntity(noun_rights[0]),
-                            question=sentence
+                            question=question
                         )
                         raw_triples.append(statement)
                     else:
@@ -117,16 +115,16 @@ def prepare_raw_triples(sentence: Span):
                                 s=head,
                                 p=token_to_span(head),
                                 o=NounEntity(noun_lefts[0]),
-                                question=sentence
+                                question=question
                             )
                             raw_triples.append(statement)
                         # else:
-                        #     # TODO: E.g.: "Give me all ESA astronauts."
+                        #     # FIXME: E.g.: "Give me all ESA astronauts."
                         #     statement = RawTriple(
                         #         s=head,
                         #         p="?property",
                         #         o=NounEntity(noun_lefts[0]),
-                        #         question=sentence
+                        #         question=question
                         #     )
                         #     raw_triples.append(statement)
 
@@ -143,7 +141,7 @@ def prepare_raw_triples(sentence: Span):
                             s=head,
                             p="country" if country is not None else token_to_span(adjective),
                             o=NounEntity(adjective) if country is not None else AdjectiveEntity(adjective),
-                            question=sentence
+                            question=question
                         )
                         raw_triples.append(statement)
 

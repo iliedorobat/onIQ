@@ -5,6 +5,7 @@ import nltk
 from nltk.corpus import wordnet
 from spacy.tokens import Token
 
+from ro.webdata.oniq.common.constants import GLOBAL_ENV
 from ro.webdata.oniq.common.print_utils import console, SYSTEM_MESSAGES
 from ro.webdata.oniq.endpoint.common.CSVService import CSV_COLUMN_SEPARATOR, CSVService
 from ro.webdata.oniq.endpoint.models.RDFElement import RDFProperty
@@ -209,7 +210,8 @@ def _calculate_detachment_score(rdf_prop, target_expression):
     target_text = target_expression.text
 
     if len(prop_name) == 0:
-        console.warning(f"The property \"{rdf_prop.uri}\" have been excluded because contains only stopwords")
+        if GLOBAL_ENV.IS_DEBUG:
+            console.warning(f"The property <{rdf_prop.uri}> have been excluded because contains only stopwords")
         return 0
 
     jaccard_distance = nltk.jaccard_distance(frozenset(prop_name), frozenset(target_text))
