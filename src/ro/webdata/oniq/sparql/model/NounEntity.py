@@ -43,6 +43,9 @@ class NounEntity:
 
                 self.compound_noun = _get_noun_entity(word)
                 self.text = _prepare_text(self.compound_noun)
+            else:
+                self.compound_noun = _get_noun_entity(self.token)
+                self.text = word.text
         else:
             self.compound_noun = _get_noun_entity(self.token)
             self.text = word
@@ -113,7 +116,7 @@ class NounEntity:
         if self.resource is not None:
             return f"dbr:{self.resource[ACCESSORS.RESOURCE_NAME]}"
 
-        if self.noun is not None:
+        if self.token is not None:
             text = re.sub(r"\s", SPARQL_STR_SEPARATOR, self.to_span().text)
             return f"{SPARQL_VAR_PREFIX}{text}"
 

@@ -4,13 +4,14 @@ from ro.webdata.oniq.common.nlp.nlp_utils import token_to_span
 from ro.webdata.oniq.common.nlp.utils import WordnetUtils
 from ro.webdata.oniq.common.nlp.word_utils import is_adj, is_wh_word
 from ro.webdata.oniq.sparql.model.AdjectiveEntity import AdjectiveEntity
+from ro.webdata.oniq.sparql.model.NLQuestion import NLQuestion, QUESTION_TYPES
 from ro.webdata.oniq.sparql.model.NounEntity import NounEntity
 from ro.webdata.oniq.sparql.model.triples.RawTriple import RawTriple
 from ro.webdata.oniq.sparql.model.triples.RawTripleGenerator import RawTripleGenerator
 from ro.webdata.oniq.sparql.model.triples.TokenHandler import TokenHandler
 
 
-# TODO: rename to prepare_base_raw_triples
+# TODO: rename to prepare_raw_triples
 def prepare_raw_triples(sentence: Span):
     raw_triples = []
 
@@ -26,6 +27,14 @@ def prepare_raw_triples(sentence: Span):
         p = token_to_span(head)
         obj = None
 
+        if nl_question.question_type == QUESTION_TYPES.S_PREP:
+            # E.g.: "In which country is Mecca located?"
+            rights_prep = list(sentence[0].rights)
+            noun_rights_prep = TokenHandler.get_nouns(rights_prep)
+
+            if len(noun_rights_prep) > 0:
+                p = token_to_span(noun_rights_prep[0])
+
         if len(noun_rights) > 0:
             # E.g.: "Did Arnold Schwarzenegger attend a university?"
             obj = noun_rights[0]
@@ -35,7 +44,7 @@ def prepare_raw_triples(sentence: Span):
             if obj is None:
                 # E.g.: "Which volcanos in Japan erupted since 2000?"
                 # E.g.: "When did the Ming dynasty dissolve?"
-                obj = p[0].text
+                obj = p.root
 
         statement = RawTriple(
             s=NounEntity(subject),
@@ -113,7 +122,13 @@ def prepare_raw_triples(sentence: Span):
                             raw_triples.append(statement)
                         # else:
                         #     # TODO: E.g.: "Give me all ESA astronauts."
-                        #     pass
+                        #     statement = RawTriple(
+                        #         s=head,
+                        #         p="?property",
+                        #         o=NounEntity(noun_lefts[0]),
+                        #         question=sentence
+                        #     )
+                        #     raw_triples.append(statement)
 
                 # E.g.: "Give me all Swedish holidays."
                 # E.g.: "Who is the youngest Pulitzer Prize winner?"

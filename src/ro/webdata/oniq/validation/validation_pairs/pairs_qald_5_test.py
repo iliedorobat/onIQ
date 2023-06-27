@@ -59,7 +59,6 @@ WHERE {
     # """
     #     },
     {
-        # FIXME:
         "aggregation": False,
         "answertype": "resource",
         "hybrid": False,
@@ -68,21 +67,23 @@ WHERE {
         "result": """
 SELECT DISTINCT ?country
 WHERE {
-	dbr:Mecca   dbo:country   ?country
+	dbr:Mecca   dbo:country   ?country .
+	?country   rdf:type   dbo:Country
 }
 """
     },
     {
+        # FIXME:
         "aggregation": False,
         "answertype": "resource",
         "hybrid": None,  # False??
         "onlydbo": True,
         "query": "Give me all ESA astronauts.",
         "result": """
-SELECT DISTINCT ?astronauts
+SELECT DISTINCT ?ESA_astronauts
 WHERE {
-	?astronauts   rdf:type   dbo:Astronaut .
-	?astronauts   ?property   dbr:ESA_(company)
+	?ESA_astronauts   ?property   dbr:European_Space_Agency .
+	?ESA_astronauts   rdf:type   dbo:Astronaut
 }
 """
     },
@@ -131,9 +132,9 @@ WHERE {
         "onlydbo": True,
         "query": "When did the Ming dynasty dissolve?",
         "result": """
-SELECT DISTINCT ?dissolve
+SELECT DISTINCT ?Ming_dynasty_dissolve
 WHERE {
-	dbr:Ming_dynasty   dbp:dateEnd   ?dissolve
+	dbr:Ming_dynasty   dbp:dateEnd   ?Ming_dynasty_dissolve
 }
 """
     },
@@ -451,10 +452,7 @@ ORDER BY DESC(COUNT(?books))
 """
     },
     {
-        # FIXME:
-        #  <?museum   dbo:location   New_York_City>
-        #  <?museum   dbo:numberOfVisitors   ?visitors>
-        #  ORDER BY DESC(?visitors)
+        # FIXME: dbo:numberOfVisitors
         "aggregation": True,
         "answertype": "resource",
         "hybrid": False,
@@ -463,9 +461,9 @@ ORDER BY DESC(COUNT(?books))
         "result": """
 SELECT DISTINCT ?museum
 WHERE {
-	?museum   dbo:location   dbr:New_York_(state) .
+	?museum   dbo:location   dbr:New_York_City .
 	?museum   rdf:type   dbo:Museum .
-	?museum   dbp:visitors   ?visitors
+	?museum   dbo:numberOfVisitors   ?visitors
 }
 ORDER BY DESC(COUNT(?visitors))
 """

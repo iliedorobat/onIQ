@@ -39,7 +39,8 @@ class RawTargetUtils:
                             target_nouns.append(raw_triple.o)
                 if raw_triple.o.is_text():
                     # E.g.: "When did the Ming dynasty dissolve?"
-                    target_nouns.append(raw_triple.o)
+                    if raw_triple.o.is_var():
+                        target_nouns.append(raw_triple.o)
 
         if nl_question.answer_type == ANSWER_TYPE.PERSON:
             _TargetProcessing.person_target(nl_question, target_nouns)
@@ -75,11 +76,13 @@ class _TargetProcessing:
         o_token = raw_triple.o.token
 
         if isinstance(s_token, Token) and s_token.head == first_token:
-            target_nouns.append(raw_triple.s)
+            if raw_triple.s.is_var():
+                target_nouns.append(raw_triple.s)
 
         if isinstance(o_token, Token) and o_token.head == first_token:
-            # E.g.: "In which country is Mecca located?" => not isinstance(o_token, Token)
-            target_nouns.append(raw_triple.o)
+            if raw_triple.o.is_var():
+                # E.g.: "In which country is Mecca located?" => not isinstance(o_token, Token)
+                target_nouns.append(raw_triple.o)
 
     @staticmethod
     def prep_how_type(nl_question: NLQuestion, raw_triple: RawTriple, target_nouns: List[NounEntity]):
