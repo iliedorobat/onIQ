@@ -16,6 +16,7 @@ class Handler(BaseHTTPRequestHandler):
         parsed = urlparse(self.path)
 
         if parsed.path == "/" + PATHS.MATCHER:
+            # TODO: remove: replaced by SpotlightService
             output = matcher_handler(parsed)
 
         elif parsed.path == "/" + PATHS.RESOURCE_TYPE:

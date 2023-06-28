@@ -6,10 +6,10 @@ from ro.webdata.oniq.common.nlp.word_utils import is_aux, is_preposition, is_adj
 from ro.webdata.oniq.endpoint.common.match.PropertyMatcher import PropertyMatcher
 from ro.webdata.oniq.endpoint.models.RDFElements import RDFElements
 from ro.webdata.oniq.endpoint.query import escape_resource_name
+from ro.webdata.oniq.service.query_const import NODE_TYPE
+from ro.webdata.oniq.sparql.common.SpotlightService import SpotlightService
 from ro.webdata.oniq.sparql.model.AdjectiveEntity import AdjectiveEntity
 from ro.webdata.oniq.sparql.model.NounEntity import NounEntity
-from ro.webdata.oniq.sparql.model.final_triples.predicate_utils import subject_predicate_lookup, \
-    object_predicate_lookup, adjective_property_lookup
 from ro.webdata.oniq.sparql.model.raw_triples.RawTriple import RawTriple
 
 
@@ -86,15 +86,29 @@ def _predicate_lookup(raw_triple: RawTriple, raw_triples: List[RawTriple], prope
             pass
 
     if isinstance(predicate, Span) and is_adj(predicate.root):
-        return adjective_property_lookup(predicate, properties)
+        return SpotlightService.adj_property_lookup(predicate, properties)
 
     if subject.is_res():
         if obj.is_var():
-            return subject_predicate_lookup(question, subject, predicate, raw_triples)
+            # E.g.: "In which country is Mecca located?"
+            return SpotlightService.property_lookup(
+                question=question,
+                predicate=predicate,
+                node_type=NODE_TYPE.SUBJECT,
+                node_value=subject,
+                raw_triples=raw_triples
+            )
 
     if subject.is_var():
-        return object_predicate_lookup(question, obj, predicate, raw_triples)
+        # E.g.: "Give me all Swedish holidays."
+        # E.g.: "Who is the youngest Pulitzer Prize winner?"
+        return SpotlightService.property_lookup(
+            question=question,
+            predicate=predicate,
+            node_type=NODE_TYPE.OBJECT,
+            node_value=obj,
+            raw_triples=raw_triples
+        )
 
     # E.g.: "Who is the tallest basketball player?"
-    #       <?person   rdf:type   dbo:BasketballPlayer>
     return predicate
