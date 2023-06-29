@@ -42,8 +42,8 @@ class RawTargetUtils:
                     if raw_triple.o.is_var():
                         target_nouns.append(raw_triple.o)
 
-        if nl_question.answer_type == ANSWER_TYPE.PERSON:
-            _TargetProcessing.person_target(nl_question, target_nouns)
+        # if nl_question.answer_type == ANSWER_TYPE.PERSON:
+        #     _TargetProcessing.person_target(nl_question, target_nouns)
 
 
 class _TargetProcessing:

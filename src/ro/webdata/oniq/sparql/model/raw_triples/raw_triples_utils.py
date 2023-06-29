@@ -1,19 +1,14 @@
-from ro.webdata.oniq.common.nlp.nlp_utils import token_to_span
-from ro.webdata.oniq.common.nlp.utils import WordnetUtils
 from ro.webdata.oniq.common.nlp.word_utils import is_adj, is_wh_word
 from ro.webdata.oniq.sparql.common.TokenHandler import TokenHandler
-from ro.webdata.oniq.sparql.model.AdjectiveEntity import AdjectiveEntity
 from ro.webdata.oniq.sparql.model.NLQuestion import NLQuestion, QUESTION_TYPES
-from ro.webdata.oniq.sparql.model.NounEntity import NounEntity
-from ro.webdata.oniq.sparql.model.raw_triples.RawTriple import RawTriple
-from ro.webdata.oniq.sparql.model.raw_triples.RawTripleGenerator import RawTripleGenerator
+from ro.webdata.oniq.sparql.model.raw_triples.RawTripleGenerator import RawTripleGenerator, STATEMENT_TYPE
 
 
 def prepare_base_raw_triples(nl_question: NLQuestion):
-    raw_triples = []
-
+    generator = RawTripleGenerator(nl_question)
     question = nl_question.question
     head = question.root
+
     lefts = [token for token in list(head.lefts) if not is_wh_word(token)]
     rights = [token for token in list(head.rights) if not is_wh_word(token)]
 
@@ -22,7 +17,7 @@ def prepare_base_raw_triples(nl_question: NLQuestion):
 
     if len(noun_lefts) > 0:
         subject = noun_lefts[0]
-        p = token_to_span(head)
+        p = head
         obj = None
 
         if nl_question.question_type == QUESTION_TYPES.S_PREP:
@@ -31,7 +26,7 @@ def prepare_base_raw_triples(nl_question: NLQuestion):
             noun_rights_prep = TokenHandler.get_nouns(rights_prep)
 
             if len(noun_rights_prep) > 0:
-                p = token_to_span(noun_rights_prep[0])
+                p = noun_rights_prep[0]
 
         if len(noun_rights) > 0:
             # E.g.: "Did Arnold Schwarzenegger attend a university?"
@@ -42,49 +37,27 @@ def prepare_base_raw_triples(nl_question: NLQuestion):
             if obj is None:
                 # E.g.: "Which volcanos in Japan erupted since 2000?"
                 # E.g.: "When did the Ming dynasty dissolve?"
-                obj = p.root
+                obj = p
 
-        statement = RawTriple(
-            s=NounEntity(subject),
-            p=p,
-            o=NounEntity(obj),
-            question=question
-        )
-        raw_triples.append(statement)
+        generator.append_noun_triple(subject, p, obj)
 
         # E.g.: "Which museum in New York has the most visitors?"
-        statement = RawTripleGenerator.prep_after_noun_handler(question, subject)
-        if statement is not None:
-            raw_triples.append(statement)
+        generator.append_triple(subject, head, STATEMENT_TYPE.NOUN)
 
         # E.g.: "How many companies were founded by the founder of Facebook?" => founder of Facebook
-        statement = RawTripleGenerator.prep_after_noun_handler(question, obj)
-        if statement is not None:
-            raw_triples.append(statement)
+        generator.append_triple(obj, head, STATEMENT_TYPE.NOUN)
 
-        statement = RawTripleGenerator.passive_possessive_handler(question, head)
-        if statement is not None:
-            raw_triples.append(statement)
+        generator.append_triple(head, head, STATEMENT_TYPE.PASS_POSS)
     else:
         if len(noun_rights) > 0:
             adj_lefts = [token for token in lefts if is_adj(token)]
-
             if len(adj_lefts) > 0:
                 # E.g.: "How high is the Yokohama Marine Tower?"
-                adjective = adj_lefts[0]
-
-                if TokenHandler.adj_not_found(adjective, head):
-                    statement = RawTriple(
-                        s=NounEntity(noun_rights[0]),
-                        p=token_to_span(adjective),
-                        o=AdjectiveEntity(adjective),
-                        question=question
-                    )
-                    raw_triples.append(statement)
+                generator.append_triple(noun_rights[0], adj_lefts[0], STATEMENT_TYPE.ADJECTIVE)
 
             statement = RawTripleGenerator.passive_possessive_handler(question, noun_rights[0])
             if statement is not None:
-                raw_triples.append(statement)
+                generator.raw_triples.append(statement)
             else:
                 # E.g.: "Who is the youngest Pulitzer Prize winner?"
                 head = noun_rights[0]
@@ -94,55 +67,25 @@ def prepare_base_raw_triples(nl_question: NLQuestion):
                 # E.g.: "Give me the currency of China."
                 # E.g.: "Who were the parents of Queen Victoria?"
                 # E.g.: "What is the highest mountain in Romania?"
-                statement = RawTripleGenerator.prep_after_noun_handler(question, head)
-                if statement is not None:
-                    raw_triples.append(statement)
+                generator.append_triple(head, head, STATEMENT_TYPE.NOUN)
 
                 if len(noun_lefts) > 0:
                     if len(noun_rights) > 0:
                         # E.g.: "Is Barack Obama a democrat?"
-                        statement = RawTriple(
-                            s=NounEntity(head),
-                            p="?property",
-                            o=NounEntity(noun_rights[0]),
-                            question=question
-                        )
-                        raw_triples.append(statement)
+                        generator.append_noun_triple(head, "?property", noun_rights[0])
                     else:
                         # E.g.: "Who is the youngest Pulitzer Prize winner?"
                         if TokenHandler.noun_not_found(noun_lefts[0], head):
-                            statement = RawTriple(
-                                s=head,
-                                p=token_to_span(head),
-                                o=NounEntity(noun_lefts[0]),
-                                question=question
-                            )
-                            raw_triples.append(statement)
+                            generator.append_noun_triple(head, head, noun_lefts[0])
                         # else:
                         #     # FIXME: E.g.: "Give me all ESA astronauts."
-                        #     statement = RawTriple(
-                        #         s=head,
-                        #         p="?property",
-                        #         o=NounEntity(noun_lefts[0]),
-                        #         question=question
-                        #     )
-                        #     raw_triples.append(statement)
+                        #     generator.append_noun_triple(head, "?property", noun_lefts[0])
 
-                # E.g.: "Give me all Swedish holidays."
-                # E.g.: "Who is the youngest Pulitzer Prize winner?"
-                # E.g.: "Who was the doctoral advisor of Albert Einstein" => "doctoral".dep_ == "amod"
                 adj_lefts = [token for token in list(head.lefts) if is_adj(token)]
                 if len(adj_lefts) > 0:
-                    adjective = adj_lefts[0]
-                    country = WordnetUtils.find_country_by_nationality(adjective.text)
+                    # E.g.: "Give me all Swedish holidays."
+                    # E.g.: "Who is the youngest Pulitzer Prize winner?"
+                    # E.g.: "Who was the doctoral advisor of Albert Einstein" => "doctoral".dep_ == "amod"
+                    generator.append_triple(head, adj_lefts[0], STATEMENT_TYPE.ADJECTIVE)
 
-                    if TokenHandler.adj_not_found(adjective, head):
-                        statement = RawTriple(
-                            s=head,
-                            p="country" if country is not None else token_to_span(adjective),
-                            o=NounEntity(adjective) if country is not None else AdjectiveEntity(adjective),
-                            question=question
-                        )
-                        raw_triples.append(statement)
-
-    return raw_triples
+    return generator.raw_triples

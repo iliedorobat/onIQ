@@ -9,20 +9,20 @@ from ro.webdata.oniq.sparql.model.NounEntity import NounEntity
 
 class TokenHandler:
     @staticmethod
-    def adj_not_found(adjective: Token, head: Token):
+    def adj_not_found(noun: Token, adjective: Token):
         adjective_cond = True
         country_cond = True
 
-        if is_noun(head):
+        if is_noun(noun):
             country = WordnetUtils.find_country_by_nationality(adjective.text)
 
             if country is None:
                 # E.g.: "What is the net income of Apple?"
                 # E.g.: "How high is the Yokohama Marine Tower?"
-                adjective_cond = adjective.lower_ not in NounEntity(head).to_span().text.lower()
+                adjective_cond = adjective.lower_ not in NounEntity(noun).to_span().text.lower()
             else:
                 # E.g.: "Give me all Swedish holidays." => country is not None
-                country_cond = country.lower() not in NounEntity(head).to_span().text.lower()
+                country_cond = country.lower() not in NounEntity(noun).to_span().text.lower()
 
         return country_cond and adjective_cond
 

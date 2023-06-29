@@ -1,17 +1,74 @@
-from typing import List
+from typing import List, Union
 
 from spacy.tokens import Span, Token
 
 from ro.webdata.oniq.common.nlp.nlp_utils import token_to_span
-from ro.webdata.oniq.common.nlp.word_utils import is_preposition, is_wh_word, is_aux
+from ro.webdata.oniq.common.nlp.utils import WordnetUtils
+from ro.webdata.oniq.common.nlp.word_utils import is_preposition, is_wh_word, is_aux, is_adj
 from ro.webdata.oniq.sparql.common.TokenHandler import TokenHandler
+from ro.webdata.oniq.sparql.model.AdjectiveEntity import AdjectiveEntity
+from ro.webdata.oniq.sparql.model.NLQuestion import NLQuestion
 from ro.webdata.oniq.sparql.model.NounEntity import NounEntity
 from ro.webdata.oniq.sparql.model.raw_triples.RawTriple import RawTriple
 
 
+class STATEMENT_TYPE:
+    ADJECTIVE = "adjective"
+    NOUN = "noun"
+    PASS_POSS = "passive_possessive"
+
+
 class RawTripleGenerator:
+    def __init__(self, nl_question: NLQuestion):
+        self.question = nl_question.question
+        self.raw_triples = []
+
+    def append_triple(self, token: Token, adjective: Token, triple_type: str):
+        statement = None
+
+        if triple_type == STATEMENT_TYPE.ADJECTIVE:
+            statement = RawTripleGenerator._adj_before_noun_handler(self.question, token, adjective)
+        elif triple_type == STATEMENT_TYPE.NOUN:
+            statement = RawTripleGenerator._prep_after_noun_handler(self.question, token)
+        elif triple_type == STATEMENT_TYPE.PASS_POSS:
+            statement = RawTripleGenerator.passive_possessive_handler(self.question, token)
+
+        if statement is not None:
+            self.raw_triples.append(statement)
+
+    def append_noun_triple(self, s: Token, p: Union[str, Token], o: Token):
+        # E.g.: "Is Barack Obama a democrat?"
+        # E.g.: "Who is the youngest Pulitzer Prize winner?"
+        predicate = p if isinstance(p, str) else token_to_span(p)
+
+        statement = RawTriple(
+            s=NounEntity(s),
+            p=predicate,
+            o=NounEntity(o),
+            question=self.question
+        )
+
+        if statement is not None:
+            self.raw_triples.append(statement)
+
     @staticmethod
-    def prep_after_noun_handler(sentence: Span, noun: Token):
+    def _adj_before_noun_handler(sentence: Span, noun: Token, adjective: Token):
+        country = WordnetUtils.find_country_by_nationality(adjective.text)
+
+        if TokenHandler.adj_not_found(noun, adjective):
+            # E.g.: "Give me all Swedish holidays." => Swedish -> Sweden
+            # E.g.: "How high is the Yokohama Marine Tower?"
+            return RawTriple(
+                s=noun,
+                p="country" if country is not None else token_to_span(adjective),
+                o=NounEntity(adjective) if country is not None else AdjectiveEntity(adjective),
+                question=sentence
+            )
+
+        return None
+
+    @staticmethod
+    def _prep_after_noun_handler(sentence: Span, noun: Token):
         noun_entity = NounEntity(noun)
 
         if noun_entity.is_text():
