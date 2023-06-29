@@ -19,9 +19,6 @@ class RawTargetUtils:
         elif nl_question.question_type == QUESTION_TYPES.HOW:
             _TargetProcessing.prep_how_type(nl_question, raw_triple, target_nouns)
 
-        # if target_type in [QUESTION_TARGET.LOCATION, QUESTION_TARGET.TIME]:
-        #     _TargetProcessing.loc_time_target(target_type, target_nouns)
-        # else:
         for token in new_target_tokens:
             target_noun = NounEntity(token)
 
@@ -34,40 +31,22 @@ class RawTargetUtils:
                             target_nouns.append(raw_triple.s)
                 if raw_triple.o.token == token:
                     if raw_triple.o not in target_nouns:
-                        # E.g.: "Give me all ESA astronauts."
                         if raw_triple.o.is_var():
+                            # E.g.: "Did Arnold Schwarzenegger attend a university?"
+                            # => ?university is var
                             target_nouns.append(raw_triple.o)
+                if raw_triple.s.is_text():
+                    if raw_triple.s.is_var():
+                        if target_noun.token.text == raw_triple.s.text:
+                            # E.g.: "Give me all ESA astronauts."
+                            target_nouns.append(raw_triple.s)
                 if raw_triple.o.is_text():
-                    # E.g.: "When did the Ming dynasty dissolve?"
                     if raw_triple.o.is_var():
+                        # E.g.: "When did the Ming dynasty dissolve?"
                         target_nouns.append(raw_triple.o)
-
-        # if nl_question.answer_type == ANSWER_TYPE.PERSON:
-        #     _TargetProcessing.person_target(nl_question, target_nouns)
 
 
 class _TargetProcessing:
-    @staticmethod
-    def loc_time_target(nl_question: NLQuestion, target_nouns: List[NounEntity]):
-        # E.g.: "When did the Ming dynasty dissolve?"
-        target_noun = NounEntity(nl_question.answer_type)
-    
-        if target_noun not in target_nouns:
-            target_nouns.append(target_noun)
-    
-    @staticmethod
-    def person_target(nl_question: NLQuestion, target_nouns: List[NounEntity]):
-        if len(target_nouns) == 0:
-            # E.g.: "Who is the tallest basketball player?"
-            target_noun = NounEntity(nl_question.answer_type)
-    
-            if target_noun not in target_nouns:
-                target_nouns.append(target_noun)
-        else:
-            # E.g.: "Who is the leader of the USA?"
-            # Do nothing
-            pass
-
     @staticmethod
     def prep_ask_type(nl_question: NLQuestion, raw_triple: RawTriple, target_nouns: List[NounEntity]):
         # E.g.: "In which country is Mecca located?"

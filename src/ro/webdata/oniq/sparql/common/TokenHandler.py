@@ -29,8 +29,10 @@ class TokenHandler:
     @staticmethod
     def noun_not_found(noun: Token, head: Token):
         if is_noun(noun):
-            # E.g.: "How high is the Yokohama Marine Tower?" => noun.text in NounEntity(head).text
-            return noun.lower_ not in NounEntity(head).to_span().text.lower()
+            # E.g.: "Who is the youngest Pulitzer Prize winner?"
+            head_is_attr = head.dep_ == "attr"
+
+            return noun.head != head or head_is_attr
         return True
 
     @staticmethod

@@ -73,17 +73,16 @@ WHERE {
 """
     },
     {
-        # FIXME:
         "aggregation": False,
         "answertype": "resource",
         "hybrid": None,  # False??
         "onlydbo": True,
         "query": "Give me all ESA astronauts.",
         "result": """
-SELECT DISTINCT ?ESA_astronauts
+SELECT DISTINCT ?astronauts
 WHERE {
-	?ESA_astronauts   ?property   dbr:European_Space_Agency .
-	?ESA_astronauts   rdf:type   dbo:Astronaut
+	?astronauts   ?property   dbr:European_Space_Agency .
+	?astronauts   rdf:type   dbo:Astronaut
 }
 """
     },

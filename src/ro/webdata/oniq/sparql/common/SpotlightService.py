@@ -75,7 +75,6 @@ class SpotlightService:
 
 def _get_props(raw_triples: List[RawTriple], predicate: Union[str, Span], node_type: str):
     endpoint = DBP_ENDPOINT
-    props = []
 
     temp_triples = [t for t in raw_triples if str(t.p) == str(predicate)]
     filtered_t = [
@@ -87,13 +86,10 @@ def _get_props(raw_triples: List[RawTriple], predicate: Union[str, Span], node_t
            or t.s == temp_triples[0].o
     ]
 
-    if node_type == NODE_TYPE.SUBJECT:
-        props = _run_properties_query(endpoint, filtered_t)
-
-    if node_type == NODE_TYPE.OBJECT:
-        props = _run_properties_query(endpoint, filtered_t)
-
-    return props
+    # TODO: return all props if filtered_t contains only a single triple
+    #  whose both subject and object are variables
+    #  E.g.: "Which musician wrote the most books?"
+    return _run_properties_query(endpoint, filtered_t)
 
 
 def _extract_dbpedia_resource(question: Span, node_value: NounEntity):

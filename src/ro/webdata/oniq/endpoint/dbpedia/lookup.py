@@ -5,6 +5,7 @@ import pydash
 import requests
 from spacy.tokens import Span
 
+from ro.webdata.oniq.common.nlp.nlp_utils import text_to_lemma
 from ro.webdata.oniq.common.text_utils import WORD_SEPARATOR
 from ro.webdata.oniq.endpoint.common.CSVService import CSVService
 from ro.webdata.oniq.endpoint.common.match.PropertiesMatcher import PropertiesMatcher
@@ -195,7 +196,7 @@ class LookupService:
         for line in lines:
             ns_label, res_label, ns, res, parent_uri = line.split('|')
             # TODO: lookup for similarities
-            if res_label.lower() == resource_name.lower():
+            if text_to_lemma(res_label) == text_to_lemma(resource_name):
                 return res.replace(ns, ns_label + ":")
 
         return None

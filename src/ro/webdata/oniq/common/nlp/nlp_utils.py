@@ -209,6 +209,24 @@ def retokenize(document: Union[Doc, Span], sentence: Span):
                 retokenizer.merge(entity)
 
 
+def text_to_lemma(text: str):
+    """
+    Lemmatizes the text
+
+    :param text: The target text
+    :return: Lemmatized text
+    """
+
+    document = nlp_model(text)
+    sentences = list(document.sents)
+
+    if len(sentences) == 0:
+        return text
+
+    sentence = sentences[0]
+    return sentence.lemma_
+
+
 def text_to_span(text: str, label: str = ""):
     """
     Convert a text to a Span entity

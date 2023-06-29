@@ -74,12 +74,16 @@ def prepare_base_raw_triples(nl_question: NLQuestion):
                         # E.g.: "Is Barack Obama a democrat?"
                         generator.append_noun_triple(head, "?property", noun_rights[0])
                     else:
-                        # E.g.: "Who is the youngest Pulitzer Prize winner?"
                         if TokenHandler.noun_not_found(noun_lefts[0], head):
+                            # E.g.: "Who is the youngest Pulitzer Prize winner?"
                             generator.append_noun_triple(head, head, noun_lefts[0])
-                        # else:
-                        #     # FIXME: E.g.: "Give me all ESA astronauts."
-                        #     generator.append_noun_triple(head, "?property", noun_lefts[0])
+                        elif head.dep_ == "dobj":
+                            # E.g.: "Give me all ESA astronauts."
+                            generator.append_noun_triple(head.text, "?property", noun_lefts[0])
+                        else:
+                            # E.g.: "How high is the Yokohama Marine Tower?"
+                            # do nothing
+                            pass
 
                 adj_lefts = [token for token in list(head.lefts) if is_adj(token)]
                 if len(adj_lefts) > 0:

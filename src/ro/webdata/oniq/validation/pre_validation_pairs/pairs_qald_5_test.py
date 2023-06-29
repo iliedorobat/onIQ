@@ -57,7 +57,6 @@ raw_triples = [
 # """
 #     },
     {
-        # FIXME: country instead of located
         "aggregation": False,
         "answertype": "resource",
         "hybrid": False,
@@ -65,12 +64,11 @@ raw_triples = [
         "query": "In which country is Mecca located?",
         "result": """
 raw_triples = [
-	<dbr:Mecca   located   ?located>
+	<dbr:Mecca   country   ?country>
 ]
 """
     },
     {
-        # FIXME:
         "aggregation": False,
         "answertype": "resource",
         "hybrid": None,  # False??
@@ -78,7 +76,7 @@ raw_triples = [
         "query": "Give me all ESA astronauts.",
         "result": """
 raw_triples = [
-
+	<?astronauts   ?property   dbr:European_Space_Agency>
 ]
 """
     },
@@ -90,7 +88,7 @@ raw_triples = [
         "query": "Give me all Swedish holidays.",
         "result": """
 raw_triples = [
-	<?holiday   country   ?Sweden>
+	<?Swedish_holidays   country   dbr:Sweden>
 ]
 """
     },
@@ -114,7 +112,7 @@ raw_triples = [
         "query": "Give me all Swiss non-profit organizations.",
         "result": """
 raw_triples = [
-	<?organization   country   ?Switzerland>
+	<?profit_organizations   country   dbr:Switzerland>
 ]
 """
     },
@@ -127,7 +125,7 @@ raw_triples = [
         "query": "When did the Ming dynasty dissolve?",
         "result": """
 raw_triples = [
-	<dbr:Ming_dynasty   dissolve   ?dissolve>
+	<dbr:Ming_dynasty   dissolve   ?Ming_dynasty_dissolve>
 ]
 """
     },
@@ -188,7 +186,7 @@ raw_triples = [
         "query": "Who is the youngest Pulitzer Prize winner?",
         "result": """
 raw_triples = [
-	<?winner   ?property   dbr:Pulitzer_Prize>
+	<?winner   winner   dbr:Pulitzer_Prize>
 	<?winner   youngest   ?youngest>
 ]
 """
@@ -224,7 +222,7 @@ raw_triples = [
         "query": "Who is the tallest basketball player?",
         "result": """
 raw_triples = [
-	<?player   tallest   ?tallest>
+	<?basketball_player   tallest   ?tallest>
 ]
 """
     },
@@ -314,7 +312,6 @@ raw_triples = [
 # """
 #     },
     {
-        # FIXME: Workplace_by_Facebook => Facebook
         "aggregation": True,
         "answertype": "number",
         "hybrid": False,
@@ -323,7 +320,7 @@ raw_triples = [
         "result": """
 raw_triples = [
 	<?many_companies   founded   ?founder>
-	<dbr:Workplace_by_Facebook   founder   ?founder>
+	<dbr:Facebook   founder   ?founder>
 ]
 """
     },
@@ -439,7 +436,7 @@ raw_triples = [
         "result": """
 raw_triples = [
 	<?museum   has   ?visitors>
-	<?museum   in   dbr:New_York_(state)>
+	<?museum   in   dbr:New_York_City>
 ]
 """
     },
