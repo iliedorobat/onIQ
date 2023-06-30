@@ -35,7 +35,7 @@ class SpotlightService:
         return predicate
 
     @staticmethod
-    def property_lookup(question: Span, predicate: Union[str, Span], node_type: str, node_value: NounEntity, raw_triples: List[RawTriple]):
+    def property_lookup(question: Span, predicate: Union[str, Span], node_type: str, node_value: NounEntity, raw_triples_values: List[RawTriple]):
         if isinstance(predicate, str):
             if predicate == "?property":
                 # E.g.: "Give me all ESA astronauts."
@@ -60,7 +60,7 @@ class SpotlightService:
             # E.g.: "When did the Ming dynasty dissolve?"
             new_predicate = text_to_span("end")
 
-        props = _get_props(raw_triples, new_predicate)
+        props = _get_props(raw_triples_values, new_predicate)
         resource = _extract_dbpedia_resource(question, node_value)
 
         return PropertiesMatcher.get_best_matched(
@@ -72,12 +72,12 @@ class SpotlightService:
         )
 
 
-def _get_props(raw_triples: List[RawTriple], predicate: Union[str, Span]):
+def _get_props(raw_triples_values: List[RawTriple], predicate: Union[str, Span]):
     endpoint = DBP_ENDPOINT
 
-    temp_triples = [t for t in raw_triples if str(t.p) == str(predicate)]
+    temp_triples = [t for t in raw_triples_values if str(t.p) == str(predicate)]
     filtered_t = [
-        t for t in raw_triples
+        t for t in raw_triples_values
         if len(temp_triples) == 0
            # E.g.: "How many companies were founded by the founder of Facebook?"
            or t.s == temp_triples[0].s
@@ -132,8 +132,8 @@ def _extract_named_entity(question: Span, node_value: NounEntity):
     return node_value.to_span()
 
 
-def _run_properties_query(endpoint: str, triples: List[RawTriple]):
-    if len(triples) == 0:
+def _run_properties_query(endpoint: str, triples_values: List[RawTriple]):
+    if len(triples_values) == 0:
         return RDFElements([])
 
     sparql_query = f"""
@@ -147,7 +147,7 @@ def _run_properties_query(endpoint: str, triples: List[RawTriple]):
     WHERE {{
 """
 
-    for triple in triples:
+    for triple in triples_values:
         triple_str = triple.to_escaped_str()
         if triple_str is not None:
             sparql_query += f"\t\t{triple_str} .\n"

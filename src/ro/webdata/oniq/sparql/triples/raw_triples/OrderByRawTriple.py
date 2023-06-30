@@ -13,10 +13,10 @@ from ro.webdata.oniq.sparql.triples.raw_triples.RawTriple import RawTriple
 
 class OrderByRawTriple:
     @staticmethod
-    def prepare_extra_raw_triples(nl_question: NLQuestion, raw_triples: List[RawTriple]):
+    def prepare_extra_raw_triples(nl_question: NLQuestion, raw_triples_values: List[RawTriple]):
         order_by = []
 
-        for raw_triple in raw_triples:
+        for raw_triple in raw_triples_values:
             obj_span = raw_triple.o.to_span()
             prev_word = get_prev_word(obj_span[0]) \
                 if obj_span is not None \

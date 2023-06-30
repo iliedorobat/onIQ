@@ -15,21 +15,21 @@ from ro.webdata.oniq.sparql.triples.raw_triples.RawTriple import RawTriple
 
 
 class Triples:
-    def __init__(self, raw_triples: List[RawTriple]):
-        self.values = init_triples(raw_triples)
+    def __init__(self, raw_triples_values: List[RawTriple]):
+        self.values = init_triples(raw_triples_values)
 
 
-def init_triples(raw_triples: List[RawTriple]):
-    if len(raw_triples) == 0:
+def init_triples(raw_triples_values: List[RawTriple]):
+    if len(raw_triples_values) == 0:
         return []
 
     subject = escape_resource_name(
-        raw_triples[0].s.to_var()
+        raw_triples_values[0].s.to_var()
     )
-    properties = _get_properties(DBP_ENDPOINT, subject, raw_triples)
+    properties = _get_properties(DBP_ENDPOINT, subject, raw_triples_values)
 
     main_raw_triples = [
-        raw_triple for raw_triple in raw_triples
+        raw_triple for raw_triple in raw_triples_values
         if not raw_triple.is_ordering_triple()
     ]
     main_triples = _init_triples(main_raw_triples, properties)
@@ -43,7 +43,7 @@ def init_triples(raw_triples: List[RawTriple]):
         ) for triple in main_triples
     ]
     order_by_raw_triples = [
-        raw_triple for raw_triple in raw_triples
+        raw_triple for raw_triple in raw_triples_values
         if raw_triple.is_ordering_triple()
     ]
 
@@ -66,18 +66,18 @@ def _get_properties(endpoint: str, subject: str, main_triples: List[Union[Triple
     return properties
 
 
-def _init_triples(raw_triples: List[RawTriple], properties: RDFElements):
+def _init_triples(raw_triples_values: List[RawTriple], properties: RDFElements):
     triples = []
 
-    for raw_triple in raw_triples:
-        triple = Triple(raw_triple, raw_triples, properties)
+    for raw_triple in raw_triples_values:
+        triple = Triple(raw_triple, raw_triples_values, properties)
         triples.append(triple)
 
     return triples
 
 
-def _run_properties_query(endpoint: str, subject: str, triples: List[Union[Triple, RawTriple]]):
-    if subject.startswith("?") and len(triples) == 0:
+def _run_properties_query(endpoint: str, subject: str, triples_values: List[Union[Triple, RawTriple]]):
+    if subject.startswith("?") and len(triples_values) == 0:
         # E.g.: "Who is the youngest Pulitzer Prize winner?"
         # => subject.startswith("?")
         return RDFElements([])
@@ -93,12 +93,12 @@ def _run_properties_query(endpoint: str, subject: str, triples: List[Union[Tripl
     WHERE {{
 """
 
-    for index, triple in enumerate(triples):
+    for index, triple in enumerate(triples_values):
         triple_str = triple.to_escaped_str()
         if triple_str is not None:
             sparql_query += f"\t\t{triple.to_escaped_str()} ."
 
-        if index < len(triples) - 1:
+        if index < len(triples_values) - 1:
             sparql_query += "\n"
 
     if not subject.startswith("?"):

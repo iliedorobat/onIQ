@@ -16,10 +16,10 @@ from ro.webdata.oniq.sparql.triples.raw_triples.generator.RDFTypeRawTriple impor
 class SPARQLBuilder:
     def __init__(self, endpoint, input_question, print_deps):
         raw_builder = SPARQLRawBuilder(endpoint, input_question, print_deps)
-        raw_triples = _prepare_raw_triples(raw_builder)
-        raw_triples = get_improved_raw_triples(raw_triples, raw_builder.nl_question)
+        raw_triples_values = _prepare_raw_triples(raw_builder)
+        raw_triples_values = get_improved_raw_triples(raw_triples_values, raw_builder.nl_question)
 
-        triples = Triples(raw_triples)
+        triples = Triples(raw_triples_values)
 
         self.nl_question = raw_builder.nl_question
         self.targets = Targets(self.nl_question, triples.values)
@@ -27,7 +27,12 @@ class SPARQLBuilder:
         self.filters = Filters(triples.values)
 
     def to_sparql_query(self):
-        return SPARQLQuery.get_query(self.nl_question, self.targets.values, self.triples.values)
+        return SPARQLQuery.get_query(
+            self.nl_question,
+            self.targets,
+            self.triples,
+            self.filters
+        )
 
 
 def _prepare_raw_triples(raw_builder: SPARQLRawBuilder):

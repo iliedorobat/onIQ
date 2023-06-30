@@ -50,6 +50,7 @@ WHERE {
     #     },
     ### SELECTION ###
     #     {
+    #         # FIXME:
     #         "aggregation": False,
     #         "answertype": "resource",
     #         "hybrid": False,
@@ -477,7 +478,6 @@ ORDER BY DESC(COUNT(?visitors))
     # """
     #     },
     {
-        # TODO: filter by
         "aggregation": True,  # False??
         "answertype": "resource",
         "hybrid": False,
@@ -488,7 +488,8 @@ SELECT DISTINCT ?volcanos
 WHERE {
 	?volcanos   dbo:eruptionYear   ?erupted .
 	?volcanos   dbo:locatedInArea   dbr:Japan .
-	?volcanos   rdf:type   dbo:Volcano
+	?volcanos   rdf:type   dbo:Volcano .
+	FILTER (year(?erupted) >= 2000)
 }
 """
     },

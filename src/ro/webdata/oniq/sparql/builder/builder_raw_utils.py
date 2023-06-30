@@ -11,21 +11,21 @@ from ro.webdata.oniq.sparql.NLQuestion import NLQuestion, ANSWER_TYPE
 from ro.webdata.oniq.sparql.triples.raw_triples.RawTriple import RawTriple
 
 
-def get_improved_raw_triples(raw_triples: List[RawTriple], nl_question: NLQuestion):
+def get_improved_raw_triples(raw_triples_values: List[RawTriple], nl_question: NLQuestion):
     temp_p_list = []
     output = []
 
-    for triple in raw_triples:
+    for triple in raw_triples_values:
         predicate = triple.p
 
         if "dbo:birthDate" not in temp_p_list:
             predicate = _get_age_predicate(triple, nl_question, predicate)
         if "dbo:elevation" not in temp_p_list:
-            predicate = _get_mountain_predicate(raw_triples, triple, predicate)
+            predicate = _get_mountain_predicate(raw_triples_values, triple, predicate)
         if "dbo:locatedInArea" not in temp_p_list:
             if isinstance(triple.o.token, Token) and triple.o.token.ent_type_ in ["GPE", "LOC"]:
                 # E.g.: "Which volcanos in Japan erupted since 2000?"
-                predicate = _update_location_triple(raw_triples, predicate)
+                predicate = _update_location_triple(raw_triples_values, predicate)
 
         temp_p_list.append(
             str(predicate)
@@ -46,27 +46,27 @@ def _get_age_predicate(triple: RawTriple, nl_question: NLQuestion, predicate: Un
     return predicate
 
 
-def _get_mountain_predicate(raw_triples: List[RawTriple], triple: RawTriple, predicate: Union[str, Span]):
+def _get_mountain_predicate(raw_triples_values: List[RawTriple], raw_triple: RawTriple, predicate: Union[str, Span]):
     exists_mountain: bool = len([
-        triple for triple in raw_triples
-        if triple.is_dbo_mountain_type()
+        raw_t for raw_t in raw_triples_values
+        if raw_t.is_dbo_mountain_type()
     ]) > 0
 
     if exists_mountain:
-        if isinstance(triple.p, Span) and triple.p.root.lemma_ == "high":
+        if isinstance(raw_triple.p, Span) and raw_triple.p.root.lemma_ == "high":
             # E.g.: "What is the highest mountain in Italy?"
             return "dbo:elevation"
 
     return predicate
 
 
-def _update_location_triple(raw_triples: List[RawTriple], predicate: Union[str, Span]):
+def _update_location_triple(raw_triples_values: List[RawTriple], predicate: Union[str, Span]):
     # Get "dbo:locatedInArea" if the triple contains a Natural Place triple object
     # E.g.: "What is the highest mountain in Italy?"
 
     rdf_type_triples: List[RawTriple] = [
-        triple for triple in raw_triples
-        if triple.is_rdf_type()
+        raw_t for raw_t in raw_triples_values
+        if raw_t.is_rdf_type()
     ]
 
     # E.g.: <?mountain   rdf:type   dbo:Mountain>

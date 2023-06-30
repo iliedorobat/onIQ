@@ -10,10 +10,10 @@ from ro.webdata.oniq.sparql.triples.raw_triples.generator.RawTripleHandler impor
 
 class RDFTypeRawTriple:
     @staticmethod
-    def generate_rdf_types(question: Span, triples: List[RawTriple]):
+    def generate_rdf_types(question: Span, triples_values: List[RawTriple]):
         rdf_types = []
 
-        for statement in triples:
+        for statement in triples_values:
             RDFTypeRawTriple._append_rdf_type(question, rdf_types, statement.s)
             RDFTypeRawTriple._append_rdf_type(question, rdf_types, statement.o)
 

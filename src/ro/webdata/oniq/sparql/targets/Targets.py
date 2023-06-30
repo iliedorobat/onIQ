@@ -9,14 +9,14 @@ from ro.webdata.oniq.sparql.triples.Triple import Triple
 
 
 class Targets:
-    def __init__(self, nl_question: NLQuestion, triples: List[Triple]):
-        self.values = init_targets(nl_question, triples)
+    def __init__(self, nl_question: NLQuestion, triples_values: List[Triple]):
+        self.values = init_targets(nl_question, triples_values)
 
 
-def init_targets(nl_question: NLQuestion, triples: List[Triple]):
+def init_targets(nl_question: NLQuestion, triples_values: List[Triple]):
     targets = []
 
-    for raw_triple in triples:
+    for raw_triple in triples_values:
         _update_targets(nl_question, targets, raw_triple)
 
     return list(set(targets))

@@ -43,6 +43,10 @@ class RawTripleHandler:
         if prep is not None:
             noun = TokenHandler.get_noun_after_prep(rights)
 
+            if noun is None:
+                # E.g.: "Which volcanos in Japan erupted in 2000?"
+                return None
+
             if prep.lower_ == "in":
                 if noun.ent_type_ == "GPE":
                     # E.g.: "What is the highest mountain in Romania?"

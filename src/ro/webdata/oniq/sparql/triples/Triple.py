@@ -14,9 +14,9 @@ from ro.webdata.oniq.sparql.triples.raw_triples.RawTriple import RawTriple
 
 
 class Triple:
-    def __init__(self, raw_triple: RawTriple, raw_triples: List[RawTriple], properties: RDFElements):
+    def __init__(self, raw_triple: RawTriple, raw_triples_values: List[RawTriple], properties: RDFElements):
         self.s = raw_triple.s
-        self.p = _predicate_lookup(raw_triple, raw_triples, properties)
+        self.p = _predicate_lookup(raw_triple, raw_triples_values, properties)
         self.o = raw_triple.o
         self.question = raw_triple.question
         self.order_by = raw_triple.order_by
@@ -66,7 +66,7 @@ class Triple:
         return f"{s}   {p}   {o}"
 
 
-def _predicate_lookup(raw_triple: RawTriple, raw_triples: List[RawTriple], properties: RDFElements):
+def _predicate_lookup(raw_triple: RawTriple, raw_triples_values: List[RawTriple], properties: RDFElements):
     subject: NounEntity = raw_triple.s
     predicate: Union[str, Span] = raw_triple.p
     obj: Union[AdjectiveEntity, NounEntity] = raw_triple.o
@@ -78,17 +78,13 @@ def _predicate_lookup(raw_triple: RawTriple, raw_triples: List[RawTriple], prope
 
     if isinstance(predicate, Span):
         if is_aux(predicate.root):
-            # TODO: move the logic to RawTripleHandler
+            # TODO: move the logic to RawTriples
             if predicate.root.lemma_ == "have":
                 # E.g. "Which museum in New York has the most visitors?"
                 if subject.is_var() and obj.is_var():
                     predicate = obj.to_span()
             else:
                 return "?property"
-        elif is_preposition(predicate.root):
-            # E.g.: "Which museum in New York has the most visitors?"
-            # TODO:
-            pass
 
     if isinstance(predicate, Span) and is_adj(predicate.root):
         return SpotlightService.adj_property_lookup(predicate, properties)
@@ -101,7 +97,7 @@ def _predicate_lookup(raw_triple: RawTriple, raw_triples: List[RawTriple], prope
                 predicate=predicate,
                 node_type=NODE_TYPE.SUBJECT,
                 node_value=subject,
-                raw_triples=raw_triples
+                raw_triples_values=raw_triples_values
             )
 
     if subject.is_var():
@@ -112,7 +108,7 @@ def _predicate_lookup(raw_triple: RawTriple, raw_triples: List[RawTriple], prope
             predicate=predicate,
             node_type=NODE_TYPE.OBJECT,
             node_value=obj,
-            raw_triples=raw_triples
+            raw_triples_values=raw_triples_values
         )
 
     # E.g.: "Who is the tallest basketball player?"
