@@ -4,11 +4,11 @@ from spacy.tokens import Token
 
 from ro.webdata.oniq.common.nlp.nlp_utils import token_to_span
 from ro.webdata.oniq.common.nlp.word_utils import get_prev_word, is_adj
-from ro.webdata.oniq.sparql.model.AdjectiveEntity import AdjectiveEntity
-from ro.webdata.oniq.sparql.model.NLQuestion import NLQuestion
-from ro.webdata.oniq.sparql.model.NounEntity import NounEntity
-from ro.webdata.oniq.sparql.model.OrderBy import OrderBy
-from ro.webdata.oniq.sparql.model.raw_triples.RawTriple import RawTriple
+from ro.webdata.oniq.sparql.AdjectiveEntity import AdjectiveEntity
+from ro.webdata.oniq.sparql.NLQuestion import NLQuestion
+from ro.webdata.oniq.sparql.NounEntity import NounEntity
+from ro.webdata.oniq.sparql.order.OrderBy import OrderBy
+from ro.webdata.oniq.sparql.triples.raw_triples.RawTriple import RawTriple
 
 
 class OrderByRawTriple:

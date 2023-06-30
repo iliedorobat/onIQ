@@ -10,9 +10,8 @@ from ro.webdata.oniq.endpoint.dbpedia.sparql_query import DBP_ENDPOINT
 from ro.webdata.oniq.endpoint.models.RDFElements import RDFElements
 from ro.webdata.oniq.endpoint.namespace import NAMESPACE, NamespaceService
 from ro.webdata.oniq.endpoint.query import QueryService, escape_resource_name
-from ro.webdata.oniq.service.query_const import NODE_TYPE
-from ro.webdata.oniq.sparql.model.NounEntity import NounEntity
-from ro.webdata.oniq.sparql.model.raw_triples.RawTriple import RawTriple
+from ro.webdata.oniq.sparql.NounEntity import NounEntity
+from ro.webdata.oniq.sparql.triples.raw_triples.RawTriple import RawTriple
 
 nlp_dbpedia = spacy.load('en_core_web_md')
 nlp_dbpedia.add_pipe('dbpedia_spotlight', config={'confidence': 0.75})
@@ -61,7 +60,7 @@ class SpotlightService:
             # E.g.: "When did the Ming dynasty dissolve?"
             new_predicate = text_to_span("end")
 
-        props = _get_props(raw_triples, new_predicate, node_type)
+        props = _get_props(raw_triples, new_predicate)
         resource = _extract_dbpedia_resource(question, node_value)
 
         return PropertiesMatcher.get_best_matched(
@@ -73,7 +72,7 @@ class SpotlightService:
         )
 
 
-def _get_props(raw_triples: List[RawTriple], predicate: Union[str, Span], node_type: str):
+def _get_props(raw_triples: List[RawTriple], predicate: Union[str, Span]):
     endpoint = DBP_ENDPOINT
 
     temp_triples = [t for t in raw_triples if str(t.p) == str(predicate)]

@@ -4,7 +4,7 @@ from spacy.tokens import Token
 
 from ro.webdata.oniq.common.nlp.utils import WordnetUtils
 from ro.webdata.oniq.common.nlp.word_utils import is_preposition, is_noun
-from ro.webdata.oniq.sparql.model.NounEntity import NounEntity
+from ro.webdata.oniq.sparql.NounEntity import NounEntity
 
 
 class TokenHandler:

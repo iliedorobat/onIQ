@@ -7,10 +7,10 @@ from ro.webdata.oniq.endpoint.common.match.PropertyMatcher import PropertyMatche
 from ro.webdata.oniq.endpoint.models.RDFElements import RDFElements
 from ro.webdata.oniq.endpoint.query import escape_resource_name
 from ro.webdata.oniq.service.query_const import NODE_TYPE
+from ro.webdata.oniq.sparql.AdjectiveEntity import AdjectiveEntity
+from ro.webdata.oniq.sparql.NounEntity import NounEntity
 from ro.webdata.oniq.sparql.common.SpotlightService import SpotlightService
-from ro.webdata.oniq.sparql.model.AdjectiveEntity import AdjectiveEntity
-from ro.webdata.oniq.sparql.model.NounEntity import NounEntity
-from ro.webdata.oniq.sparql.model.raw_triples.RawTriple import RawTriple
+from ro.webdata.oniq.sparql.triples.raw_triples.RawTriple import RawTriple
 
 
 class Triple:

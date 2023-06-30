@@ -4,8 +4,8 @@ from spacy.tokens import Token
 
 from ro.webdata.oniq.common.nlp.utils import WordnetUtils, SENTI_WORD_TYPE
 from ro.webdata.oniq.common.nlp.word_utils import is_adj, get_prev_word
-from ro.webdata.oniq.sparql.model.AdjectiveEntity import AdjectiveEntity
-from ro.webdata.oniq.sparql.model.NounEntity import NounEntity
+from ro.webdata.oniq.sparql.AdjectiveEntity import AdjectiveEntity
+from ro.webdata.oniq.sparql.NounEntity import NounEntity
 
 
 class ORDER_BY_MODIFIER:

@@ -256,7 +256,7 @@ raw_triples = [
         "query": "What is the highest mountain in Italy?",
         "result": """
 raw_triples = [
-	<?mountain   in   dbr:Italy>
+	<?mountain   location   dbr:Italy>
 	<?mountain   highest   ?highest>
 ]
 """
@@ -458,7 +458,7 @@ raw_triples = [
         "result": """
 raw_triples = [
 	<?volcanos   erupted   ?erupted>
-	<?volcanos   in   dbr:Japan>
+	<?volcanos   location   dbr:Japan>
 ]
 """
     },

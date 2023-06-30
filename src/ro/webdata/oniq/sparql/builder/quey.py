@@ -1,8 +1,8 @@
 from typing import List
 
-from ro.webdata.oniq.sparql.model.NLQuestion import NLQuestion, ANSWER_TYPE
-from ro.webdata.oniq.sparql.model.NounEntity import NounEntity
-from ro.webdata.oniq.sparql.model.final_triples.Triple import Triple
+from ro.webdata.oniq.sparql.NLQuestion import NLQuestion, ANSWER_TYPE
+from ro.webdata.oniq.sparql.NounEntity import NounEntity
+from ro.webdata.oniq.sparql.triples.Triple import Triple
 
 
 class SPARQLQuery:

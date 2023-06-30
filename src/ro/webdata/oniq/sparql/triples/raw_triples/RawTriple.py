@@ -5,17 +5,17 @@ from spacy.tokens import Span, Token
 
 from ro.webdata.oniq.endpoint.common.match.PropertyMatcher import PropertyMatcher
 from ro.webdata.oniq.endpoint.query import escape_resource_name
+from ro.webdata.oniq.sparql.AdjectiveEntity import AdjectiveEntity
+from ro.webdata.oniq.sparql.NounEntity import NounEntity
 from ro.webdata.oniq.sparql.common.constants import SPARQL_STR_SEPARATOR
-from ro.webdata.oniq.sparql.model.AdjectiveEntity import AdjectiveEntity
-from ro.webdata.oniq.sparql.model.NounEntity import NounEntity
-from ro.webdata.oniq.sparql.model.OrderBy import OrderBy
+from ro.webdata.oniq.sparql.order.OrderBy import OrderBy
 
 
 class RawTriple:
     def __init__(self, s: Union[str, NounEntity, Token], p: Union[str, Span], o: Union[str, AdjectiveEntity, NounEntity, Token], question: Span, order_by: OrderBy = None):
         self.s = s if isinstance(s, NounEntity) else NounEntity(s)
         self.p = p
-        self.o = _prepare_object(self.p, o)
+        self.o = _prepare_object(o)
         self.order_by = order_by
         self.question = question
 
@@ -93,11 +93,7 @@ def _get_p_var(predicate: Union[str, Token]):
     return re.sub(r"\s", SPARQL_STR_SEPARATOR, p)
 
 
-def _prepare_object(predicate: Union[str, Span], obj: Union[str, AdjectiveEntity, NounEntity, Token]):
-    # TODO: check
-    # if isinstance(predicate, str) and predicate == "rdf:type":
-    #     return NounEntity(obj.text, obj.token, True)
-
+def _prepare_object(obj: Union[str, AdjectiveEntity, NounEntity, Token]):
     if isinstance(obj, NounEntity):
         return obj
 

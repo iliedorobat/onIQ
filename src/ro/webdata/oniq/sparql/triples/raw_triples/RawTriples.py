@@ -1,11 +1,16 @@
 from ro.webdata.oniq.common.nlp.word_utils import is_adj, is_wh_word
+from ro.webdata.oniq.sparql.NLQuestion import NLQuestion, QUESTION_TYPES
 from ro.webdata.oniq.sparql.common.TokenHandler import TokenHandler
-from ro.webdata.oniq.sparql.model.NLQuestion import NLQuestion, QUESTION_TYPES
-from ro.webdata.oniq.sparql.model.raw_triples.RawTripleGenerator import RawTripleGenerator, STATEMENT_TYPE, \
-    RawTripleHandler
+from ro.webdata.oniq.sparql.triples.raw_triples.RawTripleGenerator import STATEMENT_TYPE, RawTripleGenerator
+from ro.webdata.oniq.sparql.triples.raw_triples.generator.RawTripleHandler import RawTripleHandler
 
 
-def prepare_base_raw_triples(nl_question: NLQuestion):
+class RawTriples:
+    def __init__(self, nl_question: NLQuestion):
+        self.values = init_raw_triples(nl_question)
+
+
+def init_raw_triples(nl_question: NLQuestion):
     generator = RawTripleGenerator(nl_question)
     question = nl_question.question
     head = question.root
@@ -43,12 +48,12 @@ def prepare_base_raw_triples(nl_question: NLQuestion):
         generator.append_noun_triple(subject, p, obj)
 
         # E.g.: "Which museum in New York has the most visitors?"
-        generator.append_triple(subject, head, STATEMENT_TYPE.NOUN)
+        generator.append_triple(subject, None, STATEMENT_TYPE.NOUN)
 
         # E.g.: "How many companies were founded by the founder of Facebook?" => founder of Facebook
-        generator.append_triple(obj, head, STATEMENT_TYPE.NOUN)
+        generator.append_triple(obj, None, STATEMENT_TYPE.NOUN)
 
-        generator.append_triple(head, head, STATEMENT_TYPE.PASS_POSS)
+        generator.append_triple(head, None, STATEMENT_TYPE.PASS_POSS)
     else:
         if len(noun_rights) > 0:
             adj_lefts = [token for token in lefts if is_adj(token)]
@@ -69,7 +74,7 @@ def prepare_base_raw_triples(nl_question: NLQuestion):
                 # E.g.: "Give me the currency of China."
                 # E.g.: "Who were the parents of Queen Victoria?"
                 # E.g.: "What is the highest mountain in Romania?"
-                generator.append_triple(head, head, STATEMENT_TYPE.NOUN)
+                generator.append_triple(head, None, STATEMENT_TYPE.NOUN)
 
                 if len(noun_lefts) > 0:
                     if len(noun_rights) > 0:
