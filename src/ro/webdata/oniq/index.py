@@ -1,10 +1,14 @@
 import warnings
 
+from spacy import displacy
+from spacy.tokens import Span
+
 from ro.webdata.oniq.common.constants import GLOBAL_ENV, TEST_MODES
 from ro.webdata.oniq.sparql.builder.builder import SPARQLBuilder
 from ro.webdata.oniq.validation.pre_validation_pairs.pairs import PAIRS
+from ro.webdata.oniq.validation.pre_validation_pairs.pairs_qald_5_test import PAIRS_QALD
 from ro.webdata.oniq.validation.validation import questions_test, question_test
-from ro.webdata.oniq.validation.validation_pairs.pairs_qald_5_test import PAIRS_QALD as V_PAIRS_QALD, PAIRS_QALD
+from ro.webdata.oniq.validation.validation_pairs.pairs_qald_5_test import PAIRS_QALD as V_PAIRS_QALD
 
 # Ignore spaCy "[W008] Evaluating Token.similarity based on empty vectors." warning message
 warnings.filterwarnings("ignore", message=r"\[W008\]", category=UserWarning)
@@ -15,7 +19,7 @@ ENDPOINT = "http://localhost:7200/repositories/eCHO"
 QUERY_01 = "Did Arnold Schwarzenegger attend a university?"  # OK
 QUERY_02 = "Is Barack Obama a democrat?"  # OK
 QUERY_03 = "In which country is Mecca located?"  # OK
-QUERY_04 = "Give me all ESA astronauts."  # TODO:
+QUERY_04 = "Give me all ESA astronauts."  # OK
 QUERY_05 = "Give me all Swedish holidays."  # OK
 QUERY_06 = "Give me the currency of China."  # OK
 QUERY_07 = "When did the Ming dynasty dissolve?"  # OK
@@ -32,7 +36,7 @@ QUERY_17 = "Which soccer players were born on Malta?"  # OK
 QUERY_18 = "Which museum in New York has the most visitors?"  # OK
 QUERY_19 = "How many companies were founded by the founder of Facebook?"  # OK ===
 QUERY_20 = "Give me all Swiss non-profit organizations."  # OK ...
-QUERY_21 = "Which musician wrote the most books?"  # OK ...
+QUERY_21 = "Which musician wrote the most books?"  # TODO:
 QUERY_22 = "Which volcanos in Japan erupted since 2000?"  # TODO:
 
 QUERY_LIST = [

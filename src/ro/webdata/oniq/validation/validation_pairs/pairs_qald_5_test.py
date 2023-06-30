@@ -451,7 +451,7 @@ ORDER BY DESC(COUNT(?books))
 """
     },
     {
-        # FIXME: dbo:numberOfVisitors
+        # FIXME: dbo:numberOfVisitors instead of dbp:visitors
         "aggregation": True,
         "answertype": "resource",
         "hybrid": False,
@@ -462,7 +462,7 @@ SELECT DISTINCT ?museum
 WHERE {
 	?museum   dbo:location   dbr:New_York_City .
 	?museum   rdf:type   dbo:Museum .
-	?museum   dbo:numberOfVisitors   ?visitors
+	?museum   dbp:visitors   ?visitors
 }
 ORDER BY DESC(COUNT(?visitors))
 """

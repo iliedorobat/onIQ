@@ -1,7 +1,8 @@
 from ro.webdata.oniq.common.nlp.word_utils import is_adj, is_wh_word
 from ro.webdata.oniq.sparql.common.TokenHandler import TokenHandler
 from ro.webdata.oniq.sparql.model.NLQuestion import NLQuestion, QUESTION_TYPES
-from ro.webdata.oniq.sparql.model.raw_triples.RawTripleGenerator import RawTripleGenerator, STATEMENT_TYPE
+from ro.webdata.oniq.sparql.model.raw_triples.RawTripleGenerator import RawTripleGenerator, STATEMENT_TYPE, \
+    RawTripleHandler
 
 
 def prepare_base_raw_triples(nl_question: NLQuestion):
@@ -55,7 +56,8 @@ def prepare_base_raw_triples(nl_question: NLQuestion):
                 # E.g.: "How high is the Yokohama Marine Tower?"
                 generator.append_triple(noun_rights[0], adj_lefts[0], STATEMENT_TYPE.ADJECTIVE)
 
-            statement = RawTripleGenerator.passive_possessive_handler(question, noun_rights[0])
+            # TODO: replace with RawTripleGenerator.append_triple
+            statement = RawTripleHandler.passive_possessive_handler(question, noun_rights[0])
             if statement is not None:
                 generator.raw_triples.append(statement)
             else:

@@ -72,8 +72,13 @@ def _predicate_lookup(raw_triple: RawTriple, raw_triples: List[RawTriple], prope
     obj: Union[AdjectiveEntity, NounEntity] = raw_triple.o
     question: Span = raw_triple.question
 
+    if isinstance(predicate, PropertyMatcher):
+        # E.g.: "Which museum in New York has the most visitors?"
+        return predicate
+
     if isinstance(predicate, Span):
         if is_aux(predicate.root):
+            # TODO: move the logic to RawTripleHandler
             if predicate.root.lemma_ == "have":
                 # E.g. "Which museum in New York has the most visitors?"
                 if subject.is_var() and obj.is_var():

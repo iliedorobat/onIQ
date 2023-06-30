@@ -436,7 +436,7 @@ raw_triples = [
         "result": """
 raw_triples = [
 	<?museum   has   ?visitors>
-	<?museum   in   dbr:New_York_City>
+	<?museum   location   dbr:New_York_City>
 ]
 """
     },

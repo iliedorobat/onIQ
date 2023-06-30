@@ -10,14 +10,14 @@ from ro.webdata.oniq.endpoint.models.RDFElements import RDFElements
 from ro.webdata.oniq.endpoint.namespace import NAMESPACE
 from ro.webdata.oniq.endpoint.query import QueryService, escape_resource_name
 from ro.webdata.oniq.service.query_const import ACCESSORS, PATHS
-from ro.webdata.oniq.sparql.builder.builder_raw_utils import get_improved_raw_triples
 from ro.webdata.oniq.sparql.builder.builder_raw import SPARQLRawBuilder
+from ro.webdata.oniq.sparql.builder.builder_raw_utils import get_improved_raw_triples
 from ro.webdata.oniq.sparql.builder.quey import SPARQLQuery
 from ro.webdata.oniq.sparql.model.NLQuestion import NLQuestion
-from ro.webdata.oniq.sparql.model.final_triples.RDFTypeTriple import RDFTypeTriple
 from ro.webdata.oniq.sparql.model.final_triples.Triple import Triple
 from ro.webdata.oniq.sparql.model.raw_triples.OrderByRawTriple import OrderByRawTriple
 from ro.webdata.oniq.sparql.model.raw_triples.RawTriple import RawTriple
+from ro.webdata.oniq.sparql.model.raw_triples.RawTripleGenerator import RDFTypeRawTriple
 from ro.webdata.oniq.sparql.model.raw_triples.raw_target_utils import RawTargetUtils
 
 
@@ -32,15 +32,11 @@ class SPARQLBuilder:
         self.triples = _prepare_triples(raw_triples)
 
     def to_sparql_query(self):
-        try:
-            return SPARQLQuery.get_query(self.nl_question, self.targets, self.triples)
-        except:
-            # FIXME:
-            return ""
+        return SPARQLQuery.get_query(self.nl_question, self.targets, self.triples)
 
 
 def _prepare_raw_triples(raw_builder: SPARQLRawBuilder):
-    rdf_types = RDFTypeTriple.generate_rdf_types(raw_builder.nl_question.question, raw_builder.raw_triples)
+    rdf_types = RDFTypeRawTriple.generate_rdf_types(raw_builder.nl_question.question, raw_builder.raw_triples)
     raw_triples = raw_builder.raw_triples + rdf_types
 
     order_by_triples = OrderByRawTriple.prepare_extra_raw_triples(raw_builder.nl_question, raw_builder.raw_triples)
@@ -74,23 +70,22 @@ def _prepare_triples(raw_triples: List[RawTriple]):
         raw_triple for raw_triple in raw_triples
         if not raw_triple.is_ordering_triple()
     ]
+    main_triples = _init_triples(main_raw_triples, properties)
+
+    main_raw_triples = [
+        RawTriple(
+            s=triple.s,
+            p=triple.p,
+            o=triple.o,
+            question=triple.question
+        ) for triple in main_triples
+    ]
     order_by_raw_triples = [
         raw_triple for raw_triple in raw_triples
         if raw_triple.is_ordering_triple()
     ]
-    rdf_type_order_by_triples = [
-        Triple(raw_triple, raw_triples, RDFElements([])) for raw_triple in raw_triples
-        # E.g.: "Which musician wrote the most books?"
-        if raw_triple.is_rdf_type()
-            and raw_triple not in main_raw_triples
-            and raw_triple.o.is_dbpedia_type
-    ]
 
-    main_triples = _init_triples(main_raw_triples, properties)
-    # properties = _get_properties(DBP_ENDPOINT, subject, main_triples + rdf_type_order_by_triples)
-    order_by_triples = _init_triples(order_by_raw_triples, properties)
-
-    return main_triples + order_by_triples
+    return _init_triples(main_raw_triples + order_by_raw_triples, properties)
 
 
 def _init_triples(raw_triples: List[RawTriple], properties: RDFElements):
