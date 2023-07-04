@@ -162,6 +162,7 @@ def _calculate_word_similarity_score(rdf_prop, target_expression, result_type):
 
         # E.g.: birthPlace
         if index > 0 and result_type is not None:
+            # TODO: check if the section is useful
             result_type_token = nlp_model(result_type)[0]
 
             if not result_type_token.has_vector:
@@ -174,10 +175,13 @@ def _calculate_word_similarity_score(rdf_prop, target_expression, result_type):
 
     if len(prop_tokens) > 0:
         if similarity_score > 0:
+            # TODO: use len(prop_tokens) instead of count
             return math.pow(similarity_score, 1/count) - SCORE_BUFFER
         elif similarity_score < 0:
+            # TODO: remove
             return -math.pow(-similarity_score, 1/count) - SCORE_BUFFER
 
+    # TODO: move it upstream: if len(prop_tokens) -> return 0
     return 0
 
 

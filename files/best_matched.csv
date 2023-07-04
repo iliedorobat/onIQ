@@ -1,0 +1,21 @@
+target_word|prop_uri|score|detachment_score|node_type|node_text_value
+attend|http://dbpedia.org/ontology/almaMater|1.2360663550382607|0.20748892862149568|subject|Arnold_Schwarzenegger
+country|http://dbpedia.org/ontology/country|2.2|1.0|subject|Mecca
+currency|http://dbpedia.org/ontology/currency|2.2|1.0|subject|China
+end|http://dbpedia.org/property/dateEnd|1.6306727136932337|0.29730177875068026|subject|Ming_dynasty
+manager|http://dbpedia.org/ontology/manager|2.2|1.0|subject|Real_Madrid_CF
+parents|http://dbpedia.org/ontology/parent|2.2|0.5915463685222677|subject|Queen_Victoria
+winner|http://dbpedia.org/ontology/award|1.7087491273880004|0.26816827879330085|object|Pulitzer_Prize
+tallest|http://dbpedia.org/ontology/height|1.749799382686615|0.23199392431796093||
+net income|http://dbpedia.org/ontology/netIncome|1.9245558089987114|1.0|subject|Apple_Inc.
+high|http://dbpedia.org/ontology/height|1.596869659423828|0.4262769748452454||
+founded|http://dbpedia.org/ontology/foundedBy|2.2|1.0|object|
+founder|http://dbpedia.org/property/founder|2.0|1.0|subject|Facebook
+born|http://dbpedia.org/ontology/birthPlace|1.7491067912709846|0.1333265414172875|object|Malta
+wrote|http://dbpedia.org/property/allWriting|2.0|0.28117481486433643|object|
+location|http://dbpedia.org/ontology/location|2.2|1.0|object|New_York_City
+visitors|http://dbpedia.org/property/visitors|2.0|1.0|object|
+erupted|http://dbpedia.org/ontology/eruptionYear|1.5245474058558113|0.24045237219134674|object|
+doctoral advisor|http://dbpedia.org/ontology/doctoralAdvisor|1.8790468007137187|1.0|subject|Albert_Einstein
+children|http://dbpedia.org/ontology/child|2.2|0.4323408350510654|subject|Benjamin_Franklin
+doctoral mentor|http://dbpedia.org/ontology/doctoralAdvisor|1.8790468007137187|0.238102697828374|subject|Albert_Einstein

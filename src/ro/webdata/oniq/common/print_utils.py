@@ -79,8 +79,8 @@ class echo:
         if GLOBAL_ENV.IS_DEBUG and PRINT_MODE.PRINT_TOKEN:
             console.info(
                 f'-------------------------------------------------------------------------------------------------------'
-                f'\n{"text":{15}}|{"lemma_":{15}}|{"pos_":{10}}|{"tag_":{10}}|'
-                f'{"dep_":{10}}|{"shape_":{15}}|{"is_alpha":{10}}|{"is_stop":{10}}'
+                f'\n{"Token":{15}}|{"Lemma":{15}}|{"POS":{10}}|{"TAG":{10}}|'
+                f'{"DEP":{10}}|{"shape_":{15}}|{"is_alpha":{10}}'
             )
             console.info(
                 '-------------------------------------------------------------------------------------------------------'
@@ -88,7 +88,7 @@ class echo:
             for token in document:
                 console.info(
                     f'{token.text:{15}}|{token.lemma_:{15}}|{token.pos_:{10}}|{token.tag_:{10}}|{token.dep_:{10}}|'
-                    f'{token.shape_:{15}}|{token.is_alpha:{10}}|{token.is_stop:{10}}'
+                    f'{token.shape_:{15}}|{token.is_alpha:{10}}'
                 )
             console.info(
                 '-------------------------------------------------------------------------------------------------------'
@@ -99,21 +99,23 @@ class echo:
     def deps_list(document):
         if GLOBAL_ENV.IS_DEBUG and PRINT_MODE.PRINT_DEPS:
             separator = ''
-            for i in range(145):
+            for i in range(130):
                 separator += '-'
 
             console.info(
-                f'{separator}'
-                f'\n{"text":{15}}|{"head":{10}}|{"main_head":{10}}|'
-                f'{"lefts":{20}}|{"rights":{20}}|'
-                f'{"lemma_":{15}}|{"pos_":{10}}|{"tag_":{10}}|{"dep_":{10}}|{"is_stop":{10}}'
+                f'{separator}\n'
+                f'  '
+                f'{"Token":{15}}|{"Governor":{10}}|{"Root Node":{10}}|'
+                f'{"Lefts":{20}}|{"Rights":{20}}|'
+                f'{"Lemma":{15}}|{"POS":{10}}|{"TAG":{10}}|{"DEP":{10}}'
             )
             console.info(separator)
             for token in document:
                 console.info(
+                    f'  '
                     f'{token.text:{15}}|{token.head.text:{10}}|{str(token == token.head):{10}}|'
                     f'{str(list(token.lefts)):{20}}|{str(list(token.rights)):{20}}|'
-                    f'{token.lemma_:{15}}|{token.pos_:{10}}|{token.tag_:{10}}|{token.dep_:{10}}|{str(token.is_stop):{10}}'
+                    f'{token.lemma_:{15}}|{token.pos_:{10}}|{token.tag_:{10}}|{token.dep_:{10}}'
                 )
             console.info(separator)
             console.info(f'sentence: {document}')

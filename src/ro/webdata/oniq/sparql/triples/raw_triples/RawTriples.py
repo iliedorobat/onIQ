@@ -1,4 +1,4 @@
-from ro.webdata.oniq.common.nlp.word_utils import is_adj, is_wh_word
+from ro.webdata.oniq.common.nlp.word_utils import is_adj, is_wh_word, is_aux, is_noun
 from ro.webdata.oniq.sparql.NLQuestion import NLQuestion, QUESTION_TYPES
 from ro.webdata.oniq.sparql.common.TokenHandler import TokenHandler
 from ro.webdata.oniq.sparql.triples.raw_triples.RawTripleGenerator import STATEMENT_TYPE, RawTripleGenerator
@@ -44,6 +44,23 @@ def init_raw_triples(nl_question: NLQuestion):
                 # E.g.: "Which volcanos in Japan erupted since 2000?"
                 # E.g.: "When did the Ming dynasty dissolve?"
                 obj = p
+
+        if obj.lemma_ == "have":
+            aux_lefts = [token for token in list(obj.lefts) if is_aux(token)]
+            if len(aux_lefts) > 0:
+                nsubj_lefts = TokenHandler.get_nouns(noun_lefts, ["nsubj", "nsubjpass"])
+                dobj_lefts = [token for token in noun_lefts if token.dep_ == "dobj"]
+                if len(nsubj_lefts) > 0 and len(dobj_lefts) > 0:
+                    # E.g.: "How many children does Eddie Murphy have?"
+                    subject = nsubj_lefts[0]
+                    p = dobj_lefts[0]
+                    obj = dobj_lefts[0]
+
+                n_lefts = [token for token in list(aux_lefts[0].lefts) if is_noun(token)]
+                if len(n_lefts) > 0:
+                    # E.g.: "How many children did Benjamin Franklin have?"
+                    p = n_lefts[0]
+                    obj = n_lefts[0]
 
         generator.append_noun_triple(subject, p, obj)
 

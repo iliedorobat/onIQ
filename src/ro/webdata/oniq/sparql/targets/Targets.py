@@ -2,7 +2,7 @@ from typing import List
 
 from spacy.tokens import Token, Span
 
-from ro.webdata.oniq.common.nlp.word_utils import is_noun
+from ro.webdata.oniq.common.nlp.word_utils import is_noun, is_aux
 from ro.webdata.oniq.sparql.NLQuestion import NLQuestion, QUESTION_TYPES
 from ro.webdata.oniq.sparql.NounEntity import NounEntity
 from ro.webdata.oniq.sparql.triples.Triple import Triple
@@ -65,13 +65,20 @@ def _init_target_tokens(nl_question: NLQuestion, sentence: Span):
     rights = [token for token in list(sentence.root.rights) if is_noun(token)]
 
     for token in sentence:
-        if is_noun(token) and token.head == sentence.root:
-            if nl_question.starts_with_wh(sentence) and len(lefts) > 0 and len(rights) > 0:
-                # E.g.: "Which museum in New York has the most visitors?"
-                if token in lefts:
+        head = token.head
+
+        if is_noun(token):
+            if is_aux(head):
+                # E.g.: "How many children did Benjamin Franklin have?"
+                head = head.head
+
+            if head == sentence.root:
+                if nl_question.starts_with_wh(sentence) and len(lefts) > 0 and len(rights) > 0:
+                    # E.g.: "Which museum in New York has the most visitors?"
+                    if token in lefts:
+                        target_nouns.append(token)
+                else:
                     target_nouns.append(token)
-            else:
-                target_nouns.append(token)
 
     return target_nouns
 

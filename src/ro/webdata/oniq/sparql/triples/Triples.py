@@ -42,6 +42,7 @@ def init_triples(raw_triples_values: List[RawTriple]):
             question=triple.question
         ) for triple in main_triples
     ]
+    # TODO: move the order_by raw triples builder to RawTriples
     order_by_raw_triples = [
         raw_triple for raw_triple in raw_triples_values
         if raw_triple.is_ordering_triple()

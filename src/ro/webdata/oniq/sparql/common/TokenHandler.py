@@ -53,20 +53,15 @@ class TokenHandler:
         return None
 
     @staticmethod
-    def get_nouns(tokens: List[Token], exception: Token = None):
+    def get_nouns(tokens: List[Token], dep_list: List[str] = None):
         noun_list = []
 
         for token in tokens:
             if is_noun(token):
-                if exception is None:
-                    noun_list.append(token)
-                elif exception.dep_ == "attr":
-                    # E.g.: "Who is the youngest Pulitzer Prize winner?"
-                    noun_list.append(token)
+                if dep_list is not None:
+                    if token.dep_ in dep_list:
+                        noun_list.append(token)
                 else:
-                    exception_text = NounEntity(exception).text
-                    if token.text in exception_text:
-                        # E.g.: "Is Barack Obama a democrat?"
-                        continue
+                    noun_list.append(token)
 
         return noun_list
