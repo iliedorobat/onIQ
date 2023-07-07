@@ -318,3 +318,22 @@ DBP_RESOURCE_TYPE_QUERY = f"""
 SPARQL query for getting the type of a particular resource.
 E.g.: dbr:%s => http://dbpedia.org/resource/Pulitzer_Prize
 """
+
+
+DBP_PROPERTY_RANGE_QUERY = f"""
+    PREFIX dbo: <{NAMESPACE.DBP_ONTOLOGY}>
+    PREFIX dbp: <{NAMESPACE.DBP_PROPERTY}>
+    PREFIX dbr: <{NAMESPACE.DBP_RESOURCE}>
+    PREFIX rdf: <{NAMESPACE.RDF}>
+    PREFIX rdfs: <{NAMESPACE.RDFS}>
+
+    SELECT DISTINCT ?range
+    WHERE {{
+        %s   rdfs:range   ?range
+    }}
+"""
+"""
+SPARQL query for getting the type of a particular resource.
+E.g.: dbr:%s => http://dbpedia.org/resource/Pulitzer_Prize
+"""
+

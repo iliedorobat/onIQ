@@ -6,9 +6,11 @@ from ro.webdata.oniq.common.nlp.nlp_utils import token_to_span, text_to_span
 from ro.webdata.oniq.common.nlp.utils import WordnetUtils
 from ro.webdata.oniq.common.nlp.word_utils import is_preposition, is_aux, is_wh_word
 from ro.webdata.oniq.endpoint.dbpedia.lookup import LookupService
+from ro.webdata.oniq.spacy_model import nlp_dbpedia
 from ro.webdata.oniq.sparql.AdjectiveEntity import AdjectiveEntity
 from ro.webdata.oniq.sparql.NounEntity import NounEntity
 from ro.webdata.oniq.sparql.common.TokenHandler import TokenHandler
+from ro.webdata.oniq.sparql.order.OrderBy import OrderBy
 from ro.webdata.oniq.sparql.triples.raw_triples.RawTriple import RawTriple
 
 
@@ -47,22 +49,36 @@ class RawTripleHandler:
                 # E.g.: "Which volcanos in Japan erupted in 2000?"
                 return None
 
-            if prep.lower_ == "in":
+            if prep.lower_ == "by":
+                adj_lefts = TokenHandler.get_adjectives(list(noun_entity.token.lefts))
+                adj = adj_lefts[0] if len(adj_lefts) > 0 else None
+
+                return RawTriple(
+                    s=noun_entity,
+                    p=token_to_span(noun),
+                    o=NounEntity(noun),
+                    question=sentence,
+                    order_by=OrderBy(noun_entity, noun, adj)
+                )
+            elif prep.lower_ == "in":
                 if noun.ent_type_ == "GPE":
                     # E.g.: "What is the highest mountain in Romania?"
                     # E.g.: "Which museum in New York has the most visitors?"
                     return RawTriple(
-                        s=NounEntity(noun_entity.token),
+                        s=noun_entity,
                         p=text_to_span("location"),
                         o=NounEntity(noun),
                         question=sentence
                     )
             elif prep.lower_ == "of":
                 # E.g.: "Give me the currency of China."
+
+                dbpedia_doc = nlp_dbpedia(sentence.text)
+                dbpedia_ents = [ent for ent in dbpedia_doc.ents if ent.start <= noun.i <= ent.end]
                 return RawTriple(
-                    s=NounEntity(noun),
+                    s=NounEntity(noun) if len(dbpedia_ents) == 0 else dbpedia_ents[0],
                     p=noun_entity.to_span(),
-                    o=NounEntity(noun_entity.token),
+                    o=noun_entity,
                     question=sentence
                 )
 

@@ -56,6 +56,8 @@ class Initializer:
         # TODO: complete the list of patterns as needed
         _add_ruler_patterns("FAC", DBPEDIA_CLASS_TYPES.ARCHITECTURAL_STRUCTURE)
         _add_ruler_patterns("PERSON", DBPEDIA_CLASS_TYPES.PERSON)
+        _add_ruler_patterns("BOOK", "Books")
+        _add_ruler_patterns("PLACE", DBPEDIA_CLASS_TYPES.PLACE)
         console.info("All patterns have been written to disk!")
 
 

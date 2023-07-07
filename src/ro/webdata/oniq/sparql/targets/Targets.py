@@ -105,5 +105,7 @@ class _TargetProcessing:
         # E.g.: "How high is the Yokohama Marine Tower?"
         root = nl_question.question.root
 
-        if triple.s.token.head == root:
-            target_nouns.append(triple.o)
+        if isinstance(triple.s.token, Token):
+            # E.g.: "How large is the area of UK?" => not isinstance(triple.s.token, Token)
+            if triple.s.token.head == root:
+                target_nouns.append(triple.o)

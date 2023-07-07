@@ -69,6 +69,19 @@ raw_triples = [
 """
     },
     {
+        # TODO: city => <?headquartered   rdf:type   dbo:City>
+        "aggregation": False,
+        "answertype": "resource",
+        "hybrid": False,
+        "onlydbo": False,
+        "query": "In which city is Air China headquartered?",
+        "result": """
+raw_triples = [
+	<dbr:Air_China   headquartered   ?headquartered>
+]
+"""
+    },
+    {
         "aggregation": False,
         "answertype": "resource",
         "hybrid": None,  # False??
@@ -148,6 +161,18 @@ raw_triples = [
         "result": """
 raw_triples = [
 	<dbr:Real_Madrid_CF   manager   ?manager>
+]
+"""
+    },
+    {
+        "aggregation": False,
+        "answertype": "resource",
+        "hybrid": False,
+        "onlydbo": False,
+        "query": "Who is the mayor of Rotterdam?",
+        "result": """
+raw_triples = [
+	<dbr:Rotterdam   mayor   ?mayor>
 ]
 """
     },
@@ -311,6 +336,18 @@ raw_triples = [
 #         "result": """
 # """
 #     },
+    {
+        "aggregation": False,
+        "answertype": "number",
+        "hybrid": False,
+        "onlydbo": False,
+        "query": "How many children does Eddie Murphy have?",
+        "result": """
+raw_triples = [
+	<dbr:Eddie_Murphy   children   ?many_children>
+]
+"""
+    },
     {
         "aggregation": True,
         "answertype": "number",

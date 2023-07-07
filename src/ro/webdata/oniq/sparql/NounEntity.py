@@ -3,17 +3,14 @@ import re
 from typing import List, Union
 
 import requests
-import spacy
 from spacy.tokens import Span, Token
 
 from ro.webdata.oniq.common.nlp.nlp_utils import text_to_span
 from ro.webdata.oniq.common.nlp.utils import WordnetUtils, get_resource_namespace, get_resource_name
 from ro.webdata.oniq.common.nlp.word_utils import get_prev_word, is_noun, is_adj_modifier
 from ro.webdata.oniq.service.query_const import ACCESSORS, DATA_TYPE, PATHS
+from ro.webdata.oniq.spacy_model import nlp_dbpedia
 from ro.webdata.oniq.sparql.common.constants import SPARQL_VAR_PREFIX, SPARQL_STR_SEPARATOR
-
-nlp_dbpedia = spacy.load('en_core_web_md')
-nlp_dbpedia.add_pipe('dbpedia_spotlight', config={'confidence': 0.75})
 
 
 class NounEntity:
@@ -45,11 +42,18 @@ class NounEntity:
             else:
                 self.compound_noun = _get_noun_entity(self.token)
                 self.text = word.text
+
+            self.resource = _get_resource(self.compound_noun, self.token)
+        elif isinstance(word, Span):
+            # E.g.: "Who is the author of the interpretation of dreams?"
+            # E.g.: "how much is the total population of  european union?"
+            self.compound_noun = word
+            self.text = word.text
+            self.resource = _get_resource(self.compound_noun, self.compound_noun)
         else:
             self.compound_noun = _get_noun_entity(self.token)
             self.text = word
-
-        self.resource = _get_resource(self.compound_noun, self.token)
+            self.resource = _get_resource(self.compound_noun, self.token)
 
     def __eq__(self, other):
         if not isinstance(other, NounEntity):
@@ -127,7 +131,7 @@ class NounEntity:
 
 
 def _get_resource(compound_noun: Span, main_word: Token):
-    if not _token_exists_in_ents(main_word):
+    if not isinstance(main_word, Span) and not _token_exists_in_ents(main_word):
         # E.g.: "Who is the youngest Pulitzer Prize winner?" => "winner"
         return None
 
@@ -149,9 +153,9 @@ def _get_resource(compound_noun: Span, main_word: Token):
         return json.loads(resource_response.content)
 
     if _is_known_compound_named_entity(compound_noun):
-        dbpedia_doc = nlp_dbpedia(compound_noun.text)
-        dbpedia_ents = [ent for ent in dbpedia_doc.ents if str(ent) == str(compound_noun)]
-        
+        dbpedia_doc = nlp_dbpedia(compound_noun.doc)
+        dbpedia_ents = [ent for ent in dbpedia_doc.ents if ent.start <= compound_noun.root.i <= ent.end]
+
         if len(dbpedia_ents) > 0:
             entity_span = dbpedia_ents[0]
             namespace = get_resource_namespace(entity_span)

@@ -31,6 +31,10 @@ class Triple:
         return hash(str(self))
 
     def __str__(self):
+        if self.s.text == "VALUES":
+            # E.g.: "Who is Dan Jurafsky?"
+            return f"{str(self.s)}   ?{str(self.p)}   {{ {self.o.to_var()} }}"
+
         if self.p is None:
             return None
 
@@ -48,6 +52,10 @@ class Triple:
         return self.order_by is not None
 
     def to_escaped_str(self):
+        if self.s.text == "VALUES":
+            # E.g.: "Who is Dan Jurafsky?"
+            return f"{str(self.s)}   ?{str(self.p)}   {{ {self.o.to_var()} }}"
+
         if self.p is None:
             return None
 
@@ -71,6 +79,14 @@ def _predicate_lookup(raw_triple: RawTriple, raw_triples_values: List[RawTriple]
     predicate: Union[str, Span] = raw_triple.p
     obj: Union[AdjectiveEntity, NounEntity] = raw_triple.o
     question: Span = raw_triple.question
+
+    if predicate is None:
+        # TODO: check "Who is the mayor of Rotterdam?"
+        return None
+
+    if subject.text == "VALUES":
+        # E.g.: "Who is Dan Jurafsky?"
+        return predicate
 
     if isinstance(predicate, PropertyMatcher):
         # E.g.: "Which museum in New York has the most visitors?"

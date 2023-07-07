@@ -29,6 +29,10 @@ class RawTriple:
         return hash(str(self))
 
     def __str__(self):
+        if self.s.text == "VALUES":
+            # E.g.: "Who is Dan Jurafsky?"
+            return f"{str(self.s)}   ?{str(self.p)}   {{ {self.o.to_var()} }}"
+
         s = self.s.to_var()
         p = _get_p_var(self.p)
         o = self.o.to_var()

@@ -21,6 +21,25 @@ class RDFTypeRawTriple:
 
     @staticmethod
     def _append_rdf_type(question: Span, rdf_types: List[RawTriple], entity: Union[str, AdjectiveEntity, NounEntity, Token]):
+        span = entity.to_span()
+
+        # TODO: complete the list of exceptions
+        if isinstance(span, Span):
+            # E.g.: "How large is the area of UK?"
+            contains_area = "area" in span.text.lower()
+
+            # E.g.: "What is the nick name of Baghdad?"
+            contains_name = "name" in span.text.lower()
+
+            # E.g.: "How much is the population of Mexico City ?"
+            contains_population = "population" in span.text.lower()
+
+            # E.g.: "how much is the total population of  european union?"
+            contains_total = "total" in span.text.lower()
+
+            if contains_area or contains_total or contains_population or contains_name:
+                return None
+
         rdf_type = RawTripleHandler.rdf_type_handler(question, entity)
 
         if rdf_type is not None:

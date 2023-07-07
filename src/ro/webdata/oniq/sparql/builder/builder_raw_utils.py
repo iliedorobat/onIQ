@@ -7,7 +7,8 @@ from spacy.tokens import Span, Token
 
 from ro.webdata.oniq.endpoint.models.RDFElement import URI_TYPE
 from ro.webdata.oniq.service.query_const import PATHS, ACCESSORS
-from ro.webdata.oniq.sparql.NLQuestion import NLQuestion, ANSWER_TYPE
+from ro.webdata.oniq.sparql.NLQuestion import NLQuestion, ANSWER_TYPE, QUESTION_TYPES
+from ro.webdata.oniq.sparql.NounEntity import NounEntity
 from ro.webdata.oniq.sparql.triples.raw_triples.RawTriple import RawTriple
 
 
@@ -23,9 +24,32 @@ def get_improved_raw_triples(raw_triples_values: List[RawTriple], nl_question: N
         if "dbo:elevation" not in temp_p_list:
             predicate = _get_mountain_predicate(raw_triples_values, triple, predicate)
         if "dbo:locatedInArea" not in temp_p_list:
-            if isinstance(triple.o.token, Token) and triple.o.token.ent_type_ in ["GPE", "LOC"]:
-                # E.g.: "Which volcanos in Japan erupted since 2000?"
-                predicate = _update_location_triple(raw_triples_values, predicate)
+            if isinstance(triple.o.token, Token):
+                span = triple.o.to_span()
+                label = span.label_ if span is not None else triple.o.token.ent_type_
+
+                if label in ["GPE", "LOC"]:
+                    # E.g.: "Which volcanos in Japan erupted since 2000?"
+                    predicate = _update_location_triple(raw_triples_values, predicate)
+        if "dbo:populationTotal" not in temp_p_list:
+            if str(triple.p).lower() == "population":
+                # E.g.: "How much is the population of Mexico City ?"
+                # TODO:
+                # predicate = _update_population_predicate(triple.s, predicate)
+                predicate = "dbo:populationTotal"
+        if "dbo:deathDate" not in temp_p_list:
+            if nl_question.question_type == QUESTION_TYPES.WHEN:
+                if str(triple.p).lower() == "death":
+                    predicate = "dbo:deathDate"
+                elif str(triple.p).lower() == "birth":
+                    predicate = "dbo:birthDate"
+        if "dbo:birthDate" not in temp_p_list:
+            if nl_question.question_type == QUESTION_TYPES.WHEN:
+                if str(triple.p).lower() == "birth":
+                    predicate = "dbo:birthDate"
+        if "foaf:nick" not in temp_p_list:
+            if "nick" in str(triple.p).lower():
+                predicate = "foaf:nick"
 
         temp_p_list.append(
             str(predicate)
@@ -83,3 +107,18 @@ def _update_location_triple(raw_triples_values: List[RawTriple], predicate: Unio
             return "dbo:locatedInArea"
 
     return predicate
+
+
+# def _update_population_predicate(subject: NounEntity, predicate: Union[str, Span]):
+#     # Get "dbo:populationTotal" if the triple contains a Place triple subject
+#     # E.g.: "How much is the population of Mexico City ?"
+#
+#     resource_type_uri = f'http://localhost:8200/{PATHS.RESOURCE_TYPE}?{ACCESSORS.RESOURCE_NAME}={subject.to_var()}'
+#
+#     resource_type_response = requests.get(resource_type_uri)
+#     resource_type: str = json.loads(resource_type_response.content)
+#
+#     if resource_type == URI_TYPE.PLACE:
+#         return "dbo:populationTotal"
+#
+#     return predicate

@@ -26,6 +26,11 @@ def init_triples(raw_triples_values: List[RawTriple]):
     subject = escape_resource_name(
         raw_triples_values[0].s.to_var()
     )
+
+    if raw_triples_values[0].s.text == "VALUES":
+        # E.g.: "Who is Dan Jurafsky?"
+        return _init_triples(raw_triples_values, RDFElements([]))
+
     properties = _get_properties(DBP_ENDPOINT, subject, raw_triples_values)
 
     main_raw_triples = [
@@ -105,7 +110,9 @@ def _run_properties_query(endpoint: str, subject: str, triples_values: List[Unio
     if not subject.startswith("?"):
         # E.g.: "How many companies were founded by the founder of Facebook?"
         # => subject.startswith("?")
-        sparql_query += f"\t\t{subject}   ?property   ?value ."
+        if subject not in [triple.s.to_var() for triple in triples_values]:
+            # E.g.: "How large is the area of UK?"
+            sparql_query += f"\t\t{subject}   ?property   ?value ."
 
     sparql_query += f"""
         ?property   rdf:type   ?subclassOf .

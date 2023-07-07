@@ -1,14 +1,20 @@
 import warnings
 
+import spacy
 from spacy import displacy
 from spacy.tokens import Span
 
 from ro.webdata.oniq.common.constants import GLOBAL_ENV, TEST_MODES
+from ro.webdata.oniq.endpoint.common.match.CachedMatch import MATCHED_ENTRIES_PATH
+from ro.webdata.oniq.init import Initializer
 from ro.webdata.oniq.sparql.builder.builder import SPARQLBuilder
 from ro.webdata.oniq.validation.pre_validation_pairs.pairs import PAIRS
 from ro.webdata.oniq.validation.pre_validation_pairs.pairs_qald_5_test import PAIRS_QALD
+from ro.webdata.oniq.validation.pre_validation_pairs.pairs_qald_8_test import PAIRS_QALD as PAIRS_QALD_8
+from ro.webdata.oniq.validation.qald_validation import run_qald_8_test
 from ro.webdata.oniq.validation.validation import questions_test, question_test
 from ro.webdata.oniq.validation.validation_pairs.pairs_qald_5_test import PAIRS_QALD as V_PAIRS_QALD
+from ro.webdata.oniq.validation.validation_pairs.pairs_qald_8_test import PAIRS_QALD as V_PAIRS_QALD_8
 
 # Ignore spaCy "[W008] Evaluating Token.similarity based on empty vectors." warning message
 warnings.filterwarnings("ignore", message=r"\[W008\]", category=UserWarning)
@@ -51,16 +57,22 @@ print_summary = True
 print_deps = True
 raw_test = False
 
-QUERY = QUERY_LIST[0]
-# question_test(PAIRS_QALD, QUERY, True, print_summary, print_deps)
-# question_test(V_PAIRS_QALD, QUERY, False, print_summary, print_deps)
+
+run_qald_8_test()
+
+
+# PRE_PAIRS = PAIRS_QALD + PAIRS_QALD_8
+# V_PAIRS = V_PAIRS_QALD + V_PAIRS_QALD_8
+
+# question_test(PRE_PAIRS, QUERY, True, print_summary, print_deps)
+# question_test(V_PAIRS, QUERY, False, print_summary, print_deps)
 
 # print("Validating Raw SPARQL Queries...\n")
-# questions_test(PAIRS_QALD, True, print_summary, print_deps)
+# questions_test(PRE_PAIRS, True, print_summary, False)
 # questions_test(PAIRS, True, print_summary, print_deps)
 
-print("Validating Final SPARQL Queries...\n")
-questions_test(V_PAIRS_QALD, False, True, True)
+# print("Validating Final SPARQL Queries...\n")
+# questions_test(V_PAIRS, False, True, True)
 
 # if GLOBAL_ENV.TEST_MODE == TEST_MODES.DEFAULT:
 #     sparql_query = SPARQLBuilder(ENDPOINT, QUERY, print_deps)

@@ -19,6 +19,10 @@ PAIRS_QALD = [
         "onlydbo": True,
         "query": "Did Arnold Schwarzenegger attend a university?",
         "result": """
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX dbr: <http://dbpedia.org/resource/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+
 ASK
 WHERE {
 	dbr:Arnold_Schwarzenegger   dbo:almaMater   ?university .
@@ -27,12 +31,15 @@ WHERE {
 """
     },
     {
+        # FIXME:
         "aggregation": False,
         "answertype": bool,
         "hybrid": False,
         "onlydbo": True,
         "query": "Is Barack Obama a democrat?",
         "result": """
+PREFIX dbr: <http://dbpedia.org/resource/>
+
 ASK
 WHERE {
 	dbr:Barack_Obama   ?property   dbr:Democratic_Party_(United_States)
@@ -66,10 +73,33 @@ WHERE {
         "onlydbo": True,
         "query": "In which country is Mecca located?",
         "result": """
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX dbr: <http://dbpedia.org/resource/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+
 SELECT DISTINCT ?country
 WHERE {
 	dbr:Mecca   dbo:country   ?country .
 	?country   rdf:type   dbo:Country
+}
+"""
+    },
+    {
+        # TODO: city => <?headquartered   rdf:type   dbo:City>
+        "aggregation": False,
+        "answertype": "resource",
+        "hybrid": False,
+        "onlydbo": False,
+        "query": "In which city is Air China headquartered?",
+        "result": """
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX dbr: <http://dbpedia.org/resource/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+
+SELECT DISTINCT *
+WHERE {
+	dbr:Air_China   dbo:headquarter   ?headquartered .
+	?headquartered   rdf:type   dbo:City
 }
 """
     },
@@ -80,6 +110,10 @@ WHERE {
         "onlydbo": True,
         "query": "Give me all ESA astronauts.",
         "result": """
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX dbr: <http://dbpedia.org/resource/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+
 SELECT DISTINCT ?astronauts
 WHERE {
 	?astronauts   ?property   dbr:European_Space_Agency .
@@ -94,6 +128,10 @@ WHERE {
         "onlydbo": True,
         "query": "Give me all Swedish holidays.",
         "result": """
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX dbr: <http://dbpedia.org/resource/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+
 SELECT DISTINCT ?Swedish_holidays
 WHERE {
 	?Swedish_holidays   dbo:country   dbr:Sweden .
@@ -108,6 +146,10 @@ WHERE {
         "onlydbo": True,
         "query": "Give me the currency of China.",
         "result": """
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX dbr: <http://dbpedia.org/resource/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+
 SELECT DISTINCT ?currency
 WHERE {
 	dbr:China   dbo:currency   ?currency .
@@ -132,6 +174,9 @@ WHERE {
         "onlydbo": True,
         "query": "When did the Ming dynasty dissolve?",
         "result": """
+PREFIX dbp: <http://dbpedia.org/property/>
+PREFIX dbr: <http://dbpedia.org/resource/>
+
 SELECT DISTINCT ?Ming_dynasty_dissolve
 WHERE {
 	dbr:Ming_dynasty   dbp:dateEnd   ?Ming_dynasty_dissolve
@@ -155,12 +200,29 @@ WHERE {
         "onlydbo": True,
         "query": "Who is the manager of Real Madrid?",
         "result": """
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX dbr: <http://dbpedia.org/resource/>
+
 SELECT DISTINCT ?manager
 WHERE {
 	dbr:Real_Madrid_CF   dbo:manager   ?manager
 }
 """
     },
+#     {
+#         # FIXME:
+#         "aggregation": False,
+#         "answertype": "resource",
+#         "hybrid": False,
+#         "onlydbo": False,
+#         "query": "Who is the mayor of Rotterdam?",
+#         "result": """
+# SELECT DISTINCT ?mayor
+# WHERE {
+# 	dbr:Rotterdam   dbo:politicalLeader   ?mayor
+# }
+# """
+#     },
     {
         "aggregation": False,
         "answertype": "resource",
@@ -168,6 +230,9 @@ WHERE {
         "onlydbo": True,
         "query": "Who were the parents of Queen Victoria?",
         "result": """
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX dbr: <http://dbpedia.org/resource/>
+
 SELECT DISTINCT ?parents
 WHERE {
 	dbr:Queen_Victoria   dbo:parent   ?parents
@@ -193,6 +258,9 @@ WHERE {
         "onlydbo": True,
         "query": "Who is the youngest Pulitzer Prize winner?",
         "result": """
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX dbr: <http://dbpedia.org/resource/>
+
 SELECT DISTINCT ?winner
 WHERE {
 	?winner   dbo:award   dbr:Pulitzer_Prize .
@@ -233,6 +301,9 @@ ORDER BY DESC(?youngest)
         "onlydbo": True,
         "query": "Who is the tallest basketball player?",
         "result": """
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+
 SELECT DISTINCT ?basketball_player
 WHERE {
 	?basketball_player   rdf:type   dbo:BasketballPlayer .
@@ -258,6 +329,9 @@ ORDER BY DESC(?tallest)
         "onlydbo": True,
         "query": "What is the net income of Apple?",
         "result": """
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX dbr: <http://dbpedia.org/resource/>
+
 SELECT DISTINCT ?net_income
 WHERE {
 	dbr:Apple_Inc.   dbo:netIncome   ?net_income
@@ -271,6 +345,10 @@ WHERE {
         "onlydbo": True,
         "query": "What is the highest mountain in Italy?",
         "result": """
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX dbr: <http://dbpedia.org/resource/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+
 SELECT DISTINCT ?mountain
 WHERE {
 	?mountain   dbo:locatedInArea   dbr:Italy .
@@ -299,6 +377,7 @@ ORDER BY DESC(?highest)
     # """
     #     },
     #     {
+    #         # FIXME:
     #         "aggregation": False,
     #         "answertype": "string",
     #         "hybrid": False,
@@ -315,6 +394,9 @@ ORDER BY DESC(?highest)
         "onlydbo": True,
         "query": "How high is the Yokohama Marine Tower?",
         "result": """
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX dbr: <http://dbpedia.org/resource/>
+
 SELECT DISTINCT ?high
 WHERE {
 	dbr:Yokohama_Marine_Tower   dbo:height   ?high
@@ -332,12 +414,34 @@ ORDER BY DESC(?high)
     # """
     #     },
     {
+        # TODO: check the aggregation
+        "aggregation": False,  # True???
+        "answertype": "number",
+        "hybrid": False,
+        "onlydbo": False,
+        "query": "How many children does Eddie Murphy have?",
+        "result": """
+PREFIX dbp: <http://dbpedia.org/property/>
+PREFIX dbr: <http://dbpedia.org/resource/>
+
+SELECT DISTINCT COUNT(?many_children)
+WHERE {
+	dbr:Eddie_Murphy   dbp:children   ?many_children
+}
+"""
+    },
+    {
         "aggregation": True,
         "answertype": "number",
         "hybrid": False,
         "onlydbo": True,
         "query": "How many companies were founded by the founder of Facebook?",
         "result": """
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX dbp: <http://dbpedia.org/property/>
+PREFIX dbr: <http://dbpedia.org/resource/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+
 SELECT DISTINCT COUNT(?many_companies)
 WHERE {
 	?many_companies   dbo:foundedBy   ?founder .
@@ -347,6 +451,7 @@ WHERE {
 """
     },
     #     {
+    #         # FIXME:
     #         "aggregation": True,
     #         "answertype": "number",
     #         "hybrid": False,
@@ -382,6 +487,10 @@ WHERE {
         "onlydbo": True,
         "query": "Which soccer players were born on Malta?",
         "result": """
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX dbr: <http://dbpedia.org/resource/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+
 SELECT DISTINCT ?soccer_players
 WHERE {
 	?soccer_players   dbo:birthPlace   dbr:Malta .
@@ -435,6 +544,7 @@ WHERE {
     # """
     #     },
     {
+        # TODO:
         #  <?musician   dbo:occupation   dbr:Musician>
         #  <?musician   dbo:author   ?books>
         "aggregation": True,
@@ -443,6 +553,10 @@ WHERE {
         "onlydbo": True,
         "query": "Which musician wrote the most books?",
         "result": """
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX dbp: <http://dbpedia.org/property/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+
 SELECT DISTINCT ?musician
 WHERE {
 	?books   rdf:type   dbo:Book .
@@ -459,6 +573,11 @@ ORDER BY DESC(COUNT(?books))
         "onlydbo": True,
         "query": "Which museum in New York has the most visitors?",
         "result": """
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX dbp: <http://dbpedia.org/property/>
+PREFIX dbr: <http://dbpedia.org/resource/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+
 SELECT DISTINCT ?museum
 WHERE {
 	?museum   dbo:location   dbr:New_York_City .
@@ -484,6 +603,10 @@ ORDER BY DESC(COUNT(?visitors))
         "onlydbo": True,
         "query": "Which volcanos in Japan erupted since 2000?",
         "result": """
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX dbr: <http://dbpedia.org/resource/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+
 SELECT DISTINCT ?volcanos
 WHERE {
 	?volcanos   dbo:eruptionYear   ?erupted .

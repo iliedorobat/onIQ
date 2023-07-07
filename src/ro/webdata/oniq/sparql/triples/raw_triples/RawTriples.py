@@ -1,6 +1,8 @@
-from ro.webdata.oniq.common.nlp.word_utils import is_adj, is_wh_word, is_aux, is_noun
+from ro.webdata.oniq.common.nlp.word_utils import is_adj, is_wh_word, is_aux, is_noun, get_prev_word, is_preposition
 from ro.webdata.oniq.sparql.NLQuestion import NLQuestion, QUESTION_TYPES
+from ro.webdata.oniq.sparql.NounEntity import NounEntity
 from ro.webdata.oniq.sparql.common.TokenHandler import TokenHandler
+from ro.webdata.oniq.sparql.triples.raw_triples.RawTriple import RawTriple
 from ro.webdata.oniq.sparql.triples.raw_triples.RawTripleGenerator import STATEMENT_TYPE, RawTripleGenerator
 from ro.webdata.oniq.sparql.triples.raw_triples.generator.RawTripleHandler import RawTripleHandler
 
@@ -61,6 +63,12 @@ def init_raw_triples(nl_question: NLQuestion):
                     # E.g.: "How many children did Benjamin Franklin have?"
                     p = n_lefts[0]
                     obj = n_lefts[0]
+        elif p.lemma_ == "have" and NounEntity(obj).is_res():
+            # E.g.: "How many awards has Bertrand Russell?"
+            old_subject = subject
+            subject = obj
+            p = old_subject
+            obj = old_subject
 
         generator.append_noun_triple(subject, p, obj)
 
@@ -73,11 +81,6 @@ def init_raw_triples(nl_question: NLQuestion):
         generator.append_triple(head, None, STATEMENT_TYPE.PASS_POSS)
     else:
         if len(noun_rights) > 0:
-            adj_lefts = [token for token in lefts if is_adj(token)]
-            if len(adj_lefts) > 0:
-                # E.g.: "How high is the Yokohama Marine Tower?"
-                generator.append_triple(noun_rights[0], adj_lefts[0], STATEMENT_TYPE.ADJECTIVE)
-
             # TODO: replace with RawTripleGenerator.append_triple
             statement = RawTripleHandler.passive_possessive_handler(question, noun_rights[0])
             if statement is not None:
@@ -96,7 +99,10 @@ def init_raw_triples(nl_question: NLQuestion):
                 if len(noun_lefts) > 0:
                     if len(noun_rights) > 0:
                         # E.g.: "Is Barack Obama a democrat?"
-                        generator.append_noun_triple(head, "?property", noun_rights[0])
+                        prev_word = get_prev_word(noun_rights[0])
+                        if not is_preposition(prev_word):
+                            # E.g.: "What is the birth name of Adele?" => is_preposition(prev_word)
+                            generator.append_noun_triple(head, "?property", noun_rights[0])
                     else:
                         if TokenHandler.noun_not_found(noun_lefts[0], head):
                             # E.g.: "Who is the youngest Pulitzer Prize winner?"
@@ -108,12 +114,48 @@ def init_raw_triples(nl_question: NLQuestion):
                             # E.g.: "How high is the Yokohama Marine Tower?"
                             # do nothing
                             pass
+                # else:
+                #     if len(noun_rights) > 0:
+                #         # E.g.: "What is the smallest city by area in Germany?"
+                #         generator.append_triple(noun_rights[0], None, STATEMENT_TYPE.NOUN)
 
-                adj_lefts = [token for token in list(head.lefts) if is_adj(token)]
+                adj_lefts = TokenHandler.get_adjectives(list(head.lefts), ["current"])
                 if len(adj_lefts) > 0:
                     # E.g.: "Give me all Swedish holidays."
                     # E.g.: "Who is the youngest Pulitzer Prize winner?"
                     # E.g.: "Who was the doctoral advisor of Albert Einstein" => "doctoral".dep_ == "amod"
-                    generator.append_triple(head, adj_lefts[0], STATEMENT_TYPE.ADJECTIVE)
+
+                    order_by_adj = [
+                        triple for triple in generator.raw_triples
+                        if triple.order_by is not None
+                           and triple.order_by.order_by_token == adj_lefts[0]
+                    ]
+                    if len(order_by_adj) == 0:
+                        # E.g.: "What is the smallest city by area in Germany?" => len(order_by_adj) > 0
+                        generator.append_triple(head, adj_lefts[0], STATEMENT_TYPE.ADJECTIVE)
+
+            if len(generator.raw_triples) == 0:
+                # E.g.: "How large is the area of UK?"              => len(generator.raw_triples) > 0
+                # E.g.: "How high is the Yokohama Marine Tower?"    => len(generator.raw_triples) == 0
+                adj_lefts = TokenHandler.get_adjectives(lefts)
+                if len(adj_lefts) > 0:
+                    # E.g.: "How high is the Yokohama Marine Tower?"
+                    noun_rights = TokenHandler.get_nouns(rights)
+                    generator.append_triple(noun_rights[0], adj_lefts[0], STATEMENT_TYPE.ADJECTIVE)
+
+    if len(generator.raw_triples) == 0:
+        if nl_question.question_type == QUESTION_TYPES.WHO:
+            # E.g.: "Who is Dan Jurafsky?"
+            subject = "VALUES"
+            p = head
+            obj = head
+
+            statement = RawTriple(
+                s=subject,
+                p=p,
+                o=NounEntity(obj),
+                question=question
+            )
+            generator.raw_triples.append(statement)
 
     return generator.raw_triples

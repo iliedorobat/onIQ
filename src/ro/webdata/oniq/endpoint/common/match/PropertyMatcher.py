@@ -1,9 +1,10 @@
 import math
+import re
 import warnings
 
 import nltk
 from nltk.corpus import wordnet
-from spacy.tokens import Token
+from spacy.tokens import Token, Span
 
 from ro.webdata.oniq.common.print_utils import console, SYSTEM_MESSAGES
 from ro.webdata.oniq.endpoint.common.CSVService import CSV_COLUMN_SEPARATOR, CSVService
@@ -143,8 +144,10 @@ def _calculate_word_similarity_score(rdf_prop, target_expression, result_type):
     count = 0
 
     prop_tokens = rdf_prop.label_to_non_stop_tokens()
-    # TODO: find a better approach
-    prop_buffer = 0.2 if rdf_prop.ns_label == "dbo" else 0
+
+    is_similar = _get_score(target_expression, rdf_prop)
+    if is_similar == 1:
+        return 1
 
     for index, prop_token in list(enumerate(prop_tokens)):
         # FIXME: workaround for "born".lemma_ == "bear"
@@ -158,7 +161,7 @@ def _calculate_word_similarity_score(rdf_prop, target_expression, result_type):
         if not word_2.has_vector:
             console.warning(SYSTEM_MESSAGES.VECTORS_NOT_AVAILABLE % word_2.lemma_)
 
-        similarity_score *= (word_1.similarity(word_2) + prop_buffer + SCORE_BUFFER)
+        similarity_score *= (word_1.similarity(word_2) + SCORE_BUFFER)
 
         # E.g.: birthPlace
         if index > 0 and result_type is not None:
@@ -168,7 +171,7 @@ def _calculate_word_similarity_score(rdf_prop, target_expression, result_type):
             if not result_type_token.has_vector:
                 console.warning(SYSTEM_MESSAGES.VECTORS_NOT_AVAILABLE % result_type_token.text)
 
-            similarity_score *= (word_2.similarity(result_type_token) +  prop_buffer + SCORE_BUFFER)
+            similarity_score *= (word_2.similarity(result_type_token) + SCORE_BUFFER)
 
         count += 1
         # similarity_list += _get_word_similarity_list(word, non_stop_token, rdf_prop)
@@ -212,6 +215,9 @@ def _calculate_detachment_score(rdf_prop, target_expression):
     prop_name = " ".join(str_tokens)
     target_text = target_expression.text
 
+    # TODO: find a better approach
+    prop_buffer = 0.2 if rdf_prop.ns_label == "dbo" else 0
+
     if len(prop_name) == 0:
         console.warning(f"The property <{rdf_prop.uri}> have been excluded because contains only stopwords")
         return 0
@@ -226,7 +232,7 @@ def _calculate_detachment_score(rdf_prop, target_expression):
     #   * sqrt(5, 2) = 2.23606797749979
     reversed_edit = math.pow(len(prop_name), 1/(edit_distance + 1)) / len(prop_name)
 
-    similarity_score = math.pow(reversed_jaccard * reversed_edit, 1/2)
+    similarity_score = math.pow((reversed_jaccard * reversed_edit) + prop_buffer, 1/2)
 
     return similarity_score
 
@@ -243,3 +249,37 @@ def _get_word_similarity_list(lemma: Token, token: Token, rdf_prop: RDFProperty)
             syn_name = syn.name().split('.')[0]
             syn_lemma = syn_lemma.name()
             print(f'{syn_name}    {syn_lemma}')
+
+
+def _get_score(target_expression: Span, rdf_prop: RDFProperty):
+    expression_lemmas = [
+        string for string in target_expression.lemma_.split(" ")
+        if len(string) > 0
+    ]
+    prop_lemmas = [
+        nlp_model(item)[0].lemma_ for item
+        in re.findall('[A-Za-z][^A-Z]*', rdf_prop.name)
+    ]
+    # prop_lemmas = [
+    #     string for string in rdf_prop.lemma.split(" ")
+    #     if len(string) > 0
+    # ]
+
+    if "".join(expression_lemmas) == "".join(prop_lemmas):
+        # E.g.: "How much is the population density rank of Germany?"
+        #   => "population density rank"
+        return 1
+
+    if len(expression_lemmas) >= len(prop_lemmas):
+        # E.g.: "How large is the total area of North Rhine-Westphalia?"
+        count = 0
+        for lemma in expression_lemmas:
+            if lemma in prop_lemmas:
+                count += 1
+        return count / len(expression_lemmas)
+    else:
+        count = 0
+        for prop_lemma in prop_lemmas:
+            if prop_lemma in expression_lemmas:
+                count += 1
+        return count / len(prop_lemmas)

@@ -3,7 +3,8 @@ from typing import List
 from spacy.tokens import Token
 
 from ro.webdata.oniq.common.nlp.utils import WordnetUtils
-from ro.webdata.oniq.common.nlp.word_utils import is_preposition, is_noun
+from ro.webdata.oniq.common.nlp.word_utils import is_preposition, is_noun, is_adj, get_next_word
+from ro.webdata.oniq.sparql.NLQuestion import NLQuestion, QUESTION_TYPES
 from ro.webdata.oniq.sparql.NounEntity import NounEntity
 
 
@@ -63,5 +64,33 @@ class TokenHandler:
                         noun_list.append(token)
                 else:
                     noun_list.append(token)
+            elif is_preposition(token):
+                if token.i > 0:
+                    # E.g.: token.i == 0 => In which country is Mecca located?
+                    next_word = get_next_word(token)
+                    if is_noun(next_word):
+                        noun_list.append(next_word)
 
-        return noun_list
+                    # E.g.: "Who is the author of the interpretation of dreams?"
+                    if next_word.dep_ == "det":
+                        next_word = get_next_word(next_word)
+                    if is_noun(next_word):
+                        noun_list.append(next_word)
+
+        # E.g.: "What is the birth name of Adele?"
+        return list(set(noun_list))
+
+    @staticmethod
+    def get_adjectives(tokens: List[Token], exceptions: List[str] = None):
+        adjectives = []
+
+        for token in tokens:
+            if is_adj(token):
+                if exceptions is not None:
+                    if token.lower_ not in exceptions:
+                        # E.g.: "Who is the current federal minister of finance in Germany?"
+                        adjectives.append(token)
+                else:
+                    adjectives.append(token)
+
+        return adjectives

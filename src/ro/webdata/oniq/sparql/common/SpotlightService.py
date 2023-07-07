@@ -37,12 +37,17 @@ class SpotlightService:
     @staticmethod
     def property_lookup(question: Span, predicate: Union[str, Span], node_type: str, node_value: NounEntity, raw_triples_values: List[RawTriple]):
         if isinstance(predicate, str):
+            # TODO: add a generic rule for checking if there is a RDF property
             if predicate == "?property":
                 # E.g.: "Give me all ESA astronauts."
                 return predicate
 
             if predicate.startswith("dbo:"):
                 # E.g.: "What is the highest mountain in Italy?"
+                return predicate
+
+            if predicate.startswith("foaf:"):
+                # E.g.: "What is the nick name of Baghdad?"
                 return predicate
 
             if predicate.startswith("rdf:"):

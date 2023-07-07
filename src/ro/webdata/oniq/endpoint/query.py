@@ -6,7 +6,7 @@ from SPARQLWrapper import SPARQLWrapper, JSON
 
 from ro.webdata.oniq.endpoint.common.CSVService import CSV_COLUMN_SEPARATOR
 from ro.webdata.oniq.endpoint.common.translator.URITranslator import URITranslator
-from ro.webdata.oniq.endpoint.dbpedia.sparql_query import DBP_RESOURCE_TYPE_QUERY
+from ro.webdata.oniq.endpoint.dbpedia.sparql_query import DBP_RESOURCE_TYPE_QUERY, DBP_PROPERTY_RANGE_QUERY
 from ro.webdata.oniq.endpoint.models.RDFElement import RDFCategory, RDFClass, RDFEntity, RDFProperty
 from ro.webdata.oniq.endpoint.models.RDFElements import RDFElements
 from ro.webdata.oniq.endpoint.namespace import NAMESPACE
@@ -181,6 +181,21 @@ class QueryService:
         classes.sort()
 
         return classes
+
+    @staticmethod
+    def run_resource_type_range(endpoint, prop=None, sparql_query=DBP_PROPERTY_RANGE_QUERY):
+        if prop is None or len(prop) == 0:
+            return None
+
+        ranges = []
+        query = sparql_query % escape_resource_name(prop)
+        response = QueryService.run_query(endpoint, query)
+
+        for result in response["results"]["bindings"]:
+            prop_range = pydash.get(result, ["range", "value"])
+            ranges.append(prop_range)
+
+        return ranges
 
     @staticmethod
     def run_properties_query(endpoint, sparql_query=PROPERTIES_QUERY):
@@ -391,5 +406,8 @@ def escape_resource_name(resource_name: str):
 
     # E.g.: "Apple_Inc." => "Apple_Inc\."
     res_name = res_name.replace(".", "\.")
+
+    # E.g.: "how much is the total population of  european union?"
+    res_name = res_name.replace("'", "\'")
 
     return res_name

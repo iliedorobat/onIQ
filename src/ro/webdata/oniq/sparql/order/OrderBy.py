@@ -14,9 +14,10 @@ class ORDER_BY_MODIFIER:
 
 
 class OrderBy:
-    def __init__(self, target: Union[AdjectiveEntity, NounEntity], predicate: Token):
+    def __init__(self, target: Union[AdjectiveEntity, NounEntity], predicate: Token, order_adj: Token = None):
         self.target = target
-        self.modifier = OrderBy.get_modifier(predicate)
+        self.modifier = OrderBy.get_modifier(predicate, order_adj)
+        self.order_by_token = order_adj if is_adj(order_adj) else predicate
 
     def __str__(self):
         prev_word = get_prev_word(self.target.token)
@@ -28,13 +29,16 @@ class OrderBy:
         return f"{self.modifier}({self.target.to_var()})"
 
     @staticmethod
-    def get_modifier(predicate: Token):
+    def get_modifier(predicate: Token, order_adj: Token = None):
         if not isinstance(predicate, Token):
             return None
 
         if is_adj(predicate):
             # E.g.: "What is the highest mountain in Italy?"
             return _prepare_order_modifier(predicate)
+        elif is_adj(order_adj):
+            # E.g.: "What is the smallest city by area in Germany?"
+            return _prepare_order_modifier(order_adj)
         else:
             # E.g.: "Which museum in New York has the fewest visitors?"
             prev_word = get_prev_word(predicate)
